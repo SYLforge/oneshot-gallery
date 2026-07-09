@@ -1,0 +1,230 @@
+# HANJI SLATE — breakdown
+
+## The hook
+
+Somewhere in Seoul, a small company decided the problem with screens is
+that they never stop talking. So they built one that does: an e-ink slate
+sold as "hanji, upgraded" — the thousand-year mulberry paper, given a
+memory. The page never argues the case. It states figures the way a spec
+sheet states them — "Six weeks of mornings on one charge. 한 번의 충전으로
+여섯 주의 아침." — and lets the calm do the persuading.
+
+The design bet: a product page can feel premium without a single photo,
+gradient, or glass panel, if the layout itself behaves like the product —
+matte, exact, and quiet until touched.
+
+## Art direction
+
+Bento-product usually means dark gradients and glow. This one inverts the
+genre's temperature: warm gray `#e9e6e0` for the desk, e-ink white
+`#f7f5f0` for the tiles, graphite `#26262a` for every word, and one amber
+`#e8830c` the color of persimmon ink. The device is drawn in SVG — bezel,
+etched screen, a page of handwriting rendered as quadratic squiggles with
+one amber annotation — so the whole identity survives at any DPI and
+re-inks itself when the reading mode changes.
+
+Contrast is where the brief had to bend. Bright amber measures 2.4:1 on
+the light grounds — beautiful, and illegible. So it was split in two: a
+derived deep amber `#9a5504` (4.6:1 on warm gray) does the functional work
+— key spec figures, tile units, the focus ring — while the bright amber
+keeps the decorative jobs and the graphite footer, where it passes at
+5.8:1. Same hue family, two employment contracts.
+
+Three typefaces, three registers: Hanken Grotesk speaks for the product,
+Noto Sans KR carries every Hangul glyph (`word-break: keep-all`, so
+phrases never shatter mid-word), and JetBrains Mono reads the instruments.
+Both the sans and mono stacks list Noto second, so Korean typed anywhere —
+even inside a mono readout — lands in the right face with no markup.
+
+## Technique 1 — the bento FLIP (flip-layout)
+
+Expanding a tile changes its grid placement from `span 2` to `1 / -1`,
+which reflows every sibling — and layout is the one thing you must never
+animate. FLIP resolves the contradiction: let layout happen instantly,
+then animate the *appearance* of the change with transforms.
+
+The rects are captured synchronously, before the state update:
+
+```tsx
+// BentoGrid.tsx — First happens before React knows anything changed
+const toggle = (id: string) => {
+  if (!reduced) flip.capture();          // reduced motion: never captured → snap
+  setOpen((prev) => (prev === id ? null : id));
+};
+
+useLayoutEffect(() => {
+  flip.play();                           // Last-Invert-Play, pre-paint
+}, [open, flip]);
+```
+
+`play()` runs in `useLayoutEffect` — after the grid has reflowed, before
+the browser paints. Each moved tile is transformed back onto its old box
+with transitions disabled, then released two frames later:
+
+```ts
+// useFlip.ts — Invert…
+el.style.transition = "none";
+el.style.transformOrigin = "0 0";
+el.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+if (inner) inner.style.transform = `scale(${1 / sx}, ${1 / sy})`;
+
+// …Play: frame 1 commits the inverted state, frame 2 releases it
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    el.style.transition = `transform 420ms cubic-bezier(0.22, 1, 0.36, 1)`;
+    el.style.transform = "";
+  });
+});
+```
+
+Two details make it read as a shared-element transition rather than a
+stretch. First, the counter-scale: the tile's content wrapper gets the
+inverse scale under the same easing, so the box morphs while the type
+holds its size. Second, interruption is free: `getBoundingClientRect`
+includes in-flight transforms, so capturing mid-morph retargets the tween
+from wherever the tile visually is — mash the tiles as fast as you like.
+
+The accessibility half is cheaper than the animation half: the toggle is a
+real `<button>` in the tile's heading with `aria-expanded` and
+`aria-controls`; the whole tile is only a convenience click target that
+ignores clicks on the button (no double-fire) and inside the open detail
+(text selection must not collapse the tile). Detail hiding is gated behind
+`.slate-js`, so without JavaScript every detail paragraph is simply
+visible.
+
+## Technique 2 — the exploded slate (svg-line-draw)
+
+The device opens as you scroll: a 280vh section (the height itself is
+JS-gated) with a sticky stage, and a scroll-progress hook that computes
+`p = -rect.top / (rect.height - innerHeight)` once per rAF. Four SVG plate
+groups — glass, panel, battery, magnesium back — translate apart as `p`
+grows:
+
+```ts
+// ExplodedView.tsx — the whole scrub is transform / dashoffset / opacity
+const e = smoothstep(clamp01((p - 0.08) / 0.62));
+LAYERS.forEach((layer, i) => {
+  g.style.transform = `translate3d(0, ${layer.spread * e}px, 0)`;
+  const t = clamp01((p - (0.5 + i * 0.09)) / 0.22);
+  line.style.strokeDashoffset = String(1 - t);   // pathLength=1: draw is 1→0
+  label.style.opacity = String(clamp01(t * 1.4));
+});
+```
+
+The parallax is one number: outer layers travel ±132px, inner layers
+±44px. That 3:1 ratio is what makes a flat diagram read as depth — the
+glass and the back plate "come from farther away."
+
+The callout lines earn the `svg-line-draw` tag. Each is a plain
+`<path pathLength={1} strokeDasharray={1}>`, so the draw is a dashoffset
+from 1 to 0 — no `getTotalLength()` measuring, ever. Each callout lives
+*inside its layer's group*, so the line and label ride the plate they
+describe; the label always points at the part, at any scroll position.
+
+The static states cost nothing because they are the default: the
+server-rendered markup is the assembled diagram with all callouts drawn
+and labels visible. No JS or reduced motion simply keeps it (and a media
+query collapses the 280vh runway to an ordinary section). The scrub only
+ever *adds* hiding, from JavaScript, after mount.
+
+## Technique 3 — pointer parallax, and the e-ink blink
+
+The hero slate floats on a 6.5s CSS keyframe — the page's only ambient
+motion — and, on fine pointers, leans toward the cursor: device ±7px,
+shadow ∓4px against it. Two planes moving in opposition is the minimum
+honest parallax. The lerp (`k = 0.09` per 60fps-normalized frame) runs in
+a rAF loop that parks itself once both planes settle under a millipixel,
+so an idle hero costs zero frames. Touch devices and reduced motion never
+start the loop.
+
+The footer's reading-mode toggle swaps the paper tokens via
+`data-mode="sepia"` on the root — and refreshes the way e-paper does, with
+a full-field invert:
+
+```css
+.slate-js.is-refreshing { animation: slate-eink 120ms linear both; }
+
+@keyframes slate-eink {
+  0%, 11%   { filter: invert(0); }
+  12%, 82%  { filter: invert(1); }   /* hard cut — e-ink snaps, never fades */
+  83%, 100% { filter: invert(0); }
+}
+```
+
+One property, one layer, and the inverted frame is genuinely the page's
+own negative — which is exactly what a real e-ink refresh shows you.
+Rapid re-toggles deliberately ride the flash already in flight (real
+e-paper batches refreshes too). Under reduced motion the class is never
+added and the media query kills the keyframe as a backstop; the mode still
+switches instantly.
+
+## Motion math
+
+- **FLIP easing.** `cubic-bezier(0.22, 1, 0.36, 1)` front-loads most of
+  the travel; at 420ms the expanded tile arrives in ~170ms and spends the
+  rest settling sub-pixel, which reads as "confident" rather than "slow".
+- **Counter-scale caveat, quantified.** Outer `scale(s)` and inner
+  `scale(1/s)` both tween linearly through the same easing, but their
+  product only equals 1 at the endpoints. For this grid's worst case
+  (s ≈ 2.0 expanding a 1×1 tile to full width) the mid-tween content
+  wobble peaks under 2% for a few frames — below perception, and worth it
+  to avoid animating `width`/`height`.
+- **Scrub windows.** Plates travel over p∈[0.08, 0.70] through smoothstep
+  (zero velocity at both ends — the plates *arrive*, never bump). Callout
+  i draws over p∈[0.5+0.09i, 0.72+0.09i]: the first line starts while the
+  plates still drift, the last finishes just before the stage unpins, and
+  the 0.09 stagger means the diagram labels itself top-to-bottom like a
+  patient teacher.
+- **120ms.** Real e-paper full refreshes run 100–450ms; 120ms with an
+  ~85ms inverted hold is the shortest duration that still reads as a
+  deliberate page-turn rather than a glitch.
+
+## Performance notes
+
+- The FLIP animates only `transform` on already-painted tiles; layout
+  runs exactly once, at the React commit. `will-change` is applied for
+  the tween and removed on cleanup.
+- The scrub does one `getBoundingClientRect` per frame (rAF-throttled,
+  passive scroll listener) and then only writes `transform`,
+  `stroke-dashoffset`, and `opacity` — reads and writes never interleave.
+- The hero parallax loop self-suspends when settled; the page at rest
+  runs one compositor-only CSS animation (the float) and nothing else.
+- No images, no canvas, no filters at rest: the e-ink invert exists for
+  120ms per toggle and is gone.
+- Fonts are three `next/font` families with `display: swap`; the SVG
+  device weighs ~2KB of paths.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) makes toggles snap (FLIP never captures), leaves the
+  exploded diagram assembled and labeled with its runway collapsed, and
+  skips the e-ink flash; a media query backstops every CSS animation.
+- **No-JS:** the SSR state is the finished print — every bento detail
+  visible, the diagram assembled, all copy in the DOM. `.slate-js` only
+  ever adds capability.
+- **Semantics:** tile toggles are `<button aria-expanded aria-controls>`
+  inside real headings; the mode switch is `aria-pressed`; both SVGs are
+  `role="img"` with bilingual labels; the narrow-screen exploded legend is
+  a real `<ol>`.
+- **Contrast:** graphite 12.1:1, secondary 5.3:1, deep amber 4.6:1+, all
+  AA on both light and sepia grounds; bright amber never carries text on
+  light surfaces. Focus is a 2px amber ring (`:focus-visible` only), deep
+  on light ground, bright on graphite.
+
+## Remix ideas
+
+1. **Field radio.** Same warm restraint, swap the slate for a
+   hand-crank emergency radio: the bento FLIP holds, the exploded view
+   separates speaker/coil/crank/shell, and the mode toggle switches
+   AM/FM with a static *pop* (the 120ms invert becomes a one-frame white
+   flash).
+2. **Film camera.** Sepia becomes "darkroom" (deep red tokens), the
+   exploded view opens a lens stack — the line-draw callouts label
+   element groups — and the FLIP tiles carry aperture/ISO/shutter
+   figures in mono.
+3. **Mechanical watch.** Rotate the exploded axis: plates separate
+   radially from a center crown. The scrub drives both separation and a
+   one-degree-per-pixel balance-wheel rotation; the spec sheet lists
+   beats per hour, and the flash becomes a hairspring shimmer
+   (`filter: brightness`) instead of an invert.

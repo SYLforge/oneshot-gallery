@@ -1,0 +1,234 @@
+# ONDO — breakdown
+
+## The hook
+
+A perfume house in a Hannam-dong alley refuses to say what its scents
+smell like. It tells you their temperature instead: 36.5° is the body, −2°
+is first snow holding its breath over the river, 45° is the floor of an
+ondol room that keeps yesterday's fire. The page is the house's one dark
+room — a bottle on a stage, a sheet of old glass in front of it, and copy
+that reads like a thermometer with feelings.
+
+The design bet is stated in the entry itself: this is the gallery's proof
+that "luxury" can be pure code. There is not a single raster image here.
+The bottle everyone expects a $40,000 product shoot for is SVG gradients;
+the glass everyone expects a shader library for is a few hundred
+`drawImage` calls and a precomputed noise table. If the page feels
+expensive, arithmetic did it.
+
+## Art direction
+
+Dark luxury has a narrow failure band: one notch too bright and it's a
+coffee shop, one notch too saturated and it's a casino. The palette holds
+four positions — noir `#16130f` (a dark room, not black), champagne
+`#d8c39a`, cream `#efe9df`, and vermeil `#9c6b3f` — and the discipline is
+in the rationing. Vermeil measures only 4.0:1 on noir, so it was demoted
+to ceremony: two hairline rules, one huge numeral, the bottle's metal. All
+secondary text runs on a derived token instead, champagne at 72% alpha
+(≈ `#a49273`, 6.1:1). The cheapest-looking thing a dark page can do is put
+low-contrast gold on everything; the most expensive is to almost never
+use it.
+
+Italiana does the Latin display work — a hairline serif with exactly one
+weight, so hierarchy has to come from size and tracking, never boldness.
+Noto Serif KR carries every Hangul glyph and all body text. Display stacks
+are ordered `Italiana, Noto Serif KR, serif`, so Korean typed inside a
+display heading falls through the Latin face into the Korean serif with no
+markup. The Korean is transcreated, not translated: "measured in degrees,
+worn as memory" comes back as "도(度)로 재고, 기억으로 입는다" — same
+observation, re-felt.
+
+## Technique 1 — a letter-spacing animation with no letter-spacing
+
+The hero wordmark opens from tight (0.02em apparent) to airy (0.4em) as
+you arrive and scroll — a slow breath. Animating `letter-spacing` would
+reflow the line every frame, so the effect is built to never touch it.
+
+The h1 is laid out at its **final** tracking. The four characters are
+split into `aria-hidden` spans behind an `aria-label`, and each span
+carries only its index; one custom property, driven by rAF, moves all
+four:
+
+```css
+.ondo-wordmark {
+  --ondo-breath: 1;           /* no-JS and reduced motion rest here: airy */
+  letter-spacing: 0.4em;
+}
+.ondo-wordmark__ch {
+  display: inline-block;
+  transform: translateX(
+    calc((var(--ondo-ci, 0) - 1.5) * (1 - var(--ondo-breath)) * -0.38em)
+  );
+}
+```
+
+At breath 0 the outer letters pull 0.57em toward the center — visually the
+0.02em word — and at breath 1 every transform is exactly zero. Because the
+math is in `em`, it survives any font-size the clamp produces. The hook
+lerps the value toward `max(intro, scroll)`:
+
+```ts
+// useBreath.ts — the wordmark opens on its own, scroll finishes it
+const intro = easeOut(Math.min((now - born) / INTRO_MS, 1)) * INTRO_FLOOR;
+const scroll = Math.min(window.scrollY / (window.innerHeight * SCROLL_SPAN), 1);
+const target = Math.max(intro, scroll);
+value += (target - value) * BREATH_LERP * (dt / 16.7);
+```
+
+The intro reaches 45% air in 2.6s — enough to feel the page inhale without
+scrolling — and the first 0.7 viewport of scroll completes it. Scroll back
+up and the name settles toward the intro floor again: it breathes, it
+doesn't play a clip. The split is why the entry claims `char-split-reveal`;
+CSS layout never changes, so the whole animation is compositor-only.
+
+## Technique 2 — the glass pane (refraction without a shader)
+
+The signature section puts a hairline-framed canvas between you and the
+SVG bottle. The trick is that the canvas is showing you the *same bottle*,
+re-rendered through a displacement field — so the pane reads as a physical
+sheet of rippled glass, not an overlay effect.
+
+First, the inline SVG becomes a texture. It is serialized straight from
+the DOM (which is why the bottle contains no `<text>` — fonts don't load
+inside SVG images), rasterized once onto an offscreen canvas over the
+stage's flat background color:
+
+```ts
+img.src =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(new XMLSerializer().serializeToString(svg));
+```
+
+Then, every frame, two passes of strip displacement. Pass 1 copies the
+pane's region out of the flat render row by row, each row offset
+horizontally by the noise field; pass 2 copies that intermediate column by
+column, each column offset vertically:
+
+```ts
+// pass 1 — rows: horizontal refraction
+const lens = Math.exp(-(dyP * dyP) / 0.055);           // pointer gaussian
+const n = noiseAt(lut, y01 * 3.2 + t * 0.00022);       // precomputed field
+let dx = n * (0.9 + 7 * ptr.e * lens) * dpr
+       + (ptr.x - 0.5) * 6 * dpr * lens * ptr.e;       // the glass "leans"
+midCtx.drawImage(art, offX + dx, sy, paneW, rowH, 0, my, paneW, rowH);
+```
+
+The noise is a 1024-sample value-noise LUT over 64 smooth-stepped lattice
+cells, two octaves, built once from a seeded PRNG — deterministic, wrapping,
+free at runtime. Ambient amplitude is under 1px; the pointer raises it to
+a capped ±7px through a gaussian lens that follows your hand, lerped at
+0.08/frame. That pointer term is the honest reason the entry is tagged
+`pointer-parallax`: two real layers — crisp bottle beneath, warped glass
+above — with the upper one drifting toward the pointer, lerped and capped.
+No backdrop-filter, no WebGL; the tag matches the implementation.
+
+The strips are 1.5 CSS px tall (rows) and 2 wide (columns), so a 440px
+pane costs roughly 500 `drawImage` calls a frame — comfortably under
+budget, and each call is a GPU-side blit. Floating-point source offsets
+give sub-pixel interpolation for free, which is what makes the ripple look
+like glass rather than a mosaic.
+
+Failure and absence are designed states: the pane only fades in after its
+first real frame; if the image ever errors, the canvas hides and the crisp
+SVG simply stays; without JavaScript you get the bottle behind an empty
+hairline frame — a sheet of glass that happens to be perfectly still.
+
+## Technique 3 — the couture wipe
+
+The collection's five cards reveal through `clip-path`, and the entire
+feel lives in one cubic-bezier:
+
+```css
+.ondo-js [data-reveal="clip"] .ondo-card__art {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 950ms cubic-bezier(0.77, 0, 0.18, 1);
+  transition-delay: var(--ondo-reveal-delay, 0ms);
+}
+.ondo-js [data-reveal="clip"].is-visible .ondo-card__art {
+  clip-path: inset(0 0 0 0);
+}
+```
+
+`cubic-bezier(.77, 0, .18, 1)` is symmetric and slow at both ends — the
+curtain gathers speed, then decelerates just as long. It reads as fabric,
+where the usual ease-out reads as UI. The observer staggers arrivals 90ms
+apart and writes the delay both as `transition-delay` and as
+`--ondo-reveal-delay`, so the card's *text* can inherit the same beat and
+follow its image by 220ms — image first, caption second, like turning a
+lookbook page.
+
+The card art itself keeps the no-photo rule with a straight face: each
+"product shot" is an SVG gradient swatch of the scent's temperature, and a
+hairline gradation line whose height *is* the temperature — −2° sits low
+and pale, 62° high and glowing. One system, five readings.
+
+## Motion math
+
+- **Breath lerp 0.055/frame** (60fps-normalized): half-life ≈ 12 frames
+  ≈ 200ms. Tracking follows scroll like something heavy and well-oiled —
+  present, but never twitchy.
+- **Lens lerp 0.08 / energy attack 0.05 / release 0.02.** The glass takes
+  ~130ms to slew toward your hand, ~230ms of half-life to brighten, and
+  ~570ms to forget you. Asymmetry is the personality: attention arrives
+  politely and lingers.
+- **Displacement caps ±7px/±4px.** Above that the bottle stops "refracting"
+  and starts "melting" — the caps are the difference between expensive and
+  gimmicky, which is why they're hard limits and not tuning suggestions.
+- **No shared periods.** The noise field drifts at 0.22 and 0.17 cells/s
+  on the two axes, the idle lissajous runs three unrelated frequencies,
+  the hint pulses at 4.6s — nothing ever visibly loops in sync.
+
+## Performance notes
+
+- One rAF loop per animated element class, throttled to ~64fps
+  (`FRAME_MS = 15.5`), `dt` clamped to 48ms so background-tab returns don't
+  lurch. Both loops (breath, refraction) pause offscreen via
+  IntersectionObserver *and* on `visibilitychange`.
+- DPR is capped at 2; the pane's backing store tops out around 800×1000
+  device pixels. Strip drawing is ~500 `drawImage` blits per frame with
+  zero per-pixel JavaScript — the noise LUT is read ~500 times, not per
+  pixel.
+- The bottle SVG is rasterized exactly once per resize (ResizeObserver),
+  never per frame. The two offscreen canvases are reused for the life of
+  the component.
+- Everything CSS animates is `transform`, `opacity`, or `clip-path`; the
+  breath writes one custom property per frame on one element, and the
+  reveal observer writes classes imperatively — no React re-renders per
+  scroll.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (useSyncExternalStore over
+  matchMedia) makes the wordmark rest at full air (the CSS default), draws
+  the refraction as one composed still frame at a hand-picked `t = 4200`
+  with no loop and no listeners, and a media query removes every reveal
+  transition, the hint pulse, and the pane fade. The page becomes a
+  beautiful photograph of itself.
+- **No-JS:** every pre-reveal state is gated behind `.ondo-js`, added on
+  mount. The default `--ondo-breath: 1` means the wordmark's no-JS state
+  is the finished airy one; the bottle, all copy, and every card are plain
+  DOM content.
+- **Semantics:** the wordmark is an h1 with `aria-label="ONDO"` over
+  aria-hidden spans; the bottle SVG is `role="img"` with a bilingual
+  description; the swatches are decorative and hidden; the rail is a
+  labeled focusable `region` — arrow keys step one card, Home/End jump,
+  wheel and drag work, touch scrolls natively, and the keyboard smooth
+  scroll switches to instant under reduced motion.
+- **Contrast:** cream 15.3:1, champagne 10.7:1, champagne-dim 6.1:1 —
+  all functional text AA or better. Vermeil (4.0:1) never carries anything
+  smaller than the display numeral.
+
+## Remix ideas
+
+1. **Whisky house.** Keep the stage and the glass pane; redraw the SVG as
+   a decanter, retitle the collection by cask years instead of degrees.
+   The gradation line becomes an age statement — the refraction already
+   reads as thick bar glass.
+2. **Hot-spring ryokan.** Palette shifts to steam: noir → deep slate,
+   champagne → moon white. The pane's noise field slows and gains
+   amplitude near the *bottom* only — mist rising in front of the bathhouse
+   sign — and the collection lists pools by water temperature.
+3. **Glassblowing studio.** Invert the trick: the SVG is the *workpiece*
+   glowing vermeil, and pointer energy raises both displacement and a
+   `filter: brightness()` on the pane — the glass softens where you look,
+   as if still hot from the furnace.

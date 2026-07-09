@@ -90,6 +90,377 @@
       }
     },
     {
+      "name": "giwa",
+      "type": "registry:block",
+      "title": "GIWA — Under Painted Eaves",
+      "description": "A palace-eave restoration guild documents dancheong and the five directional colors on hanji paper — a roofline that draws itself in ink and then floods with pigment, and four dancheong motifs rebuilt as pure SVG symmetry.",
+      "dependencies": [],
+      "categories": [
+        "korean-traditional",
+        "svg-line-draw",
+        "clip-path-reveal",
+        "feturbulence-texture",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/giwa/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/giwa/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/giwa/components/HanjiMethod.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/giwa/components/HanjiMethod.tsx"
+        },
+        {
+          "path": "registry/designs/giwa/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/giwa/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/giwa/components/Obangsaek.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/giwa/components/Obangsaek.tsx"
+        },
+        {
+          "path": "registry/designs/giwa/components/PatternGallery.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/giwa/components/PatternGallery.tsx"
+        },
+        {
+          "path": "registry/designs/giwa/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/giwa/fonts.ts"
+        },
+        {
+          "path": "registry/designs/giwa/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/giwa/hooks/usePointerParallax.ts"
+        },
+        {
+          "path": "registry/designs/giwa/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/giwa/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/giwa/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/giwa/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/giwa/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/giwa/page.tsx"
+        },
+        {
+          "path": "registry/designs/giwa/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/giwa/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/giwa/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/giwa/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"GIWA — Under Painted Eaves\" installs into app/oneshot/giwa/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 8,
+        "accent": "#8a3b2a",
+        "theme": "light",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "hanji-slate",
+      "type": "registry:block",
+      "title": "HANJI SLATE — The Paper Computer",
+      "description": "A calm product page for a fictional e-ink writing slate — hanji, upgraded — with a bento grid that FLIP-morphs open, a scroll-scrubbed exploded device drawn in SVG, and a 120ms e-ink refresh flash.",
+      "dependencies": [],
+      "categories": [
+        "bento-product",
+        "flip-layout",
+        "svg-line-draw",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/hanji-slate/components/BentoGrid.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanji-slate/components/BentoGrid.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/components/DeviceArt.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanji-slate/components/DeviceArt.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/components/ExplodedView.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanji-slate/components/ExplodedView.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanji-slate/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/components/SlateFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanji-slate/components/SlateFooter.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/components/SpecSheet.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanji-slate/components/SpecSheet.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/hanji-slate/fonts.ts"
+        },
+        {
+          "path": "registry/designs/hanji-slate/hooks/useFlip.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanji-slate/hooks/useFlip.ts"
+        },
+        {
+          "path": "registry/designs/hanji-slate/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanji-slate/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/hanji-slate/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanji-slate/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/hanji-slate/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/hanji-slate/page.tsx"
+        },
+        {
+          "path": "registry/designs/hanji-slate/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/hanji-slate/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/hanji-slate/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/hanji-slate/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"HANJI SLATE — The Paper Computer\" installs into app/oneshot/hanji-slate/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 11,
+        "accent": "#e8830c",
+        "theme": "light",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "lumen-nord",
+      "type": "registry:block",
+      "title": "LUMEN NORD — Aurora Forecast Bureau",
+      "description": "A fictional Nordic–Korean joint observatory that issues the night's aurora forecast like a weather bulletin — a pointer-warped WebGL aurora over specular glass panels of Kp readings and poetic advisories.",
+      "dependencies": [],
+      "categories": [
+        "glass-futurism",
+        "webgl-shader",
+        "glass-specular",
+        "svg-line-draw"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/lumen-nord/components/AuroraCanvas.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/lumen-nord/components/AuroraCanvas.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/components/BulletinPanels.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/lumen-nord/components/BulletinPanels.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/lumen-nord/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/components/ForecastLog.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/lumen-nord/components/ForecastLog.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/components/GlassPanel.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/lumen-nord/components/GlassPanel.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/lumen-nord/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/lumen-nord/fonts.ts"
+        },
+        {
+          "path": "registry/designs/lumen-nord/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/lumen-nord/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/lumen-nord/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/lumen-nord/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/lumen-nord/hooks/useScrollTemperature.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/lumen-nord/hooks/useScrollTemperature.ts"
+        },
+        {
+          "path": "registry/designs/lumen-nord/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/lumen-nord/page.tsx"
+        },
+        {
+          "path": "registry/designs/lumen-nord/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/lumen-nord/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/lumen-nord/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/lumen-nord/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"LUMEN NORD — Aurora Forecast Bureau\" installs into app/oneshot/lumen-nord/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 5,
+        "accent": "#6ff2c3",
+        "theme": "dark",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "ondo",
+      "type": "registry:block",
+      "title": "ONDO — Perfume Atelier, Seoul",
+      "description": "A Seoul perfume house that titles its scents by temperature — the bottle drawn entirely in SVG gradients and seen through a hand-rolled canvas pane of rippling glass.",
+      "dependencies": [],
+      "categories": [
+        "luxury-fashion",
+        "pointer-parallax",
+        "clip-path-reveal",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/ondo/components/Bottle.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ondo/components/Bottle.tsx"
+        },
+        {
+          "path": "registry/designs/ondo/components/Collection.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ondo/components/Collection.tsx"
+        },
+        {
+          "path": "registry/designs/ondo/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ondo/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/ondo/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ondo/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/ondo/components/Notes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ondo/components/Notes.tsx"
+        },
+        {
+          "path": "registry/designs/ondo/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/ondo/fonts.ts"
+        },
+        {
+          "path": "registry/designs/ondo/hooks/useBreath.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ondo/hooks/useBreath.ts"
+        },
+        {
+          "path": "registry/designs/ondo/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ondo/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/ondo/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ondo/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/ondo/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/ondo/page.tsx"
+        },
+        {
+          "path": "registry/designs/ondo/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/ondo/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/ondo/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/ondo/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"ONDO — Perfume Atelier, Seoul\" installs into app/oneshot/ondo/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 9,
+        "accent": "#d8c39a",
+        "theme": "dark",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "pale-signal",
       "type": "registry:block",
       "title": "PALE.SIGNAL — Deep Sky Listening Post",
@@ -168,6 +539,96 @@
         "no": 3,
         "accent": "#33ff66",
         "theme": "dark",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "raster",
+      "type": "registry:block",
+      "title": "RASTER — Bureau for Grid Systems",
+      "description": "A fictional standards bureau that certifies grid systems the way a metrology institute certifies weights — one red, a width-axis wordmark, and a 6-to-12-column re-certification that FLIPs the whole sheet into place.",
+      "dependencies": [],
+      "categories": [
+        "swiss-typographic",
+        "flip-layout",
+        "char-split-reveal",
+        "svg-line-draw"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/raster/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/raster/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/raster/components/GridProvider.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/raster/components/GridProvider.tsx"
+        },
+        {
+          "path": "registry/designs/raster/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/raster/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/raster/components/ModularScale.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/raster/components/ModularScale.tsx"
+        },
+        {
+          "path": "registry/designs/raster/components/SpecimenTable.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/raster/components/SpecimenTable.tsx"
+        },
+        {
+          "path": "registry/designs/raster/components/WidthMark.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/raster/components/WidthMark.tsx"
+        },
+        {
+          "path": "registry/designs/raster/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/raster/fonts.ts"
+        },
+        {
+          "path": "registry/designs/raster/hooks/useFlip.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/raster/hooks/useFlip.ts"
+        },
+        {
+          "path": "registry/designs/raster/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/raster/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/raster/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/raster/page.tsx"
+        },
+        {
+          "path": "registry/designs/raster/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/raster/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/raster/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/raster/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"RASTER — Bureau for Grid Systems\" installs into app/oneshot/raster/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 10,
+        "accent": "#e30613",
+        "theme": "light",
         "prompt": {
           "model": "claude-fable-5",
           "modelLabel": "Claude Fable 5",

@@ -35,6 +35,145 @@
     "featured": false
   },
   {
+    "slug": "giwa",
+    "no": 8,
+    "title": {
+      "en": "GIWA — Under Painted Eaves",
+      "ko": "기와 — 처마 아래 단청"
+    },
+    "description": {
+      "en": "A palace-eave restoration guild documents dancheong and the five directional colors on hanji paper — a roofline that draws itself in ink and then floods with pigment, and four dancheong motifs rebuilt as pure SVG symmetry.",
+      "ko": "궁궐 처마 복원공방이 한지 위에 단청과 오방색을 기록한다 — 먹선으로 스스로를 그린 뒤 안료로 물드는 처마선, 그리고 순수 SVG 대칭으로 다시 지은 네 가지 단청 문양."
+    },
+    "aesthetic": "korean-traditional",
+    "techniques": [
+      "svg-line-draw",
+      "clip-path-reveal",
+      "feturbulence-texture",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#8a3b2a",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "hanji-slate",
+    "no": 11,
+    "title": {
+      "en": "HANJI SLATE — The Paper Computer",
+      "ko": "한지 슬레이트 — 종이 컴퓨터"
+    },
+    "description": {
+      "en": "A calm product page for a fictional e-ink writing slate — hanji, upgraded — with a bento grid that FLIP-morphs open, a scroll-scrubbed exploded device drawn in SVG, and a 120ms e-ink refresh flash.",
+      "ko": "가상의 전자잉크 필기 슬레이트를 위한 고요한 제품 페이지 — 벤토 타일이 FLIP으로 펼쳐지고, SVG로 그린 기기가 스크롤에 따라 분해되며, 모드를 바꾸면 전자잉크처럼 화면이 한 번 반전됩니다."
+    },
+    "aesthetic": "bento-product",
+    "techniques": [
+      "flip-layout",
+      "svg-line-draw",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#e8830c",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "lumen-nord",
+    "no": 5,
+    "title": {
+      "en": "LUMEN NORD — Aurora Forecast Bureau",
+      "ko": "루멘 노르드 — 오로라 예보국"
+    },
+    "description": {
+      "en": "A fictional Nordic–Korean joint observatory that issues the night's aurora forecast like a weather bulletin — a pointer-warped WebGL aurora over specular glass panels of Kp readings and poetic advisories.",
+      "ko": "밤하늘의 오로라 예보를 일기예보처럼 발행하는 가상의 북유럽–한국 합동 관측소 — 포인터에 휘어지는 WebGL 오로라 아래, Kp 지수와 시적인 관측 지침을 담은 유리 패널들."
+    },
+    "aesthetic": "glass-futurism",
+    "techniques": [
+      "webgl-shader",
+      "glass-specular",
+      "svg-line-draw"
+    ],
+    "industry": [
+      "science"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "webgl",
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#6ff2c3",
+    "theme": "dark",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "ondo",
+    "no": 9,
+    "title": {
+      "en": "ONDO — Perfume Atelier, Seoul",
+      "ko": "온도 — 향의 아틀리에, 서울"
+    },
+    "description": {
+      "en": "A Seoul perfume house that titles its scents by temperature — the bottle drawn entirely in SVG gradients and seen through a hand-rolled canvas pane of rippling glass.",
+      "ko": "향에 온도로 이름을 붙이는 서울의 향수 하우스 — SVG 그라디언트로만 그린 보틀을, 손으로 짠 캔버스 유리 너머로 바라본다."
+    },
+    "aesthetic": "luxury-fashion",
+    "techniques": [
+      "pointer-parallax",
+      "clip-path-reveal",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "fashion-beauty"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "svg",
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#d8c39a",
+    "theme": "dark",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
     "slug": "pale-signal",
     "no": 3,
     "title": {
@@ -67,5 +206,39 @@
     "theme": "dark",
     "published": "2026-07-10",
     "featured": true
+  },
+  {
+    "slug": "raster",
+    "no": 10,
+    "title": {
+      "en": "RASTER — Bureau for Grid Systems",
+      "ko": "라스터 — 그리드 시스템 인증국"
+    },
+    "description": {
+      "en": "A fictional standards bureau that certifies grid systems the way a metrology institute certifies weights — one red, a width-axis wordmark, and a 6-to-12-column re-certification that FLIPs the whole sheet into place.",
+      "ko": "그리드 시스템을 도량형처럼 인증하는 가상의 표준국 — 빨강 하나, 폭 축으로 말하는 워드마크, 그리고 페이지 전체가 FLIP으로 제자리를 찾아가는 6단↔12단 재인증."
+    },
+    "aesthetic": "swiss-typographic",
+    "techniques": [
+      "flip-layout",
+      "char-split-reveal",
+      "svg-line-draw"
+    ],
+    "industry": [
+      "science"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#e30613",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": false
   }
 ]

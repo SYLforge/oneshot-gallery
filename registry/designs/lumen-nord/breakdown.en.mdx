@@ -1,0 +1,226 @@
+# LUMEN NORD — breakdown
+
+## The hook
+
+Weather bureaus commit to numbers about chaos every single night, and
+nobody finds that strange. So: an observatory — one station on a Norwegian
+ridge, one office in Seoul — that forecasts the aurora with the same straight
+face. Bulletin number, confidence percentage, visibility window, and one
+advisory line per night that gives the game away: "78% chance the sky
+remembers it is a curtain."
+
+The design bet: if the numbers are played completely straight, the poetry
+between them lands harder — and a WebGL shader can carry an entire page's
+visuals without a single image file.
+
+## Art direction
+
+Glass futurism usually dies by genericism: blur a card, add a gradient,
+ship a SaaS page. Two decisions keep the bureau out of that territory.
+First, the display face is a serif — Hahmlet, drawn for Hangul and Latin
+together — over Sora's instrument voice. A serif masthead over aurora light
+reads as an old institution with new equipment, which is exactly the
+fiction. Second, the body font stack is `Sora, Hahmlet, sans-serif`, so
+Korean body text falls through into the serif *on purpose*. The Korean is
+not styled like the English; it has its own voice, and `word-break:
+keep-all` keeps its phrases whole.
+
+The palette is the brief's five tokens, with one addition earned by
+contrast math: ice at 72% alpha (≈ `#a4adc5`, 8.1:1) for secondary text,
+because horizon blue `#27406b` measures 1.9:1 and is therefore demoted to
+hairlines and the ridge glow. Magenta veil sits at 5.8:1 — fine for labels
+and hems, banned from long body text by rule.
+
+## Technique 1 — the aurora (webgl-shader)
+
+The sky is one fragment shader on one oversized triangle — no libraries,
+no quad seam, one draw call. The field is classic domain warping: a
+3-octave value-noise fbm advects the domain of a second fbm, and the result
+is sharpened into curtains with a ridge function:
+
+```glsl
+float flow = fbm(vec2(q.x * 1.1 + t * 0.6, q.y * 1.8 - t * 0.25));
+float rib  = fbm(vec2(q.x * 2.4 + flow * 2.2 - t * 0.4,
+                      q.y * 0.9 + flow * 0.8 + t * 0.15));
+
+float rid = 1.0 - abs(rib * 2.0 - 1.0);  // fold the noise into ridges
+rid = pow(rid, 2.6);                     // pinch ridges into curtains
+```
+
+`1 − |2n − 1|` folds smooth noise into creases; the power sharpens the
+creases into hanging bands. A fine vertical noise (`q.x * 24.0`) combs the
+bands into rays, and the color mix keys on height plus flow — green skirt
+low, magenta hem high, exactly how real curtains stratify.
+
+The pointer does not move a light around; it warps the field itself:
+
+```glsl
+vec2 d = q - ptr;
+float fall = exp(-dot(d, d) * 4.5);            // gaussian, capped by design
+q += normalize(d + 0.0001) * fall * 0.22 * u_energy;
+```
+
+Because the CPU lerps the pointer (0.07/frame) and its energy
+(attack 0.05 / release 0.02), the warp arrives like weather, not like a
+cursor. After 3.2 seconds of silence — or on touch — a slow lissajous
+drift takes the wheel and the sky scans on its own.
+
+Two production details worth stealing: a per-frame hash dither
+(±0.003 per channel) added to the final color, which erases the banding
+that dark gradients otherwise show on consumer panels; and hashed stars
+computed per-cell (not per-pixel random), so each star is stable in place
+and twinkles at its own rate.
+
+**The fallback is layer order, not a code path.** An always-painted CSS
+aurora — three blurred radial blobs, a conic sweep, drifting on 26s/19s
+alternate cycles — sits underneath the canvas, and the canvas fades in
+only after a first frame actually lands (`wrap.classList.add("is-live")`
+after the first `draw()`). No WebGL, a failed compile, and
+`webglcontextlost` all resolve to the same thing: the CSS sky was already
+there. Nothing to detect at render time, no blank hero, ever.
+
+## Technique 2 — glass that notices you (glass-specular)
+
+The panels are `backdrop-filter: blur(14px) saturate(150%)` — but blur
+over a flat color is just a gray rectangle. So the bulletin section paints
+a repeating multi-size radial-gradient star speckle behind the panels,
+purely so the blur has detail to destroy. That destroyed detail is what
+reads as "glass."
+
+The specular highlight is two custom properties and zero re-renders:
+
+```tsx
+// GlassPanel.tsx — written straight to the element, no React state
+const r = el.getBoundingClientRect();
+el.style.setProperty("--lumen-gx", `${(((ev.clientX - r.left) / r.width) * 100).toFixed(2)}%`);
+el.style.setProperty("--lumen-gy", `${(((ev.clientY - r.top) / r.height) * 100).toFixed(2)}%`);
+el.style.setProperty("--lumen-gs", "1");
+```
+
+```css
+.lumen-glass__spec {
+  background: radial-gradient(
+    230px 175px at var(--lumen-gx) var(--lumen-gy),
+    rgba(223, 233, 255, 0.16), rgba(223, 233, 255, 0.05) 46%, transparent 72%
+  );
+  opacity: var(--lumen-gs);
+}
+```
+
+On `pointerleave` the properties are *removed*, so the CSS defaults take
+over: highlight resting top-center at 55% strength. That resting state is
+the touch story — panels on a phone are lit glass, not dead glass, and
+nothing about the page's meaning ever depended on hover. The strength
+eases because `--lumen-gs` is registered with `@property`; where that is
+unsupported, the highlight snaps, which no one will ever file a bug about.
+
+Contrast is budgeted, not hoped for: the panel body is polar-night-toned
+glass at 58% alpha, which keeps ice text at or above 5.7:1 even if the
+brightest patch of afterglow drifts directly behind a panel.
+
+## Technique 3 — the forecast draws itself (svg-line-draw)
+
+The night's predicted intensity is a Catmull-Rom spline through seven Kp
+readings, emitted as cubic beziers at module scope (it is data, not
+state). The draw trick is `pathLength` normalization:
+
+```tsx
+<path className="lumen-spark__line" d={LINE} pathLength={1} />
+```
+
+```css
+.lumen-js .lumen-spark__line { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.lumen-js .lumen-spark.is-visible .lumen-spark__line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1900ms cubic-bezier(0.33, 0, 0.2, 1) 200ms;
+}
+```
+
+With `pathLength` pinned to 1, the dash math never needs
+`getTotalLength()` — no layout read, no resize listener, and the CSS never
+has to know how long the curve really is. The `is-visible` class comes from
+the same IntersectionObserver that runs every scroll reveal; the sparkline
+just does more with it. Dots stagger in on inline transition-delays after
+the line passes them; the area fill fades up last. The Kp 5 storm threshold
+is a labeled dashed line, because a forecast without a threshold is just a
+squiggle.
+
+Both pre-states — dash hidden, dots transparent — are gated behind
+`.lumen-js`. No JavaScript, no missing chart.
+
+## The scroll temperature
+
+The page has one color that is allowed to change: `--lumen-blend`, lerped
+in JS from magenta veil to aurora green as you scroll (rAF-throttled,
+passive listener). Section readings, the glass panels' top hairlines, and
+the method list's borders all borrow it — so the top of the page is hemmed
+in dusk magenta and the bottom in deep-night green. The background
+`color-mix`es toward `#080b20` on the same variable, and the shader
+receives the same scroll progress amplified ×3 as `u_temp`, shifting its
+hue weights and darkening its base while the hero is still on screen.
+Subtle on any single element; unmistakable as a whole.
+
+## Motion math
+
+- **Pointer lerp 0.07/frame** (60fps-normalized): half-life ≈ 9.6 frames
+  ≈ 160ms. The warp trails your hand by a beat — atmosphere, not UI.
+- **Energy attack 0.05 / release 0.02:** the sky notices you in ~13 frames
+  of half-life and forgets you in ~34. Attention arrives fast and decays
+  slowly; that asymmetry is the bureau's whole personality.
+- **Warp cap:** `exp(−4.5·d²) × 0.22` aspect-units — at full energy the
+  displacement peaks around a fifth of the viewport height and dies within
+  a radius of it. The sky bends; it never tears.
+- The reveal ease `cubic-bezier(0.22, 1, 0.36, 1)` front-loads travel so
+  700ms reads calm rather than slow; stagger is per observer batch (80ms),
+  so only elements that arrive together queue.
+
+## Performance notes
+
+- One rAF for the whole page, owned by the shader. It stops when the hero
+  leaves the viewport (IntersectionObserver, 80px margin), when the tab
+  hides (visibilitychange), under reduced motion (never starts), and when
+  the visitor presses "pause the sky."
+- DPR is capped at 2 — a gradient field gains nothing above it. `dt` is
+  clamped to 50ms so returning from a background tab cannot lurch the
+  simulation.
+- The scroll-temperature listener is passive and rAF-coalesced: at most
+  one style write per frame, all custom properties, no layout reads.
+- Specular tracking writes two custom properties per pointermove on one
+  element — no React state, no re-render, no getBoundingClientRect cache
+  invalidation beyond the one read.
+- Everything CSS animates is transform or opacity; the CSS aurora's drift
+  is paused via `animation-play-state` while the opaque canvas covers it,
+  so the understudy stops costing compositor time the moment WebGL takes
+  over.
+
+## Accessibility notes
+
+- **Reduced motion:** the shader draws exactly one composed frame
+  (t = 38s, drift centered, energy 0.55) and never starts its loop; the
+  CSS aurora holds still; reveals and the sparkline are simply visible;
+  the pause button hides because there is nothing left to pause.
+- **No-JS:** every pre-reveal state lives under `.lumen-js`, added on
+  mount. Without JavaScript the page is the full bulletin over the CSS
+  aurora — readable end to end.
+- **Pause control:** the hero is an autonomous animation longer than five
+  seconds, so it gets a real `button` with `aria-pressed` (WCAG 2.2.2)
+  that freezes both the shader and the CSS fallback.
+- **Semantics and labels:** the aurora wrapper is `aria-hidden` (it is
+  weather, not content); the sparkline is `role="img"` with a bilingual
+  description of the actual curve; the gauge is decorative beside its
+  text value.
+- **Contrast:** ice 14.9:1, secondary 8.1:1, green 13.1:1, magenta 5.8:1
+  (labels only); the masthead sits on a night scrim so worst-case
+  curtain-behind-text still clears AA; horizon blue never carries meaning.
+
+## Remix ideas
+
+1. **Tide bureau.** Same bones, sea-level palette: the shader's curtains
+   become swell bands (rotate the ridge 90°), the sparkline becomes a tide
+   table, the advisory panel tells you when the harbor holds its breath.
+2. **Meteor watch.** Keep the sky; add hashed shooting stars (a second
+   per-cell hash with a time-gated streak) and swap the Kp gauge for a
+   ZHR counter. The pause button becomes "hold the sky."
+3. **Light-pollution atlas.** Invert the fiction: the bureau forecasts
+   darkness itself. The scroll temperature runs city-amber to true black,
+   and the glass panels report which neighborhoods will see stars at all.

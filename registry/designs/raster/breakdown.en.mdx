@@ -1,0 +1,241 @@
+# RASTER — breakdown
+
+## The hook
+
+Somewhere there is an institute that keeps the reference kilogram in a
+vault. RASTER is its typographic sibling: a bureau that certifies grid
+systems, stamps them, registers them, and — in one glorious 1998 ruling —
+deprecates them ("odd column counts do not divide"). The page never
+explains the joke, because to the bureau it is not a joke. You are handed
+standard sheet no. 10, set on certified grid no. 04, and invited to
+inspect it.
+
+The design bet: restraint as spectacle. Three colors, one typeface family,
+and every drop of expressiveness routed through a single variable-font
+axis — Archivo's width, 62 to 125. When a page owns exactly one trick, the
+trick had better be load-bearing.
+
+## Art direction
+
+Swiss typographic style is usually invoked as a mood. Here it is enforced
+as law. Paper `#f7f7f5`, ink `#111111`, and one red `#e30613` — the
+canonical Swiss red of railway clocks and federal signage. The red turned
+out to be a lesson in honesty: the brief claimed it fails AA on paper at
+~4.0:1, but measured properly it passes at **4.55:1 — by 0.05**. A pass
+without margin is not a certification, so the policy stands as if it had
+failed: red draws marks, hairlines, the stamp, and large display fills;
+every red status mark is doubled by black text; small red text does not
+exist on this sheet.
+
+Type hierarchy is built almost entirely from *width*, not size or color.
+Body sits at `'wdth' 100`, headings at 116, the wordmark rests at 125, and
+the hover state drops a single glyph to 62. Weight barely moves. This is
+the page's whole personality: where another site would reach for a second
+color or a bigger font, RASTER gets wider.
+
+The construction is exposed on purpose. A fixed overlay renders the actual
+column grid — same 1440px frame, same gutter, same tracks as the content —
+in 16% red hairlines with a 2.5% tint, and the hero adds a 24px baseline
+grid. The page wears its own blueprint, which raises the stakes: any
+element that missed the grid would be visibly, publicly wrong.
+
+## Technique 1 — the 6↔12 FLIP re-certification
+
+The signature interaction: a segmented control re-certifies the sheet at
+six or twelve columns, and everything with a `data-flip` attribute slides
+to its new lawful cell. The mechanism is classic FLIP — First, Last,
+Invert, Play — with React in the loop via `flushSync`, so the layout
+change happens synchronously between the two measurements:
+
+```tsx
+// GridProvider.tsx — the state change is the L in FLIP
+flip(() => {
+  flushSync(() => setColsState(next));
+});
+```
+
+```ts
+// useFlip.ts — measure, mutate, invert, release
+const first = targets.map((el) => el.getBoundingClientRect()); // FIRST
+mutate();                                                      // LAST exists now
+const l = el.getBoundingClientRect();
+el.style.transform =
+  `translate(${f.left - l.left}px, ${f.top - l.top}px) ` +
+  `scale(${f.width / l.width}, ${f.height / l.height})`;       // INVERT
+// two rAFs later: clear the inline transform and let
+// `transition: transform 560ms` in styles.css PLAY it home.
+```
+
+Three details make it robust rather than demo-grade:
+
+- **Interruption safety.** `getBoundingClientRect` includes any in-flight
+  transform, so First is the element's *visual* position. Re-toggling
+  mid-animation starts the new morph from where the eye is, not from a
+  layout position nobody saw. A stored rAF handle is cancelled so a
+  pending release can't clobber a fresh inversion.
+- **Read/write discipline.** All Firsts are read, then all styles written,
+  then one mutation, then all Lasts — exactly two layout passes per
+  toggle, both user-initiated. Nothing measures during scroll.
+- **Offscreen skipping.** Blocks whose First *and* Last rects are far
+  outside the viewport get no transform; they animate for nobody.
+
+The column overlay deliberately does *not* FLIP. It is two complete grids
+(12 and 6) cross-faded by opacity in 240ms, roughly half the 560ms
+re-snap — so the law changes first, and the content visibly complies.
+That ordering is the fiction in one interaction.
+
+## Technique 2 — the width axis, split by glyph
+
+The wordmark animates `font-variation-settings: 'wdth'` from 62 to 125 per
+glyph with a 55ms stagger — the letters arrive narrow and settle wide, a
+live demonstration of the axis that the whole page is built on. Split text
+is an accessibility trap, so the split is the standard safe pattern: the
+`<h1>` carries `aria-label="RASTER"`, and the glyph spans live inside an
+`aria-hidden` wrapper. Screen readers get one word; the animation gets 6
+elements:
+
+```tsx
+<h1 aria-label="RASTER">
+  <span className="raster-mark" aria-hidden="true">
+    <span className="raster-mark__ch" style={{ "--i": 0 }}>R</span>
+    …
+```
+
+The CSS has one subtlety worth stealing. The entrance animation uses
+`backwards` fill (not `forwards`), and its 100% keyframe is byte-identical
+to the resting style:
+
+```css
+.raster-mark__ch {
+  font-variation-settings: "wdth" 125;                 /* resting = 100% keyframe */
+  transition: font-variation-settings 300ms var(--raster-ease);
+}
+.raster-js .is-on .raster-mark__ch {
+  animation: raster-wdth-in 1100ms var(--raster-ease) backwards;
+  animation-delay: calc(var(--i) * 55ms);
+}
+```
+
+A `forwards`-filled animation keeps overriding the property, which silently
+kills any later hover transition. With `backwards`, the moment the
+animation ends the element falls back to its base style — same value, no
+jump — and the 300ms hover transition (glyph narrows to 62 under the
+cursor) simply works. The footer verdict STILL CORRECT reuses the same
+component, armed by an IntersectionObserver instead of mount. Words are
+wrapped in `white-space: nowrap` spans separated by real spaces, so the
+mark can break between words on a 360px sheet but never inside one.
+
+## Technique 3 — stamps that draw themselves
+
+The certification stamp (two rings, four ticks) and the footer rule draw in
+with the SVG dash trick, normalized by `pathLength`:
+
+```tsx
+<circle cx="66" cy="66" r="62" pathLength={1} />
+```
+
+```css
+.raster-js .is-on .raster-stamp__draw {
+  stroke-dasharray: 1;      /* one dash, one gap — each the full path */
+  stroke-dashoffset: 1;     /* start fully hidden */
+  animation: raster-draw 900ms var(--raster-ease) forwards;
+}
+@keyframes raster-draw { to { stroke-dashoffset: 0; } }
+```
+
+`pathLength={1}` means no JavaScript ever measures `getTotalLength()` — a
+circle of any radius, or the footer's 100-unit line, animates with the same
+three lines of CSS. Rings stagger 0/200/420ms; the mono lettering fades in
+at 720ms, after the geometry exists — a seal is stamped, then read.
+
+The reduced-motion handling has a trap worth documenting: killing the
+animation alone would freeze the strokes at `dashoffset: 1` — invisible
+forever. The media query therefore also resets the dash properties:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .raster-root .raster-stamp__draw,
+  .raster-root .raster-cert__line {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+```
+
+## The modular scale, scrubbed
+
+Section 02 teaches the type system by performing it. Six steps of ratio
+1.333 (the perfect fourth: 1 / 1.333 / 1.777 / 2.369 / 3.157 / 4.209×
+base) are annotated in Space Mono, and scroll drives each word from one
+step below its size up to its certified value.
+
+The math is the point: animating `font-size` would relayout the document
+every frame, so each word's `font-size` is already the settled value and
+scroll drives `transform: scale()` from `1 / 1.333 ≈ 0.750` to `1` —
+**exactly one ratio step of travel**. The heading arrives at its size by
+walking the scale itself, and the compositor does all the work:
+
+```ts
+const p = clamp01((vh * 0.92 - rect.top) / (rect.height + vh * 0.4));
+const local = clamp01((p - i * 0.09) / 0.5);   // 0.09 stagger per step
+const eased = local * local * (3 - 2 * local); // smoothstep
+el.style.transform = `scale(${(S0 + (1 - S0) * eased).toFixed(4)})`;
+```
+
+Smoothstep (`3t² − 2t³`) has zero velocity at both ends, so each word
+eases out of rest and settles without a snap — a scroll-linked animation
+needs its easing *inside* the mapping, since there is no time-based
+transition to ease for you. One `getBoundingClientRect` per rAF, reads
+before writes, early exit when the section is more than 1.6 viewports
+away. Transforms exist only as inline styles set by this effect, so no-JS
+and reduced-motion render the settled scale by construction.
+
+## Performance notes
+
+- **No persistent loops.** The crosshair and the scale scrub schedule one
+  rAF per input event (`pointermove`, `scroll`) and clear the handle when
+  it runs; an idle page costs zero frames.
+- The FLIP costs two layout passes per toggle — both user-initiated, never
+  during scroll — and offscreen blocks are skipped entirely.
+- Everything animated is `transform`, `opacity`,
+  `font-variation-settings`, or `stroke-dashoffset`: no layout, no paint
+  storms. `font-variation-settings` re-rasterizes glyphs but the wordmark
+  is one line of text, once, on load.
+- The overlay is static DOM (18 spans) whose only animated property is
+  opacity; the baseline grid is a single `repeating-linear-gradient`.
+- Listeners, observers, and rAF handles all clean up on unmount; the
+  status line is React state, not a DOM mutation, so hydration stays
+  consistent.
+
+## Accessibility notes
+
+- **Reduced motion:** a blanket `animation/transition: none` over the root
+  (safe because every base state is the finished document), dash-property
+  resets for the line draws, and JS-side early returns: FLIP becomes an
+  instant re-layout, the scale renders settled, the crosshair stands at
+  the certified center reading "x 0.500 y 0.500".
+- **No-JS:** `.raster-js` gates every entrance animation and the FLIP
+  transition; the static page is the complete 12-column sheet.
+- **Keyboard & touch:** the 06/12 control is two native buttons with
+  `aria-pressed` inside a labelled group; a `role="status"` line announces
+  each re-certification. The crosshair only arms itself on
+  `(hover: hover) and (pointer: fine)`.
+- **Semantics:** the wordmark and verdict use aria-label + aria-hidden
+  glyphs; the stamp is decorative (`aria-hidden`) because the
+  certification claim lives in the adjacent spec text; the registry is a
+  real `<table>` with `scope` on every header.
+- **Contrast:** ink 17.6:1, annotations 5.6:1, white-on-red block labels
+  4.9:1; red text appears only at display sizes; every red mark is doubled
+  by black text.
+
+## Remix ideas
+
+1. **Bureau of weights.** Keep everything; replace grids with mass — the
+   FLIP re-snaps a table of reference weights between metric and imperial,
+   and the stamp certifies "1.000 kg. still 1.000 kg."
+2. **Deprecation office.** Invert the mood: the registry grows, the red ✕
+   multiplies, and the footer verdict animates NO LONGER CORRECT — a page
+   about standards dying, set in the same deadpan.
+3. **Width-axis clock.** Drive `'wdth'` from the time of day instead of
+   load — the wordmark breathes 62→125 over 24 hours, one imperceptible
+   certification per day. The crosshair reads the timestamp.

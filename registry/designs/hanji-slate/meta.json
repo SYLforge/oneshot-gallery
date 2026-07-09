@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "hanji-slate",
+  "no": 11,
+  "title": {
+    "en": "HANJI SLATE — The Paper Computer",
+    "ko": "한지 슬레이트 — 종이 컴퓨터"
+  },
+  "description": {
+    "en": "A calm product page for a fictional e-ink writing slate — hanji, upgraded — with a bento grid that FLIP-morphs open, a scroll-scrubbed exploded device drawn in SVG, and a 120ms e-ink refresh flash.",
+    "ko": "가상의 전자잉크 필기 슬레이트를 위한 고요한 제품 페이지 — 벤토 타일이 FLIP으로 펼쳐지고, SVG로 그린 기기가 스크롤에 따라 분해되며, 모드를 바꾸면 전자잉크처럼 화면이 한 번 반전됩니다."
+  },
+  "aesthetic": "bento-product",
+  "techniques": ["flip-layout", "svg-line-draw", "pointer-parallax"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#e8830c",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

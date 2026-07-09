@@ -2,9 +2,14 @@
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
-export const demoSlugs = ["blunt","pale-signal"] as const;
+export const demoSlugs = ["blunt","giwa","hanji-slate","lumen-nord","ondo","pale-signal","raster"] as const;
 
 export const demoIndex: Record<string, ComponentType> = {
   "blunt": dynamic(() => import("@/registry/designs/blunt/page")),
+  "giwa": dynamic(() => import("@/registry/designs/giwa/page")),
+  "hanji-slate": dynamic(() => import("@/registry/designs/hanji-slate/page")),
+  "lumen-nord": dynamic(() => import("@/registry/designs/lumen-nord/page")),
+  "ondo": dynamic(() => import("@/registry/designs/ondo/page")),
   "pale-signal": dynamic(() => import("@/registry/designs/pale-signal/page")),
+  "raster": dynamic(() => import("@/registry/designs/raster/page")),
 };

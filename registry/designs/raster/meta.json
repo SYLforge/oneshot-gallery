@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "raster",
+  "no": 10,
+  "title": {
+    "en": "RASTER — Bureau for Grid Systems",
+    "ko": "라스터 — 그리드 시스템 인증국"
+  },
+  "description": {
+    "en": "A fictional standards bureau that certifies grid systems the way a metrology institute certifies weights — one red, a width-axis wordmark, and a 6-to-12-column re-certification that FLIPs the whole sheet into place.",
+    "ko": "그리드 시스템을 도량형처럼 인증하는 가상의 표준국 — 빨강 하나, 폭 축으로 말하는 워드마크, 그리고 페이지 전체가 FLIP으로 제자리를 찾아가는 6단↔12단 재인증."
+  },
+  "aesthetic": "swiss-typographic",
+  "techniques": ["flip-layout", "char-split-reveal", "svg-line-draw"],
+  "industry": ["science"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#e30613",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

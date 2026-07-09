@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "lumen-nord",
+  "no": 5,
+  "title": {
+    "en": "LUMEN NORD — Aurora Forecast Bureau",
+    "ko": "루멘 노르드 — 오로라 예보국"
+  },
+  "description": {
+    "en": "A fictional Nordic–Korean joint observatory that issues the night's aurora forecast like a weather bulletin — a pointer-warped WebGL aurora over specular glass panels of Kp readings and poetic advisories.",
+    "ko": "밤하늘의 오로라 예보를 일기예보처럼 발행하는 가상의 북유럽–한국 합동 관측소 — 포인터에 휘어지는 WebGL 오로라 아래, Kp 지수와 시적인 관측 지침을 담은 유리 패널들."
+  },
+  "aesthetic": "glass-futurism",
+  "techniques": ["webgl-shader", "glass-specular", "svg-line-draw"],
+  "industry": ["science"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["webgl", "svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#6ff2c3",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

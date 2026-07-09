@@ -1,0 +1,1002 @@
+/* ==========================================================================
+   RASTER — bureau for grid systems
+   swiss-typographic · paper, ink, one red · the width axis does the talking
+   Scoped by convention to .raster-root; classes prefixed raster-.
+   ========================================================================== */
+
+.raster-root {
+  /* -- palette: three colors, ever ------------------------------------- */
+  --raster-paper: #f7f7f5;   /* the sheet */
+  --raster-ink: #111111;     /* text and rules — 17.6:1 on paper */
+  --raster-red: #e30613;     /* the one red — 4.55:1: marks, rules, large type only */
+  --raster-hairline: rgba(227, 6, 19, 0.28);        /* derived: overlay hairline */
+  --raster-hairline-faint: rgba(227, 6, 19, 0.16);  /* derived: overlay hairline, resting */
+  --raster-tint: rgba(227, 6, 19, 0.025);           /* derived: column tint */
+  --raster-rule-soft: rgba(17, 17, 17, 0.25);       /* derived: row hairlines */
+  --raster-ink-dim: rgba(17, 17, 17, 0.66);         /* ≈ #5f5f5e — 5.6:1, annotations */
+
+  /* -- type -------------------------------------------------------------- */
+  --raster-font-main: var(--font-archivo), "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --raster-font-ko: var(--font-plex-kr), "IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
+  /* Hangul falls through Archivo into IBM Plex Sans KR even without :lang */
+  --raster-font-stack: var(--font-archivo), var(--font-plex-kr), "Helvetica Neue", Arial, sans-serif;
+  --raster-font-mono: var(--font-space-mono), var(--font-plex-kr), "Courier New", monospace;
+
+  /* -- the certified construction ---------------------------------------- */
+  --raster-maxw: 1440px;
+  --raster-margin: clamp(16px, 4vw, 48px);
+  --raster-gutter: clamp(8px, 1.6vw, 24px);
+  --raster-baseline: 24px;
+
+  /* -- motion: brisk, no overshoot — the bureau does not bounce ----------- */
+  --raster-ease: cubic-bezier(0.2, 0, 0, 1);
+  --raster-flip-ms: 560ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--raster-paper);
+  color: var(--raster-ink);
+  font-family: var(--raster-font-stack);
+  font-size: clamp(15px, 0.4vw + 13.6px, 17px);
+  font-variation-settings: "wdth" 100;
+  line-height: 1.55;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: its own family, its own weight logic. */
+.raster-root :lang(ko) {
+  font-family: var(--raster-font-ko);
+  letter-spacing: -0.005em;
+}
+
+/* Approval-red selection, scoped to the entry root. */
+.raster-root ::selection,
+.raster-root::selection {
+  background: var(--raster-red);
+  color: #ffffff;
+}
+
+/* Keyboard focus: the bureau's red, squared, unambiguous. */
+.raster-root :focus-visible {
+  outline: 2px solid var(--raster-red);
+  outline-offset: 2px;
+}
+
+/* The inspector's pencil: annotations, coordinates, figures. */
+.raster-mono {
+  font-family: var(--raster-font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Master grid — the scope carries the certified column count
+   ========================================================================== */
+
+.raster-scope {
+  --raster-cols: 12;
+}
+
+.raster-scope[data-grid="6"] {
+  --raster-cols: 6;
+}
+
+.raster-frame {
+  max-width: var(--raster-maxw);
+  margin-inline: auto;
+  padding-inline: var(--raster-margin);
+}
+
+.raster-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--raster-cols), minmax(0, 1fr));
+  gap: var(--raster-gutter);
+}
+
+/* FLIP: useFlip.ts inverts with an inline transform and releases; this
+   transition plays every block home. JS-gated — no JS, no morphs. */
+.raster-js [data-flip] {
+  transition: transform var(--raster-flip-ms) var(--raster-ease);
+}
+
+/* ==========================================================================
+   Exposed construction — the fixed column overlay (12 and 6, cross-faded)
+   ========================================================================== */
+
+.raster-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.raster-overlay__layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  gap: var(--raster-gutter);
+  max-width: var(--raster-maxw);
+  margin-inline: auto;
+  padding-inline: var(--raster-margin);
+  transition: opacity 240ms var(--raster-ease);
+}
+
+.raster-overlay__layer--twelve {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.raster-overlay__layer--six {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  opacity: 0;
+}
+
+[data-grid="6"] .raster-overlay__layer--twelve {
+  opacity: 0;
+}
+
+[data-grid="6"] .raster-overlay__layer--six {
+  opacity: 1;
+}
+
+.raster-overlay__layer > span {
+  background: var(--raster-tint);
+  border-inline: 1px solid var(--raster-hairline-faint);
+}
+
+/* ==========================================================================
+   Section furniture
+   ========================================================================== */
+
+.raster-section {
+  padding-block: clamp(64px, 11vh, 132px);
+}
+
+.raster-sechead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 20px;
+  border-top: 3px solid var(--raster-ink);
+  padding-top: 12px;
+  margin: 0 0 clamp(28px, 5vh, 52px);
+}
+
+.raster-sechead__no {
+  font-family: var(--raster-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.raster-sechead__no::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 10px;
+  background: var(--raster-red);
+}
+
+.raster-sechead__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+  font-weight: 620;
+  font-variation-settings: "wdth" 116;
+  line-height: 1.1;
+}
+
+.raster-sechead__ko {
+  margin-left: 8px;
+  font-size: 0.62em;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   00 · Hero — the cover sheet
+   ========================================================================== */
+
+.raster-hero {
+  position: relative;
+  overflow: hidden;
+  /* the visible baseline grid: one faint red hairline per 24px */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(227, 6, 19, 0.055) 0 1px,
+    transparent 1px var(--raster-baseline)
+  );
+}
+
+.raster-hero__inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: clamp(16px, 3vh, 32px);
+  padding-bottom: clamp(16px, 3vh, 28px);
+}
+
+.raster-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  margin: 0;
+  border-bottom: 1px solid var(--raster-ink);
+  padding-bottom: 10px;
+}
+
+.raster-hero__title {
+  margin: auto 0 0;
+  font-size: clamp(4.2rem, 17.5vw, 14rem);
+  font-weight: 640;
+  letter-spacing: -0.015em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.raster-hero__sub {
+  margin: 10px 0 0;
+  font-family: var(--raster-font-ko);
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+}
+
+.raster-hero__foot {
+  margin-top: auto;
+  padding-top: clamp(28px, 6vh, 64px);
+  align-items: end;
+}
+
+.raster-hero__spec {
+  grid-column: 1 / span 7;
+  border-top: 1px solid var(--raster-ink);
+  padding-top: 14px;
+}
+
+[data-grid="6"] .raster-hero__spec {
+  grid-column: 1 / span 4;
+}
+
+.raster-hero__spec p {
+  margin: 0 0 10px;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  font-weight: 460;
+  line-height: 1.4;
+}
+
+.raster-hero__spec p:last-child {
+  margin-bottom: 0;
+}
+
+.raster-hero__spec p span[lang="ko"] {
+  display: block;
+  font-size: 0.9em;
+  color: var(--raster-ink-dim);
+}
+
+.raster-hero__stampcell {
+  grid-column: 10 / span 3;
+  justify-self: end;
+  align-self: end;
+}
+
+[data-grid="6"] .raster-hero__stampcell {
+  grid-column: 5 / span 2;
+}
+
+.raster-hero__cue {
+  margin: clamp(20px, 4vh, 40px) 0 0;
+}
+
+/* -- the width-axis wordmark (split by WidthMark.tsx) --------------------- */
+
+.raster-mark__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.raster-mark__ch {
+  display: inline-block;
+  font-variation-settings: "wdth" 125;
+  transition: font-variation-settings 300ms var(--raster-ease);
+}
+
+/* one glyph narrows under the cursor — a live demonstration, not a message */
+.raster-mark__ch:hover {
+  font-variation-settings: "wdth" 62;
+}
+
+/* entrance: each glyph travels the whole axis, 62 → 125, staggered.
+   The 100% keyframe equals the resting style, so nothing jumps when the
+   animation ends and hover transitions take over. */
+.raster-js .is-on .raster-mark__ch {
+  animation: raster-wdth-in 1100ms var(--raster-ease) backwards;
+  animation-delay: calc(var(--i) * 55ms);
+}
+
+@keyframes raster-wdth-in {
+  0% {
+    font-variation-settings: "wdth" 62;
+    opacity: 0;
+  }
+  28% {
+    opacity: 1;
+  }
+  100% {
+    font-variation-settings: "wdth" 125;
+    opacity: 1;
+  }
+}
+
+/* -- certification stamp (SVG line draw) ---------------------------------- */
+
+.raster-stamp {
+  width: clamp(96px, 11vw, 148px);
+  height: auto;
+}
+
+.raster-stamp circle,
+.raster-stamp line {
+  fill: none;
+  stroke: var(--raster-red);
+  stroke-width: 1.6;
+}
+
+.raster-stamp__txt {
+  fill: var(--raster-red);
+  font-family: var(--raster-font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+}
+
+.raster-js .is-on .raster-stamp__draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: raster-draw 900ms var(--raster-ease) forwards;
+}
+
+.raster-js .is-on .raster-stamp__draw--d2 {
+  animation-delay: 200ms;
+}
+
+.raster-js .is-on .raster-stamp__draw--d3 {
+  animation-delay: 420ms;
+}
+
+.raster-js .is-on .raster-stamp__txt {
+  animation: raster-fade 400ms var(--raster-ease) 720ms backwards;
+}
+
+@keyframes raster-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes raster-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* -- crosshair instrument -------------------------------------------------
+   Raw coordinates, no smoothing. Base state (no JS, coarse pointer,
+   reduced motion): pinned to the certified center of the sheet. */
+
+.raster-cross {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0.55;
+  transition: opacity 200ms var(--raster-ease);
+}
+
+.raster-hero.is-live .raster-cross {
+  opacity: 1;
+}
+
+.raster-cross__v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(227, 6, 19, 0.55);
+}
+
+.raster-cross__h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(227, 6, 19, 0.55);
+}
+
+.raster-hero.is-live .raster-cross__v {
+  left: 0;
+}
+
+.raster-hero.is-live .raster-cross__h {
+  top: 0;
+}
+
+.raster-cross__chip {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 14px);
+  transform: translateX(-50%);
+}
+
+.raster-hero.is-live .raster-cross__chip {
+  left: 0;
+  top: 0;
+  transform: none;
+}
+
+.raster-cross__chip span {
+  display: inline-block;
+  border: 1px solid var(--raster-ink);
+  background: var(--raster-paper);
+  padding: 5px 10px;
+  font-family: var(--raster-font-mono);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   01 · Demonstration — the 6/12 re-certification
+   ========================================================================== */
+
+.raster-demo__lead {
+  margin-bottom: clamp(28px, 5vh, 48px);
+  align-items: start;
+}
+
+.raster-demo__spec {
+  grid-column: 1 / span 7;
+}
+
+[data-grid="6"] .raster-demo__spec {
+  grid-column: 1 / span 4;
+}
+
+.raster-demo__spec p {
+  margin: 0 0 8px;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.45;
+  max-width: 52ch;
+}
+
+.raster-demo__spec p[lang="ko"] {
+  font-size: clamp(0.88rem, 1.3vw, 1.02rem);
+  color: var(--raster-ink-dim);
+}
+
+.raster-toggle {
+  grid-column: 9 / span 4;
+  justify-self: stretch;
+  border: 1px solid var(--raster-ink);
+  padding: 14px 16px;
+  background: var(--raster-paper);
+}
+
+[data-grid="6"] .raster-toggle {
+  grid-column: 5 / span 2;
+}
+
+.raster-toggle__label {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--raster-font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+}
+
+.raster-toggle__btns {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--raster-ink);
+}
+
+.raster-toggle__btn {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  background: var(--raster-paper);
+  color: var(--raster-ink);
+  border: 0;
+  font-family: var(--raster-font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.raster-toggle__btn + .raster-toggle__btn {
+  border-left: 1px solid var(--raster-ink);
+}
+
+.raster-toggle__btn[aria-pressed="true"] {
+  background: var(--raster-ink);
+  color: var(--raster-paper);
+  cursor: default;
+}
+
+.raster-toggle__btn:focus-visible {
+  outline-offset: -4px;
+}
+
+.raster-toggle__state {
+  margin: 10px 0 0;
+  font-family: var(--raster-font-mono);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.raster-toggle__state::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  background: var(--raster-red);
+}
+
+/* -- the specimen blocks: 12-col spans → 6-col spans ----------------------
+   12: [a5 b7] [c4 d4 e4] [f9 g3] [h12]
+    6: [a6] [b3 c3] [d2 e2 f2] [g6] [h6] */
+
+.raster-blk {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.raster-blk--ink {
+  background: var(--raster-ink);
+  color: var(--raster-paper);
+}
+
+.raster-blk--red {
+  background: var(--raster-red);
+  color: #ffffff; /* 4.9:1 on the red — AA for the block labels */
+}
+
+.raster-blk--line {
+  border: 1px solid var(--raster-ink);
+}
+
+.raster-blk--lg {
+  min-height: clamp(150px, 24vw, 240px);
+}
+
+.raster-blk--md {
+  min-height: clamp(104px, 15vw, 156px);
+}
+
+.raster-blk--sm {
+  min-height: clamp(64px, 9vw, 96px);
+}
+
+.raster-blk--bar {
+  min-height: 56px;
+}
+
+.raster-blk__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--raster-font-mono);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.raster-blk__no {
+  align-self: flex-end;
+  font-size: clamp(2.6rem, 6.5vw, 5.4rem);
+  font-weight: 640;
+  font-variation-settings: "wdth" 125;
+  line-height: 0.85;
+}
+
+.raster-blk__bars {
+  display: grid;
+  gap: 7px;
+}
+
+.raster-blk__bars i {
+  height: 2px;
+  background: rgba(17, 17, 17, 0.35);
+}
+
+.raster-blk__bars i:nth-child(2) {
+  width: 84%;
+}
+
+.raster-blk__bars i:nth-child(3) {
+  width: 58%;
+}
+
+.raster-blk--a { grid-column: span 5; }
+.raster-blk--b { grid-column: span 7; }
+.raster-blk--c { grid-column: span 4; }
+.raster-blk--d { grid-column: span 4; }
+.raster-blk--e { grid-column: span 4; }
+.raster-blk--f { grid-column: span 9; }
+.raster-blk--g { grid-column: span 3; }
+.raster-blk--h { grid-column: span 12; }
+
+[data-grid="6"] .raster-blk--a { grid-column: span 6; }
+[data-grid="6"] .raster-blk--b { grid-column: span 3; }
+[data-grid="6"] .raster-blk--c { grid-column: span 3; }
+[data-grid="6"] .raster-blk--d { grid-column: span 2; }
+[data-grid="6"] .raster-blk--e { grid-column: span 2; }
+[data-grid="6"] .raster-blk--f { grid-column: span 2; }
+[data-grid="6"] .raster-blk--g { grid-column: span 6; }
+[data-grid="6"] .raster-blk--h { grid-column: span 6; }
+
+.raster-demo__note {
+  margin: 18px 0 0;
+  color: var(--raster-ink-dim);
+}
+
+/* ==========================================================================
+   02 · Modular scale
+   ========================================================================== */
+
+.raster-ms__chip {
+  margin: 0 0 0 auto;
+  align-self: baseline;
+  border: 1px solid var(--raster-ink);
+  padding: 3px 10px;
+  min-width: 21ch;
+  text-align: left;
+}
+
+.raster-ms__intro {
+  grid-column: 1 / span 4;
+}
+
+[data-grid="6"] .raster-ms__intro {
+  grid-column: 1 / span 6;
+}
+
+.raster-ms__intro p {
+  margin: 0 0 12px;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.45;
+  max-width: 44ch;
+}
+
+.raster-ms__intro p span[lang="ko"] {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.9em;
+  color: var(--raster-ink-dim);
+}
+
+.raster-ms__list {
+  grid-column: 5 / span 8;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  --raster-msb: clamp(0.95rem, 0.5vw + 0.8rem, 1.15rem);
+}
+
+[data-grid="6"] .raster-ms__list {
+  grid-column: 1 / span 6;
+  margin-top: clamp(20px, 4vh, 36px);
+}
+
+.raster-ms__row {
+  display: grid;
+  grid-template-columns: clamp(9rem, 16vw, 13rem) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px 18px;
+  padding-block: 14px 12px;
+  border-bottom: 1px solid var(--raster-rule-soft);
+}
+
+.raster-ms__row:first-child {
+  border-top: 1.5px solid var(--raster-ink);
+}
+
+.raster-ms__ann {
+  color: var(--raster-ink-dim);
+}
+
+.raster-ms__word {
+  display: inline-block;
+  transform-origin: 0% 70%;
+  font-weight: 620;
+  font-variation-settings: "wdth" 116;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.raster-ms__word :lang(ko) {
+  font-weight: 500;
+  font-size: 0.82em;
+}
+
+.raster-ms__word--0 { font-size: var(--raster-msb); }
+.raster-ms__word--1 { font-size: calc(var(--raster-msb) * 1.333); }
+.raster-ms__word--2 { font-size: calc(var(--raster-msb) * 1.777); }
+.raster-ms__word--3 { font-size: calc(var(--raster-msb) * 2.369); }
+.raster-ms__word--4 { font-size: calc(var(--raster-msb) * 3.157); }
+.raster-ms__word--5 { font-size: calc(var(--raster-msb) * 4.209); }
+
+/* ==========================================================================
+   03 · Registry — the specimen table
+   ========================================================================== */
+
+.raster-tablewrap {
+  grid-column: 2 / span 10;
+  overflow-x: auto;
+}
+
+[data-grid="6"] .raster-tablewrap {
+  grid-column: 1 / span 6;
+}
+
+.raster-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  border-top: 3px solid var(--raster-ink);
+}
+
+.raster-table caption {
+  text-align: left;
+  padding: 10px 0;
+  color: var(--raster-ink-dim);
+  caption-side: top;
+}
+
+.raster-table th,
+.raster-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.raster-table thead th {
+  border-top: 1.5px solid var(--raster-ink);
+  border-bottom: 1.5px solid var(--raster-ink);
+  font-family: var(--raster-font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.raster-table tbody th,
+.raster-table tbody td {
+  border-bottom: 1px solid var(--raster-rule-soft);
+  font-size: 0.92rem;
+}
+
+.raster-table tbody th {
+  font-weight: 700;
+}
+
+.raster-td--num {
+  text-align: right;
+}
+
+.raster-table .raster-mono {
+  font-size: 0.8rem;
+}
+
+/* status marks: red geometry; the meaning is always in the black text */
+.raster-status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.raster-status i {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  flex: none;
+  background: var(--raster-red);
+}
+
+.raster-status--rev i {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--raster-red);
+}
+
+.raster-status--dep i {
+  background: transparent;
+}
+
+.raster-status--dep i::before,
+.raster-status--dep i::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 4px;
+  width: 14px;
+  height: 2px;
+  background: var(--raster-red);
+  transform: rotate(45deg);
+}
+
+.raster-status--dep i::after {
+  transform: rotate(-45deg);
+}
+
+.raster-status--star {
+  font-weight: 700;
+}
+
+.raster-row--dep th {
+  box-shadow: inset 3px 0 0 var(--raster-red);
+}
+
+.raster-table__note {
+  margin: 14px 0 0;
+  color: var(--raster-ink-dim);
+}
+
+/* ==========================================================================
+   04 · Footer — certification
+   ========================================================================== */
+
+.raster-footer {
+  padding-block: clamp(64px, 10vh, 120px) 28px;
+}
+
+.raster-footer__verdict {
+  margin: clamp(20px, 4vh, 44px) 0 16px;
+  font-size: clamp(2.3rem, 9.2vw, 9.6rem);
+  font-weight: 640;
+  letter-spacing: -0.015em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.raster-cert {
+  display: block;
+  width: 100%;
+  height: 3px;
+}
+
+.raster-cert__line {
+  fill: none;
+  stroke: var(--raster-red);
+  stroke-width: 3;
+}
+
+.raster-js .is-on .raster-cert__line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: raster-draw 1100ms var(--raster-ease) 480ms forwards;
+}
+
+.raster-footer__attest {
+  margin: 18px 0 0;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.45;
+  max-width: 58ch;
+}
+
+.raster-footer__attest span[lang="ko"] {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.9em;
+  color: var(--raster-ink-dim);
+}
+
+.raster-footer__cols {
+  margin-top: clamp(40px, 7vh, 72px);
+}
+
+.raster-footer__block {
+  grid-column: span 4;
+  border-top: 1px solid var(--raster-ink);
+  padding-top: 12px;
+}
+
+[data-grid="6"] .raster-footer__block {
+  grid-column: span 2;
+}
+
+.raster-footer__h {
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.raster-footer__block p {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.raster-footer__legal {
+  margin: clamp(48px, 8vh, 80px) 0 0;
+  border-top: 1px solid var(--raster-rule-soft);
+  padding-top: 14px;
+}
+
+/* ==========================================================================
+   Small sheets — the grid holds; the furniture stacks
+   (kept below the [data-grid] overrides so equal-specificity rules win)
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  .raster-scope .raster-hero__spec,
+  .raster-scope .raster-hero__stampcell,
+  .raster-scope .raster-demo__spec,
+  .raster-scope .raster-toggle,
+  .raster-scope .raster-ms__intro,
+  .raster-scope .raster-ms__list,
+  .raster-scope .raster-tablewrap,
+  .raster-scope .raster-footer__block {
+    grid-column: 1 / -1;
+  }
+
+  .raster-scope .raster-hero__stampcell {
+    justify-self: start;
+  }
+
+  .raster-scope .raster-ms__list {
+    margin-top: clamp(20px, 4vh, 36px);
+  }
+
+  .raster-ms__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .raster-ms__chip {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}
+
+/* touch / coarse pointers: the instrument stands at the certified center
+   (the JS never arms itself without a fine pointer) */
+@media (hover: none), (pointer: coarse) {
+  .raster-cross {
+    opacity: 0.4;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the finished document, immediately
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .raster-root *,
+  .raster-root *::before,
+  .raster-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* line-draw strokes must render complete, not paused at zero */
+  .raster-root .raster-stamp__draw,
+  .raster-root .raster-cert__line {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}

@@ -1,0 +1,950 @@
+/* ==========================================================================
+   GIWA — 처마 아래 단청 / Under Painted Eaves
+   korean-traditional · hanji light · obangsaek pigments · every color a token
+   Scoped by convention to .giwa-root; classes prefixed giwa-.
+   ========================================================================== */
+
+.giwa-root {
+  /* -- palette: obangsaek + dancheong working pigments -------------------- */
+  --giwa-hanji: #f4eee1;          /* 한지 — the paper everything sits on */
+  --giwa-hanji-deep: #ece4d0;     /* pressed hanji — stage + card grounds */
+  --giwa-heuk: #1f1c19;           /* 흑 먹 — body text, ink lines (14.7:1) */
+  --giwa-seok: #8a3b2a;           /* 적 석간주 — accent, focus, ::selection (6.6:1) */
+  --giwa-sam: #2f5d9e;            /* 청 삼청 — functional text allowed (5.7:1) */
+  --giwa-noe: #58796f;            /* 뇌록 — decorative / large only (4.2:1) */
+  --giwa-noe-deep: #3e5850;       /* derived: secondary text (6.7:1) */
+  --giwa-hwang: #d9a441;          /* 황 석황 — decorative ONLY on hanji (2.0:1) */
+  --giwa-baek: #f7f3e8;           /* 백 호분 — breath lines, card grounds */
+  --giwa-tile: #3f3a34;           /* derived from 먹: fired-clay roof plane */
+  --giwa-clay: #4b453e;           /* derived: tile-end discs */
+  --giwa-line: rgba(31, 28, 25, 0.26); /* hairline rules */
+  --giwa-accent: var(--giwa-seok);
+  /* the living accent — obangsaek panels retint this; colors snap, never ease */
+  --giwa-accent-live: var(--giwa-seok);
+
+  /* -- type ---------------------------------------------------------------- */
+  --giwa-font-display: var(--font-song-myung), "Song Myung", serif;
+  --giwa-font-body: var(--font-gowun), "Gowun Batang", serif;
+  --giwa-font-latin: var(--font-fraunces), "Fraunces", Georgia, serif;
+
+  /* -- motion --------------------------------------------------------------- */
+  --giwa-ease-out: cubic-bezier(0.16, 1, 0.3, 1);    /* reveals: fast in, long tail */
+  --giwa-ease-brush: cubic-bezier(0.45, 0.05, 0.35, 1); /* ink draw: loaded brush */
+  --giwa-ease-flood: cubic-bezier(0.6, 0, 0.18, 1);  /* color flood: commits, then rests */
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--giwa-hanji);
+  color: var(--giwa-heuk);
+  font-family: var(--giwa-font-body);
+  font-size: clamp(16px, 0.5vw + 14px, 19px);
+  line-height: 1.78;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Latin is the guest voice: Fraunces, slightly quieter than the Korean */
+.giwa-root [lang="en"] {
+  font-family: var(--giwa-font-latin);
+  letter-spacing: 0.005em;
+}
+
+/* Seokganju selection on hanji, scoped to the entry root */
+.giwa-root ::selection {
+  background: var(--giwa-seok);
+  color: var(--giwa-hanji);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a seokganju ring with a faint pigment halo */
+.giwa-root :focus-visible {
+  outline: 2px solid var(--giwa-seok);
+  outline-offset: 3px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 6px rgba(138, 59, 42, 0.16);
+}
+
+.giwa-link {
+  color: var(--giwa-seok);
+  text-decoration: underline;
+  text-decoration-color: rgba(138, 59, 42, 0.4);
+  text-underline-offset: 3px;
+}
+
+.giwa-link:hover {
+  text-decoration-color: var(--giwa-seok);
+}
+
+/* The content layer; the hanji grain sits above it, pointer-events: none */
+.giwa-page {
+  position: relative;
+  z-index: 1;
+}
+
+/* Full-page hanji fiber — static, multiplied, decorative */
+.giwa-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+.giwa-grain svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   SVG pigment utilities — every fill and stroke routed through a token
+   ========================================================================== */
+
+.giwa-f-sam { fill: var(--giwa-sam); }
+.giwa-f-seok { fill: var(--giwa-seok); }
+.giwa-f-hwang { fill: var(--giwa-hwang); }
+.giwa-f-noe { fill: var(--giwa-noe); }
+.giwa-f-baek { fill: var(--giwa-baek); }
+.giwa-f-ink { fill: var(--giwa-heuk); }
+.giwa-f-tile { fill: var(--giwa-tile); }
+.giwa-f-clay { fill: var(--giwa-clay); }
+
+.giwa-s-ink { stroke: var(--giwa-heuk); stroke-width: 1.4; }
+.giwa-s-ink2 { stroke: var(--giwa-heuk); stroke-width: 2; }
+.giwa-s-ink3 { stroke: var(--giwa-heuk); stroke-width: 2.6; }
+.giwa-s-ink4 { stroke: var(--giwa-heuk); stroke-width: 4; }
+.giwa-s-ink5 { stroke: var(--giwa-heuk); stroke-width: 5; }
+.giwa-s-ink6 { stroke: var(--giwa-heuk); stroke-width: 6; }
+
+.giwa-s-baek { stroke: var(--giwa-baek); stroke-width: 1.6; }
+.giwa-s-baekline { stroke: var(--giwa-baek); stroke-width: 1.2; opacity: 0.75; }
+.giwa-s-baekdot {
+  stroke: var(--giwa-baek);
+  stroke-width: 1.8;
+  stroke-dasharray: 1 8;
+  stroke-linecap: round;
+}
+.giwa-s-paperline { stroke: rgba(244, 238, 225, 0.6); stroke-width: 1.5; }
+.giwa-s-tilelight { stroke: rgba(244, 238, 225, 0.12); stroke-width: 2; }
+.giwa-s-band { stroke: var(--giwa-sam); stroke-width: 10; }
+
+.giwa-s-hwi-ink { stroke: var(--giwa-heuk); stroke-width: 1.6; }
+.giwa-s-hwi-sam { stroke: var(--giwa-sam); stroke-width: 13; }
+.giwa-s-hwi-seok { stroke: var(--giwa-seok); stroke-width: 13; }
+.giwa-s-hwi-noe { stroke: var(--giwa-noe-deep); stroke-width: 13; }
+.giwa-s-hwi-baek { stroke: var(--giwa-baek); stroke-width: 4; }
+
+.giwa-s-gm-ink { stroke: var(--giwa-heuk); stroke-width: 16.5; }
+.giwa-s-gm-baek { stroke: var(--giwa-baek); stroke-width: 13; }
+.giwa-s-gm-sam { stroke: var(--giwa-sam); stroke-width: 7.5; }
+
+.giwa-s-knot-seok { stroke: var(--giwa-seok); stroke-width: 5; }
+.giwa-s-knot-sam { stroke: var(--giwa-sam); stroke-width: 5; }
+.giwa-s-strand-seok { stroke: var(--giwa-seok); stroke-width: 4; stroke-linecap: round; }
+.giwa-s-strand-sam { stroke: var(--giwa-sam); stroke-width: 4; stroke-linecap: round; }
+
+.giwa-round { stroke-linecap: round; stroke-linejoin: round; }
+
+/* the 초 — construction ink */
+.giwa-ink { stroke: var(--giwa-heuk); stroke-width: 1.8; fill: none; }
+.giwa-ink-draw { stroke: var(--giwa-heuk); stroke-width: 2.6; fill: none; }
+.giwa-ink-draw--thin { stroke-width: 1.5; }
+
+/* ==========================================================================
+   Section headers — NN 제목 · latin gloss, accent-live underline segment
+   ========================================================================== */
+
+.giwa-sechead {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 1.1rem;
+  padding-bottom: 0.7rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.8rem);
+  border-bottom: 1px solid var(--giwa-line);
+}
+
+.giwa-sechead::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 64px;
+  height: 3px;
+  background: var(--giwa-accent-live);
+}
+
+.giwa-sechead__no {
+  font-size: 0.78em;
+  letter-spacing: 0.22em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-sechead__title {
+  margin: 0;
+  font-family: var(--giwa-font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+}
+
+.giwa-sechead__en {
+  font-size: 0.55em;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  color: var(--giwa-noe-deep);
+}
+
+/* ==========================================================================
+   01 · Hero — the roofline that draws itself, then takes its colors
+   ========================================================================== */
+
+.giwa-hero {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: clamp(24px, 6vh, 72px) clamp(20px, 5vw, 64px) 0;
+}
+
+.giwa-hero__text {
+  max-width: 720px;
+}
+
+.giwa-hero__kicker {
+  margin: 0 0 clamp(0.8rem, 2vh, 1.6rem);
+  font-size: 0.82em;
+  letter-spacing: 0.14em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-hero__kicker [lang="en"] {
+  color: var(--giwa-seok);
+  letter-spacing: 0.24em;
+}
+
+.giwa-hero__title {
+  margin: 0 0 0.1em;
+  font-family: var(--giwa-font-display);
+  font-weight: 400;
+  font-size: clamp(4.2rem, 17vw, 12rem);
+  line-height: 1.02;
+  letter-spacing: 0.06em;
+}
+
+.giwa-hero__sub {
+  margin: 0 0 clamp(1.2rem, 3vh, 2.2rem);
+  font-size: clamp(1rem, 2.1vw, 1.35rem);
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: var(--giwa-seok);
+}
+
+.giwa-hero__lead {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.9vw, 1.25rem);
+  line-height: 1.85;
+}
+
+.giwa-hero__lead-en {
+  margin: 0.35rem 0 0;
+  font-size: 0.9em;
+  color: var(--giwa-noe-deep);
+}
+
+/* the stage — two layers, one geometry */
+.giwa-hero__art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 470;
+  margin-top: auto;
+}
+
+.giwa-roof {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.giwa-hero__paint {
+  position: absolute;
+  inset: 0;
+}
+
+/* choreography — all of it gated behind .giwa-js; the no-JS page is painted */
+.giwa-js .giwa-hero__kicker { animation: giwa-appear 0.7s var(--giwa-ease-out) 0.1s both; }
+.giwa-js .giwa-hero__title { animation: giwa-appear 0.9s var(--giwa-ease-out) 0.25s both; }
+.giwa-js .giwa-hero__sub { animation: giwa-appear 0.7s var(--giwa-ease-out) 0.5s both; }
+.giwa-js .giwa-hero__lead { animation: giwa-appear 0.7s var(--giwa-ease-out) 0.65s both; }
+.giwa-js .giwa-hero__lead-en { animation: giwa-appear 0.7s var(--giwa-ease-out) 0.78s both; }
+
+.giwa-js .giwa-hero__art .giwa-ink-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: giwa-draw 1.1s var(--giwa-ease-brush) both;
+  animation-delay: var(--d, 0s);
+}
+
+.giwa-js .giwa-hero__art .giwa-ink-draw--slow {
+  animation-duration: 1.5s;
+}
+
+.giwa-js .giwa-hero__art .giwa-roof__dots {
+  opacity: 0;
+  animation: giwa-fade 0.8s var(--giwa-ease-out) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* the flood — line art takes its colors, left to right like a loaded brush */
+.giwa-js .giwa-hero__paint {
+  animation: giwa-sweep-in 1.6s var(--giwa-ease-flood) 2.05s both;
+  will-change: clip-path;
+}
+
+/* ==========================================================================
+   02 · Obangsaek — the five directional colors
+   ========================================================================== */
+
+.giwa-obang {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 64px) 0;
+}
+
+.giwa-obang__intro {
+  margin: 0;
+  max-width: 640px;
+}
+
+.giwa-obang__intro-en {
+  margin: 0.35rem 0 0;
+  max-width: 640px;
+  font-size: 0.88em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-obang__grid {
+  list-style: none;
+  margin: clamp(1.8rem, 4vh, 3rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.giwa-obang__btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--giwa-line);
+  background: var(--giwa-baek);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.3s var(--giwa-ease-out);
+}
+
+/* pigment does not ease — color states snap; only the lift is eased */
+.giwa-obang__btn:hover,
+.giwa-obang__btn[data-active] {
+  border-color: var(--giwa-accent-live);
+  transform: translateY(-3px);
+}
+
+.giwa-obang__btn[data-active] {
+  box-shadow: inset 0 -3px 0 var(--giwa-accent-live);
+}
+
+.giwa-obang__swatch {
+  display: block;
+  height: clamp(56px, 8vw, 84px);
+  background: var(--giwa-swatch, var(--giwa-heuk));
+  border-bottom: 1px solid var(--giwa-line);
+}
+
+.giwa-obang__hanja {
+  display: block;
+  padding: 0.55rem 0.75rem 0;
+  font-family: var(--giwa-font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.2;
+}
+
+.giwa-obang__name {
+  display: block;
+  padding: 0 0.75rem;
+  font-family: var(--giwa-font-display);
+  font-size: 1.02em;
+}
+
+.giwa-obang__name-en {
+  font-size: 0.78em;
+  font-style: italic;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-obang__dir {
+  display: block;
+  padding: 0.15rem 0.75rem 0;
+  font-size: 0.8em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-obang__pig {
+  display: block;
+  padding: 0 0.75rem 0.7rem;
+  font-size: 0.8em;
+  letter-spacing: 0.04em;
+  color: var(--giwa-seok);
+}
+
+.giwa-obang__notes {
+  margin-top: clamp(1.4rem, 3vh, 2.2rem);
+  border-left: 3px solid var(--giwa-accent-live);
+  padding-left: clamp(1rem, 3vw, 1.8rem);
+}
+
+@media (min-width: 720px) {
+  .giwa-obang__notes {
+    min-height: 13.5rem;
+  }
+}
+
+.giwa-obang__note {
+  max-width: 720px;
+}
+
+/* hiding is JS-gated: without .giwa-js all five notes read as a catalog */
+.giwa-js .giwa-obang__note.is-closed {
+  display: none;
+}
+
+.giwa-js .giwa-obang__note.is-open {
+  animation: giwa-appear 0.4s var(--giwa-ease-out) both;
+}
+
+.giwa-obang__note + .giwa-obang__note {
+  margin-top: 1.6rem;
+}
+
+.giwa-js .giwa-obang__note + .giwa-obang__note {
+  margin-top: 0;
+}
+
+.giwa-obang__note-head {
+  margin: 0 0 0.4rem;
+  font-family: var(--giwa-font-display);
+  font-weight: 400;
+  font-size: 1.15em;
+}
+
+.giwa-obang__note-meaning {
+  margin: 0 0 0.4rem;
+}
+
+.giwa-obang__note-usage {
+  margin: 0;
+}
+
+.giwa-obang__note-en {
+  margin: 0.45rem 0 0;
+  font-size: 0.88em;
+  color: var(--giwa-noe-deep);
+}
+
+/* ==========================================================================
+   03 · Pattern gallery — ink draws, color floods
+   ========================================================================== */
+
+.giwa-gallery {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 64px) 0;
+}
+
+.giwa-gallery__intro {
+  margin: 0;
+  max-width: 640px;
+}
+
+.giwa-gallery__intro-en {
+  margin: 0.35rem 0 0;
+  max-width: 640px;
+  font-size: 0.88em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  margin-top: clamp(1.8rem, 4vh, 3rem);
+}
+
+.giwa-motif-card {
+  margin: 0;
+  padding: clamp(1.2rem, 2.6vw, 2rem);
+  background: var(--giwa-baek);
+  border: 1px solid var(--giwa-line);
+}
+
+.giwa-motif {
+  position: relative;
+  margin-inline: auto;
+}
+
+.giwa-motif--square { width: min(100%, 320px); aspect-ratio: 1; }
+.giwa-motif--beam { width: 100%; aspect-ratio: 2 / 1; }
+.giwa-motif--hang { width: min(58%, 190px); aspect-ratio: 180 / 220; }
+.giwa-motif--band { width: 100%; aspect-ratio: 340 / 120; }
+
+.giwa-motif__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.giwa-motif__paint {
+  position: absolute;
+  inset: 0;
+}
+
+.giwa-motif-card__caption {
+  margin-top: clamp(1rem, 2.4vh, 1.6rem);
+  border-top: 1px dotted var(--giwa-line);
+  padding-top: 0.9rem;
+}
+
+.giwa-motif-card__name {
+  margin: 0 0 0.35rem;
+  font-family: var(--giwa-font-display);
+  font-weight: 400;
+  font-size: 1.2em;
+}
+
+.giwa-motif-card__hanja {
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-motif-card__en {
+  font-size: 0.72em;
+  font-style: italic;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-motif-card__body {
+  margin: 0;
+  font-size: 0.95em;
+}
+
+.giwa-motif-card__body-en {
+  margin: 0.4rem 0 0;
+  font-size: 0.85em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-motif-card__how {
+  margin: 0.7rem 0 0;
+  font-size: 0.74em;
+  letter-spacing: 0.06em;
+  color: var(--giwa-seok);
+}
+
+/* motif choreography — pre-states exist only under .giwa-js */
+.giwa-js .giwa-motif .giwa-ink-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.giwa-js [data-reveal].is-visible .giwa-motif .giwa-ink-draw {
+  animation: giwa-draw 0.9s var(--giwa-ease-brush) both;
+  animation-delay: var(--d, 0s);
+}
+
+.giwa-js .giwa-motif__paint {
+  opacity: 0;
+}
+
+.giwa-js [data-reveal].is-visible .giwa-motif__paint {
+  opacity: 1;
+}
+
+.giwa-js [data-reveal].is-visible .giwa-motif__paint--bloom {
+  animation: giwa-bloom-in 1.1s var(--giwa-ease-flood) 0.75s both;
+}
+
+.giwa-js [data-reveal].is-visible .giwa-motif__paint--sweep {
+  animation: giwa-sweep-in 1.1s var(--giwa-ease-flood) 0.75s both;
+}
+
+.giwa-js [data-reveal].is-visible .giwa-motif__paint--drop {
+  animation: giwa-drop-in 0.95s var(--giwa-ease-flood) 0.8s both;
+}
+
+/* ==========================================================================
+   04 · Method — layered hanji with capped pointer parallax
+   ========================================================================== */
+
+.giwa-method {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 64px) 0;
+}
+
+.giwa-method__stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--giwa-hanji-deep);
+  border: 1px solid var(--giwa-line);
+}
+
+.giwa-method__paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.giwa-method__layer {
+  position: absolute;
+  inset: -18px;
+  mix-blend-mode: multiply;
+  will-change: transform;
+  /* --giwa-px / --giwa-py ∈ [-1, 1] from the hook; depth caps travel ≤ 8px */
+  transform: translate3d(
+    calc(var(--giwa-px, 0) * var(--giwa-depth, 0) * 1px),
+    calc(var(--giwa-py, 0) * var(--giwa-depth, 0) * 0.6px),
+    0
+  );
+}
+
+.giwa-method__layer svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.giwa-method__layer--a { --giwa-depth: 4; }
+.giwa-method__layer--b { --giwa-depth: 8; }
+.giwa-method__layer--c { --giwa-depth: -5; }
+
+.giwa-method__inner {
+  position: relative;
+  padding: clamp(1.6rem, 4vw, 3.4rem);
+}
+
+.giwa-method__intro {
+  margin: 0;
+  max-width: 640px;
+}
+
+.giwa-method__intro-en {
+  margin: 0.35rem 0 0;
+  max-width: 640px;
+  font-size: 0.88em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-method__steps {
+  list-style: none;
+  margin: clamp(1.6rem, 4vh, 2.6rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.4rem, 3.4vw, 2.6rem);
+}
+
+.giwa-method__step {
+  border-top: 2px solid var(--giwa-heuk);
+  padding-top: 0.9rem;
+}
+
+.giwa-method__step-no {
+  display: block;
+  font-family: var(--giwa-font-display);
+  font-size: 1.4em;
+  line-height: 1.2;
+  color: var(--giwa-seok);
+}
+
+.giwa-method__step-name {
+  margin: 0.2rem 0 0.45rem;
+  font-family: var(--giwa-font-display);
+  font-weight: 400;
+  font-size: 1.15em;
+}
+
+.giwa-method__step-hanja {
+  font-size: 0.82em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-method__step-body {
+  margin: 0;
+  font-size: 0.95em;
+}
+
+.giwa-method__step-en {
+  margin: 0.4rem 0 0;
+  font-size: 0.85em;
+  color: var(--giwa-noe-deep);
+}
+
+/* ==========================================================================
+   05 · Footer — sign-off, with the norigae keeping time
+   ========================================================================== */
+
+.giwa-footer {
+  position: relative;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 64px)
+    clamp(96px, 14vh, 170px);
+}
+
+.giwa-footer__rule {
+  border-top: 2px solid var(--giwa-heuk);
+}
+
+.giwa-tassel {
+  position: absolute;
+  top: calc(clamp(72px, 11vh, 140px) + 1px);
+  right: clamp(28px, 12vw, 150px);
+  width: clamp(44px, 6vw, 62px);
+  transform-origin: 50% 0;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.giwa-tassel__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.giwa-footer__inner {
+  max-width: 720px;
+  padding-top: clamp(1.8rem, 4vh, 3rem);
+}
+
+.giwa-footer__line {
+  margin: 0;
+  font-family: var(--giwa-font-display);
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  line-height: 1.6;
+}
+
+.giwa-footer__line-en {
+  margin: 0.3rem 0 2rem;
+  font-style: italic;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-footer__data {
+  margin: 0 0 2.2rem;
+}
+
+.giwa-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dotted var(--giwa-line);
+}
+
+.giwa-footer__data dt {
+  flex: 0 0 4.5rem;
+  font-size: 0.82em;
+  letter-spacing: 0.16em;
+  color: var(--giwa-noe-deep);
+}
+
+.giwa-footer__data dd {
+  flex: 1 1 18rem;
+  margin: 0;
+  font-size: 0.95em;
+}
+
+.giwa-footer__copy {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.giwa-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.65s var(--giwa-ease-out),
+    transform 0.65s var(--giwa-ease-out);
+  will-change: opacity, transform;
+}
+
+.giwa-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / clip-path / stroke-dashoffset only
+   ========================================================================== */
+
+@keyframes giwa-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes giwa-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes giwa-appear {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* the flood: line art takes color, left to right */
+@keyframes giwa-sweep-in {
+  from {
+    opacity: 1;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* medallions bloom from the seed-pod outward */
+@keyframes giwa-bloom-in {
+  from {
+    opacity: 1;
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    opacity: 1;
+    clip-path: circle(78% at 50% 50%);
+  }
+}
+
+/* hanging things are painted top-down */
+@keyframes giwa-drop-in {
+  from {
+    opacity: 1;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 880px) {
+  .giwa-obang__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .giwa-gallery__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .giwa-method__steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .giwa-obang__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .giwa-hero__art {
+    aspect-ratio: 1200 / 560;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the finished document, instantly
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .giwa-js .giwa-hero__kicker,
+  .giwa-js .giwa-hero__title,
+  .giwa-js .giwa-hero__sub,
+  .giwa-js .giwa-hero__lead,
+  .giwa-js .giwa-hero__lead-en,
+  .giwa-js .giwa-obang__note.is-open {
+    animation: none;
+  }
+
+  .giwa-js .giwa-hero__art .giwa-ink-draw,
+  .giwa-js .giwa-motif .giwa-ink-draw {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .giwa-js .giwa-hero__art .giwa-roof__dots {
+    animation: none;
+    opacity: 1;
+  }
+
+  .giwa-js .giwa-hero__paint,
+  .giwa-js .giwa-motif__paint {
+    animation: none;
+    opacity: 1;
+    clip-path: none;
+  }
+
+  .giwa-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .giwa-obang__btn {
+    transition: none;
+  }
+
+  .giwa-obang__btn:hover,
+  .giwa-obang__btn[data-active] {
+    transform: none;
+  }
+
+  /* the hanji lies flat; the norigae hangs plumb */
+  .giwa-method__layer {
+    transform: none !important;
+  }
+
+  .giwa-tassel {
+    transform: none !important;
+  }
+}

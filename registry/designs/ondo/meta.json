@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "ondo",
+  "no": 9,
+  "title": {
+    "en": "ONDO — Perfume Atelier, Seoul",
+    "ko": "온도 — 향의 아틀리에, 서울"
+  },
+  "description": {
+    "en": "A Seoul perfume house that titles its scents by temperature — the bottle drawn entirely in SVG gradients and seen through a hand-rolled canvas pane of rippling glass.",
+    "ko": "향에 온도로 이름을 붙이는 서울의 향수 하우스 — SVG 그라디언트로만 그린 보틀을, 손으로 짠 캔버스 유리 너머로 바라본다."
+  },
+  "aesthetic": "luxury-fashion",
+  "techniques": ["pointer-parallax", "clip-path-reveal", "char-split-reveal"],
+  "industry": ["fashion-beauty"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["svg", "canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#d8c39a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

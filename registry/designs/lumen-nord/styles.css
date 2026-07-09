@@ -1,0 +1,865 @@
+/* ==========================================================================
+   LUMEN NORD — aurora forecast bureau
+   glass-futurism · polar night, aurora green, magenta veil · every color a token
+   Scoped by convention to .lumen-root; classes prefixed lumen-.
+   ========================================================================== */
+
+/* Registered so the specular strength can ease in and out; where @property
+   is unsupported the highlight simply snaps — a harmless degrade. */
+@property --lumen-gs {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.55;
+}
+
+.lumen-root {
+  /* -- palette ---------------------------------------------------------- */
+  --lumen-night: #0e1330;         /* polar night — the ground everything stands on */
+  --lumen-deep: #080b20;          /* derived: where the night goes when you scroll */
+  --lumen-green: #6ff2c3;         /* aurora green — accent, focus, the skirt of the curtain (13.1:1) */
+  --lumen-magenta: #c26bf2;       /* magenta veil — the hem, the dusk end of the blend (5.8:1) */
+  --lumen-ice: #dfe9ff;           /* primary text (14.9:1 on night) */
+  --lumen-ice-dim: rgba(223, 233, 255, 0.72); /* ≈ #a4adc5 — secondary text (8.1:1) */
+  --lumen-horizon: #27406b;       /* decorative ONLY (1.9:1): rules, ridge glow */
+  --lumen-hairline: rgba(39, 64, 107, 0.55);  /* derived from horizon */
+  --lumen-glass-fill: rgba(18, 24, 56, 0.58); /* glass panel body over the afterglow */
+
+  /* -- scroll temperature (JS lerps these; the statics are the dusk state) */
+  --lumen-temp: 0;
+  --lumen-blend: rgb(194 107 242);
+  --lumen-blend-soft: rgb(194 107 242 / 0.35);
+
+  /* -- type -------------------------------------------------------------- */
+  --lumen-font-display: var(--font-hahmlet), "Hahmlet", georgia, serif;
+  /* Hangul falls through Sora into Hahmlet: Korean body text is serif on purpose */
+  --lumen-font-body: var(--font-sora), var(--font-hahmlet), sans-serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --lumen-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --lumen-reveal-ms: 700ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--lumen-night);
+  /* Deepens as you scroll — supported browsers only; the line above is the floor. */
+  background: color-mix(
+    in srgb,
+    var(--lumen-night),
+    var(--lumen-deep) calc(var(--lumen-temp) * 100%)
+  );
+  color: var(--lumen-ice);
+  font-family: var(--lumen-font-body);
+  font-size: clamp(15px, 0.35vw + 13.5px, 17px);
+  line-height: 1.65;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: it lands in Hahmlet through the stack, keeps its
+   own line-breaking rules, and is never letter-spaced apart. */
+.lumen-root :lang(ko) {
+  word-break: keep-all;
+  letter-spacing: -0.005em;
+}
+
+/* Aurora selection, scoped to the entry root */
+.lumen-root ::selection {
+  background: var(--lumen-green);
+  color: var(--lumen-night);
+  text-shadow: none;
+}
+
+/* Keyboard focus: an aurora-green ring with a soft outer veil */
+.lumen-root :focus-visible {
+  outline: 2px solid var(--lumen-green);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px rgba(111, 242, 195, 0.18);
+}
+
+.lumen-link {
+  color: var(--lumen-ice);
+  text-decoration: underline;
+  text-decoration-color: rgba(111, 242, 195, 0.45);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.lumen-link:hover {
+  text-decoration-color: var(--lumen-green);
+  text-shadow: 0 0 14px rgba(111, 242, 195, 0.45);
+}
+
+/* ==========================================================================
+   The aurora — canvas over CSS understudy, never a blank sky
+   ========================================================================== */
+
+.lumen-aurora {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Always painted: the no-JS view, the no-WebGL view, the context-lost view.
+   Oversized so the drift never shows an edge. */
+.lumen-aurora__fallback {
+  position: absolute;
+  inset: -14%;
+  background:
+    radial-gradient(52% 44% at 72% 16%, rgba(194, 107, 242, 0.36), transparent 68%),
+    radial-gradient(58% 62% at 24% 34%, rgba(111, 242, 195, 0.38), transparent 64%),
+    radial-gradient(46% 40% at 56% 6%, rgba(111, 242, 195, 0.2), transparent 70%),
+    radial-gradient(80% 34% at 50% 104%, rgba(39, 64, 107, 0.85), transparent 72%),
+    linear-gradient(180deg, var(--lumen-deep) 0%, var(--lumen-night) 60%, #16244d 100%);
+  filter: blur(26px) saturate(118%);
+  transform: translateZ(0);
+  animation: lumen-drift 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.lumen-aurora__fallback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 240deg at 50% -20%,
+    transparent 38%,
+    rgba(111, 242, 195, 0.16) 46%,
+    transparent 54%,
+    rgba(194, 107, 242, 0.13) 61%,
+    transparent 70%
+  );
+  animation: lumen-sway 19s ease-in-out infinite alternate;
+}
+
+.lumen-aurora__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.lumen-aurora.is-live .lumen-aurora__canvas {
+  opacity: 1;
+}
+
+/* Don't burn compositor time under an opaque canvas — and honor the pause
+   button in fallback mode too. */
+.lumen-aurora.is-live .lumen-aurora__fallback,
+.lumen-aurora.is-live .lumen-aurora__fallback::after,
+.lumen-aurora.is-paused .lumen-aurora__fallback,
+.lumen-aurora.is-paused .lumen-aurora__fallback::after {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   01 · Hero — the masthead over the sky
+   ========================================================================== */
+
+.lumen-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Guarantees AA for the masthead over the brightest possible curtain. */
+.lumen-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(8, 11, 32, 0.5), transparent 26%),
+    linear-gradient(
+      0deg,
+      rgba(8, 11, 32, 0.88) 0%,
+      rgba(8, 11, 32, 0.34) 38%,
+      transparent 62%
+    );
+}
+
+.lumen-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 64px);
+  padding-bottom: clamp(44px, 8vh, 88px);
+}
+
+.lumen-kicker {
+  margin: 0 0 clamp(1rem, 2.5vh, 1.8rem);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--lumen-green);
+}
+
+.lumen-kicker__ko {
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.lumen-title {
+  margin: 0;
+  font-family: var(--lumen-font-display);
+  font-weight: 600;
+  font-size: clamp(3.1rem, 11.5vw, 9.5rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
+  color: var(--lumen-ice);
+  text-shadow: 0 2px 34px rgba(8, 11, 32, 0.65);
+}
+
+.lumen-title__ko {
+  display: block;
+  margin-top: 0.35em;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 3vw, 2.1rem);
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+}
+
+.lumen-lede {
+  margin: clamp(1.4rem, 3.5vh, 2.4rem) 0 0;
+  max-width: 44ch;
+  font-family: var(--lumen-font-display);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  line-height: 1.55;
+}
+
+.lumen-lede__ko {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-issue {
+  margin: clamp(1.2rem, 3vh, 2rem) 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-hero__hint {
+  margin: clamp(1.8rem, 4vh, 2.8rem) 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--lumen-ice-dim);
+}
+
+/* The pause control — glass chip, JS-gated (it does nothing without JS) */
+.lumen-skybtn {
+  display: none;
+  position: absolute;
+  top: clamp(16px, 3vw, 28px);
+  right: clamp(16px, 3vw, 28px);
+  z-index: 3;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.55em 1.05em;
+  border: 1px solid rgba(223, 233, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(14, 19, 48, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--lumen-ice);
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.lumen-js .lumen-skybtn {
+  display: inline-flex;
+}
+
+.lumen-skybtn:hover {
+  border-color: var(--lumen-green);
+}
+
+/* ==========================================================================
+   Section headers — 0N · title · 한국어 · reading
+   ========================================================================== */
+
+.lumen-section__head {
+  position: relative;
+  z-index: 1;
+  max-width: 1160px;
+  margin: 0 auto clamp(2rem, 5vh, 3.4rem);
+}
+
+.lumen-section__no {
+  margin: 0 0 0.4rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: var(--lumen-green);
+}
+
+.lumen-section__title {
+  margin: 0;
+  font-family: var(--lumen-font-display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 1.25;
+}
+
+.lumen-section__ko {
+  font-weight: 400;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-section__meta {
+  margin: 0.7rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lumen-blend); /* drifts magenta → green as the night deepens */
+}
+
+/* ==========================================================================
+   02 · Tonight's bulletin — specular glass over the afterglow
+   ========================================================================== */
+
+.lumen-bulletin {
+  position: relative;
+  padding: clamp(80px, 12vh, 150px) clamp(20px, 5vw, 64px);
+}
+
+/* A speckle of stars for the backdrop-filter to actually blur — glass needs
+   detail behind it to read as glass. */
+.lumen-bulletin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.4px 1.4px at 22% 31%, rgba(223, 233, 255, 0.55) 45%, transparent 55%),
+    radial-gradient(1px 1px at 68% 14%, rgba(223, 233, 255, 0.4) 45%, transparent 55%),
+    radial-gradient(1.2px 1.2px at 84% 63%, rgba(223, 233, 255, 0.45) 45%, transparent 55%),
+    radial-gradient(1px 1px at 41% 78%, rgba(223, 233, 255, 0.35) 45%, transparent 55%),
+    radial-gradient(1.3px 1.3px at 8% 56%, rgba(223, 233, 255, 0.4) 45%, transparent 55%);
+  background-size: 260px 240px, 190px 210px, 300px 280px, 230px 260px, 340px 300px;
+  background-repeat: repeat;
+}
+
+/* Afterglow: the curtain's residue, tinted by the scroll temperature. */
+.lumen-bulletin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(44% 36% at 82% 2%, var(--lumen-blend-soft), transparent 70%),
+    radial-gradient(40% 44% at 10% 72%, rgba(111, 242, 195, 0.12), transparent 70%);
+  opacity: 0.55;
+}
+
+.lumen-bulletin__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(14px, 2.2vw, 24px);
+  max-width: 1160px;
+  margin-inline: auto;
+}
+
+@media (min-width: 760px) {
+  .lumen-bulletin__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lumen-panel--wide {
+    grid-column: span 2;
+  }
+}
+
+/* -- the glass primitive --------------------------------------------------- */
+
+.lumen-glass {
+  --lumen-gx: 50%;
+  --lumen-gy: 30%;
+  --lumen-gs: 0.55;
+  position: relative;
+  border: 1px solid rgba(223, 233, 255, 0.16);
+  border-radius: 18px;
+  background:
+    linear-gradient(165deg, rgba(223, 233, 255, 0.06), rgba(223, 233, 255, 0) 40%),
+    var(--lumen-glass-fill);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(223, 233, 255, 0.22),
+    0 18px 44px rgba(4, 7, 22, 0.5);
+  overflow: hidden;
+  transition: --lumen-gs 450ms ease;
+}
+
+/* A colored hairline along the top edge — it borrows the scroll blend, so
+   panels near the top of the page are hemmed magenta, panels read later are
+   hemmed green. */
+.lumen-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 4%, var(--lumen-blend-soft), transparent 96%);
+}
+
+/* The specular highlight: --lumen-gx/--lumen-gy track the pointer (written
+   imperatively in GlassPanel); with no pointer it rests top-center at
+   reduced strength, so touch users get lit glass, not dead glass. */
+.lumen-glass__spec {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background: radial-gradient(
+    230px 175px at var(--lumen-gx) var(--lumen-gy),
+    rgba(223, 233, 255, 0.16),
+    rgba(223, 233, 255, 0.05) 46%,
+    transparent 72%
+  );
+  opacity: var(--lumen-gs);
+}
+
+.lumen-glass__body {
+  position: relative;
+  padding: clamp(20px, 3vw, 30px);
+}
+
+/* -- panel typography ------------------------------------------------------ */
+
+.lumen-panel__label {
+  margin: 0 0 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-panel__value {
+  margin: 0;
+  font-family: var(--lumen-font-display);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  line-height: 1.1;
+  color: var(--lumen-ice);
+}
+
+.lumen-panel__unit {
+  font-size: 0.5em;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-panel__line {
+  margin: 0.95rem 0 0;
+  font-family: var(--lumen-font-display);
+  line-height: 1.6;
+}
+
+.lumen-panel__line--lg {
+  font-size: clamp(1.02rem, 1.5vw, 1.25rem);
+  max-width: 58ch;
+}
+
+.lumen-panel__ko {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-panel__meta {
+  margin: 1rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--lumen-hairline);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lumen-ice-dim);
+}
+
+/* -- the Kp gauge ---------------------------------------------------------- */
+
+.lumen-gauge {
+  display: block;
+  width: min(210px, 70%);
+  margin: 0.7rem 0 0.1rem;
+}
+
+.lumen-gauge__track {
+  fill: none;
+  stroke: rgba(223, 233, 255, 0.14);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.lumen-gauge__fill {
+  fill: none;
+  stroke: var(--lumen-green);
+  stroke-width: 7;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(111, 242, 195, 0.5));
+}
+
+/* -- the visibility window bar --------------------------------------------- */
+
+.lumen-window {
+  position: relative;
+  height: 32px;
+  margin: 0.9rem 0 1.5rem;
+  border-bottom: 1px solid rgba(223, 233, 255, 0.2);
+}
+
+.lumen-window__band {
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 27.8%; /* 22:40 on a 21:00–03:00 track */
+  width: 41.7%; /* through 01:10 */
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(111, 242, 195, 0.55),
+    rgba(194, 107, 242, 0.5)
+  );
+  box-shadow: 0 0 16px rgba(111, 242, 195, 0.3);
+}
+
+.lumen-window__tick {
+  position: absolute;
+  top: 4px;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: rgba(223, 233, 255, 0.28);
+}
+
+.lumen-window__tick::after {
+  content: attr(data-hour);
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--lumen-ice-dim);
+  white-space: nowrap;
+}
+
+.lumen-window__tick--mid {
+  left: 50%;
+}
+
+.lumen-window__tick--mid::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lumen-window__tick--end {
+  left: auto;
+  right: 0;
+}
+
+.lumen-window__tick--end::after {
+  left: auto;
+  right: 0;
+}
+
+/* ==========================================================================
+   03 · The forecast log — sparkline + how the bureau listens
+   ========================================================================== */
+
+.lumen-log {
+  max-width: 1020px;
+  margin-inline: auto;
+  padding: clamp(80px, 12vh, 150px) clamp(20px, 5vw, 64px);
+}
+
+.lumen-spark__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.lumen-spark__threshold {
+  stroke: rgba(223, 233, 255, 0.18);
+  stroke-dasharray: 5 7;
+}
+
+.lumen-spark__note,
+.lumen-spark__label {
+  fill: var(--lumen-ice-dim);
+  font-family: var(--lumen-font-body);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.lumen-spark__label {
+  font-size: 12px;
+}
+
+.lumen-spark__line {
+  fill: none;
+  stroke: url(#lumen-spark-grad);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.lumen-spark__area {
+  fill: url(#lumen-spark-fill);
+}
+
+.lumen-spark__dot {
+  fill: var(--lumen-night);
+  stroke: var(--lumen-green);
+  stroke-width: 2;
+}
+
+.lumen-spark__stop-a {
+  stop-color: var(--lumen-green);
+}
+
+.lumen-spark__stop-b {
+  stop-color: var(--lumen-magenta);
+}
+
+.lumen-spark__stop-fill {
+  stop-color: rgba(111, 242, 195, 0.16);
+}
+
+.lumen-spark__stop-none {
+  stop-color: rgba(111, 242, 195, 0);
+}
+
+.lumen-spark__caption {
+  margin: 1.1rem 0 0;
+  font-size: 0.85rem;
+  color: var(--lumen-ice-dim);
+  max-width: 70ch;
+}
+
+/* The draw: pathLength is normalized to 1 in the markup, so one dash unit
+   covers the whole line. Pre-states are JS-gated — no JS, no hidden line. */
+.lumen-js .lumen-spark__line {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+}
+
+.lumen-js .lumen-spark__area,
+.lumen-js .lumen-spark__dot {
+  opacity: 0;
+}
+
+.lumen-js .lumen-spark.is-visible .lumen-spark__line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1900ms cubic-bezier(0.33, 0, 0.2, 1) 200ms;
+}
+
+.lumen-js .lumen-spark.is-visible .lumen-spark__area {
+  opacity: 1;
+  transition: opacity 900ms ease 1500ms;
+}
+
+.lumen-js .lumen-spark.is-visible .lumen-spark__dot {
+  opacity: 1;
+  transition: opacity 500ms ease; /* per-dot delay set inline */
+}
+
+/* -- how the bureau listens ------------------------------------------------ */
+
+.lumen-method {
+  margin-top: clamp(3rem, 7vh, 5rem);
+  padding-top: 2.2rem;
+  border-top: 1px solid var(--lumen-hairline);
+}
+
+.lumen-method__title {
+  margin: 0;
+  font-family: var(--lumen-font-display);
+  font-weight: 500;
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+}
+
+.lumen-method__list {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.35rem;
+}
+
+.lumen-method__list li {
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--lumen-blend-soft);
+  font-family: var(--lumen-font-display);
+}
+
+.lumen-method__ko {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--lumen-ice-dim);
+}
+
+/* ==========================================================================
+   04 · Footer — end of watch
+   ========================================================================== */
+
+.lumen-footer {
+  max-width: 1020px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 64px)
+    clamp(90px, 13vh, 150px);
+  border-top: 1px solid var(--lumen-hairline);
+}
+
+.lumen-footer__signoff {
+  margin: 0 0 2.2rem;
+  font-family: var(--lumen-font-display);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  line-height: 1.5;
+}
+
+.lumen-footer__ko {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--lumen-ice-dim);
+}
+
+.lumen-footer__data {
+  margin: 0 0 2.4rem;
+}
+
+.lumen-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.2rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dotted var(--lumen-hairline);
+}
+
+.lumen-footer__data dt {
+  flex: 0 0 6.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lumen-ice-dim);
+  line-height: 2.1;
+}
+
+.lumen-footer__data dd {
+  flex: 1 1 16rem;
+  margin: 0;
+}
+
+.lumen-footer__nav {
+  margin: 0 0 2.4rem;
+  font-size: 0.9rem;
+}
+
+.lumen-footer__copy {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.lumen-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--lumen-reveal-ms) var(--lumen-ease-out),
+    transform var(--lumen-reveal-ms) var(--lumen-ease-out);
+  will-change: opacity, transform;
+}
+
+.lumen-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform only; the CSS aurora breathes, slowly
+   ========================================================================== */
+
+@keyframes lumen-drift {
+  0% {
+    transform: translate3d(-2%, 0.5%, 0) scale(1.05) rotate(-1.2deg);
+  }
+  50% {
+    transform: translate3d(2%, -1.5%, 0) scale(1.12) rotate(1.3deg);
+  }
+  100% {
+    transform: translate3d(-1%, 1%, 0) scale(1.07) rotate(-0.5deg);
+  }
+}
+
+@keyframes lumen-sway {
+  0% {
+    transform: translate3d(-3%, 0, 0);
+  }
+  100% {
+    transform: translate3d(3%, 0, 0);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — one composed still, everything readable
+   (The WebGL loop is separately stopped in JS; this handles the CSS side.)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .lumen-aurora__fallback,
+  .lumen-aurora__fallback::after {
+    animation: none;
+  }
+
+  .lumen-aurora__canvas,
+  .lumen-glass {
+    transition: none;
+  }
+
+  .lumen-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .lumen-js .lumen-spark__line {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .lumen-js .lumen-spark__area,
+  .lumen-js .lumen-spark__dot {
+    opacity: 1;
+    transition: none;
+  }
+
+  /* The sky is already still — there is nothing to pause. */
+  .lumen-js .lumen-skybtn {
+    display: none;
+  }
+}

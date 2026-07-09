@@ -1,0 +1,45 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "giwa",
+  "no": 8,
+  "title": {
+    "en": "GIWA — Under Painted Eaves",
+    "ko": "기와 — 처마 아래 단청"
+  },
+  "description": {
+    "en": "A palace-eave restoration guild documents dancheong and the five directional colors on hanji paper — a roofline that draws itself in ink and then floods with pigment, and four dancheong motifs rebuilt as pure SVG symmetry.",
+    "ko": "궁궐 처마 복원공방이 한지 위에 단청과 오방색을 기록한다 — 먹선으로 스스로를 그린 뒤 안료로 물드는 처마선, 그리고 순수 SVG 대칭으로 다시 지은 네 가지 단청 문양."
+  },
+  "aesthetic": "korean-traditional",
+  "techniques": [
+    "svg-line-draw",
+    "clip-path-reveal",
+    "feturbulence-texture",
+    "pointer-parallax"
+  ],
+  "industry": ["culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#8a3b2a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

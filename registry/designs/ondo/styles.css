@@ -1,0 +1,683 @@
+/* ==========================================================================
+   ONDO — perfume atelier, Seoul
+   luxury-fashion · noir / champagne / cream / vermeil · expensive silence
+   Scoped by convention to .ondo-root; classes prefixed ondo-.
+   ========================================================================== */
+
+.ondo-root {
+  /* -- palette ---------------------------------------------------------- */
+  --ondo-noir: #16130f;            /* background — a dark room, not black */
+  --ondo-noir-2: #1a1511;          /* lifted noir — the bottle's stage */
+  --ondo-champagne: #d8c39a;       /* accent — 10.7:1 on noir */
+  --ondo-cream: #efe9df;           /* primary text — 15.3:1 */
+  --ondo-vermeil: #9c6b3f;         /* 4.0:1 — rules + LARGE display only */
+  --ondo-champagne-dim: rgba(216, 195, 154, 0.72); /* ≈ #a49273 — 6.1:1, secondary text */
+  --ondo-hairline: rgba(216, 195, 154, 0.24);      /* derived: rules, borders */
+  --ondo-hairline-strong: rgba(216, 195, 154, 0.38);
+
+  /* -- type -------------------------------------------------------------- */
+  --ondo-font-display: var(--font-italiana), "Italiana", serif;
+  --ondo-font-body: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  /* Hangul falls through Italiana into Noto Serif KR in display settings */
+  --ondo-font-stack: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --ondo-ease-couture: cubic-bezier(0.77, 0, 0.18, 1); /* clip reveals */
+  --ondo-ease-air: cubic-bezier(0.22, 1, 0.36, 1);     /* fades, the pane */
+  --ondo-reveal-ms: 750ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--ondo-noir);
+  color: var(--ondo-cream);
+  font-family: var(--ondo-font-stack);
+  font-weight: 300;
+  font-size: clamp(16px, 1vw + 12px, 19px);
+  line-height: 1.7;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: Noto Serif KR, a touch lighter and quieter. */
+.ondo-root :lang(ko) {
+  font-family: var(--ondo-font-body);
+  letter-spacing: 0.01em;
+}
+
+/* Champagne selection, scoped to the entry root */
+.ondo-root ::selection {
+  background: var(--ondo-champagne);
+  color: var(--ondo-noir);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a champagne hairline, held at a respectful distance */
+.ondo-root :focus-visible {
+  outline: 1px solid var(--ondo-champagne);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+
+.ondo-link {
+  color: var(--ondo-cream);
+  text-decoration: underline;
+  text-decoration-color: var(--ondo-hairline-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.ondo-link:hover {
+  text-decoration-color: var(--ondo-champagne);
+}
+
+.ondo-sheet {
+  position: relative;
+}
+
+/* ==========================================================================
+   Section shell — eyebrow · title · line
+   ========================================================================== */
+
+.ondo-eyebrow {
+  margin: 0 0 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-sechead {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  margin-bottom: clamp(2.4rem, 6vh, 4.2rem);
+}
+
+.ondo-sechead__title {
+  margin: 0;
+  font-family: var(--ondo-font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.12;
+  letter-spacing: 0.12em;
+  color: var(--ondo-cream);
+}
+
+.ondo-sechead__ko {
+  margin-left: 0.35em;
+  font-size: 0.5em;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-sechead__line {
+  margin: 1.1rem 0 0;
+  max-width: 36rem;
+  color: var(--ondo-cream);
+}
+
+.ondo-sechead__lineko {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--ondo-champagne-dim);
+}
+
+/* ==========================================================================
+   Hero — the breath
+   ========================================================================== */
+
+.ondo-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(24px, 6vw, 72px);
+  text-align: center;
+  /* subtle warm vignette — the only light in the room */
+  background: radial-gradient(
+    120% 85% at 50% 24%,
+    rgba(156, 107, 63, 0.11),
+    transparent 62%
+  );
+}
+
+.ondo-hero__eyebrow {
+  margin: 0 0 2.2rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ondo-champagne-dim);
+}
+
+/*
+ * The wordmark is laid out at its FINAL airy tracking (0.4em); the breath
+ * is per-character translateX in em, scaled by (1 − --ondo-breath), so the
+ * animation is compositor-only and the line never reflows. The default
+ * --ondo-breath is 1: without JavaScript, and under reduced motion, the
+ * name simply rests open. padding-left rebalances the trailing tracking.
+ */
+.ondo-wordmark {
+  --ondo-breath: 1;
+  margin: 0;
+  padding-left: 0.4em;
+  font-family: var(--ondo-font-display);
+  font-weight: 400;
+  font-size: clamp(4.2rem, 19vw, 12.5rem);
+  line-height: 1;
+  letter-spacing: 0.4em;
+  color: var(--ondo-champagne);
+  text-shadow: 0 0 44px rgba(216, 195, 154, 0.16);
+}
+
+.ondo-wordmark__ch {
+  display: inline-block;
+  transform: translateX(
+    calc((var(--ondo-ci, 0) - 1.5) * (1 - var(--ondo-breath)) * -0.38em)
+  );
+  will-change: transform;
+}
+
+.ondo-hero__sub {
+  margin: 1.6rem 0 0;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: var(--ondo-cream);
+}
+
+.ondo-hero__rule {
+  width: clamp(72px, 16vw, 150px);
+  height: 1px;
+  margin: 2.6rem 0;
+  background: var(--ondo-vermeil);
+}
+
+.ondo-hero__line {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  letter-spacing: 0.06em;
+  color: var(--ondo-cream);
+}
+
+.ondo-hero__lineko {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-hero__hint {
+  margin: 4rem 0 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-js .ondo-hero__hint {
+  animation: ondo-hint 4.6s var(--ondo-ease-air) infinite;
+}
+
+/* ==========================================================================
+   01 · The vessel — SVG bottle + refraction pane
+   ========================================================================== */
+
+.ondo-bottle {
+  padding: clamp(84px, 12vh, 150px) 0;
+}
+
+.ondo-bottle__fig {
+  margin: 0;
+  padding-inline: clamp(20px, 6vw, 72px);
+  text-align: center;
+}
+
+/* Vermeil is permitted here: display scale only (≥3:1 for large type). */
+.ondo-bottle__degree {
+  margin: 0 auto 0.4rem;
+  font-family: var(--ondo-font-display);
+  font-size: clamp(2.6rem, 9vw, 5.4rem);
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: var(--ondo-vermeil);
+}
+
+/*
+ * The stage background must stay a FLAT color: the refraction canvas fills
+ * itself with this computed backgroundColor before drawing the warped
+ * bottle, so pane and stage blend seamlessly.
+ */
+.ondo-bottle__stage {
+  --ondo-pane-x: 12%;
+  --ondo-pane-top: 7%;
+  --ondo-pane-bottom: 10%;
+  position: relative;
+  width: min(78vw, 440px);
+  aspect-ratio: 360 / 560;
+  margin-inline: auto;
+  background-color: var(--ondo-noir-2);
+  border: 1px solid var(--ondo-hairline);
+}
+
+.ondo-bottle__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ondo-bottle__pane {
+  position: absolute;
+  left: var(--ondo-pane-x);
+  right: var(--ondo-pane-x);
+  top: var(--ondo-pane-top);
+  bottom: var(--ondo-pane-bottom);
+  display: block;
+  opacity: 0;
+}
+
+/* The pane only appears once the first warped frame has been drawn. */
+.ondo-js .ondo-bottle__pane.is-live {
+  opacity: 1;
+  transition: opacity 900ms var(--ondo-ease-air);
+}
+
+/* Hairline frame + a static sheen: the sheet of glass is a real object,
+   visible (empty) even before JS, honest about its own edges. */
+.ondo-bottle__frame {
+  position: absolute;
+  left: var(--ondo-pane-x);
+  right: var(--ondo-pane-x);
+  top: var(--ondo-pane-top);
+  bottom: var(--ondo-pane-bottom);
+  border: 1px solid var(--ondo-hairline-strong);
+  background: linear-gradient(
+    112deg,
+    rgba(239, 233, 223, 0.05) 0%,
+    rgba(239, 233, 223, 0) 34%
+  );
+  pointer-events: none;
+}
+
+.ondo-bottle__caption {
+  max-width: 30rem;
+  margin: 2.2rem auto 0;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  color: var(--ondo-cream);
+}
+
+.ondo-bottle__captionko {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--ondo-champagne-dim);
+}
+
+/* ==========================================================================
+   02 · The collection — horizontal rail, clip-path reveals
+   ========================================================================== */
+
+.ondo-collection {
+  padding: clamp(84px, 12vh, 150px) 0;
+}
+
+.ondo-rail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding: 0.5rem clamp(20px, 6vw, 72px) 1.6rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ondo-hairline-strong) transparent;
+}
+
+.ondo-rail:focus-visible {
+  outline-offset: -4px;
+}
+
+.ondo-js .ondo-rail {
+  cursor: grab;
+}
+
+.ondo-js .ondo-rail.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  scroll-snap-type: none;
+}
+
+.ondo-rail__list {
+  display: flex;
+  gap: clamp(18px, 3vw, 36px);
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ondo-card {
+  flex: none;
+  width: clamp(230px, 62vw, 300px);
+  scroll-snap-align: start;
+}
+
+.ondo-card__art {
+  aspect-ratio: 280 / 340;
+  border: 1px solid var(--ondo-hairline);
+}
+
+.ondo-card__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ondo-card__body {
+  padding-top: 1.1rem;
+}
+
+.ondo-card__temp {
+  margin: 0;
+  font-family: var(--ondo-font-display);
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
+  color: var(--ondo-champagne);
+}
+
+.ondo-card__tempko {
+  margin-left: 0.3em;
+  font-size: 0.55em;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-card__name {
+  margin: 0.45rem 0 0.7rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ondo-cream);
+}
+
+.ondo-card__nameko {
+  margin-left: 0.4em;
+  text-transform: none;
+  letter-spacing: 0.1em;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-card__line {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ondo-cream);
+}
+
+.ondo-card__line:lang(ko) {
+  margin-top: 0.15rem;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-rail__hint {
+  max-width: 880px;
+  margin: 1.4rem auto 0;
+  padding-inline: clamp(20px, 6vw, 72px);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ondo-champagne-dim);
+}
+
+/* ==========================================================================
+   03 · The note — composition ledger
+   ========================================================================== */
+
+.ondo-notes {
+  padding: clamp(84px, 12vh, 150px) 0;
+}
+
+.ondo-tiers {
+  max-width: 880px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+}
+
+.ondo-tier {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.15rem 2rem;
+  padding: clamp(1.5rem, 3.5vh, 2.4rem) 0;
+  border-top: 1px solid var(--ondo-hairline);
+}
+
+.ondo-tier:last-of-type {
+  border-bottom: 1px solid var(--ondo-hairline);
+}
+
+.ondo-tier__name {
+  font-family: var(--ondo-font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ondo-champagne);
+}
+
+.ondo-tier__nameko {
+  margin-left: 0.35em;
+  font-size: 0.7em;
+  text-transform: none;
+  letter-spacing: 0.1em;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-tier__notes {
+  margin: 0;
+  letter-spacing: 0.05em;
+  color: var(--ondo-cream);
+}
+
+.ondo-tier__notes--ko {
+  color: var(--ondo-champagne-dim);
+}
+
+@media (min-width: 760px) {
+  .ondo-tier {
+    grid-template-columns: 11rem 1fr;
+  }
+
+  .ondo-tier__name {
+    grid-row: 1 / span 2;
+  }
+
+  .ondo-tier__notes,
+  .ondo-tier__notes--ko {
+    grid-column: 2;
+  }
+}
+
+.ondo-credo {
+  max-width: 640px;
+  margin: clamp(3.5rem, 8vh, 5.5rem) auto 0;
+  padding-inline: clamp(20px, 6vw, 72px);
+  text-align: center;
+}
+
+.ondo-credo__en {
+  margin: 0;
+  font-family: var(--ondo-font-display);
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+  line-height: 1.55;
+  letter-spacing: 0.06em;
+  color: var(--ondo-cream);
+}
+
+.ondo-credo__ko {
+  margin: 0.6rem 0 2rem;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-credo__ko:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Footer — come warm
+   ========================================================================== */
+
+.ondo-footer {
+  padding: clamp(84px, 12vh, 150px) clamp(20px, 6vw, 72px)
+    clamp(96px, 14vh, 160px);
+  text-align: center;
+}
+
+.ondo-footer__call {
+  margin: 0;
+  font-family: var(--ondo-font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 8vw, 5.2rem);
+  line-height: 1.1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ondo-champagne);
+}
+
+.ondo-footer__callko {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.32em;
+  letter-spacing: 0.3em;
+  text-transform: none;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-footer__rule {
+  width: clamp(72px, 16vw, 150px);
+  height: 1px;
+  margin: 2.8rem auto;
+  background: var(--ondo-vermeil);
+}
+
+.ondo-footer__address {
+  margin: 0 0 2.4rem;
+  font-style: normal;
+  font-size: 0.95rem;
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: var(--ondo-cream);
+}
+
+.ondo-footer__address :lang(ko) {
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-footer__legal {
+  margin: 0 0 2.2rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--ondo-champagne-dim);
+}
+
+.ondo-footer__nav {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   Reveals — all pre-states gated behind .ondo-js
+   ========================================================================== */
+
+.ondo-js [data-reveal="fade"] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--ondo-reveal-ms) var(--ondo-ease-air),
+    transform var(--ondo-reveal-ms) var(--ondo-ease-air);
+  will-change: opacity, transform;
+}
+
+.ondo-js [data-reveal="fade"].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* The collection's masked reveal: a couture wipe on the card's art, its
+   text following one beat later. The stagger set by the observer arrives
+   through --ondo-reveal-delay so children keep the same rhythm. */
+.ondo-js [data-reveal="clip"] .ondo-card__art {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 950ms var(--ondo-ease-couture);
+  transition-delay: var(--ondo-reveal-delay, 0ms);
+  will-change: clip-path;
+}
+
+.ondo-js [data-reveal="clip"].is-visible .ondo-card__art {
+  clip-path: inset(0 0 0 0);
+}
+
+.ondo-js [data-reveal="clip"] .ondo-card__body {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 700ms var(--ondo-ease-air),
+    transform 700ms var(--ondo-ease-air);
+  transition-delay: calc(var(--ondo-reveal-delay, 0ms) + 220ms);
+}
+
+.ondo-js [data-reveal="clip"].is-visible .ondo-card__body {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity only
+   ========================================================================== */
+
+@keyframes ondo-hint {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(5px);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — everything settles into one composed, airy state:
+   the wordmark rests open, reveals appear instantly, the refraction pane
+   holds a single still frame (no rAF loop runs), nothing shimmers.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ondo-js .ondo-hero__hint {
+    animation: none;
+  }
+
+  .ondo-wordmark__ch {
+    transform: none !important;
+  }
+
+  .ondo-js .ondo-bottle__pane.is-live {
+    transition: none;
+  }
+
+  .ondo-js [data-reveal="fade"],
+  .ondo-js [data-reveal="clip"] .ondo-card__body {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .ondo-js [data-reveal="clip"] .ondo-card__art {
+    clip-path: none;
+    transition: none;
+  }
+
+  .ondo-rail {
+    scroll-behavior: auto;
+  }
+}

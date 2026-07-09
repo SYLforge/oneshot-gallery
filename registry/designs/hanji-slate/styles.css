@@ -1,0 +1,929 @@
+/* ==========================================================================
+   HANJI SLATE — the paper computer
+   bento-product · graphite on warm paper · one amber · e-ink calm
+   Scoped by convention to .slate-root; classes prefixed slate-.
+   ========================================================================== */
+
+.slate-root {
+  /* -- palette ----------------------------------------------------------- */
+  --slate-bg: #e9e6e0;            /* warm gray — the desk the slate lies on */
+  --slate-ink: #26262a;           /* graphite — 12.1:1 on warm gray */
+  --slate-paper: #f7f5f0;         /* e-ink white — tiles, device, footer type */
+  --slate-amber: #e8830c;         /* bright amber — decorative marks + dark ground
+                                     only (2.4:1 on paper: never text on light) */
+  --slate-amber-deep: #9a5504;    /* derived amber for functional accents on light
+                                     ground — 4.6:1 on warm gray, 5.3:1 on paper */
+  --slate-ink-soft: rgba(38, 38, 42, 0.72); /* ≈ #616061 — 5.3:1 on warm gray */
+  --slate-paper-soft: rgba(247, 245, 240, 0.72); /* footer secondary — 7.9:1 */
+  --slate-shell: #d8d4cb;         /* device shell, buttons, the magnesium back */
+  --slate-hairline: rgba(38, 38, 42, 0.14);        /* rules, tile borders */
+  --slate-hairline-strong: rgba(38, 38, 42, 0.3);  /* emphasized rules */
+
+  /* -- type --------------------------------------------------------------- */
+  --slate-font-sans: var(--font-hanken), var(--font-noto-kr), "Helvetica Neue",
+    Arial, sans-serif;
+  --slate-font-mono: var(--font-jbmono), var(--font-noto-kr), "Courier New",
+    monospace;
+
+  /* -- motion -------------------------------------------------------------- */
+  --slate-ease-flip: cubic-bezier(0.22, 1, 0.36, 1); /* FLIP + small reveals */
+  --slate-flip-ms: 420ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--slate-bg);
+  color: var(--slate-ink);
+  font-family: var(--slate-font-sans);
+  font-size: clamp(16px, 0.4vw + 14px, 18px);
+  line-height: 1.55;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Sepia reading mode — only the papers warm up; ink and amber hold still. */
+.slate-root[data-mode="sepia"] {
+  --slate-bg: #e7dfcf;
+  --slate-paper: #f2ead9;
+  --slate-shell: #d6cdba;
+}
+
+.slate-root *,
+.slate-root *::before,
+.slate-root *::after {
+  box-sizing: border-box;
+}
+
+/* Korean is first-class: Noto Sans KR everywhere Hangul appears (including
+   inside mono readouts), with dignified line breaking. */
+.slate-root :lang(ko) {
+  font-family: var(--font-noto-kr), "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+  word-break: keep-all;
+}
+
+/* Amber selection, scoped to the entry root. Deliberately e-ink loud:
+   the one place the bright amber touches text. */
+.slate-root ::selection {
+  background: var(--slate-amber);
+  color: var(--slate-paper);
+}
+
+/* Keyboard focus: an amber ring — deep amber on light ground (4.6:1),
+   bright amber on the graphite footer (5.8:1). :focus-visible only. */
+.slate-root :focus-visible {
+  outline: 2px solid var(--slate-amber-deep);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.slate-footer :focus-visible {
+  outline-color: var(--slate-amber);
+}
+
+/* ==========================================================================
+   The e-ink refresh — 120ms full-invert flash on reading-mode change.
+   Hard cuts, no easing: e-paper does not fade, it snaps. Skipped entirely
+   under prefers-reduced-motion (see the block at the end).
+   ========================================================================== */
+
+.slate-js.is-refreshing {
+  animation: slate-eink 120ms linear both;
+}
+
+@keyframes slate-eink {
+  0%,
+  11% {
+    filter: invert(0);
+  }
+  12%,
+  82% {
+    filter: invert(1);
+  }
+  83%,
+  100% {
+    filter: invert(0);
+  }
+}
+
+/* ==========================================================================
+   Section headers — NN title · 한국어 — note
+   ========================================================================== */
+
+.slate-sechead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.1rem;
+  margin-bottom: clamp(1.8rem, 4vh, 2.8rem);
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--slate-hairline);
+}
+
+.slate-sechead__no {
+  font-family: var(--slate-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--slate-amber-deep);
+}
+
+.slate-sechead__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.slate-sechead__title [lang="ko"] {
+  margin-left: 0.35rem;
+  font-weight: 500;
+  color: var(--slate-ink-soft);
+}
+
+.slate-sechead__note {
+  margin: 0 0 0 auto;
+  font-size: 0.85rem;
+  color: var(--slate-ink-soft);
+}
+
+/* ==========================================================================
+   01 · Hero — the calm warm stage
+   ========================================================================== */
+
+.slate-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 56px) clamp(40px, 6vh, 72px);
+  text-align: center;
+}
+
+.slate-hero__overline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem 1.6rem;
+  margin: 0;
+  font-family: var(--slate-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate-ink-soft);
+}
+
+.slate-hero__title {
+  margin: 1.1rem 0 0.35rem;
+  font-size: clamp(2.7rem, 8vw, 6rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.slate-hero__sub {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 500;
+  color: var(--slate-ink-soft);
+}
+
+.slate-hero__tagline {
+  margin: 1.4rem 0 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+  font-weight: 550;
+}
+
+.slate-hero__stage {
+  position: relative;
+  width: min(330px, 70vw);
+  margin-top: clamp(2rem, 5vh, 3.4rem);
+}
+
+/* Soft warm shadow — the second parallax plane */
+.slate-hero__shadow {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -22px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(38, 38, 42, 0.26),
+    rgba(38, 38, 42, 0) 74%
+  );
+}
+
+.slate-hero__device {
+  position: relative;
+}
+
+/* Ambient float on the SVG itself; pointer parallax rides the wrapper.
+   JS-gated so the no-JS page is a finished print. */
+.slate-js .slate-hero__device .slate-device {
+  animation: slate-float 6.5s ease-in-out infinite;
+}
+
+.slate-hero__specline {
+  margin: clamp(2.2rem, 5vh, 3.2rem) 0 0;
+  font-family: var(--slate-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--slate-ink-soft);
+}
+
+.slate-hero__hint {
+  margin: 2.2rem 0 0;
+  font-family: var(--slate-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--slate-ink-soft);
+}
+
+/* -- the device, drawn ---------------------------------------------------- */
+
+.slate-device {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.slate-device__bezel {
+  fill: var(--slate-paper);
+  stroke: var(--slate-hairline-strong);
+  stroke-width: 1.5;
+}
+
+.slate-device__bezelInner {
+  fill: none;
+  stroke: var(--slate-hairline);
+  stroke-width: 1;
+}
+
+.slate-device__button,
+.slate-device__port {
+  fill: var(--slate-shell);
+}
+
+.slate-device__screen {
+  fill: var(--slate-bg);
+  stroke: var(--slate-hairline);
+  stroke-width: 1;
+}
+
+.slate-device__meta {
+  font-family: var(--slate-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  fill: var(--slate-ink-soft);
+}
+
+.slate-device__rule {
+  stroke: var(--slate-hairline-strong);
+  stroke-width: 1;
+}
+
+.slate-device__heading {
+  font-family: var(--font-noto-kr), sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  fill: var(--slate-ink);
+}
+
+.slate-device__ink path {
+  fill: none;
+  stroke: var(--slate-ink);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  opacity: 0.82;
+}
+
+.slate-device__annotation {
+  fill: none;
+  stroke: var(--slate-amber);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.slate-device__dot {
+  fill: var(--slate-amber);
+}
+
+/* ==========================================================================
+   02 · Bento grid — the signature FLIP
+   ========================================================================== */
+
+.slate-bento {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 56px);
+}
+
+.slate-bento__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: minmax(148px, auto);
+  grid-auto-flow: dense;
+  gap: 14px;
+}
+
+.slate-tile {
+  position: relative;
+  overflow: hidden;
+  background: var(--slate-paper);
+  border: 1px solid var(--slate-hairline);
+  border-radius: 18px;
+}
+
+.slate-tile--hero {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.slate-tile--wide {
+  grid-column: span 2;
+}
+
+.slate-tile--box {
+  grid-column: span 1;
+}
+
+/* Expanded: full row width; useFlip morphs everyone between the states. */
+.slate-tile.is-open {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  border-color: var(--slate-hairline-strong);
+}
+
+.slate-js .slate-tile {
+  cursor: pointer;
+}
+
+.slate-js .slate-tile:hover {
+  border-color: var(--slate-hairline-strong);
+}
+
+/* Counter-scaled content wrapper — useFlip applies the inverse scale here */
+.slate-tile__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: clamp(18px, 2.4vw, 26px);
+}
+
+.slate-tile__readout {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0;
+  font-family: var(--slate-font-mono);
+}
+
+.slate-tile__figure {
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.slate-tile--hero .slate-tile__figure {
+  font-size: clamp(3rem, 7vw, 5.6rem);
+}
+
+.slate-tile__unit {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate-amber-deep);
+}
+
+.slate-tile__title {
+  margin: auto 0 0;
+  font-size: 1.02rem;
+}
+
+.slate-tile__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.slate-tile__name [lang="ko"] {
+  margin-left: 0.15rem;
+  font-weight: 500;
+  color: var(--slate-ink-soft);
+}
+
+/* plus → minus, transform-only */
+.slate-tile__plus {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.slate-tile__plus::before,
+.slate-tile__plus::after {
+  content: "";
+  position: absolute;
+  background: var(--slate-amber-deep);
+  border-radius: 1px;
+}
+
+.slate-tile__plus::before {
+  top: 7px;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.slate-tile__plus::after {
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  transition: transform 200ms var(--slate-ease-flip);
+}
+
+.slate-tile__toggle[aria-expanded="true"] .slate-tile__plus::after {
+  transform: scaleY(0);
+}
+
+.slate-tile__line {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.95rem;
+  color: var(--slate-ink-soft);
+}
+
+.slate-tile__detail {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 68ch;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--slate-hairline);
+}
+
+.slate-tile__detail p {
+  margin: 0;
+}
+
+.slate-tile__detail p[lang="ko"] {
+  color: var(--slate-ink-soft);
+}
+
+/* Hiding is JS-gated: without .slate-js every detail is plainly visible. */
+.slate-js .slate-tile:not(.is-open) .slate-tile__detail {
+  display: none;
+}
+
+.slate-js .slate-tile.is-open .slate-tile__detail {
+  animation: slate-fade 300ms var(--slate-ease-flip) 140ms both;
+}
+
+@media (max-width: 900px) {
+  .slate-bento__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(132px, auto);
+  }
+
+  .slate-tile--hero {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+
+  .slate-tile--wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .slate-bento__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .slate-tile--hero,
+  .slate-tile--wide,
+  .slate-tile--box {
+    grid-column: span 1;
+  }
+}
+
+/* ==========================================================================
+   03 · Exploded view — scroll-scrubbed disassembly
+   ========================================================================== */
+
+.slate-exploded {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+.slate-exploded__sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.6rem, 2vh, 1.6rem);
+  padding-block: clamp(72px, 11vh, 140px);
+}
+
+/* The scrub runway only exists when JS can drive it. */
+.slate-js .slate-exploded {
+  height: 280vh;
+}
+
+.slate-js .slate-exploded .slate-exploded__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  padding-block: clamp(20px, 4vh, 48px);
+}
+
+.slate-exploded__svg {
+  display: block;
+  width: min(640px, 100%);
+  height: auto;
+  /* short viewports: let the diagram letterbox instead of overflowing
+     the sticky stage (default preserveAspectRatio keeps it centered) */
+  max-height: 64vh;
+  max-height: 64svh;
+  margin-inline: auto;
+}
+
+/* plates ------------------------------------------------------------------ */
+
+.slate-plate__slab {
+  stroke-width: 1;
+}
+
+.slate-plate--glass .slate-plate__slab {
+  fill: var(--slate-paper);
+  fill-opacity: 0.5;
+  stroke: var(--slate-hairline-strong);
+}
+
+.slate-plate__sheen {
+  stroke: var(--slate-paper);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+
+.slate-plate--panel .slate-plate__slab {
+  fill: var(--slate-paper);
+  stroke: var(--slate-hairline-strong);
+}
+
+.slate-plate__text line {
+  stroke: var(--slate-ink-soft);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+
+.slate-plate--battery .slate-plate__slab {
+  fill: var(--slate-ink);
+  stroke: none;
+}
+
+.slate-plate__terminal {
+  fill: var(--slate-amber);
+}
+
+.slate-plate__stamp {
+  font-family: var(--slate-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  fill: var(--slate-paper-soft);
+}
+
+.slate-plate--back .slate-plate__slab {
+  fill: var(--slate-shell);
+  stroke: var(--slate-hairline-strong);
+}
+
+.slate-plate__emboss {
+  fill: none;
+  stroke: var(--slate-ink-soft);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+.slate-plate__stamp--etch {
+  fill: var(--slate-ink-soft);
+}
+
+/* callouts — drawn with stroke-dashoffset, scrubbed by scroll ------------- */
+
+.slate-exploded__line {
+  fill: none;
+  stroke: var(--slate-ink-soft);
+  stroke-width: 1.5;
+}
+
+.slate-exploded__label {
+  font-family: var(--slate-font-mono);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  fill: var(--slate-ink);
+}
+
+.slate-exploded__labelKo {
+  font-family: var(--font-noto-kr), sans-serif;
+  font-size: 13px;
+  fill: var(--slate-ink-soft);
+}
+
+/* Narrow screens: in-SVG callouts would shrink below legibility, so they
+   hand off to an HTML legend. */
+.slate-exploded__legend {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .slate-exploded__callout {
+    display: none;
+  }
+
+  .slate-exploded__legend {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0.6rem 0 0;
+    padding-left: 1.4rem;
+    font-family: var(--slate-font-mono);
+    font-size: 0.85rem;
+  }
+
+  .slate-exploded__legend [lang="ko"] {
+    color: var(--slate-ink-soft);
+  }
+}
+
+/* ==========================================================================
+   04 · Spec sheet
+   ========================================================================== */
+
+.slate-spec {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 56px);
+}
+
+.slate-spec__table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--slate-hairline-strong);
+}
+
+.slate-spec__row {
+  border-bottom: 1px solid var(--slate-hairline);
+}
+
+.slate-spec__label {
+  width: 11rem;
+  padding: 0.85rem 1rem 0.85rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.slate-spec__label [lang="ko"] {
+  margin-left: 0.3rem;
+  font-weight: 400;
+  color: var(--slate-ink-soft);
+}
+
+.slate-spec__value {
+  padding: 0.85rem 0;
+  font-family: var(--slate-font-mono);
+  font-size: 0.92rem;
+}
+
+.slate-spec__key {
+  font-weight: 600;
+  color: var(--slate-amber-deep);
+}
+
+.slate-spec__fine {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--slate-ink-soft);
+}
+
+@media (max-width: 560px) {
+  .slate-spec__label,
+  .slate-spec__value {
+    display: block;
+    width: auto;
+    white-space: normal;
+  }
+
+  .slate-spec__label {
+    padding-bottom: 0.1rem;
+  }
+
+  .slate-spec__value {
+    padding-top: 0;
+    padding-bottom: 0.85rem;
+  }
+}
+
+/* ==========================================================================
+   05 · Footer — graphite, plus the reading-mode toggle
+   ========================================================================== */
+
+.slate-footer {
+  margin-top: clamp(48px, 8vh, 96px);
+  background: var(--slate-ink);
+  color: var(--slate-paper);
+}
+
+.slate-footer__inner {
+  display: grid;
+  gap: clamp(2rem, 5vh, 3.2rem);
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 56px)
+    clamp(48px, 7vh, 80px);
+}
+
+.slate-footer__giant {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(1.6rem, 4.6vw, 3.2rem);
+  font-weight: 650;
+  line-height: 1.15;
+}
+
+.slate-footer__giant [lang="ko"] {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.72em;
+  font-weight: 500;
+  color: var(--slate-paper-soft);
+}
+
+.slate-footer__modeLabel {
+  margin: 0 0 0.6rem;
+  font-family: var(--slate-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate-paper-soft);
+}
+
+.slate-footer__toggle {
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid rgba(247, 245, 240, 0.3);
+  border-radius: 999px;
+  background: none;
+  font-family: var(--slate-font-mono);
+  cursor: pointer;
+}
+
+.slate-footer__modeOpt {
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--slate-paper-soft);
+}
+
+.slate-footer__modeOpt.is-active {
+  background: var(--slate-paper);
+  color: var(--slate-ink);
+}
+
+.slate-footer__modeNote {
+  margin: 0.7rem 0 0;
+  max-width: 52ch;
+  font-size: 0.85rem;
+  color: var(--slate-paper-soft);
+}
+
+.slate-footer__data {
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.slate-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dotted rgba(247, 245, 240, 0.22);
+}
+
+.slate-footer__data dt {
+  flex: 0 0 5.5rem;
+  font-family: var(--slate-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate-paper-soft);
+}
+
+.slate-footer__data dd {
+  margin: 0;
+}
+
+.slate-footer__link {
+  color: var(--slate-paper);
+  text-decoration: underline;
+  text-decoration-color: var(--slate-amber);
+  text-underline-offset: 3px;
+}
+
+.slate-footer__link:hover {
+  color: var(--slate-amber);
+}
+
+.slate-footer__legal {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--slate-paper-soft);
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / filter only
+   ========================================================================== */
+
+@keyframes slate-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes slate-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — one beautiful static frame
+   - no e-ink flash (mode still switches instantly)
+   - no device float, no detail fade, instant plus/minus
+   - the exploded runway collapses: assembled diagram, labels shown
+   - useFlip never captures, so tile toggles snap (JS side)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .slate-js.is-refreshing {
+    animation: none;
+  }
+
+  .slate-js .slate-hero__device .slate-device {
+    animation: none;
+  }
+
+  .slate-js .slate-tile.is-open .slate-tile__detail {
+    animation: none;
+  }
+
+  .slate-tile__plus::after {
+    transition: none;
+  }
+
+  .slate-js .slate-exploded {
+    height: auto;
+  }
+
+  .slate-js .slate-exploded .slate-exploded__sticky {
+    position: static;
+    height: auto;
+    padding-block: clamp(72px, 11vh, 140px);
+  }
+}

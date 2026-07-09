@@ -1,0 +1,223 @@
+# GIWA — Under Painted Eaves · breakdown
+
+A note before reading: the Korean breakdown is the original document, and
+this English text is its translation note — the same relationship the page
+itself keeps between its two languages.
+
+## The hook: plate no. 08 of the guild's catalog
+
+Imagine a guild that repaints palace eaves. Before they paint, they
+document — the color system, the construction of each pattern, the order
+of hands. This page is the eighth plate of that catalog. It is not a
+website *about* dancheong; it is a working document *of* it: the five
+colors first, then the patterns, then the method, then the guild's
+sign-off.
+
+The design bet: museum-label dignity and a practitioner's precision can
+live in the same sentence. So every Korean line ends in the plain
+declarative — it records, it does not sing.
+
+## Art direction
+
+Pages about Korean tradition usually slip at the same spot: ornament. One
+dragon, one taegeuk, one sepia filter, and heritage becomes a mood board.
+The discipline here is the opposite — **structure is the ornament**.
+Every color is a directional obangsaek color; every motif is one unit
+plus a symmetry operation; every animation replays the guild's real
+working order: the construction drawing first, pigment after.
+
+One more law of color: the roof plane is never painted. Fired clay stays
+gray, and dancheong lives only *under* the eave — because that is how the
+real building works. The restraint is the authenticity.
+
+Contrast is where the spec had to bend. Noerok `#58796f` measures 4.2:1
+on hanji — perfect as a ground coat, insufficient as body text — so it
+was demoted to surfaces and large type, and a derived `noerok-deep`
+`#3e5850` (6.7:1) carries all secondary text. Hwang `#d9a441` is 2.0:1 on
+paper and never touches text there; it marks seed-pods, the bell, gilt
+dots — wherever hwang lands becomes the center of the pattern, which is
+its actual job in dancheong.
+
+## Technique 1 — the roofline: draw, then flood
+
+The hero roof is two SVG layers sharing one computed geometry. The eave
+is a single cubic Bézier; the 26 round tile-ends and 18 rafter discs sit
+at sampled points along vertical offsets of that same curve:
+
+```tsx
+// Hero.tsx — the eave: corners lifted, center at rest
+const EAVE: Cubic = [
+  { x: 48, y: 300 }, { x: 320, y: 352 },
+  { x: 880, y: 352 }, { x: 1152, y: 300 },
+];
+
+// tile-end / rafter rows: equal samples on an offset of the eave
+function row(n: number, dy: number, inset: number): Pt[] {
+  const curve = offsetEave(dy);
+  return Array.from({ length: n }, (_, i) => {
+    const t = inset + (1 - 2 * inset) * ((i + 0.5) / n);
+    return cubicAt(t, curve);
+  });
+}
+```
+
+The first layer — the ink — draws itself. Giving every path
+`pathLength={1}` normalizes the dash coordinate system to 0–1 regardless
+of true length, so one CSS rule choreographs every stroke:
+
+```css
+.giwa-js .giwa-hero__art .giwa-ink-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: giwa-draw 1.1s var(--giwa-ease-brush) both;
+  animation-delay: var(--d, 0s); /* ridge 0s → eave .55s → columns 1.15s */
+}
+```
+
+The order is a carpenter's order: ridge, end-tiles, hip lines, eleven
+tile courses, and then the eave — the longest stroke — takes 1.5 seconds.
+The second layer is the same roof fully colored, and at 2.05s, just as
+the last ink line settles, an animated clip-path sweeps it in from the
+left:
+
+```css
+@keyframes giwa-sweep-in {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }   /* line art takes its colors */
+}
+```
+
+The real reason for the two-layer structure is accessibility: the paint
+layer's hidden state only exists under `.giwa-js`, so without JavaScript
+the page is a fully painted plate from the first byte — and reduced
+motion gets the same final frame instantly.
+
+## Technique 2 — the lotus: one petal, rotated eight times
+
+The gallery's rule is the rule a dancheong painter actually uses:
+**define one unit, let symmetry do the rest.** In the entire lotus
+medallion, exactly one petal is drawn by hand:
+
+```tsx
+// PatternGallery.tsx — one petal, eight rotations
+<defs>
+  <g id="giwa-lotus-p">
+    <path className="giwa-f-seok giwa-s-ink2" d={LOTUS_PETAL} />   {/* seokganju body */}
+    <path className="giwa-f-hwang" d={LOTUS_PETAL_IN} />           {/* hwang inner leaf */}
+    <path className="giwa-s-baek" fill="none" d={LOTUS_PETAL_LIGHT} /> {/* baek breath line */}
+  </g>
+</defs>
+{Array.from({ length: 8 }, (_, i) => (
+  <use key={i} href="#giwa-lotus-p" transform={`rotate(${i * 45} 110 110)`} />
+))}
+```
+
+The petal already carries the whole dancheong grammar: a bold ink
+outline, color bands inside it, and the white breath (bitneoki) between
+colors. Green shoots rise at the 22.5° offsets, a samcheong band binds
+the ring (its dotted baek circle is just `stroke-dasharray`), and the
+sixteen outer scallops reuse one path whose fill is inherited from each
+`use` — shapes in `defs` that declare no fill take it from their
+instance.
+
+Moricho is the opposite operation: build the left beam-end once, mirror
+it with `scale(-1, 1)` — exactly how the real pattern sits at both ends
+of a beam. Geummun strokes one spiral polyline three times (heuk 16.5
+under baek 13 under samcheong 7.5 — an outlined ribbon from three
+selectors) and translates it six times at 52px.
+
+Each motif also carries a small ink layer — compass circles and radial
+spokes, the skeleton of a real construction drawing — that strokes
+itself at scroll-into-view before the painted layer floods over it: a
+`circle()` bloom from the seed-pod for the medallion, a left-to-right
+sweep for beam and fret, a top-down drop for the bell, because hanging
+things are painted from the top.
+
+## Technique 3 — the grain of hanji
+
+The paper comes in two plies. Page-wide, one static feTurbulence sheet
+multiplies over everything (fractalNoise 0.75, alpha ≈ 0.07). The method
+section's stage has three plies, and the important one is the second
+layer's anisotropic frequency:
+
+```tsx
+// HanjiMethod.tsx — mulberry fiber has a direction
+<feTurbulence type="fractalNoise" baseFrequency="0.008 0.18" numOctaves="3" />
+```
+
+Two values in `baseFrequency` stretch the noise along one axis — long
+horizontal fiber streaks, the way the papermaker's screen leaves its
+direction in real hanji. The three layers drift with the pointer at
+depths 4 / 8 / −5 px (one moves against the others — parallax between
+plies of paper). The hook lerps normalized coordinates (0.09/frame,
+dt-corrected) and writes just two CSS variables; the travel cap lives in
+the CSS multiplication. On touch it never attaches; under reduced motion
+the paper lies flat.
+
+## Motion math
+
+The norigae is a flourish, but the physics is real — a one-angle damped
+pendulum:
+
+```ts
+// Footer.tsx — θ″ = −kθ − cω; scroll gives the angular velocity a kick
+theta += omega * dt;
+omega += (-16 * theta - 2.1 * omega) * dt;   // k=16 → natural swing ≈ 0.64Hz
+omega += clamp(dy * 0.011, -0.9, 0.9);        // scroll impulse
+```
+
+With k = 16 the natural frequency is √16 ⁄ 2π ≈ 0.64Hz — the tempo a
+finger-length tassel actually swings at. Damping ratio ζ = c ⁄ 2√k ≈
+0.26: two or three return swings, then rest. The angle clamps at
+±0.24rad so no scroll flick can flip it. The loop parks itself offscreen
+(IntersectionObserver) and again once θ and ω run out — a resting
+pendulum costs zero rAF frames.
+
+The parallax lerp of 0.09 has a half-life of ~7.4 frames (≈ 123ms):
+enough lag that the paper follows the hand without sticking to it like a
+cursor.
+
+## Performance notes
+
+- No persistent rAF loops. Pendulum and parallax wake on demand,
+  converge, and park; both die completely offscreen.
+- All feTurbulence is static — each filter rasterizes once. Only layer
+  `transform`s move, so nothing leaves the compositor.
+- `pathLength={1}` keeps the stroke animations free of per-path length
+  measurement; after the flood, the paint layer covers the ink layer
+  entirely.
+- Reveals use the same imperative IO pattern as pale-signal — class +
+  `transitionDelay` writes, no per-item React re-renders.
+- The obangsaek color swap has no transition — intent and thrift at once.
+
+## Accessibility notes
+
+- **Reduced motion:** the hook (useSyncExternalStore over matchMedia)
+  disables reveals, parallax, and the pendulum in JS; a CSS media block
+  removes every draw, flood, and appear. The result is the finished
+  plate, instantly — zero information lost.
+- **No JS:** every pre-reveal state exists only under `.giwa-js`. The
+  five obangsaek notes read as a full catalog without JavaScript.
+- **Touch & keyboard:** the color panels are real buttons; hover, focus,
+  and tap all do the same thing (`aria-expanded` + `aria-controls`). The
+  focus ring is 2px seokganju with a faint pigment halo,
+  `:focus-visible` only.
+- **Semantics:** the roof and each motif are `role="img"` with bilingual
+  descriptions; decorative layers are `aria-hidden`. The root is
+  `lang="ko"` and every English run is `lang="en"`, so screen readers
+  switch voices correctly.
+- **Contrast:** body 14.7:1, accent 6.6:1, secondary 6.7:1; the 4.2:1
+  noerok and 2.0:1 hwang never carry meaning.
+
+## Remix ideas
+
+1. **Night survey.** Same geometry on ink-black ground; a flashlight
+   (the pointer) reveals painted color through a clip-path circle — a
+   nighttime condition-survey plate.
+2. **Jogakbo catalog.** Swap the lotus's rotational symmetry for the
+   translational symmetry of patchwork wrapping cloth; feTurbulence
+   becomes ramie weave, stroke-draw becomes stitching — the basting line
+   is already half-done by `stroke-dasharray`.
+3. **Before/after slider.** Bind the hero's clip-path to drag instead of
+   time — faded dancheong on the left, restored on the right. The
+   guild's fiction becomes the interaction itself.
