@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "yeobaek",
+  "no": 7,
+  "title": {
+    "en": "YEOBAEK — The Journal of Blank Space",
+    "ko": "여백 — 빈 공간의 잡지"
+  },
+  "description": {
+    "en": "A bilingual literary journal devoted to yeobaek — negative space in Korean art and life — set as a quiet editorial spread where tipped-in plates pin and draw themselves while the essay flows past.",
+    "ko": "한국 예술과 삶 속의 여백을 다루는 이중언어 문예지 — 접지 도판이 자리를 지키며 스스로 그려지는 동안, 에세이가 그 곁을 조용히 흘러가는 에디토리얼 지면."
+  },
+  "aesthetic": "editorial-serif",
+  "techniques": ["scroll-scrub-pinned", "svg-line-draw", "char-split-reveal"],
+  "industry": ["publishing"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#7d2a26",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

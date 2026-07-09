@@ -1,0 +1,266 @@
+# KEMURI — breakdown
+
+## The hook
+
+There is an atelier in Kyoto that has been lighting the same kind of fire
+since 1927, and it does not sell you the incense. It sells you the hour the
+incense takes to burn. The page opens with a censer already lit — you
+arrive mid-hour, the way you arrive at every real place — and the only
+thing moving is a ribbon of smoke that refuses to hurry. Everything else
+on the page is a way of asking you to match its pace: a poem that appears
+one glyph per tick of an incense clock, paintings that take two seconds to
+settle out of water, a menu that prices time instead of grams.
+
+The design bet: on a light page with no imagery budget, *simulated smoke*
+can carry more atmosphere than any photograph — because a photograph of
+smoke is still, and stillness is the one thing smoke never does.
+
+## Art direction
+
+Washi-sumi-e lives or dies on restraint. The ground is warm paper
+(`#efe7d8`), the voice is ink (`#1c1814`, 14.4:1), and there is exactly
+one warm color — ember `#c96f2e` — which appears where fire actually is:
+the censer tip, the seals, the button's ink-fill. The moment a second warm
+hue arrives, the page becomes a café menu.
+
+Two constraints did the hard work. First, the brief's ember and gold both
+fail AA on washi (2.9:1 and 2.5:1), so on light ground they were demoted
+to objects — a seal is a thing, not a sentence — and two working tokens
+were derived: `ink-soft #4f4a43` (sumi thinned with water, 7.1:1) for
+every secondary line, and `ember-deep #a04f16` (a banked coal, 4.7:1)
+wherever ember must function: eyebrows, the menu's hour numerals, the
+focus ring, `::selection`. Ember gets its full voice back exactly once,
+in the dark room at the end, where it measures 4.9:1 on sumi.
+
+Second, the fonts refuse the obvious pairing. EB Garamond speaks English
+the way the house would — slowly, with a good pen — and Zen Old Mincho
+holds every Japanese glyph upright; the stack order (`EB Garamond, Zen
+Old Mincho, serif`) means kanji fall through the Latin face into the
+mincho with no markup at all. The two languages are distinguished by
+posture, not size: English italicizes, mincho never leans.
+
+## Technique 1 — curl noise, or why this smoke doesn't look like confetti
+
+The naive way to animate smoke is to give each particle a random wander.
+It reads as static, or snow — because independent random walks have no
+*structure*. Real smoke is a fluid: neighboring parcels move together,
+eddies form and persist, and — crucially — the flow is incompressible.
+Particles never bunch into clumps or tear into voids.
+
+You can get all of that without a fluid solver. Take any smooth scalar
+field ψ (the *potential*) and define the velocity as its rotated
+gradient:
+
+```ts
+// SmokeCanvas.tsx — divergence-free flow: velocity = (∂ψ/∂y, −∂ψ/∂x)
+const cx =
+  (psi(x, y + CURL_EPS, t) - psi(x, y - CURL_EPS, t)) / (2 * CURL_EPS);
+const cy =
+  -(psi(x + CURL_EPS, y, t) - psi(x - CURL_EPS, y, t)) /
+  (2 * CURL_EPS);
+```
+
+This is the 2D *curl* of ψ, and a rotated gradient is divergence-free by
+construction: ∂vx/∂x + ∂vy/∂y = ∂²ψ/∂x∂y − ∂²ψ/∂y∂x = 0. Whatever noise
+you pour into ψ, the resulting flow conserves area — particles advected
+by it swirl around the potential's contour lines forever without ever
+compressing. That single property is the difference between smoke and
+confetti.
+
+ψ itself is two octaves of seeded value noise (feature sizes ~150px and
+~56px), with one trick that sells the whole illusion:
+
+```ts
+// SmokeCanvas.tsx — the field itself rises with the smoke
+function psi(x: number, y: number, t: number): number {
+  const yr = y + t * FIELD_RISE; // 26 px/s
+  return (
+    valueNoise(x * EDDY_LARGE, yr * EDDY_LARGE) - 0.5 +
+    (valueNoise(x * EDDY_SMALL + 37.2, yr * (EDDY_SMALL * 1.35) + 11.8) - 0.5) * 0.45
+  );
+}
+```
+
+Offsetting the noise domain's y by `t · 26px/s` makes the eddies
+themselves drift upward. Without it, the plume swims through frozen
+turbulence and looks like it's climbing a rope; with it, each coil is
+born, rises, and dies with the smoke it belongs to.
+
+Particles (a `Float32Array`, ~260–820 by stage area) don't obey the field
+directly — they relax toward it at 2.4 s⁻¹, which is inertia, which is
+weight. And two outside forces bend the ribbon without ever steering it:
+
+- **Scroll.** The `useScrollVelocity` hook records raw px/ms samples; the
+  rAF loop treats anything staler than 140ms as "stopped", lerps a lag
+  value toward `velocity × 210px/s` (capped ±190), and applies it
+  downward, scaled by height. Scroll fast and the plume bends like smoke
+  behind a moved cup; stop, and it recovers on the smoothing constant,
+  not on an animation you wrote.
+- **Pointer.** A capped horizontal pull (≤ ±54 px/s) toward the cursor,
+  gated by an energy value with asymmetric lerps — attack 0.055, release
+  0.018 per 60fps frame. The smoke notices your hand in a quarter
+  second and takes three to forget it. On touch, or after 2.6s of
+  silence, a two-sine breeze (~30s and ~13s periods, no common divisor)
+  takes back over.
+
+The plume is drawn as three soft radial sprites: young smoke uses a
+darker ink sprite that crossfades to pale gray as it disperses, and an
+ember glint rides the first half-second of each particle's life — the
+coal's light climbing into the smoke. Before first paint the system
+pre-advects 120 steps of 85ms, so you never see the plume being born; it
+was burning before you arrived.
+
+## Technique 2 — the ink that settles
+
+The three plates are not images. Each is layered vector ink — silhouettes
+under `feGaussianBlur` at several radii for wet edges, opacity as aerial
+perspective, the smoke stroke in plate three drawn three times (widths
+13/6/2.2 at rising opacity) like a loaded brush retracing itself. On top
+of each art group sits the reveal:
+
+```tsx
+{/* InkPlates.tsx — per-plate turbulence feeding a displacement map */}
+<filter id="kemuri-p1-settle" x="-14%" y="-14%" width="128%" height="128%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.011 0.017" numOctaves="2" seed="19" result="w" />
+  <feDisplacementMap in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G" />
+</filter>
+```
+
+The markup ships with `scale="0"` — settled. That is the page's no-JS
+state and its reduced-motion state: a finished painting. Only after mount
+does JavaScript raise the chaos, and only when a plate enters the
+viewport does it settle:
+
+```ts
+// InkPlates.tsx — animate ONE number: the displacement scale
+const tick = (now: number) => {
+  const p = Math.min((now - t0) / SETTLE_MS, 1);
+  const ease = 1 - (1 - p) * (1 - p) * (1 - p); // cubic out — a sigh
+  fe.setAttribute("scale", String(SETTLE_FROM * (1 - ease)));
+  if (p < 1) rafs.add(requestAnimationFrame(tick));
+};
+```
+
+The perf shape matters: `baseFrequency` and `seed` never change, so the
+browser rasterizes the turbulence once and caches it; each frame of the
+settle pays only the displacement pass. Animating `baseFrequency` instead
+(the tempting knob) recomputes the noise every frame and stutters on
+mid-range hardware. At scale 110 the painting is weather; at 0 it is ink;
+the cubic ease means it crosses "recognizable" early and spends most of
+its 1900ms on the last few pixels — which is exactly how wet ink dries.
+
+## Technique 3 — the incense clock's cadence
+
+Split text is an accessibility trap with a well-known shape: glyph spans
+read as letter salad in a screen reader. Every split string on this page
+— the wordmark, the vertical poem — keeps its original in the accessible
+tree and animates only copies:
+
+```tsx
+{/* Cadence.tsx — the real string for AT, aria-hidden glyphs for the eye */}
+<span className="kemuri-sr">{text}</span>
+<span aria-hidden="true" className="kemuri-cadence__row">
+  {glyphs.map((g, i) => (
+    <span className="kemuri-cadence__g"
+      style={{ "--kd": `${start + i * step}ms` } as CSSProperties}>
+      {g}
+    </span>
+  ))}
+</span>
+```
+
+Each glyph carries its delay as a custom property, and the *only* thing
+JavaScript does at reveal time is add one class to one container — the
+IntersectionObserver never touches a glyph. From there CSS runs the whole
+choreography: `transition-delay: var(--kd)` staggers the glyphs (60ms per
+glyph, 620ms per column for the poem — the pacing of an incense clock,
+deliberately slower than any UI convention), and the pre-reveal state
+(`opacity: 0`, a 5px blur, a 0.16em drop) exists only under the
+`.kemuri-js` root class. No JavaScript, no hidden poetry.
+
+The poem's Japanese is set in `writing-mode: vertical-rl`, which quietly
+does the right thing: DOM order is reading order, columns flow right to
+left, and `line-height: 2.5` becomes column pitch — the 間 between lines
+is typeset, not positioned.
+
+## Motion math
+
+Two numbers give the smoke its temperament:
+
+- **Velocity relaxation 2.4 s⁻¹.** Per frame, a particle covers
+  `1 − e^(−dt·2.4)` of the gap between its velocity and the field's —
+  a half-life of ~290ms. That lag is the difference between smoke
+  (carried) and sparks (obedient). Framerate-independent by
+  construction, because it's computed from `dt`, not per-frame.
+- **Attack 0.055 / release 0.018.** The pointer-energy lerps, normalized
+  to 60fps. Half-life ≈ 12 frames in, ≈ 38 frames out. Attention arrives
+  in a breath and leaves like the smell of smoke — which is the brand,
+  expressed in two constants.
+
+Everything else obeys two easings: `ease-smoke`
+(`cubic-bezier(0.22,1,0.36,1)`) front-loads its travel and spends the
+tail settling sub-pixel, so 900–1150ms reads as calm rather than slow;
+`ease-ink` (`cubic-bezier(0.65,0,0.35,1)`) is symmetric and weighted for
+the two "physical" moves — the loader's paper lift and the button's ink
+fill. Ambient cycles (ember breath 5.6s, hint drift 7.4s) are mutually
+prime with each other and with both cadences, so the idle page never
+visibly loops.
+
+## Performance notes
+
+- One rAF loop for the smoke, throttled to ~64fps (`FRAME_MS = 15.5`),
+  `dt` clamped to 48ms so a background tab never causes a lurch on
+  return. The loop stops via IntersectionObserver (80px margin) *and*
+  `visibilitychange` — zero frames offscreen or tab-hidden.
+- DPR capped at 2; particle count scales with stage area (260–820).
+  A particle costs 8 value-noise evaluations for the curl (4 ψ samples ×
+  2 octaves) and at most three `drawImage` calls of pre-rendered
+  gradient sprites — no per-particle `createRadialGradient`, no shadows.
+- The warmup (120 × 85ms steps) runs once, synchronously, at mount:
+  ~10s of simulated time for about a frame's worth of work.
+- The plates animate a single SVG attribute; turbulence is computed once
+  per plate. The washi grain is one static `feTurbulence` rect — filters
+  never animate anywhere on the page.
+- All CSS animation is `transform`, `opacity`, `filter`. Reveals write
+  `class` + `transitionDelay` from one observer callback; no React
+  re-renders on scroll. The page re-renders exactly twice after mount:
+  loader lift start, loader unmount.
+
+## Accessibility notes
+
+- **Reduced motion:** the loader never mounts (and `display: none` as a
+  belt), the smoke warms up and paints one composed still (the plume
+  mid-air, ember lit), the plates stay at `scale=0` — never disturbed —
+  and a media query flattens every transition and ambient cycle. The
+  result is a finished painting, not a paused video.
+- **No-JS:** every pre-reveal style is gated behind `.kemuri-js`, added
+  on mount; the displacement chaos is only *raised* by JavaScript. The
+  SSR page is the completed page.
+- **Semantics:** the canvas stage is `role="img"` with a bilingual EN/JA
+  description; each plate SVG is `role="img"` with its own; split text
+  keeps visually-hidden originals; the wordmark is an `h1` with
+  `aria-label`; decorative seals and the censer are `aria-hidden`.
+- **Keyboard & touch:** the two interactive elements (button, top link)
+  take a 2px ember ring on `:focus-visible` — `ember-deep` on washi,
+  `ember` in the dark room, both AA for non-text. The smoke self-drifts
+  on touch; nothing anywhere lives behind hover.
+- **Contrast:** sumi 14.4:1, ink-soft 7.1:1, ember-deep 4.7:1 on washi;
+  washi 14.4:1, washi-dim 7.9:1, ember 4.9:1 on sumi. Smoke gray and
+  gold never carry meaning. Worst case under a passing wisp, the
+  wordmark still reads ≈ 8:1.
+
+## Remix ideas
+
+1. **Tea house.** Keep the curl field; make the ribbon *steam* — shorter
+   life, tighter eddies (halve both feature sizes), rising from a cup at
+   the ledger's edge. Palette swaps ember for a deep matcha; the poem
+   becomes the order of a tea ceremony.
+2. **Ink stone.** Invert to a sumi ground and run the smoke *downward* —
+   ink diffusing into water (negate buoyancy, triple relaxation). The
+   plates then assemble instead of settling: displacement scale runs
+   0 → 110 → 0 as each enters, a drop hitting the stone and clearing.
+3. **Bonshō at midnight.** Replace the plume with a struck temple bell:
+   the curl field's gain pulses once per strike (SWIRL × a decaying
+   sine), the glyph cadence syncs to the strike interval, and the menu
+   lists the 108 tolls of New Year's Eve — sold, of course, one toll at
+   a time.

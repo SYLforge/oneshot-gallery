@@ -1,0 +1,983 @@
+/* ==========================================================================
+   KEMURI — incense atelier, Kyoto, est. 1927
+   washi-sumi-e · washi / sumi / ember / gold leaf · an hour of stillness
+   Scoped by convention to .kemuri-root; classes prefixed kemuri-.
+   ========================================================================== */
+
+.kemuri-root {
+  /* -- palette ----------------------------------------------------------- */
+  --kemuri-washi: #efe7d8;      /* the paper — every hour is burned on it */
+  --kemuri-washi-aged: #e3d7c0; /* plate paper, hover washes, aged edges */
+  --kemuri-sumi: #1c1814;       /* the ink — 14.4:1 on washi */
+  --kemuri-ink-soft: #4f4a43;   /* sumi thinned with water — 7.1:1, secondary text */
+  --kemuri-smoke: #8a8178;      /* the smoke — 3.1:1, large or decorative only */
+  --kemuri-ember: #c96f2e;      /* the coal — 2.9:1 on washi: decorative there,
+                                   4.9:1 on sumi: allowed to speak in the dark */
+  --kemuri-ember-deep: #a04f16; /* banked ember — 4.7:1 on washi, functional accent */
+  --kemuri-gold: #b08d4a;       /* gold leaf — 2.5:1: hairlines and the sun, never text */
+  --kemuri-washi-dim: rgba(239, 231, 216, 0.72); /* ≈ #b4ada1 on sumi — 7.9:1 */
+  --kemuri-hairline: rgba(28, 24, 20, 0.16);
+  --kemuri-hairline-strong: rgba(28, 24, 20, 0.3);
+
+  /* -- type ---------------------------------------------------------------- */
+  --kemuri-font-latin: var(--font-garamond), "EB Garamond", serif;
+  --kemuri-font-jp: var(--font-mincho), "Zen Old Mincho", serif;
+  /* kanji and kana fall through Garamond into the mincho with no markup */
+  --kemuri-font-stack: var(--font-garamond), var(--font-mincho), serif;
+
+  /* -- motion ---------------------------------------------------------------
+     Two easings on the whole page: smoke (rises fast, settles long) for every
+     entrance, ink (deliberate, weighted) for the loader lift and button fill. */
+  --kemuri-ease-smoke: cubic-bezier(0.22, 1, 0.36, 1);
+  --kemuri-ease-ink: cubic-bezier(0.65, 0, 0.35, 1);
+  --kemuri-reveal-ms: 900ms;
+  --kemuri-glyph-ms: 1150ms;
+  --kemuri-loader-lift: 650ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--kemuri-washi);
+  color: var(--kemuri-sumi);
+  font-family: var(--kemuri-font-stack);
+  font-weight: 400;
+  font-size: clamp(17px, 1vw + 12px, 20px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Japanese is first-class: Zen Old Mincho, opened up a little — vertical or
+   horizontal, the kana get room to breathe. */
+.kemuri-root :lang(ja) {
+  font-family: var(--kemuri-font-jp);
+  letter-spacing: 0.06em;
+}
+
+/* Ember selection, scoped to the entry root. Banked ember, so the selected
+   washi text stays AA (4.7:1). */
+.kemuri-root ::selection {
+  background: var(--kemuri-ember-deep);
+  color: var(--kemuri-washi);
+  text-shadow: none;
+}
+
+/* Keyboard focus: an ember ring, held one paper-thickness away. */
+.kemuri-root :focus-visible {
+  outline: 2px solid var(--kemuri-ember-deep);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+
+.kemuri-cta :focus-visible {
+  outline-color: var(--kemuri-ember);
+}
+
+/* Visually hidden, present for screen readers and find-in-page. */
+.kemuri-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.kemuri-sheet {
+  position: relative;
+}
+
+/* Kanji cut into the seals — always the mincho, wherever the seal appears. */
+.kemuri-sealglyph {
+  font-family: var(--kemuri-font-jp);
+}
+
+/* ==========================================================================
+   Washi — the paper itself
+   One static feTurbulence grain pass (multiplied, ≤5% ink) and a faint gold
+   age-vignette. Neither ever animates; the paper is old, not alive.
+   ========================================================================== */
+
+.kemuri-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.75;
+}
+
+.kemuri-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 95% at 50% 42%,
+      transparent 55%,
+      rgba(176, 141, 74, 0.09) 100%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(28, 24, 20, 0.012) 0 2px,
+      transparent 2px 7px
+    );
+}
+
+/* ==========================================================================
+   Reveal primitives
+   Everything pre-reveal lives under .kemuri-js: with JavaScript off the page
+   stands finished. data-reveal elements fade-rise; data-reveal="scene"
+   containers never move themselves — they only hand `is-visible` to the
+   choreography inside (poem glyphs, English lines).
+   ========================================================================== */
+
+.kemuri-js [data-reveal]:not([data-reveal="scene"]) {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--kemuri-reveal-ms) var(--kemuri-ease-smoke),
+    transform var(--kemuri-reveal-ms) var(--kemuri-ease-smoke);
+}
+
+.kemuri-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Split glyphs — the hero wordmark and the poem share one cadence system.
+   Each glyph carries its own delay as --kd; only opacity/transform/filter
+   ever animate. */
+.kemuri-hero__glyph,
+.kemuri-cadence__g {
+  display: inline-block;
+  transition:
+    opacity var(--kemuri-glyph-ms) var(--kemuri-ease-smoke) var(--kd, 0ms),
+    transform var(--kemuri-glyph-ms) var(--kemuri-ease-smoke) var(--kd, 0ms),
+    filter var(--kemuri-glyph-ms) var(--kemuri-ease-smoke) var(--kd, 0ms);
+}
+
+.kemuri-js .kemuri-hero:not(.is-entered) .kemuri-hero__glyph,
+.kemuri-js .kemuri-hero:not(.is-entered) .kemuri-cadence__g,
+.kemuri-js [data-reveal="scene"]:not(.is-visible) .kemuri-cadence__g {
+  opacity: 0;
+  transform: translateY(0.16em);
+  filter: blur(5px);
+  transition: none;
+}
+
+/* The English poem arrives per line, half a breath behind the Japanese. */
+.kemuri-poem__enline {
+  transition:
+    opacity 1000ms var(--kemuri-ease-smoke) var(--kd, 0ms),
+    transform 1000ms var(--kemuri-ease-smoke) var(--kd, 0ms);
+}
+
+.kemuri-js [data-reveal="scene"]:not(.is-visible) .kemuri-poem__enline {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: none;
+}
+
+/* ==========================================================================
+   Loader — the seal, then the paper lifts
+   Rendered only after mount and never under reduced motion, so it can never
+   hide content from anyone.
+   ========================================================================== */
+
+.kemuri-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kemuri-washi);
+}
+
+.kemuri-loader__seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.kemuri-loader__seal svg {
+  transform: rotate(-4deg);
+  animation: kemuri-seal-press 700ms var(--kemuri-ease-smoke) both;
+}
+
+@keyframes kemuri-seal-press {
+  0% {
+    opacity: 0;
+    transform: scale(1.14) rotate(-1deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.97) rotate(-4.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-4deg);
+  }
+}
+
+.kemuri-loader__word {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--kemuri-ink-soft);
+  opacity: 0;
+  animation: kemuri-fade 600ms var(--kemuri-ease-smoke) 380ms forwards;
+}
+
+.kemuri-loader__word :lang(ja) {
+  text-transform: none;
+  letter-spacing: 0.22em;
+  margin-left: 0.6em;
+}
+
+@keyframes kemuri-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+.kemuri-loader.is-lifting {
+  animation: kemuri-paper-lift var(--kemuri-loader-lift) var(--kemuri-ease-ink)
+    forwards;
+}
+
+@keyframes kemuri-paper-lift {
+  to {
+    opacity: 0;
+    transform: translateY(-2.5%);
+  }
+}
+
+/* ==========================================================================
+   Hero — the censer, the smoke, the name
+   Layers, bottom to top: censer (0) · text (1) · smoke canvas (2).
+   The smoke crosses the letters; the letters can take it (14.4:1 under a
+   worst-case wisp still reads ≈ 8:1).
+   ========================================================================== */
+
+.kemuri-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.kemuri-hero__inner {
+  position: relative;
+  z-index: 1;
+  padding: clamp(24px, 6vw, 64px);
+  transform: translateY(-7vh);
+}
+
+.kemuri-hero__kicker {
+  margin: 0 0 2rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--kemuri-ember-deep);
+}
+
+.kemuri-hero__kickerja {
+  display: inline-block;
+  margin-left: 1em;
+  text-transform: none;
+  letter-spacing: 0.28em;
+}
+
+.kemuri-hero__title {
+  margin: 0;
+  font-family: var(--kemuri-font-latin);
+  font-weight: 500;
+  font-size: clamp(3.8rem, 16.5vw, 12rem);
+  line-height: 0.95;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em; /* optically recenters the tracked line */
+  color: var(--kemuri-sumi);
+}
+
+.kemuri-hero__sub {
+  margin: 1.6rem 0 0;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-hero__rule {
+  width: 64px;
+  height: 1px;
+  margin: 2.4rem auto;
+  background: var(--kemuri-gold);
+}
+
+.kemuri-hero__line {
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--kemuri-sumi);
+}
+
+.kemuri-hero__lineja {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.92em;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-hero__est {
+  margin: 2.2rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-hero__est :lang(ja) {
+  margin-left: 0.6em;
+}
+
+.kemuri-censer {
+  position: absolute;
+  left: 50%;
+  bottom: 44px;
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+/* The coal breathes — a 5.6s cycle, prime to the hint's 7.4s, so the two
+   never sync into a loop. Opacity only. */
+.kemuri-censer__ember {
+  animation: kemuri-ember-breath 5.6s ease-in-out infinite;
+}
+
+@keyframes kemuri-ember-breath {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.kemuri-hero__hint {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--kemuri-ink-soft);
+  white-space: nowrap;
+  animation: kemuri-hint-drift 7.4s ease-in-out infinite;
+}
+
+.kemuri-hero__hint :lang(ja) {
+  margin-right: 0.8em;
+}
+
+@keyframes kemuri-hint-drift {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(-50%) translateY(5px);
+    opacity: 0.55;
+  }
+}
+
+.kemuri-smoke {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.kemuri-smoke__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Section shell — eyebrow · title · line
+   ========================================================================== */
+
+.kemuri-poem,
+.kemuri-plates,
+.kemuri-menu {
+  padding-block: clamp(96px, 15vh, 176px);
+}
+
+.kemuri-sechead {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  margin-bottom: clamp(3rem, 7vh, 5rem);
+}
+
+.kemuri-eyebrow {
+  margin: 0 0 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--kemuri-ember-deep);
+}
+
+.kemuri-sechead__title {
+  margin: 0;
+  font-family: var(--kemuri-font-latin);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  color: var(--kemuri-sumi);
+}
+
+.kemuri-sechead__ja {
+  margin-left: 0.45em;
+  font-size: 0.55em;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-sechead__line {
+  margin: 1.2rem 0 0;
+  max-width: 40rem;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-sechead__lineja {
+  display: block;
+  margin-top: 0.4rem;
+}
+
+/* ==========================================================================
+   02 — the poem
+   The Japanese stands vertical (vertical-rl: DOM order is reading order,
+   right to left); the English leans beside it in italic. The seal is
+   pressed slightly off-true, the way a real hand presses one.
+   ========================================================================== */
+
+.kemuri-poem__stage {
+  position: relative;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: clamp(48px, 8vw, 120px);
+}
+
+.kemuri-poem__en {
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  line-height: 2.2;
+  color: var(--kemuri-sumi);
+  padding-top: clamp(8px, 4vh, 48px);
+}
+
+.kemuri-poem__enline {
+  margin: 0 0 0.4em;
+}
+
+.kemuri-poem__jp {
+  writing-mode: vertical-rl;
+  height: clamp(340px, 56vh, 540px);
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  line-height: 2.5; /* column pitch — the 間 between lines */
+  letter-spacing: 0.16em;
+  color: var(--kemuri-sumi);
+}
+
+.kemuri-poem__jpline {
+  margin: 0;
+}
+
+.kemuri-poem__seal {
+  position: absolute;
+  right: clamp(24px, 9vw, 110px);
+  bottom: -30px;
+  transform: rotate(-6deg);
+}
+
+/* ==========================================================================
+   03 — the plates
+   Aged paper, hairline mounts. Captions arrive only after the ink settles.
+   ========================================================================== */
+
+.kemuri-plates__row {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.kemuri-plate {
+  margin: 0;
+}
+
+/* Every other plate hangs a little lower — a wall, not a grid. */
+.kemuri-plate:nth-child(2) {
+  transform: translateY(clamp(20px, 4vw, 56px));
+}
+
+.kemuri-plate__paper {
+  background: var(--kemuri-washi-aged);
+  border: 1px solid var(--kemuri-hairline);
+  box-shadow: 0 1px 0 rgba(28, 24, 20, 0.06);
+  padding: clamp(10px, 1.6vw, 18px);
+}
+
+.kemuri-plate__art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.kemuri-plate__caption {
+  display: block;
+  margin-top: 1.1rem;
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--kemuri-ink-soft);
+  transition: opacity 900ms var(--kemuri-ease-smoke) 1000ms;
+}
+
+.kemuri-js .kemuri-plate:not(.is-inked) .kemuri-plate__caption {
+  opacity: 0;
+  transition: none;
+}
+
+.kemuri-plate__no {
+  float: left;
+  margin-right: 0.9em;
+  font-family: var(--kemuri-font-jp);
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: var(--kemuri-ember-deep);
+}
+
+.kemuri-plate__ja {
+  display: block;
+}
+
+.kemuri-plate__en {
+  display: block;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   04 — the hours
+   A ledger with generous 間. Nothing to click; everything to read.
+   ========================================================================== */
+
+.kemuri-menu__list {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 6vw, 72px);
+  list-style: none;
+}
+
+.kemuri-menu__item {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr auto;
+  gap: clamp(16px, 3vw, 32px);
+  align-items: baseline;
+  padding-block: clamp(28px, 4.5vh, 44px);
+  border-top: 1px solid var(--kemuri-hairline);
+  transition: background-color 400ms var(--kemuri-ease-smoke);
+}
+
+.kemuri-menu__item:last-child {
+  border-bottom: 1px solid var(--kemuri-hairline);
+}
+
+.kemuri-menu__item:hover {
+  background-color: rgba(227, 215, 192, 0.55);
+}
+
+.kemuri-menu__time {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--kemuri-ember-deep);
+}
+
+.kemuri-menu__en {
+  font-family: var(--kemuri-font-latin);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--kemuri-sumi);
+}
+
+.kemuri-menu__ja {
+  margin-left: 0.7em;
+  font-size: 1.05rem;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-menu__notes {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-menu__notesja {
+  font-style: normal;
+  margin-left: 0.5em;
+}
+
+.kemuri-menu__price {
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--kemuri-sumi);
+}
+
+.kemuri-menu__foot {
+  max-width: 880px;
+  margin: 2.6rem auto 0;
+  padding-inline: clamp(20px, 6vw, 72px);
+  font-size: 0.88rem;
+  font-style: italic;
+  color: var(--kemuri-ink-soft);
+}
+
+.kemuri-menu__foot :lang(ja) {
+  font-style: normal;
+  margin-left: 0.6em;
+}
+
+/* ==========================================================================
+   05 — the dark room
+   The one inversion on the page. Ember may finally be text here (4.9:1).
+   ========================================================================== */
+
+.kemuri-cta {
+  background: var(--kemuri-sumi);
+  color: var(--kemuri-washi);
+  padding: clamp(110px, 18vh, 200px) clamp(20px, 6vw, 72px)
+    clamp(48px, 7vh, 72px);
+}
+
+.kemuri-cta__inner {
+  max-width: 880px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.kemuri-cta__eyebrow {
+  margin: 0 0 1.4rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--kemuri-ember);
+}
+
+.kemuri-cta__title {
+  margin: 0;
+  font-family: var(--kemuri-font-latin);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.4vw, 3.9rem);
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.kemuri-cta__titleja {
+  display: block;
+  margin-top: 0.55em;
+  font-size: 0.55em;
+  color: var(--kemuri-washi-dim);
+}
+
+.kemuri-cta__line {
+  max-width: 44rem;
+  margin: 1.8rem auto 0;
+  color: var(--kemuri-washi-dim);
+}
+
+.kemuri-cta__lineja {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.kemuri-cta__btn {
+  position: relative;
+  display: inline-block;
+  margin-top: 3.2rem;
+  padding: 1.05em 2.6em;
+  border: 1px solid rgba(239, 231, 216, 0.45);
+  color: var(--kemuri-washi);
+  text-decoration: none;
+  font-size: 0.88rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+/* The ink-fill: a scaleX pseudo-element, compositor-only. */
+.kemuri-cta__btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--kemuri-ember);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 520ms var(--kemuri-ease-ink);
+}
+
+.kemuri-cta__btn:hover::before,
+.kemuri-cta__btn:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.kemuri-cta__btntext {
+  position: relative;
+  transition: color 320ms var(--kemuri-ease-ink) 120ms;
+}
+
+.kemuri-cta__btn:hover .kemuri-cta__btntext,
+.kemuri-cta__btn:focus-visible .kemuri-cta__btntext {
+  color: var(--kemuri-sumi); /* sumi on ember — 4.9:1 */
+}
+
+.kemuri-cta__btnja {
+  margin-left: 0.8em;
+  text-transform: none;
+  letter-spacing: 0.14em;
+}
+
+/* -- footer ------------------------------------------------------------- */
+
+.kemuri-footer {
+  max-width: 1080px;
+  margin: clamp(90px, 14vh, 150px) auto 0;
+  border-top: 1px solid rgba(239, 231, 216, 0.18);
+  padding-top: clamp(36px, 6vh, 56px);
+}
+
+.kemuri-footer__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem 3rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.kemuri-footer__grid p {
+  margin: 0;
+}
+
+.kemuri-footer__brand {
+  font-family: var(--kemuri-font-latin);
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: 0.3em;
+}
+
+.kemuri-footer__brandja {
+  margin-left: 0.5em;
+  font-size: 0.85em;
+  color: var(--kemuri-washi-dim);
+}
+
+.kemuri-footer__addr,
+.kemuri-footer__est {
+  font-size: 0.85rem;
+  color: var(--kemuri-washi-dim);
+}
+
+.kemuri-footer__addr :lang(ja),
+.kemuri-footer__est :lang(ja) {
+  margin-left: 0.6em;
+}
+
+.kemuri-footer__koan {
+  margin: clamp(36px, 6vh, 56px) 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--kemuri-washi-dim);
+}
+
+.kemuri-footer__koanja {
+  display: block;
+  margin-top: 0.4rem;
+  font-style: normal;
+}
+
+.kemuri-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 3rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.kemuri-footer__copy {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--kemuri-washi-dim);
+}
+
+.kemuri-footer__top {
+  font-size: 0.8rem;
+  color: var(--kemuri-washi);
+  text-decoration: underline;
+  text-decoration-color: rgba(239, 231, 216, 0.4);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.kemuri-footer__top:hover {
+  text-decoration-color: var(--kemuri-ember);
+}
+
+.kemuri-footer__topja {
+  margin-left: 0.5em;
+  color: var(--kemuri-washi-dim);
+}
+
+/* ==========================================================================
+   Composition at other widths
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .kemuri-plates__row {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+
+  .kemuri-plate:nth-child(2) {
+    transform: none;
+  }
+
+  .kemuri-poem__stage {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+
+  /* The original comes first on a narrow page. */
+  .kemuri-poem__jp {
+    order: -1;
+    height: clamp(300px, 46vh, 420px);
+    justify-self: center;
+  }
+
+  .kemuri-poem__en {
+    padding-top: 0;
+  }
+
+  .kemuri-poem__seal {
+    position: static;
+    transform: rotate(-6deg);
+    justify-self: end;
+    margin-top: -8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .kemuri-menu__item {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "time price"
+      "names names";
+    row-gap: 0.7rem;
+  }
+
+  .kemuri-menu__time {
+    grid-area: time;
+  }
+
+  .kemuri-menu__price {
+    grid-area: price;
+  }
+
+  .kemuri-menu__names {
+    grid-area: names;
+  }
+
+  .kemuri-footer__grid,
+  .kemuri-footer__base {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .kemuri-hero__kickerja {
+    display: block;
+    margin: 0.5em 0 0;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the page as a finished painting
+   The smoke paints one composed still (SmokeCanvas), the plates are never
+   disturbed (InkPlates), the loader never mounts (Loader). CSS removes
+   every remaining transition and ambient cycle, and forces all pre-reveal
+   states to their final composition.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .kemuri-loader {
+    display: none;
+  }
+
+  .kemuri-censer__ember,
+  .kemuri-hero__hint,
+  .kemuri-loader__seal svg,
+  .kemuri-loader__word {
+    animation: none;
+  }
+
+  .kemuri-js [data-reveal]:not([data-reveal="scene"]),
+  .kemuri-hero__glyph,
+  .kemuri-cadence__g,
+  .kemuri-poem__enline,
+  .kemuri-plate__caption,
+  .kemuri-js .kemuri-hero:not(.is-entered) .kemuri-hero__glyph,
+  .kemuri-js .kemuri-hero:not(.is-entered) .kemuri-cadence__g,
+  .kemuri-js [data-reveal="scene"]:not(.is-visible) .kemuri-cadence__g,
+  .kemuri-js [data-reveal="scene"]:not(.is-visible) .kemuri-poem__enline,
+  .kemuri-js .kemuri-plate:not(.is-inked) .kemuri-plate__caption {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .kemuri-cta__btn::before,
+  .kemuri-cta__btntext,
+  .kemuri-menu__item {
+    transition: none;
+  }
+}

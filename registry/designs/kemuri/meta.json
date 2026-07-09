@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "kemuri",
+  "no": 1,
+  "title": {
+    "en": "KEMURI — Smoke & Stillness",
+    "ko": "케무리 — 연기와 고요"
+  },
+  "description": {
+    "en": "A Kyoto incense atelier, est. 1927, that sells an hour of stillness — one censer, one ribbon of curl-noise smoke, and three ink paintings that settle out of water.",
+    "ko": "1927년 창업, '고요 한 시간'을 파는 교토의 향 공방 — 향로 하나, 컬 노이즈로 피어오르는 한 줄기 연기, 물에서 가라앉아 완성되는 세 폭의 수묵."
+  },
+  "aesthetic": "washi-sumi-e",
+  "techniques": ["canvas-particles", "feturbulence-texture", "char-split-reveal"],
+  "industry": ["atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#c96f2e",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": true
+}

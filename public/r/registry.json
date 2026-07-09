@@ -181,6 +181,196 @@
       }
     },
     {
+      "name": "gradient-plaza",
+      "type": "registry:block",
+      "title": "GRADIENT PLAZA — Midnight Mall Radio",
+      "description": "A 24-hour radio station broadcasting from a shopping mall that only exists after closing — a scroll-rushed perspective grid, draggable retro-OS radio windows, and PA announcements that smear like a tired CRT at speed.",
+      "dependencies": [],
+      "categories": [
+        "vaporwave",
+        "canvas-particles",
+        "drag-physics",
+        "marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/gradient-plaza/components/Announcements.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/gradient-plaza/components/Announcements.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/gradient-plaza/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/gradient-plaza/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/components/PAMarquee.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/gradient-plaza/components/PAMarquee.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/components/RadioWindows.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/gradient-plaza/components/RadioWindows.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/components/Schedule.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/gradient-plaza/components/Schedule.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/gradient-plaza/fonts.ts"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/hooks/useDrag.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/gradient-plaza/hooks/useDrag.ts"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/gradient-plaza/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/hooks/useScrollEnergy.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/gradient-plaza/hooks/useScrollEnergy.ts"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/gradient-plaza/page.tsx"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/gradient-plaza/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/gradient-plaza/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/gradient-plaza/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"GRADIENT PLAZA — Midnight Mall Radio\" installs into app/oneshot/gradient-plaza/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 14,
+        "accent": "#ff71ce",
+        "theme": "dark",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "halflight",
+      "type": "registry:block",
+      "title": "HALFLIGHT — Original Scores for Imaginary Films",
+      "description": "A composer's screening room for films that were never shot: a scroll-scrubbed procedural film reel, a cue you press play to synthesize, and end credits for nobody — every frame drawn in code.",
+      "dependencies": [],
+      "categories": [
+        "cinematic-dark",
+        "sprite-scrub",
+        "canvas-particles",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/halflight/components/CreditsFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/halflight/components/CreditsFooter.tsx"
+        },
+        {
+          "path": "registry/designs/halflight/components/CueSheet.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/halflight/components/CueSheet.tsx"
+        },
+        {
+          "path": "registry/designs/halflight/components/Reel.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/halflight/components/Reel.tsx"
+        },
+        {
+          "path": "registry/designs/halflight/components/ScorePlayer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/halflight/components/ScorePlayer.tsx"
+        },
+        {
+          "path": "registry/designs/halflight/components/TitleCard.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/halflight/components/TitleCard.tsx"
+        },
+        {
+          "path": "registry/designs/halflight/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/halflight/fonts.ts"
+        },
+        {
+          "path": "registry/designs/halflight/hooks/useAudioEngine.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/halflight/hooks/useAudioEngine.ts"
+        },
+        {
+          "path": "registry/designs/halflight/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/halflight/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/halflight/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/halflight/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/halflight/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/halflight/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/halflight/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/halflight/page.tsx"
+        },
+        {
+          "path": "registry/designs/halflight/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/halflight/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/halflight/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/halflight/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"HALFLIGHT — Original Scores for Imaginary Films\" installs into app/oneshot/halflight/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 12,
+        "accent": "#d43425",
+        "theme": "dark",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "hanji-slate",
       "type": "registry:block",
       "title": "HANJI SLATE — The Paper Computer",
@@ -263,6 +453,111 @@
       "meta": {
         "no": 11,
         "accent": "#e8830c",
+        "theme": "light",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "kemuri",
+      "type": "registry:block",
+      "title": "KEMURI — Smoke & Stillness",
+      "description": "A Kyoto incense atelier, est. 1927, that sells an hour of stillness — one censer, one ribbon of curl-noise smoke, and three ink paintings that settle out of water.",
+      "dependencies": [],
+      "categories": [
+        "washi-sumi-e",
+        "canvas-particles",
+        "feturbulence-texture",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/kemuri/components/Cadence.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/Cadence.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/CTAFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/CTAFooter.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/IncenseMenu.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/IncenseMenu.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/InkPlates.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/InkPlates.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/Loader.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/Loader.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/Poem.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/Poem.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/components/SmokeCanvas.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/kemuri/components/SmokeCanvas.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/kemuri/fonts.ts"
+        },
+        {
+          "path": "registry/designs/kemuri/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/kemuri/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/kemuri/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/kemuri/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/kemuri/hooks/useScrollVelocity.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/kemuri/hooks/useScrollVelocity.ts"
+        },
+        {
+          "path": "registry/designs/kemuri/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/kemuri/page.tsx"
+        },
+        {
+          "path": "registry/designs/kemuri/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/kemuri/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/kemuri/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/kemuri/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"KEMURI — Smoke & Stillness\" installs into app/oneshot/kemuri/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 1,
+        "accent": "#c96f2e",
         "theme": "light",
         "prompt": {
           "model": "claude-fable-5",
@@ -628,6 +923,201 @@
       "meta": {
         "no": 10,
         "accent": "#e30613",
+        "theme": "light",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "sup",
+      "type": "registry:block",
+      "title": "SUP — Forest Bathing Retreats",
+      "description": "A Gangwon-do forest-bathing house whose page grows as you arrive — an L-system tree draws itself in, a canvas meadow bends under the breeze your pointer makes, and a 4·4·4 breathing guide counts with you.",
+      "dependencies": [],
+      "categories": [
+        "organic-nature",
+        "svg-line-draw",
+        "canvas-particles",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/sup/components/BreathingGuide.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sup/components/BreathingGuide.tsx"
+        },
+        {
+          "path": "registry/designs/sup/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sup/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/sup/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sup/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/sup/components/plant.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/sup/components/plant.ts"
+        },
+        {
+          "path": "registry/designs/sup/components/Retreats.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sup/components/Retreats.tsx"
+        },
+        {
+          "path": "registry/designs/sup/components/WindField.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sup/components/WindField.tsx"
+        },
+        {
+          "path": "registry/designs/sup/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/sup/fonts.ts"
+        },
+        {
+          "path": "registry/designs/sup/hooks/useGrowth.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sup/hooks/useGrowth.ts"
+        },
+        {
+          "path": "registry/designs/sup/hooks/usePointerDrift.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sup/hooks/usePointerDrift.ts"
+        },
+        {
+          "path": "registry/designs/sup/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sup/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/sup/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sup/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/sup/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/sup/page.tsx"
+        },
+        {
+          "path": "registry/designs/sup/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/sup/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/sup/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/sup/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"SUP — Forest Bathing Retreats\" installs into app/oneshot/sup/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 13,
+        "accent": "#4a5d3a",
+        "theme": "light",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "yeobaek",
+      "type": "registry:block",
+      "title": "YEOBAEK — The Journal of Blank Space",
+      "description": "A bilingual literary journal devoted to yeobaek — negative space in Korean art and life — set as a quiet editorial spread where tipped-in plates pin and draw themselves while the essay flows past.",
+      "dependencies": [],
+      "categories": [
+        "editorial-serif",
+        "scroll-scrub-pinned",
+        "svg-line-draw",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/yeobaek/components/Colophon.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/yeobaek/components/Colophon.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/components/EmptinessGallery.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/yeobaek/components/EmptinessGallery.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/components/Footnotes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/yeobaek/components/Footnotes.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/components/InkLink.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/yeobaek/components/InkLink.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/components/LeadEssay.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/yeobaek/components/LeadEssay.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/components/Masthead.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/yeobaek/components/Masthead.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/yeobaek/fonts.ts"
+        },
+        {
+          "path": "registry/designs/yeobaek/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/yeobaek/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/yeobaek/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/yeobaek/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/yeobaek/hooks/useScrollScrub.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/yeobaek/hooks/useScrollScrub.ts"
+        },
+        {
+          "path": "registry/designs/yeobaek/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/yeobaek/page.tsx"
+        },
+        {
+          "path": "registry/designs/yeobaek/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/yeobaek/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/yeobaek/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/yeobaek/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"YEOBAEK — The Journal of Blank Space\" installs into app/oneshot/yeobaek/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 7,
+        "accent": "#7d2a26",
         "theme": "light",
         "prompt": {
           "model": "claude-fable-5",

@@ -1,0 +1,861 @@
+/* ==========================================================================
+   숲 SUP — forest bathing retreats
+   organic-nature · moss and loam on cream · light is the only texture
+   Scoped by convention to .sup-root; classes prefixed sup-.
+   ========================================================================== */
+
+.sup-root {
+  /* -- palette ------------------------------------------------------------ */
+  --sup-moss: #4a5d3a;             /* accent, headings, focus ring — 6.2:1 on cream */
+  --sup-loam: #2e2a24;             /* primary text — 12:1 on cream */
+  --sup-cream: #f2efe6;            /* the clearing — background */
+  --sup-lichen: #a8b89a;           /* decorative ONLY (1.8:1): leaves, rules, grass */
+  --sup-sun: #e9dfa8;              /* sunlight washes at low alpha — decorative */
+  --sup-bark: rgba(46, 42, 36, 0.72);  /* ≈ #65615a — secondary text, 5.4:1 */
+  --sup-moss-soft: #6f8457;        /* decorative mid-green: leaves, twig tips */
+  --sup-hairline: rgba(74, 93, 58, 0.25); /* rules, borders */
+  --sup-field: #e7ead6;            /* the meadow floor the grass stands on */
+
+  /* -- procedurally consumed (canvas + SVG read these) --------------------- */
+  --sup-trunk: #56523d;            /* branch tier 0 — bark */
+  --sup-stem: #5c7245;             /* branch tier 2 */
+  --sup-under-stem: #8d9d7d;       /* understory shrub stems */
+  --sup-under-leaf: #b7c2a8;       /* understory shrub leaves */
+  --sup-grass-lit: #c9d2ab;        /* backlit blades */
+  --sup-grass-back: #a8b89a;       /* far row (lichen) */
+  --sup-grass-mid: #7d9465;        /* middle row */
+  --sup-grass-front: #55693f;      /* near row */
+  --sup-pollen: #d9cd8f;           /* drifting motes */
+
+  /* -- type ---------------------------------------------------------------- */
+  --sup-font-display: var(--font-instrument), "Instrument Serif", "Gowun Dodum", serif;
+  --sup-font-body: var(--font-gowun), "Gowun Dodum", "Apple SD Gothic Neo", sans-serif;
+
+  /* -- motion ---------------------------------------------------------------
+     ease-forest: fast to move, very long to settle — nothing here snaps. */
+  --sup-ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--sup-cream);
+  color: var(--sup-loam);
+  font-family: var(--sup-font-body);
+  font-size: clamp(16px, 0.4vw + 14px, 18px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.sup-root,
+.sup-root *,
+.sup-root *::before,
+.sup-root *::after {
+  box-sizing: border-box;
+}
+
+.sup-root h1,
+.sup-root h2,
+.sup-root h3,
+.sup-root p,
+.sup-root ul {
+  margin: 0;
+}
+
+.sup-root ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Korean is first-class: Gowun Dodum, its own rhythm, no orphan-broken words */
+.sup-root :lang(ko) {
+  font-family: var(--sup-font-body);
+  word-break: keep-all;
+  line-height: 1.8;
+}
+
+/* The guide's italic asides speak Instrument Serif */
+.sup-root em {
+  font-family: var(--sup-font-display);
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* Moss selection, scoped to the entry root */
+.sup-root ::selection {
+  background: var(--sup-moss);
+  color: var(--sup-cream);
+}
+
+/* Keyboard focus: a moss ring with a soft canopy halo */
+.sup-root :focus-visible {
+  outline: 2px solid var(--sup-moss);
+  outline-offset: 3px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 6px rgba(74, 93, 58, 0.16);
+}
+
+.sup-link {
+  color: var(--sup-moss);
+  text-decoration: underline;
+  text-decoration-color: var(--sup-hairline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.sup-link:hover {
+  text-decoration-color: var(--sup-moss);
+}
+
+.sup-ground {
+  position: relative;
+}
+
+/* ==========================================================================
+   Scroll reveals — pre-reveal state exists only when JS is alive
+   ========================================================================== */
+
+.sup-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.sup-js [data-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 950ms var(--sup-ease),
+    transform 950ms var(--sup-ease);
+}
+
+/* ==========================================================================
+   Section heads — a Korean numeral, a title, a long hairline
+   ========================================================================== */
+
+.sup-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 1.1rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.8rem);
+}
+
+.sup-sec__no {
+  flex: none;
+  font-size: 0.82rem;
+  color: var(--sup-moss);
+  letter-spacing: 0.24em;
+}
+
+.sup-sec__title {
+  font-family: var(--sup-font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--sup-loam);
+}
+
+.sup-sec__ko {
+  font-size: 0.62em;
+  color: var(--sup-bark);
+  margin-left: 0.35em;
+}
+
+.sup-sec::after {
+  content: "";
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  background: var(--sup-hairline);
+  margin-left: 0.6rem;
+}
+
+/* ==========================================================================
+   Hero — the arrival; an L-system tree draws itself in
+   ========================================================================== */
+
+.sup-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(24px, 6vw, 72px);
+}
+
+/* morning light from the upper left; it breathes very slowly */
+.sup-hero__sun {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    110% 85% at 22% 0%,
+    rgba(233, 223, 168, 0.5),
+    rgba(233, 223, 168, 0.12) 45%,
+    transparent 70%
+  );
+}
+
+.sup-js .sup-hero__sun {
+  animation: sup-sunbreathe 17s ease-in-out infinite alternate;
+}
+
+@keyframes sup-sunbreathe {
+  from {
+    opacity: 0.65;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.sup-hero__stage {
+  position: absolute;
+  right: clamp(-40px, 1vw, 48px);
+  bottom: 0;
+  width: clamp(300px, 44vw, 640px);
+  height: min(92%, 88vh);
+  pointer-events: none;
+}
+
+.sup-hero__plant {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sup-hero__plant--back {
+  right: 34%;
+  transform: translate3d(
+    calc(var(--sup-px, 0) * -7px),
+    calc(var(--sup-py, 0) * -4px),
+    0
+  );
+  opacity: 0.55;
+}
+
+.sup-hero__plant--main {
+  right: 0;
+  transform: translate3d(
+    calc(var(--sup-px, 0) * 12px),
+    calc(var(--sup-py, 0) * 7px),
+    0
+  );
+}
+
+/* -- the growth clock ------------------------------------------------------
+   One variable, --sup-grow (0 → 1, fallback 1 = fully grown), is converted
+   per branch into a stroke-dashoffset window [t0, t1] and per leaf into an
+   opacity/scale window. Without JS or under reduced motion nothing is ever
+   hidden: the fallback keeps every offset at 0 and every leaf at 1. */
+
+.sup-growth path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sup-growth__branch {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: clamp(
+    0,
+    calc((var(--t1) - var(--sup-grow, 1)) / var(--tw)),
+    1.02
+  );
+}
+
+.sup-growth__branch--t0 {
+  stroke: var(--sup-trunk);
+}
+.sup-growth__branch--t1 {
+  stroke: var(--sup-moss);
+}
+.sup-growth__branch--t2 {
+  stroke: var(--sup-stem);
+}
+.sup-growth__branch--t3 {
+  stroke: var(--sup-moss-soft);
+}
+
+.sup-growth__leaf {
+  --sup-unfurl: clamp(0, calc((var(--sup-grow, 1) - var(--lt)) * 12), 1);
+  opacity: var(--sup-unfurl);
+  transform: scale(var(--sup-unfurl));
+  transform-box: fill-box;
+  transform-origin: left center;
+  stroke: none;
+}
+
+.sup-growth__leaf--0 {
+  fill: var(--sup-lichen);
+}
+.sup-growth__leaf--1 {
+  fill: var(--sup-moss-soft);
+}
+
+.sup-hero__plant--back .sup-growth__branch {
+  stroke: var(--sup-under-stem);
+}
+.sup-hero__plant--back .sup-growth__leaf {
+  fill: var(--sup-under-leaf);
+}
+
+/* idle sway — mutually prime periods so the pair never visibly loops */
+.sup-js .sup-hero__plant--main .sup-growth {
+  transform-box: view-box;
+  transform-origin: 50% 100%;
+  animation: sup-sway 9.4s ease-in-out infinite alternate;
+}
+
+.sup-js .sup-hero__plant--back .sup-growth {
+  transform-box: view-box;
+  transform-origin: 50% 100%;
+  animation: sup-sway 12.7s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes sup-sway {
+  from {
+    transform: rotate(-0.5deg);
+  }
+  to {
+    transform: rotate(0.5deg);
+  }
+}
+
+.sup-hero__copy {
+  position: relative;
+  max-width: 34rem;
+  transform: translate3d(
+    calc(var(--sup-px, 0) * -4px),
+    calc(var(--sup-py, 0) * -2px),
+    0
+  );
+}
+
+.sup-hero__kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
+  color: var(--sup-moss);
+  margin-bottom: clamp(1rem, 3vh, 2rem);
+}
+
+.sup-hero__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  font-weight: 400;
+  line-height: 0.94;
+  margin-bottom: clamp(1.2rem, 3.5vh, 2.2rem);
+}
+
+.sup-hero__hangul {
+  font-family: var(--sup-font-body);
+  font-size: clamp(6.4rem, 21vw, 13.5rem);
+  color: var(--sup-loam);
+  letter-spacing: -0.02em;
+}
+
+.sup-hero__latin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  font-family: var(--sup-font-display);
+  font-size: clamp(1.7rem, 4.6vw, 3rem);
+  color: var(--sup-moss);
+  letter-spacing: 0.22em;
+}
+
+.sup-hero__latin-sub {
+  font-style: italic;
+  font-size: 0.44em;
+  letter-spacing: 0.05em;
+  color: var(--sup-bark);
+}
+
+.sup-hero__lede {
+  max-width: 26rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
+}
+
+.sup-hero__lede em {
+  display: block;
+  font-size: 1.18rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.sup-hero__lede span {
+  display: block;
+  color: var(--sup-bark);
+  font-size: 0.95rem;
+}
+
+.sup-hero__cta {
+  display: inline-block;
+  padding: 0.72em 1.6em;
+  border: 1px solid var(--sup-moss);
+  border-radius: 999px;
+  color: var(--sup-moss);
+  text-decoration: none;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+}
+
+/* states snap — only entrances are eased on this page */
+.sup-hero__cta:hover {
+  background: var(--sup-moss);
+  color: var(--sup-cream);
+}
+
+.sup-hero__hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(14px, 3vh, 30px);
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--sup-bark);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   하나 · The wind field — canvas meadow
+   ========================================================================== */
+
+.sup-wind {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 56px) 0;
+}
+
+.sup-wind__lede {
+  max-width: 36rem;
+  margin-bottom: clamp(2rem, 5vh, 3.4rem);
+}
+
+.sup-wind__lede em {
+  font-size: 1.35rem;
+  color: var(--sup-loam);
+}
+
+.sup-wind__lede span {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--sup-bark);
+  font-size: 0.95rem;
+}
+
+/* full-bleed stage; the grass runs past the reading column on purpose */
+.sup-wind__stage {
+  position: relative;
+  height: clamp(380px, 62vh, 560px);
+  margin-inline: calc(50% - 50vw);
+  border-top: 1px solid var(--sup-hairline);
+  border-bottom: 1px solid var(--sup-hairline);
+  background: linear-gradient(
+    180deg,
+    var(--sup-cream) 0%,
+    rgba(233, 223, 168, 0.28) 46%,
+    var(--sup-field) 100%
+  );
+}
+
+.sup-wind__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sup-wind__caption {
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-top: 1.4rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--sup-bark);
+}
+
+.sup-wind__caption span {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   둘 · One breath — the 4·4·4 guide
+   ========================================================================== */
+
+.sup-breath {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 56px);
+  text-align: center;
+}
+
+.sup-breath .sup-sec {
+  text-align: left;
+}
+
+.sup-breath__how {
+  max-width: 34rem;
+  margin-inline: auto;
+  margin-bottom: clamp(2rem, 6vh, 3.6rem);
+}
+
+.sup-breath__how em {
+  display: block;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.sup-breath__how span {
+  display: block;
+  color: var(--sup-bark);
+  font-size: 0.95rem;
+}
+
+.sup-breath__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(300px, 46vh, 420px);
+  margin-bottom: 1.8rem;
+}
+
+/* the orb — scale is the only thing that moves, and the fallback (0.62,
+   a resting mid-breath) is what no-JS and reduced motion see */
+.sup-breath__orb {
+  grid-area: 1 / 1;
+  width: clamp(190px, 30vw, 270px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 30%,
+    rgba(233, 223, 168, 0.75),
+    rgba(168, 184, 154, 0.62) 52%,
+    rgba(111, 132, 87, 0.55) 100%
+  );
+  transform: scale(calc(0.76 + 0.3 * var(--sup-breath, 0.62)));
+  will-change: transform;
+}
+
+.sup-breath__halo {
+  grid-area: 1 / 1;
+  width: clamp(190px, 30vw, 270px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--sup-moss);
+  opacity: calc(0.22 + 0.4 * var(--sup-breath, 0.62));
+  transform: scale(calc(0.94 + 0.36 * var(--sup-breath, 0.62)));
+  will-change: transform, opacity;
+}
+
+.sup-breath__readout {
+  grid-area: 1 / 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.sup-breath__word {
+  font-size: 1.5rem;
+  color: var(--sup-loam);
+}
+
+.sup-breath__word-en {
+  font-family: var(--sup-font-display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--sup-loam);
+}
+
+.sup-breath__count {
+  font-family: var(--sup-font-display);
+  font-size: 2.1rem;
+  line-height: 1.1;
+  color: var(--sup-moss);
+  font-variant-numeric: tabular-nums;
+}
+
+.sup-breath__toggle {
+  font: inherit;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  color: var(--sup-moss);
+  background: transparent;
+  border: 1px solid var(--sup-moss);
+  border-radius: 999px;
+  padding: 0.72em 1.6em;
+  cursor: pointer;
+}
+
+.sup-breath__toggle:hover {
+  background: var(--sup-moss);
+  color: var(--sup-cream);
+}
+
+.sup-breath__note {
+  margin-top: 2.2rem;
+  font-size: 0.95rem;
+  color: var(--sup-bark);
+}
+
+.sup-breath__note em {
+  color: var(--sup-loam);
+  font-size: 1.05rem;
+  margin-right: 0.4em;
+}
+
+/* ==========================================================================
+   셋 · The retreats — a quiet ledger
+   ========================================================================== */
+
+.sup-retreats {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 56px);
+}
+
+.sup-retreats__lede {
+  max-width: 36rem;
+  margin-bottom: clamp(2.4rem, 6vh, 4rem);
+}
+
+.sup-retreats__lede em {
+  font-size: 1.35rem;
+  color: var(--sup-loam);
+}
+
+.sup-retreats__lede span {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--sup-bark);
+  font-size: 0.95rem;
+}
+
+.sup-retreat {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  grid-template-areas:
+    "when name"
+    "when sense";
+  column-gap: 1.6rem;
+  row-gap: 0.5rem;
+  padding-block: clamp(1.6rem, 4vh, 2.4rem);
+  border-top: 1px solid var(--sup-hairline);
+}
+
+.sup-retreat:last-child {
+  border-bottom: 1px solid var(--sup-hairline);
+}
+
+.sup-retreat__when {
+  grid-area: when;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.sup-retreat__time {
+  font-family: var(--sup-font-display);
+  font-size: 1.5rem;
+  color: var(--sup-moss);
+  font-variant-numeric: tabular-nums;
+}
+
+.sup-retreat__length {
+  font-size: 0.8rem;
+  color: var(--sup-bark);
+  letter-spacing: 0.05em;
+}
+
+.sup-retreat__name {
+  grid-area: name;
+  font-weight: 400;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  flex-wrap: wrap;
+}
+
+.sup-retreat__ko {
+  font-size: 1.45rem;
+  color: var(--sup-loam);
+}
+
+.sup-retreat__en {
+  font-family: var(--sup-font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--sup-bark);
+}
+
+.sup-retreat__sense {
+  grid-area: sense;
+  max-width: 34rem;
+}
+
+.sup-retreat__sense em {
+  display: block;
+  font-size: 1.02rem;
+  color: var(--sup-loam);
+  margin-bottom: 0.2rem;
+}
+
+.sup-retreat__sense span {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--sup-bark);
+}
+
+/* ==========================================================================
+   Footer — the clearing at the end
+   ========================================================================== */
+
+.sup-footer {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 140px) clamp(20px, 5vw, 56px) clamp(48px, 8vh, 80px);
+  text-align: center;
+  border-top: 1px solid var(--sup-hairline);
+}
+
+.sup-footer__call {
+  font-family: var(--sup-font-display);
+  font-size: clamp(1.7rem, 4.4vw, 2.7rem);
+  letter-spacing: 0.14em;
+  color: var(--sup-loam);
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
+}
+
+.sup-footer__call :lang(ko) {
+  letter-spacing: 0.08em;
+}
+
+.sup-footer__dot {
+  color: var(--sup-moss);
+}
+
+.sup-footer__where {
+  margin-bottom: 2rem;
+  color: var(--sup-bark);
+  font-size: 0.95rem;
+}
+
+.sup-footer__where-en {
+  display: block;
+  font-family: var(--sup-font-display);
+  font-style: italic;
+}
+
+.sup-footer__coords {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: var(--sup-lichen);
+}
+
+.sup-footer__contact {
+  display: flex;
+  justify-content: center;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.6rem;
+  font-size: 0.92rem;
+}
+
+.sup-footer__legal {
+  font-size: 0.85rem;
+  color: var(--sup-bark);
+}
+
+/* ==========================================================================
+   Composition — small clearings
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .sup-hero__stage {
+    right: -14%;
+    width: clamp(300px, 72vw, 460px);
+    opacity: 0.5;
+  }
+
+  .sup-hero__copy {
+    max-width: 30rem;
+  }
+
+  .sup-retreat {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "when"
+      "name"
+      "sense";
+    row-gap: 0.4rem;
+  }
+
+  .sup-retreat__when {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sup-sec {
+    gap: 0.7rem;
+  }
+
+  .sup-hero__hint {
+    font-size: 0.72rem;
+  }
+
+  .sup-footer__contact {
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the forest, already still.
+   The plants stand fully grown (the --sup-grow fallback is 1 and the hooks
+   never run), the meadow is one composed frame, the orb rests mid-breath,
+   and the written instruction carries the whole exercise.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .sup-js .sup-hero__sun,
+  .sup-js .sup-hero__plant--main .sup-growth,
+  .sup-js .sup-hero__plant--back .sup-growth {
+    animation: none;
+  }
+
+  .sup-hero__plant--back,
+  .sup-hero__plant--main,
+  .sup-hero__copy {
+    transform: none;
+  }
+
+  .sup-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .sup-breath__orb {
+    transform: scale(0.9);
+  }
+
+  .sup-breath__halo {
+    transform: scale(1.04);
+    opacity: 0.4;
+  }
+}

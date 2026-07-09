@@ -1,0 +1,262 @@
+# HALFLIGHT — breakdown
+
+## The hook
+
+Somewhere there is a composer with a shelf of finished scores for films
+nobody ever shot. The films have slug lines, cue sheets, end credits — they
+simply do not exist. This page is that studio's screening room, and it takes
+the premise literally: there is no video file, no photograph, no exported
+frame anywhere in the entry. The "footage" you scrub through is drawn by
+code the moment you arrive, the score is synthesized the moment you press
+play, and the credits thank an audience that almost was.
+
+The design bet: absence is art-directable. A film you cannot watch, scored
+by music you have to ask for, can feel more like cinema than an autoplaying
+hero video ever does.
+
+## Art direction
+
+Cinematic-dark here means projection, not "dark mode". The background
+`#0b0b0d` is the screen with the lamp off; true `#000` is reserved for the
+letterbox bars and the frame surround, so the picture area always reads as
+*lit*. Everything on screen is grayscale — bone `#e8e4da` for voice,
+tungsten `#a08560` for machine metadata — except one signal red `#d43425`,
+which appears as a cue dot, a focus ring, a struck cue's spine, a playhead,
+and THE END. One red per viewport; it is an event, not a color scheme.
+
+Red also set the hardest constraint: it measures ~4.0:1 on the black, so it
+never carries body text. Large Anton display (THE END) and non-text marks
+only; the "UNUSED" flag on the cue sheet is tungsten, and the red arrives
+as the row's border spine instead.
+
+Four faces play four roles. Anton is the title card — condensed capitals,
+one weight. Spectral is the direction voice, italic when the page speaks in
+stage directions. Space Mono is every machine surface: timecodes, frame
+counters, credit roles. And Noto Serif KR carries every Hangul glyph — the
+stacks (`Spectral, Noto Serif KR, serif`; `Space Mono, Noto Serif KR,
+monospace`) let Korean fall through the Latin faces with no markup, and
+`:lang(ko)` pins the family and sets `word-break: keep-all`.
+
+## Technique 1 — sprite-scrub, without sprites
+
+The classic sprite-scrub ships hundreds of JPEG frames and swaps them by
+scroll position. HALFLIGHT keeps the grammar — scroll position *is*
+position in the reel — and deletes the frames. A 380vh section pins a
+2.39:1 canvas; `useScrollProgress` maps the corridor to `p ∈ [0, 1]`, and
+`p` maps to one of 480 frame numbers at 24fps. Every frame is *computed*,
+not fetched:
+
+```tsx
+// Reel.tsx — scroll progress is the only clock the picture has
+useScrollProgress(sectionRef, (p) => { targetPRef.current = p; }, !reduced);
+
+// in the rAF loop: the shown position trails the target like film mass
+shownP += (targetPRef.current - shownP) * SCRUB_LERP * k; // 0.12/frame
+```
+
+The sequence itself is two shots. Shot A is INT. MEMORY — NIGHT: tilted
+venetian-blind bands of light sweeping a dark room, each band a vertical
+linear gradient whose alpha peaks under a gaussian centered on the sweep.
+Shot B is EXT. SHORELINE — DUSK: a pale disc rising over a sea of
+horizontal shimmer bars, clipped at the waterline. Between p = 0.45 and
+0.60 they dissolve — drawn on top of each other with a smoothstepped
+`globalAlpha`:
+
+```tsx
+if (p < 0.62) drawShotA(qa);
+if (p > 0.45) {
+  const x = Math.min(1, (p - 0.45) / 0.15);
+  ctx.globalAlpha = x * x * (3 - 2 * x); // smoothstepped dissolve
+  drawShotB(Math.min(1, (p - 0.45) / 0.55));
+  ctx.globalAlpha = 1;
+}
+```
+
+Because the reel is procedural it is also *deterministic*: scrub back and
+the same scratch crosses the same frame. That is the detail that makes it
+feel like film rather than a screensaver — the wear pass is hashed off the
+frame number, so frame 0312 is always frame 0312:
+
+```tsx
+/** Deterministic per-frame hash: same frame number, same wear, forever. */
+function hash(n: number, salt: number): number {
+  let x = (n * 374761393 + salt * 668265263) | 0;
+  x = Math.imul(x ^ (x >>> 13), 1274126177);
+  return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+}
+```
+
+A Space Mono HUD sits on the frame — `REEL 02 · 2.39:1`, `FR 0312`, a
+24fps timecode — written imperatively into refs only when the frame number
+changes, so the counter ticks like a counter instead of re-rendering React.
+
+## Technique 2 — canvas particles: grain, dust, and the wear pass
+
+The grain is the reel's particle system, and it runs at two clocks. A 160px
+tile is pre-rendered once from `ImageData` — bright specks above the 0.82
+hash band, dark pits below 0.16, transparent between — then composited over
+the picture with `globalCompositeOperation: "overlay"` at 0.45 alpha. The
+tile's offset re-seeds at ~12fps (`GRAIN_MS = 83`) while the scrub redraws
+at display rate:
+
+```tsx
+if (grainDue) {
+  lastGrain = now;
+  grainX = Math.random();
+  grainY = Math.random();
+}
+```
+
+Grain at 60fps looks like static; at 12fps it looks like stock. Splitting
+the clocks — picture at display cadence, grain at film cadence — is the
+single cheapest trick in the entry and the one that sells the projection.
+
+On top of the grain, the hashed wear pass spawns actual particles: a
+vertical scratch whose x jitters ±1.5px while it lives (`Math.floor(f / 3)`
+gives it a three-frame lifespan), and up to three dust motes per frame,
+each with hashed position, radius, and polarity (pale or black). A lamp
+flicker — a 3–8% black wash, also frame-hashed — and a radial vignette
+finish the pass. The DOM gets its own grain (an SVG feTurbulence tile over
+the hero, stepped between five offsets), but the canvas system is where the
+particles do the work.
+
+## Technique 3 — the char-split title and the gate weave
+
+The title card wants two contradictory things: a nine-glyph staggered
+entrance, and a word that afterwards behaves like one physical object. So
+the split works at two levels. Each glyph is an `aria-hidden` span with its
+own `animation-delay`; the whole word sits in a single "weave" wrapper; the
+`h1` carries the accessible name:
+
+```tsx
+<h1 className="halflight-title" id="halflight-title" aria-label={TITLE}>
+  <span className="halflight-title__weave" aria-hidden="true">
+    {TITLE.split("").map((ch, i) => (
+      <span key={`${ch}-${i}`} className="halflight-title__ch"
+        style={{ animationDelay: `${220 + i * 55}ms` }}>
+        {ch}
+      </span>
+    ))}
+  </span>
+</h1>
+```
+
+Screen readers read "HALFLIGHT" once; sighted visitors watch it rise out of
+the letterbox glyph by glyph (`translateY(0.35em) → 0`, 700ms, 55ms
+stagger). Then the wrapper takes over: the gate weave is a 7.3s keyframe
+loop of nine sub-pixel positions (±0.7px x, ±0.9px y) with
+`steps(1, end)` timing — the word *jumps* between rest positions and holds,
+which is what film does in a loose projector gate. Ease the same keyframes
+and the title turns to jelly; `steps(1)` or nothing.
+
+Both layers are gated behind `.halflight-js` (no JS, no hidden text — the
+animation itself carries the pre-state via `animation-fill-mode: both`) and
+both die in the reduced-motion media query.
+
+## The score — three seconds late, on purpose
+
+The audio is not a tag in meta.json; it is the entry's second procedural
+medium. Pressing PLAY — and nothing else, ever — builds a Web Audio graph:
+a room tone (sines at 55 and a deliberately sharp 110.7, a triangle a
+twelfth up, all through a 260Hz lowpass) fades in over 1.6s. The strings —
+two detuned saws and an open fifth through a breathing lowpass — are
+scheduled, not faded, at `osc.start(now + 3)`: the cue sheet's line "the
+strings enter three seconds late, on purpose" is executable.
+
+```ts
+// useAudioEngine.ts — the copy, made literal
+const enter = now + STRINGS_DELAY_S;
+strEnv.gain.setValueAtTime(0.0001, enter);
+strEnv.gain.linearRampToValueAtTime(0.17, enter + STRINGS_SWELL_S);
+voice("sawtooth", 220, 0.5, strFilter, enter);
+```
+
+Two LFOs below 0.2Hz (filter frequency ±320Hz, swell ±0.24) keep the drone
+from ever sitting still or audibly looping. While it sounds, an
+AnalyserNode feeds a canvas score-line: an RMS envelope marching left, the
+raw oscilloscope ghosted behind it in tungsten, a red playhead, and a fixed
+red mark at 18% — the strings' entrance, visible even in the static
+reduced-motion drawing.
+
+Every exit is a teardown. Stop ramps the master down over 0.55s, then stops
+every oscillator, disconnects the graph, and closes the AudioContext.
+Leaving the section (IntersectionObserver), unmounting, and `pagehide` all
+reach the same function — there is no path where nodes leak or sound
+continues out of view.
+
+## Motion math
+
+- **Scrub lerp 0.12/frame.** Half-life ≈ `ln(0.5)/ln(1 − 0.12)` ≈ 5.4
+  frames ≈ 90ms at 60fps (normalized by `dt / 16.7`). Enough lag that the
+  reel has mass — a flick of the wheel lands a beat later, like real film
+  taking up the slack — but not so much that the frame counter feels
+  detached from the scrollbar.
+- **The dissolve window (0.45–0.60)** is 15% of the corridor ≈ 57vh of
+  scroll: long enough to hold mid-dissolve and look at the double image,
+  short enough that neither shot feels contaminated by the other.
+- **Grain at 83ms** against a 7.3s weave and an 8.1s blink: the three
+  ambient periods share no common divisor, so the dark never visibly loops.
+- **Audio asymmetry, 1.6s in / 0.55s out.** A drone must arrive like a
+  room and leave like a switch — a long release would smear over whatever
+  the visitor scrolled to next.
+
+## Performance notes
+
+- One rAF loop for the reel; it early-returns without drawing unless the
+  scrub moved (> 0.0004), the frame number changed, or the 83ms grain clock
+  fired — an idle pinned reel costs a comparison, not a repaint.
+- The loop pauses entirely offscreen (IntersectionObserver, 120px margin)
+  and on hidden tabs (`visibilitychange`); `dt` is clamped to 48ms so a
+  background tab never lurches.
+- DPR is capped at 2; the grain tile is drawn `⌈w/160⌉ × ⌈h/160⌉` ≈ 21
+  times per frame from a pre-rendered canvas — no per-pixel work after
+  init. Shot gradients are rebuilt per frame (≈ 25 gradient objects), well
+  inside a frame budget at 2.39:1 sizes.
+- The waveform loop exists only while `playing && !reduced`; stopping the
+  cue cancels it in the same effect cleanup.
+- HUD counters, cue-mark opacity, and the credit roll's `--hl-roll-p` are
+  imperative ref/CSS-var writes — zero React re-renders per scroll frame.
+  The only state changes on the page are play/stop and the one-time
+  `.halflight-js` class.
+- DOM animation is transform/opacity only; the scrub corridors exist only
+  under `.halflight-js`, so the no-JS page is normal height with no dead
+  scroll.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) freezes the reel on one composed still (p = 0.78, late
+  in the dissolve), disables the scroll mapping, and collapses both scrub
+  corridors to normal flow; the media query kills weave, char rise, grain,
+  blink, and reveals. The score button still works — reduced motion is not
+  reduced sound — but its waveform renders as a static drawing.
+- **Audio consent:** the AudioContext is constructed inside the click
+  handler; there is no autoplay path, and the button is a native `<button>`
+  with `aria-pressed` and visible PLAY/STOP states.
+- **No-JS:** every hidden pre-state (`[data-reveal]`, corridors, the
+  player controls) is gated behind `.halflight-js`. Without JavaScript the
+  page is a complete, readable document; the reel frame shows a CSS still.
+- **Semantics:** both canvases sit in `role="img"` wrappers with full
+  bilingual descriptions and `aria-hidden` canvas elements; the HUD and cue
+  dots are decorative and hidden from the tree; the struck cue uses a real
+  `<s>` element plus an explicit UNUSED · 미사용 flag rather than color
+  alone.
+- **Contrast:** bone 15.5:1, bone-dim 6.6:1, tungsten 5.6:1 — all AA+ on
+  the screen black; red (4.0:1) is confined to large display type and
+  non-text marks, and the HUD sits on a scrim so it stays readable over the
+  reel's brightest frames.
+
+## Remix ideas
+
+1. **Radio play.** Keep the whole engine, delete the picture: the reel
+   canvas becomes a slowly panning VU-meter landscape, the cue sheet
+   becomes a broadcast log, and the Web Audio patch gains a noise bed
+   (buffer source) with a bandpass "tuning" LFO. The scrub scrubs static.
+2. **Photographer of missing places.** Swap the two shots for four:
+   contact-sheet mode, where the corridor scrubs across a strip of frames
+   and holding still "develops" the current one (grain settles, vignette
+   deepens). Red becomes the grease-pencil circle on the chosen frame.
+3. **Planetarium.** The same deterministic hash draws a star field instead
+   of wear; scroll scrubs the sky through one night, the drone becomes a
+   pad that detunes with the hour, and the credits roll lists
+   constellations that were never named.

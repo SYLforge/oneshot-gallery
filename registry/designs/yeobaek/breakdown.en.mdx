@@ -1,0 +1,207 @@
+# 여백 YEOBAEK — breakdown
+
+## The hook
+
+A literary quarterly devotes its seventh issue to 여백 — yeobaek, the
+blank space of Korean art and life — and the issue commits to the bit:
+the cover is mostly empty, the lead essay is about the emptiness it is
+set in, the gallery hangs three plates of almost nothing, and one plate
+is left blank on purpose. The page never explains itself. It behaves like
+paper, and it trusts you the way its essay says paper trusts a reader.
+
+The design bet: on a gallery full of motion pieces, the quietest entry —
+where the only spectacle is typographic rhythm and the deliberate use of
+nothing — can hold its own. Whitespace is the design.
+
+## Art direction
+
+Everything happens against ivory (`#faf6ef`). Ink (`#232020`, 15:1) does
+the speaking; oxblood (`#7d2a26`, 8.7:1) is the single accent and appears
+only as small, expensive things — hairlines, a drop cap, footnote
+numerals, one seal, the underline draw, the focus ring. The brief's
+graphite (`#8f8a82`) measures ~3.2:1 on ivory, so it was demoted to rules
+only; secondary text (the EN transcreations, captions, footnotes) uses a
+derived token instead — ink at 72% alpha, about `#5f5c5a`, 6.2:1.
+
+Two serifs, two roles. Nanum Myeongjo carries every Hangul glyph — the
+masthead at weight 800, the essay at 400 with line-height 2.05 and
+`word-break: keep-all`, because Myeongjo needs air and Korean should
+never break mid-word. Libre Caslon Text answers in Latin: the
+transcreations at 0.95em in ink-soft, the folios and captions in italic,
+the drop cap. The family stack does quiet work — Caslon first, Myeongjo
+second — so Hangul falls through into the Korean serif with no markup.
+
+## Technique — the plate that pins (scroll-scrub-pinned)
+
+The essay's signature is the tipped-in figure plate: it holds position
+while paragraphs flow past, and its ink stroke is drawn by the reader's
+scroll. The pin itself is free — `position: sticky` inside the spread's
+full-height figure column:
+
+```css
+.yeobaek-spread__fig .yeobaek-figure {
+  position: sticky;
+  top: clamp(4.5rem, 14vh, 8rem);
+}
+```
+
+The scrub is a small rAF loop per spread. Each frame does exactly one
+read (the spread's rect) and one write (a custom property) — read before
+write, so layout is never thrashed — and the raw progress is
+lerp-smoothed with a dt-normalized factor so a 120Hz display doesn't
+scrub twice as fast:
+
+```ts
+// useScrollScrub.ts — one read, one lerp, one write
+const span = Math.max(Math.min(rect.height * 0.85, vh * 1.1), 1);
+const raw = (vh * 0.7 - rect.top) / span;
+const target = Math.min(1, Math.max(0, raw));
+value += (target - value) * (1 - Math.pow(0.86, dt / 16.7));
+el.style.setProperty("--yb-scrub", value.toFixed(4));
+```
+
+An IntersectionObserver starts and stops the loop, so an offscreen spread
+costs zero frames. The `vh * 1.1` cap matters on mobile: single-column
+spreads get tall, and without the cap the stroke would still be drawing
+long after the plate scrolled away.
+
+Under `prefers-reduced-motion` the hook writes `--yb-scrub: 1` once and a
+media query sets the figure to `position: static` — a finished plate,
+statically tipped in. Without JavaScript the CSS fallback does the same.
+
+## Technique — ink that draws itself (svg-line-draw)
+
+Every stroke on the page is a `pathLength=1` path with
+`stroke-dasharray: 1 1`, which reduces all dashoffset math to numbers you
+can do in your head. The essay plates map the scrub directly:
+
+```css
+.yeobaek-stroke {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--yb-scrub, 1));
+}
+
+/* the seal arrives only as the plate completes: 0.833→1 maps to 0→1,
+   and the browser clamps opacity to [0,1] for free */
+.yeobaek-seal {
+  opacity: calc(var(--yb-scrub, 1) * 6 - 5);
+}
+```
+
+Because `--yb-scrub` defaults to 1 on the root, the no-JS and
+reduced-motion states are not fallbacks that hide things — they are the
+finished plates.
+
+The gallery ripples draw once, time-based, at their reveal threshold
+(dashoffset 1 → 0 over 1.5s, the three ellipses staggered 250ms apart),
+and the links carry the rubber band: a static graphite hairline that is
+always present, plus an oxblood SVG path with a slight hand wobble that
+draws in on hover or focus through an overshooting bezier:
+
+```css
+.yeobaek-link:hover .yeobaek-link__ink path,
+.yeobaek-link:focus-visible .yeobaek-link__ink path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 640ms cubic-bezier(0.32, 1.42, 0.5, 1);
+}
+```
+
+The bezier overshoots ~6%, so the stroke draws past taut and snaps back —
+the rubber band. It is pure CSS: it works with JavaScript disabled, and
+under reduced motion the stroke is simply present, undrawn.
+
+## Technique — a name in two characters (char-split-reveal)
+
+The masthead 여백 is two glyphs, so the split costs two spans. The `h1`
+keeps the whole word in `aria-label`; the animated characters are
+`aria-hidden`, each carrying its index as a custom property:
+
+```tsx
+<h1 className="yeobaek-name" lang="ko" aria-label="여백">
+  {NAME.map((ch, i) => (
+    <span aria-hidden="true" className="yeobaek-name__ch"
+      style={{ "--yb-ci": i } as CSSProperties}>{ch}</span>
+  ))}
+</h1>
+```
+
+CSS staggers the rise by `calc(120ms + var(--yb-ci) * 190ms)`, gated
+behind the `.yeobaek-js` root class so the server-rendered cover is
+complete. The drop cap deliberately does *not* use this technique — it is
+CSS `::first-letter`, no spans, nothing rearranged for assistive tech.
+Split where it's honest and cheap; style where the platform already
+provides.
+
+## The margin footnotes
+
+Four numbered notes annotate the essay from a 15rem margin rail. Each is
+a real two-way anchor pair — the superscript in the text links to the
+note, the note's return arrow links back — so keyboard and screen-reader
+users can travel both directions. Their arrival reuses the reveal
+observer with a horizontal pre-state:
+
+```css
+.yeobaek-js [data-reveal="margin"] { transform: translateX(22px); }
+.yeobaek-js [data-reveal].is-visible { opacity: 1; transform: none; }
+```
+
+At the note's scroll threshold it slides in from the margin — from the
+emptiness, which is the joke the whole page is telling. Below 1080px the
+rail folds away and notes sit beneath their passage as left-ruled
+insets; nothing is hover-only, nothing is lost to touch.
+
+## The discipline of the measure
+
+The quiet work is the column math. Essay text caps at 36rem — roughly 65
+Latin characters, which footnote 4 admits in print. Korean paragraphs run
+line-height 2.05 against the Latin's 1.78, so the two languages breathe
+at different rates but return to the same baseline rhythm every pair.
+"Multi-column" here means the editorial grid — text column, margin rail,
+figure column — rather than running the essay through CSS columns, which
+would have killed the sticky pin (fragmentation contexts don't compose
+with sticky). True `column-count: 2` appears exactly once, in the coda,
+with a faint column rule: the essay ends in the magazine's own gesture.
+
+## Accessibility notes
+
+- **Reduced motion:** figures unpin (`position: static`), every stroke is
+  fully drawn (`--yb-scrub` stays 1), footnotes and reveals are present
+  without motion, the underline is present without the draw, the cover
+  skips its choreography. One static, finished issue.
+- **No-JS:** every pre-reveal state is gated behind `.yeobaek-js`, added
+  on mount. With JavaScript off the page is a clean printed document —
+  which is exactly what a magazine should degrade to.
+- **Semantics:** plates are `role="img"` with bilingual labels inside
+  real `figure`/`figcaption` pairs; the split masthead hides its spans
+  behind an `aria-label`; footnotes are `role="note"` with labeled
+  back-links; focus is a 2px oxblood `:focus-visible` ring.
+- **Contrast:** ink 15:1, oxblood 8.7:1, secondary 6.2:1 — all AA or
+  better; the 3.2:1 graphite never carries a word.
+
+## Performance notes
+
+- Two rAF loops exist (one per spread), each alive only while its spread
+  intersects a generous observer margin; each frame is one
+  `getBoundingClientRect` and one custom-property write.
+- Everything animated is `transform`, `opacity`, or `stroke-dashoffset`;
+  the pin is native sticky, not scripted layout.
+- Reveals write `class` + `transitionDelay` imperatively from one
+  IntersectionObserver — no React re-renders on scroll anywhere on the
+  page.
+- Zero images, zero dependencies; the heaviest assets are two font
+  families, and Hangul subsetting is left to next/font.
+
+## Remix ideas
+
+1. **Poetry chapbook.** Keep the grid; replace the essay with poems whose
+   stanzas are Blocks and whose single illustration pins per poem. The
+   scrub draws an underline beneath the title as you read — finished only
+   if you reach the end.
+2. **Museum wall-text system.** The plates become object labels; the
+   margin rail carries curator's notes; oxblood becomes the collection's
+   accession-number red. The gallery of emptiness becomes the actual
+   catalogue.
+3. **Letterpress specimen.** Same bones, but the plates are type
+   specimens and the scrub inks a giant ampersand instead of a brush
+   stroke. The colophon ledger grows point sizes; the coda sets itself in
+   the face it describes.

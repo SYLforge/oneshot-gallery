@@ -70,6 +70,74 @@
     "featured": false
   },
   {
+    "slug": "gradient-plaza",
+    "no": 14,
+    "title": {
+      "en": "GRADIENT PLAZA — Midnight Mall Radio",
+      "ko": "그라디언트 플라자 — 미드나잇 몰 라디오"
+    },
+    "description": {
+      "en": "A 24-hour radio station broadcasting from a shopping mall that only exists after closing — a scroll-rushed perspective grid, draggable retro-OS radio windows, and PA announcements that smear like a tired CRT at speed.",
+      "ko": "폐점 후에만 존재하는 쇼핑몰에서 송출되는 24시간 라디오 — 스크롤 속도에 바닥이 달리는 원근 그리드, 드래그되는 레트로 OS 창, 빠르게 스크롤하면 브라운관처럼 번지는 안내방송."
+    },
+    "aesthetic": "vaporwave",
+    "techniques": [
+      "canvas-particles",
+      "drag-physics",
+      "marquee"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff71ce",
+    "theme": "dark",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "halflight",
+    "no": 12,
+    "title": {
+      "en": "HALFLIGHT — Original Scores for Imaginary Films",
+      "ko": "하프라이트 — 존재하지 않는 영화의 음악"
+    },
+    "description": {
+      "en": "A composer's screening room for films that were never shot: a scroll-scrubbed procedural film reel, a cue you press play to synthesize, and end credits for nobody — every frame drawn in code.",
+      "ko": "찍히지 않은 영화들을 위한 작곡가의 시사실 — 스크롤로 스크럽하는 절차적 필름 릴, 직접 재생해 합성하는 큐, 아무도 없는 엔드 크레딧. 모든 프레임을 코드로 그렸다."
+    },
+    "aesthetic": "cinematic-dark",
+    "techniques": [
+      "sprite-scrub",
+      "canvas-particles",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#d43425",
+    "theme": "dark",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
     "slug": "hanji-slate",
     "no": 11,
     "title": {
@@ -102,6 +170,41 @@
     "theme": "light",
     "published": "2026-07-10",
     "featured": false
+  },
+  {
+    "slug": "kemuri",
+    "no": 1,
+    "title": {
+      "en": "KEMURI — Smoke & Stillness",
+      "ko": "케무리 — 연기와 고요"
+    },
+    "description": {
+      "en": "A Kyoto incense atelier, est. 1927, that sells an hour of stillness — one censer, one ribbon of curl-noise smoke, and three ink paintings that settle out of water.",
+      "ko": "1927년 창업, '고요 한 시간'을 파는 교토의 향 공방 — 향로 하나, 컬 노이즈로 피어오르는 한 줄기 연기, 물에서 가라앉아 완성되는 세 폭의 수묵."
+    },
+    "aesthetic": "washi-sumi-e",
+    "techniques": [
+      "canvas-particles",
+      "feturbulence-texture",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#c96f2e",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": true
   },
   {
     "slug": "lumen-nord",
@@ -237,6 +340,75 @@
     },
     "media": "code",
     "accent": "#e30613",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "sup",
+    "no": 13,
+    "title": {
+      "en": "SUP — Forest Bathing Retreats",
+      "ko": "숲 — 산림욕 리트릿"
+    },
+    "description": {
+      "en": "A Gangwon-do forest-bathing house whose page grows as you arrive — an L-system tree draws itself in, a canvas meadow bends under the breeze your pointer makes, and a 4·4·4 breathing guide counts with you.",
+      "ko": "도착하는 만큼 자라나는 강원도 산림욕 리트릿 — L-시스템 나무가 스스로 그려지고, 포인터가 만든 바람에 캔버스 풀밭이 눕고, 4·4·4 호흡 가이드가 함께 숨을 세어 준다."
+    },
+    "aesthetic": "organic-nature",
+    "techniques": [
+      "svg-line-draw",
+      "canvas-particles",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "wellness"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#4a5d3a",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "yeobaek",
+    "no": 7,
+    "title": {
+      "en": "YEOBAEK — The Journal of Blank Space",
+      "ko": "여백 — 빈 공간의 잡지"
+    },
+    "description": {
+      "en": "A bilingual literary journal devoted to yeobaek — negative space in Korean art and life — set as a quiet editorial spread where tipped-in plates pin and draw themselves while the essay flows past.",
+      "ko": "한국 예술과 삶 속의 여백을 다루는 이중언어 문예지 — 접지 도판이 자리를 지키며 스스로 그려지는 동안, 에세이가 그 곁을 조용히 흘러가는 에디토리얼 지면."
+    },
+    "aesthetic": "editorial-serif",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "svg-line-draw",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "publishing"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#7d2a26",
     "theme": "light",
     "published": "2026-07-10",
     "featured": false

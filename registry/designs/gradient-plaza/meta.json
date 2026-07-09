@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "gradient-plaza",
+  "no": 14,
+  "title": {
+    "en": "GRADIENT PLAZA — Midnight Mall Radio",
+    "ko": "그라디언트 플라자 — 미드나잇 몰 라디오"
+  },
+  "description": {
+    "en": "A 24-hour radio station broadcasting from a shopping mall that only exists after closing — a scroll-rushed perspective grid, draggable retro-OS radio windows, and PA announcements that smear like a tired CRT at speed.",
+    "ko": "폐점 후에만 존재하는 쇼핑몰에서 송출되는 24시간 라디오 — 스크롤 속도에 바닥이 달리는 원근 그리드, 드래그되는 레트로 OS 창, 빠르게 스크롤하면 브라운관처럼 번지는 안내방송."
+  },
+  "aesthetic": "vaporwave",
+  "techniques": ["canvas-particles", "drag-physics", "marquee"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#ff71ce",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

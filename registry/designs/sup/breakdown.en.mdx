@@ -1,0 +1,216 @@
+# 숲 SUP — breakdown
+
+## The hook
+
+Forest bathing has one rule, and it is barely a rule: go slower than you
+meant to. The design bet was to make a landing page obey it. Nothing on
+this page asks for attention — the tree grows whether or not you watch, the
+grass answers your hand but doesn't need it, and the one interactive control
+is a button that offers to count to four with you. There is no photograph
+anywhere, because a photo of a forest is a memory of somewhere else. Every
+branch, leaf, and blade is generated, so the page isn't *showing* you a
+forest — it is being one, badly, on purpose, the way a bonsai is.
+
+## Art direction
+
+Light theme, but forest-light: cream `#f2efe6` (a clearing, not a white
+studio), loam `#2e2a24` for anything that must be read, moss `#4a5d3a` as
+the single accent that ever asks for a click. Lichen `#a8b89a` is the
+prettiest color on the page and it measures 1.8:1 on cream — so it is
+foliage, never a voice: leaves, far grass, one decorative coordinates line.
+Secondary text is a derived token instead, loam at 72% alpha (`bark`,
+≈`#65615a`, 5.4:1).
+
+Two typefaces, two speakers. Instrument Serif is the guide's voice — the
+SUP wordmark and every italic aside ("Wind you can see — we call it
+grass."). Gowun Dodum is the ground everything stands on: all Hangul, all
+body text, round and unhurried. The display stack `Instrument Serif, Gowun
+Dodum, serif` means the giant 숲 falls through the Latin face into Gowun
+with no markup — the title's Korean roundness is a font-stack accident made
+load-bearing.
+
+## Technique 1 — a tree that draws itself (svg-line-draw)
+
+The hero plant is a bracketed L-system — axiom `X`, rules `X → F[+X][-X]FX`
+and `F → FF`, five iterations — interpreted by a turtle with a seeded PRNG,
+so the server and client render byte-identical SVG. The grammar gives
+structure; the turtle adds what grammars can't: per-segment wander,
+phototropism, shrinking steps.
+
+```ts
+// plant.ts — the turtle walk
+if (ch === "F") {
+  const step = 10 * Math.pow(0.92, f.depth) * (0.85 + rnd() * 0.3);
+  f.ang += (rnd() - 0.5) * 8;          // wander — nothing alive is straight
+  f.ang += (-90 - f.ang) * 0.034;      // phototropism — lean back toward light
+  ...
+  f.dist += step;                       // the growth clock
+}
+```
+
+The interesting part is `f.dist` — cumulative distance from the seed. Every
+branch records where on that clock it starts and ends, normalized to 0–1,
+and every path gets `pathLength={1}` so dash math ignores real lengths.
+Then one CSS variable grows the entire plant:
+
+```css
+/* styles.css — one variable, ~250 private timelines */
+.sup-growth__branch {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: clamp(0, calc((var(--t1) - var(--sup-grow, 1)) / var(--tw)), 1.02);
+}
+.sup-growth__leaf {
+  --sup-unfurl: clamp(0, calc((var(--sup-grow, 1) - var(--lt)) * 12), 1);
+  opacity: var(--sup-unfurl);
+  transform: scale(var(--sup-unfurl));
+}
+```
+
+A rAF hook (`useGrowth`) eases `--sup-grow` to 0.74 over ~5.2 seconds and
+lets scroll raise the last 26% — one `setProperty` per frame and the trunk
+draws before the branches, the branches before the crown, each leaf popping
+open in its ~8% window. Two details carry the a11y story: the fallback is
+`var(--sup-grow, 1)`, so no-JS and reduced-motion visitors see a finished
+tree, never a bare one; and the hidden-state offset clamps at 1.02, not
+1.0, so round line caps can't leave a phantom dot at the branch base.
+
+## Technique 2 — the wind you can see (canvas-particles)
+
+The meadow is ~450 instanced blades on a DPR-capped canvas, each one a
+single quadratic curve with its own spring state. The pointer never touches
+a blade directly — it writes into the *air* instead: a 96-cell 1-D wind
+field that diffuses sideways and decays, like a held note.
+
+```ts
+// WindField.tsx — a pass of the hand becomes weather
+const v = clamp((ev.clientX - lastPX) / max(now - lastPT, 8), -2.4, 2.4);
+deposit(nx, v * 1.4);                  // gaussian splat into the wind cells
+// each frame:
+windTmp[i] = wind[i] + (l + r - 2 * wind[i]) * 0.22 * k;  // diffuse
+wind[i] = windTmp[i] * Math.pow(0.945, k);                 // forget
+```
+
+Because the impulse carries the pointer's *velocity*, a slow pass is a
+sigh and a flick is a gust — and because it diffuses cell to cell, the
+breeze visibly travels on after your hand stops. Each blade then runs a
+tiny spring toward `ambient + windAt(x)`:
+
+```ts
+bl.vel += (target - bl.bend) * bl.stiff * k;   // stiffness 0.03–0.06
+bl.vel *= Math.pow(bl.damp, k);                // damping 0.88–0.93
+bl.bend += bl.vel * k;
+```
+
+The spread of spring constants is what makes it read as grass rather than
+as a curtain: every blade recovers at its own pace, one soft overshoot
+each. Drawing is batched — three depth rows × two tones, blades appended
+into one path per group — so a full frame costs six `strokeStyle` changes.
+On touch, or with no pointer at all, the ambient term (three unrelated
+sines plus a traveling gust every ~33s) keeps the field weathered, and a
+tap parts the grass outward from the fingertip.
+
+## Technique 3 — depth that settles (pointer-parallax)
+
+The hero has three depth planes: an understory shrub (a 3-iteration run of
+the same L-system, different seed), the main tree, and the copy. A hook
+lerps two variables toward the pointer at 0.05/frame — deliberately half
+the usual speed — and CSS multiplies them into capped, opposite-signed
+translations: shrub −7px, tree +12px, copy −4px at full deflection.
+
+```css
+.sup-hero__plant--main {
+  transform: translate3d(calc(var(--sup-px, 0) * 12px),
+                         calc(var(--sup-py, 0) * 7px), 0);
+}
+```
+
+At that lerp rate the half-life of any pointer movement is ~13 frames —
+the layers don't track your hand, they *settle after it*, like branches
+after a bird leaves. Fine pointers only; on touch the planes rest and the
+sway animation carries the depth cue instead. Both fallbacks are 0, so the
+no-JS page is simply composed.
+
+## The breath — motion as a witness, not a teacher
+
+The 4·4·4 guide is the section that had to be honest. The rule it was
+built around: **the instruction must survive the death of the animation.**
+The sentence "In for four, hold for four, out for four — the forest counts
+with you" is plain, always-visible text above the orb. The orb, halo, and
+countdown are all `aria-hidden` — decoration on top of a sentence, not the
+other way around.
+
+One rAF clock drives both the orb scale (`--sup-breath`, half-sine eased)
+and the phase word + digit, so text and shape can never drift apart. State
+updates only fire when the displayed second actually changes — twelve
+renders per 12-second cycle. Under reduced motion the same button still
+works: it starts a text-only count (the variable writes are skipped, the
+words and digits still turn), because a breathing exercise is exactly the
+kind of thing a reduced-motion user might be here for. Pausing stores the
+position in the cycle; resuming re-anchors the clock so the breath
+continues from where it stopped rather than snapping to "in".
+
+## Motion math
+
+- **Growth lerp 0.06/frame** (60fps-normalized): half-life ≈ 11 frames
+  ≈ 190ms. Slow enough that scroll feels like weather, not a scrubber.
+- **Wind decay 0.945/frame**: a gust's half-life is ~12 frames, but
+  diffusion keeps redistributing it sideways as it dies, which is why the
+  breeze appears to travel roughly one field-width per strong flick.
+- **Ambient periods 9.4s / 12.7s / 17s / 12s** (tree sway, shrub sway, sun
+  breath, breath cycle) share no common divisor — the page never visibly
+  loops, which is most of what "alive, not busy" means in practice.
+- The reveal ease `cubic-bezier(0.22, 0.8, 0.24, 1)` covers ~70% of its
+  travel in the first third of its 950ms duration; with a 20px translate
+  the tail settles sub-pixel, so slow reads as calm instead of laggy.
+
+## Performance notes
+
+- One `setProperty` per frame grows ~250 SVG elements; the browser batches
+  the style recalc and stroke-dashoffset/opacity/transform are all
+  paint/composite-level — no layout ever runs during growth.
+- The canvas loop throttles to ~64fps (`FRAME_MS = 15.5`), clamps `dt` to
+  48ms, and is started/stopped by an IntersectionObserver (120px margin)
+  plus `visibilitychange` — zero frames offscreen, zero in hidden tabs.
+- Blade drawing is six batched strokes per frame; pollen is one fillStyle.
+  At DPR 2 × 1440px the whole frame stays comfortably inside a 60fps
+  budget on integrated graphics.
+- All three rAF hooks (growth, drift, breath) stop themselves offscreen
+  and clean up their observers and listeners on unmount.
+- The plants are generated once at module load (~4ms) and shared by
+  server and client — hydration diffs are structurally impossible.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) disables all four motion hooks; CSS fallbacks land
+  everything on a composed still — grown plants, a mid-gust meadow frame,
+  the orb resting at its 0.62 mid-breath scale. The breathing exercise
+  remains fully usable as text.
+- **No-JS:** the pre-reveal hidden state exists only under `.sup-js`, and
+  every animated value has a finished-state fallback. View-source shows a
+  complete forest.
+- **Semantics:** the canvas is `role="img"` with a bilingual description;
+  the plant SVGs are `aria-hidden` (the title carries the meaning); the
+  pause control is a native `<button>` with `aria-pressed`; the animated
+  readout is `aria-hidden` so screen readers get one calm instruction
+  instead of a metronome.
+- **Contrast:** loam 12:1, moss 6.2:1, bark 5.4:1 on cream; the breathing
+  words sit at ≥9:1 over the orb's lightest wash; lichen (1.8:1) never
+  labels anything.
+- **Keyboard:** CTA → pause button → footer links, in order, each with a
+  moss `:focus-visible` ring and soft halo.
+
+## Remix ideas
+
+1. **Tide flat.** Rotate the wind field 90°: blades become reed shadows,
+   the 1-D field becomes water level, and the breath orb becomes a tide
+   clock counting six hours in and six out. Palette: cream → wet sand,
+   moss → sea glass.
+2. **Bamboo grove.** Swap the L-system rules for a columnar grammar
+   (`X → F[+X]F[-X]X`, tighter angles), stroke widths constant, and let
+   the pointer wind play the grove like a marimba — each blade's spring
+   overshoot triggers a faint knock.
+3. **City park at dusk.** Keep everything; invert to a loam background
+   with cream text, sunlight becomes sodium-lamp amber, and the pollen
+   motes become fireflies that drift *toward* the pointer's last resting
+   place instead of the wind.

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "sup",
+  "no": 13,
+  "title": {
+    "en": "SUP — Forest Bathing Retreats",
+    "ko": "숲 — 산림욕 리트릿"
+  },
+  "description": {
+    "en": "A Gangwon-do forest-bathing house whose page grows as you arrive — an L-system tree draws itself in, a canvas meadow bends under the breeze your pointer makes, and a 4·4·4 breathing guide counts with you.",
+    "ko": "도착하는 만큼 자라나는 강원도 산림욕 리트릿 — L-시스템 나무가 스스로 그려지고, 포인터가 만든 바람에 캔버스 풀밭이 눕고, 4·4·4 호흡 가이드가 함께 숨을 세어 준다."
+  },
+  "aesthetic": "organic-nature",
+  "techniques": ["svg-line-draw", "canvas-particles", "pointer-parallax"],
+  "industry": ["wellness"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#4a5d3a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

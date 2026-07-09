@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "halflight",
+  "no": 12,
+  "title": {
+    "en": "HALFLIGHT — Original Scores for Imaginary Films",
+    "ko": "하프라이트 — 존재하지 않는 영화의 음악"
+  },
+  "description": {
+    "en": "A composer's screening room for films that were never shot: a scroll-scrubbed procedural film reel, a cue you press play to synthesize, and end credits for nobody — every frame drawn in code.",
+    "ko": "찍히지 않은 영화들을 위한 작곡가의 시사실 — 스크롤로 스크럽하는 절차적 필름 릴, 직접 재생해 합성하는 큐, 아무도 없는 엔드 크레딧. 모든 프레임을 코드로 그렸다."
+  },
+  "aesthetic": "cinematic-dark",
+  "techniques": ["sprite-scrub", "canvas-particles", "char-split-reveal"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "claude-fable-5",
+    "modelLabel": "Claude Fable 5",
+    "tool": "claude-code",
+    "date": "2026-07-10",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#d43425",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-10",
+  "featured": false
+}

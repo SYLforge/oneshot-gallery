@@ -1,0 +1,232 @@
+# GRADIENT PLAZA — breakdown
+
+## The hook
+
+Somewhere there is a shopping mall that only exists after closing, and its
+PA system never got the memo about the closing part. FM 88.8 broadcasts
+from the second-floor fountain court all night: escalator jazz at two,
+rain in the food court at three-thirty, and announcements addressed to
+shoppers who will never hear them. The page never explains this. You
+arrive at 3:33 AM, the floor is already rushing toward a sunset that never
+finishes, and the station assumes you stayed on purpose.
+
+The design bet: vaporwave works as a *place*, not a filter. If the grid,
+the windows, and the announcements all belong to one fictional building,
+the nostalgia stops being a Tumblr moodboard and starts being somewhere
+you can stand.
+
+## Art direction
+
+Vaporwave is the easiest aesthetic in this gallery to do badly, because
+its source material was never designed — it was accumulated. So the entry
+treats the classic kit (grid, sun, neon, windows) with the discipline the
+originals never had: one accent (`#ff71ce` pink), one "live" color
+(`#05ffa1` mint), and a hard rule that anything you must read is set in
+lavender-white (15.4:1), haze (10.0:1), cyan (9.9:1), mint, or pink —
+never dimmer. Violet, at 5.7:1, is legally AA and still gets demoted to
+labels and chrome, because a page-long paragraph at 5.7:1 *feels* like
+fog even when it passes.
+
+Three faces, three jobs. Monoton is the neon tube over the entrance —
+display sizes only, because signage is not a reading face. Gugi carries
+every Hangul glyph; it sounds like a PA speaker in a tiled atrium, which
+is exactly the register the Korean copy is written in. Azeret Mono is the
+broadcast console: schedule, chrome, body. Both working stacks run
+Latin-first with Gugi second, so Hangul falls through automatically —
+one fallback-sans glyph would break the whole fiction.
+
+## Technique 1 — the floor that rushes (perspective grid math)
+
+The hero grid is a 2D canvas, and the whole illusion is one division. Put
+the horizon at 58% of the hero's height and give every grid row a depth
+`z` in "lane units". A camera at depth 0 projects that row onto the screen
+at
+
+```ts
+// Hero.tsx — d: 1 at the bottom edge → 0 at the horizon
+const d = NEAR / z;                       // NEAR = 0.92
+const y = horizon + (h - horizon) * d;
+```
+
+Rows are spawned at integer depths and slide toward you by a shared
+`offset`; a row whose `z` drops below `NEAR` has passed the camera and is
+skipped. Because `d` is hyperbolic in `z`, distant rows crowd the horizon
+and near rows accelerate off the bottom edge — that acceleration *is* the
+perspective; no easing curve is involved. Vertical lines are even
+cheaper: every lane converges on the vanishing point, so they are straight
+strokes from the horizon's center to evenly spaced points below the
+canvas, drawn with one vertical fade gradient reused as `strokeStyle` for
+the entire fan.
+
+The signature move is what drives `offset`. A `useScrollEnergy` hook
+measures scroll *velocity* — not position — and smooths it into a 0→1
+energy with an asymmetric lerp (attack 0.16, release 0.05):
+
+```ts
+// useScrollEnergy.ts — the mall notices you fast, calms down slowly
+const target = Math.min(1, v / V_MAX);    // full rush at 2.4 px/ms
+const k = (target > energy ? ATTACK : RELEASE) * (dt / 16.7);
+energy += (target - energy) * Math.min(1, k);
+```
+
+```ts
+// Hero.tsx — stroll: 0.5 lanes/s. rush: ~9× that, and the horizon flares
+offset += (dt / 1000) * (BASE_SPEED + energy * RUSH_SPEED);
+```
+
+At rest the floor drifts gently on its own (so touch devices get a living
+scene without hovering anything); scroll hard and the floor rushes, the
+horizon glow brightens by `0.55 · energy`, and the sun's halo widens. The
+sun itself is drawn as 2px horizontal slices lerping pink→violet, skipping
+slices where a venetian-blind gap falls — the gaps widen toward the
+horizon by construction (`period = 9 + dy · 0.55`), which is the entire
+"sliced sun" recipe. Stars are particles with hashed twinkle phases whose
+positions are pure functions of time, so the reduced-motion still frame is
+just one honest moment of the same sky.
+
+## Technique 2 — windows you can throw (drag physics and z-order)
+
+The booth renders three retro-OS windows. Without JavaScript they are
+ordinary sections stacked in document flow — every track and label
+readable. When `.plaza-js` lands, the stage becomes a desktop
+(`position: relative`, fixed height) and each window takes a spawn point
+in CSS. Dragging never touches `left`/`top`: position lives in a ref and
+is written as `translate3d`, so a drag costs the compositor, not layout.
+
+Pointer capture does the heavy lifting. The title-bar grip captures its
+pointer on down, so moves keep arriving even when the cursor outruns the
+bar; `touch-action: none` on the grip (and only the grip) means a thumb
+can drag a window while the page still scrolls everywhere else:
+
+```ts
+// useDrag.ts — release keeps a little momentum
+const decay = Math.pow(FRICTION, dt / 16.7);   // 0.9 per normalized frame
+vel.current.x *= decay;
+vel.current.y *= decay;
+if (Math.hypot(vel.current.x, vel.current.y) > STOP_SPEED) {
+  rafRef.current = requestAnimationFrame(step);
+}
+```
+
+Velocity is sampled from the last ~12ms of pointer travel, and on release
+the window glides with exponential friction, clamped to the stage with
+±16px of tuck — hitting a wall zeroes that axis's velocity, so windows
+thud against edges instead of vibrating. Under reduced motion the glide is
+skipped entirely: dragging still works (it is user-driven input), the
+window just stops where your hand stops.
+
+Z-order is a raise stack, not a counter. The parent keeps an array of
+window ids; raising a window moves its id to the end, and each window's
+`z-index` is `10 + indexOf(id)` — no ever-growing `++zIndex`, and the
+render is pure state. The grip is a real button, so the same window moves
+by keyboard: arrows nudge 24px (Shift, 4px; Home respawns), announced in
+the grip's bilingual `aria-label`. Minimize and close are real buttons
+too — closed windows dock in a taskbar with `aria-pressed`, which is what
+keeps decorative chrome honest.
+
+## Technique 3 — the smear (chromatic aberration without a filter)
+
+The classic RGB-split is usually done with an SVG `feOffset` filter graph
+or a canvas channel copy. Both put the *readable* pixels inside the
+effect — get the math wrong and your heading is illegible. This entry
+inverts the layering: the base glyphs never move, and the aberration is
+two pseudo-element *ghosts* stacked over them:
+
+```css
+/* styles.css — ghosts ride two custom properties written by JS */
+.plaza-ab::before,
+.plaza-ab::after {
+  content: attr(data-text) / "";     /* empty alt: silent to readers */
+  position: absolute;
+  inset: 0;
+  opacity: var(--plaza-ghost, 0);
+  mix-blend-mode: screen;            /* additive light — can only brighten */
+  pointer-events: none;
+}
+.plaza-ab::before { color: var(--plaza-cyan); transform: translate3d(calc(var(--plaza-shift) * -1), 0, 0); }
+.plaza-ab::after  { color: var(--plaza-pink); transform: translate3d(var(--plaza-shift), 0, 0); }
+```
+
+`useScrollEnergy` writes `--plaza-shift` (0–7px) and `--plaza-ghost`
+(0–0.85) on the entry root from the same energy that drives the floor, so
+one number keeps the whole page in sync: rush, and the headings smear
+cyan-left/pink-right like a de-converged CRT; stop, and everything eases
+back to crisp over the release curve. `screen` blending is the contrast
+insurance — ghosts can only *add* light over the unmoving base text, so
+the worst case is a brighter heading, never a dimmer one.
+
+The PA ticker closes the loop on the same number: a JS marquee (duplicated
+`aria-hidden` track, wrap by modulo of half its width, a visually-hidden
+list for screen readers) whose speed is `42 + 300 · energy` px/s. Stroll
+and the announcements drift by; run and the PA hurries after you.
+
+## The contrast discipline
+
+Numbers, because vaporwave dies without them (all on `#1a0b2e`):
+
+- lavender-white `#efe6ff` — 15.4:1, all body copy
+- mint `#05ffa1` — 14.0:1, live markers
+- haze `#c7b8e0` — 10.0:1, secondary text and Korean glosses
+- cyan `#01cdfe` — 9.9:1, times, buttons, focus
+- pink `#ff71ce` — 7.5:1, the accent (legal even for body, spent on
+  display)
+- violet `#b967ff` — 5.7:1, **labels and chrome only**
+
+Dark-on-neon is checked too: deep-purple text on the title-bar gradient
+holds 7.5:1 on the pink end and 5.7:1 on the violet end; taskbar buttons
+flip to void-on-violet at 6.1:1 when pressed. The hero seats its copy on a
+radial scrim (`void` at 82%) so body-size text stays AA even where the
+brightest grid lines pass beneath it.
+
+## Performance notes
+
+- Three rAF loops total (grid, ticker, visualizer), every one paused by
+  IntersectionObserver when offscreen and by `visibilitychange` when the
+  tab hides. The scroll-energy loop is stricter: it wakes on the first
+  scroll event and parks itself once energy drains below 0.004, so an
+  idle page runs zero frames.
+- Canvases are DPR-capped at 2. The grid draws ~26 horizontal strokes, a
+  fan of verticals under one reused gradient, ~150 star rects, and ~100
+  sun slices — comfortably under a millisecond on mid hardware. The
+  visualizer batches by color: all mint bars, then all pink caps — two
+  `fillStyle` assignments per frame.
+- Windows animate exclusively via `transform`; raising is a `z-index`
+  write on state change; nothing in the entry animates a layout property.
+- Custom-property writes (`--plaza-shift`, `--plaza-ghost`) happen at most
+  once per frame inside the energy loop, and the properties they feed are
+  transform and opacity on promoted pseudo-elements.
+
+## Accessibility notes
+
+- **Reduced motion:** the grid draws one composed still (a pure function
+  of a hand-picked `t`, so it is a real frame, not a blank), aberration
+  ghosts are removed with `content: none` plus zeroed variables, the
+  ticker never starts, lamp and progress animations are stripped, and drag
+  inertia is off. Dragging itself remains — it only moves when the visitor
+  moves.
+- **No-JS:** `.plaza-js` gates the desktop positioning, canvas, and ticker
+  motion; without it the windows stack in flow over a CSS gradient sky and
+  every word on the page is plainly readable.
+- **Semantics:** both canvases carry `role="img"` with bilingual
+  descriptions; the moving ticker track is `aria-hidden` with a
+  visually-hidden list as the accessible copy; grips, minimize, close,
+  taskbar, and track rows are native buttons; the playing track is
+  `aria-current`; window visibility is honest `hidden`.
+- **Focus:** a cyan `:focus-visible` ring with a pink halo, visible on
+  the dark stage and inside the neon title bars alike.
+
+## Remix ideas
+
+1. **Late-night ferry terminal.** Same bones, new building: the grid
+   floor becomes a dark sea with a moon path, windows become DEPARTURES.EXE
+   and a tide visualizer, the PA announces sailings for passengers who
+   stopped arriving in 1998. Swap pink for signal-orange, keep the
+   discipline.
+2. **All-night laundromat FM.** The visualizer becomes a drum-rotation
+   radar, the schedule lists spin cycles as shows, and the aberration
+   triggers on the *washer's* rhythm — a slow pulse every 4.2s — instead
+   of scroll. Good exercise: the energy envelope stays, the input changes.
+3. **Closed-circuit aquarium.** The grid inverts into a ceiling (light
+   caustics drawn with the same projected-rows math upside down), windows
+   become tank cameras with pan buttons, and SIGNAL LOST is the one tank
+   nobody films anymore.

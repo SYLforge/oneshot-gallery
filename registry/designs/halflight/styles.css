@@ -1,0 +1,884 @@
+/* ==========================================================================
+   HALFLIGHT — original scores for imaginary films
+   cinematic-dark · grayscale + one signal red · letterboxed everything
+   Scoped by convention to .halflight-root; classes prefixed halflight-.
+   ========================================================================== */
+
+.halflight-root {
+  /* -- palette ---------------------------------------------------------- */
+  --hl-black: #0b0b0d; /* the screen with the lamp off */
+  --hl-abyss: #000000; /* letterbox bars, the frame surround */
+  --hl-bone: #e8e4da; /* primary text — 15.5:1 on black */
+  --hl-bone-dim: rgba(232, 228, 218, 0.64); /* ≈ #989690 — 6.6:1, secondary */
+  --hl-red: #d43425; /* signal red — 4.0:1: large type & non-text only */
+  --hl-tungsten: #a08560; /* warm metadata — 5.6:1 */
+  --hl-line: rgba(232, 228, 218, 0.14); /* hairlines, decorative */
+
+  /* -- type -------------------------------------------------------------- */
+  --hl-font-display: var(--font-anton), "Anton", "Arial Narrow", sans-serif;
+  /* Hangul falls through the Latin faces into Noto Serif KR without markup */
+  --hl-font-body: var(--font-spectral), var(--font-noto-serif-kr), Georgia,
+    serif;
+  --hl-font-mono: var(--font-space-mono), var(--font-noto-serif-kr),
+    "Courier New", monospace;
+  --hl-font-ko: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --hl-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* reveals: fast in, long tail */
+
+  /* -- geometry ---------------------------------------------------------- */
+  --hl-bar: clamp(44px, 9svh, 116px); /* hero letterbox bar height */
+  --hl-frame-w: min(1100px, 92vw, 148svh); /* the 2.39:1 picture width */
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--hl-black);
+  color: var(--hl-bone);
+  font-family: var(--hl-font-body);
+  font-size: clamp(16px, 0.9vw + 11px, 19px);
+  line-height: 1.65;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: its own serif, natural breaks, its own rhythm. */
+.halflight-root :lang(ko) {
+  font-family: var(--hl-font-ko);
+  word-break: keep-all;
+  letter-spacing: 0;
+}
+
+/* Signal-red selection, scoped to the entry root */
+.halflight-root ::selection {
+  background: var(--hl-red);
+  color: var(--hl-bone);
+  text-shadow: none;
+}
+
+/* Keyboard focus: the one red rectangle in the dark */
+.halflight-root :focus-visible {
+  outline: 2px solid var(--hl-red);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.halflight-mono {
+  font-family: var(--hl-font-mono);
+}
+
+.halflight-link {
+  color: var(--hl-bone);
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 228, 218, 0.3);
+  text-underline-offset: 4px;
+}
+
+.halflight-link:hover {
+  text-decoration-color: var(--hl-red);
+}
+
+/* Visually hidden, still read aloud */
+.halflight-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Shared section furniture
+   ========================================================================== */
+
+.halflight-sechead {
+  margin: 0;
+  font-family: var(--hl-font-display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.4vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+}
+
+.halflight-sechead__ko {
+  margin-left: 0.35em;
+  font-size: 0.48em;
+  font-weight: 600;
+  color: var(--hl-bone-dim);
+  letter-spacing: 0.04em;
+  vertical-align: 0.22em;
+}
+
+.halflight-sechead__no {
+  margin: 0 0 0.6rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.24em;
+  color: var(--hl-tungsten);
+}
+
+/* The reel-change cue mark — the page's single recurring red object */
+.halflight-cuedot {
+  position: absolute;
+  top: calc(var(--hl-bar) + clamp(14px, 2.5svh, 26px));
+  right: clamp(18px, 4vw, 44px);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--hl-red);
+  box-shadow: 0 0 14px rgba(212, 52, 37, 0.5);
+}
+
+.halflight-js .halflight-hero > .halflight-cuedot {
+  animation: hl-cue-blink 8.1s linear infinite;
+}
+
+/* ==========================================================================
+   Reel 01 · Title card
+   ========================================================================== */
+
+.halflight-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 32%, #141417 0%, var(--hl-black) 58%);
+}
+
+.halflight-hero__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--hl-bar);
+  background: var(--hl-abyss);
+  z-index: 2;
+}
+
+.halflight-hero__bar--top {
+  top: 0;
+  border-bottom: 1px solid rgba(232, 228, 218, 0.08);
+}
+
+.halflight-hero__bar--bottom {
+  bottom: 0;
+  border-top: 1px solid rgba(232, 228, 218, 0.08);
+}
+
+.halflight-hero__frame {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  padding: calc(var(--hl-bar) + 4svh) clamp(20px, 5vw, 64px);
+  text-align: center;
+}
+
+.halflight-hero__kicker {
+  margin: 0 0 clamp(1.2rem, 3svh, 2rem);
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  color: var(--hl-tungsten);
+}
+
+.halflight-title {
+  margin: 0;
+  font-family: var(--hl-font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 16.5vw, 12.5rem);
+  line-height: 0.92;
+  letter-spacing: 0.015em;
+  color: var(--hl-bone);
+}
+
+.halflight-title__weave {
+  display: inline-block;
+}
+
+.halflight-js .halflight-title__weave {
+  animation: hl-weave 7.3s steps(1, end) infinite;
+  will-change: transform;
+}
+
+.halflight-title__ch {
+  display: inline-block;
+}
+
+.halflight-js .halflight-title__ch {
+  animation: hl-ch-rise 700ms var(--hl-ease-out) both;
+}
+
+.halflight-hero__slug {
+  margin: clamp(1.4rem, 3.5svh, 2.4rem) 0 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-hero__lede {
+  max-width: 34em;
+  margin: 0.9rem auto 0;
+  font-size: clamp(1.02rem, 1.8vw, 1.25rem);
+}
+
+.halflight-hero__lede :lang(ko) {
+  color: var(--hl-bone-dim);
+}
+
+.halflight-hero__hint {
+  margin: clamp(2.2rem, 6svh, 3.6rem) 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  color: var(--hl-tungsten);
+}
+
+/* Film grain over the whole stage — decorative, stepped, JS-gated */
+.halflight-grain {
+  position: absolute;
+  inset: -60px;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  opacity: 0.07;
+}
+
+.halflight-js .halflight-grain {
+  animation: hl-grain 1.3s steps(1, end) infinite;
+}
+
+/* ==========================================================================
+   Reel 02 · The sequence — sticky scrub stage
+   Without JS (or under reduced motion) the section is normal-height and the
+   frame shows its CSS still; the tall scrub corridor is opt-in via .halflight-js.
+   ========================================================================== */
+
+.halflight-reel__sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(48px, 8svh, 96px) 0;
+}
+
+.halflight-js .halflight-reel {
+  height: 380vh;
+}
+
+.halflight-js .halflight-reel__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  padding: 0;
+}
+
+.halflight-reel__head {
+  width: var(--hl-frame-w);
+  margin: 0 auto clamp(0.9rem, 2.4svh, 1.8rem);
+}
+
+.halflight-reel__slug {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-reel__stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: var(--hl-abyss);
+  padding-block: clamp(14px, 3svh, 30px); /* the letterbox */
+  border-top: 1px solid rgba(232, 228, 218, 0.07);
+  border-bottom: 1px solid rgba(232, 228, 218, 0.07);
+}
+
+.halflight-reel__frame {
+  position: relative;
+  width: var(--hl-frame-w);
+  aspect-ratio: 2.39 / 1;
+  overflow: hidden;
+  /* The no-JS / pre-JS still: shot B, composed in CSS */
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(232, 228, 218, 0.32),
+      rgba(232, 228, 218, 0.05) 16%,
+      transparent 42%
+    ),
+    linear-gradient(180deg, #08080a 0%, #1a191c 63%, #111013 64%, #050506 100%);
+}
+
+.halflight-reel__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.halflight-reel__hud {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 10px 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--hl-bone-dim);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.62), transparent);
+}
+
+.halflight-cuedot--reel {
+  top: auto;
+  bottom: 12px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  opacity: 0;
+  transition: opacity 160ms linear;
+}
+
+.halflight-reel__note {
+  width: var(--hl-frame-w);
+  margin: clamp(0.9rem, 2.4svh, 1.6rem) auto 0;
+  font-size: 0.95rem;
+  color: var(--hl-bone-dim);
+}
+
+/* ==========================================================================
+   Reel 03 · Cue 04 — the score player
+   ========================================================================== */
+
+.halflight-score {
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 64px);
+}
+
+.halflight-score__inner {
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.halflight-score__head {
+  margin-bottom: clamp(1.4rem, 3vh, 2.2rem);
+}
+
+.halflight-score__direction {
+  max-width: 36em;
+  margin: 0 0 clamp(1.6rem, 3.5vh, 2.6rem);
+  font-size: clamp(1.12rem, 2.1vw, 1.45rem);
+  font-style: italic;
+}
+
+.halflight-score__direction :lang(ko) {
+  font-style: normal;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-score__stage {
+  height: clamp(150px, 26vh, 240px);
+  border-top: 1px solid var(--hl-line);
+  border-bottom: 1px solid var(--hl-line);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.halflight-score__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The player is pure enhancement — without JS it never appears */
+.halflight-score__controls {
+  display: none;
+}
+
+.halflight-js .halflight-score__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.6rem;
+  margin: clamp(1.2rem, 2.6vh, 1.8rem) 0 0;
+}
+
+.halflight-js .halflight-score__controls--mute {
+  display: block;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65em;
+  padding: 0.72em 1.35em;
+  border: 1px solid rgba(232, 228, 218, 0.28);
+  background: transparent;
+  color: var(--hl-bone);
+  font-family: var(--hl-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  transition:
+    border-color 160ms linear,
+    background-color 160ms linear;
+}
+
+.halflight-play:hover,
+.halflight-play[aria-pressed="true"] {
+  border-color: var(--hl-red);
+  background: rgba(212, 52, 37, 0.08);
+}
+
+.halflight-play__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--hl-red);
+}
+
+.halflight-js .halflight-play[aria-pressed="true"] .halflight-play__dot {
+  animation: hl-cue-pulse 1.9s ease-in-out infinite;
+}
+
+.halflight-score__hint {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--hl-tungsten);
+}
+
+.halflight-score__caption {
+  margin: clamp(1.2rem, 2.6vh, 1.8rem) 0 0;
+  font-size: 0.95rem;
+  color: var(--hl-bone-dim);
+}
+
+/* ==========================================================================
+   Reel 04 · The cue sheet
+   ========================================================================== */
+
+.halflight-cues {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 64px);
+}
+
+.halflight-cues__head {
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
+}
+
+.halflight-cues__slug {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-cues__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--hl-line);
+}
+
+.halflight-cue {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 0.3rem 1.6rem;
+  padding: 1.15rem 0.4rem;
+  border-bottom: 1px solid var(--hl-line);
+}
+
+.halflight-cue__tc {
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: var(--hl-tungsten);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.25rem;
+}
+
+.halflight-cue__name {
+  margin: 0;
+  font-family: var(--hl-font-body);
+  font-weight: 500;
+  font-size: 1.06rem;
+  letter-spacing: 0.05em;
+}
+
+.halflight-cue__note {
+  margin: 0.2rem 0 0;
+  color: var(--hl-bone-dim);
+}
+
+/* The one struck cue: a red spine, a strike, dimmed ink */
+.halflight-cue--unused {
+  border-left: 3px solid var(--hl-red);
+  padding-left: clamp(0.8rem, 2vw, 1.2rem);
+}
+
+.halflight-cue--unused s {
+  color: var(--hl-bone-dim);
+  text-decoration-color: var(--hl-red);
+  text-decoration-thickness: 1.5px;
+}
+
+.halflight-cue__flag {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--hl-tungsten);
+}
+
+@media (max-width: 700px) {
+  .halflight-cue {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .halflight-cue__tc {
+    padding-top: 0;
+  }
+}
+
+/* ==========================================================================
+   Reel 05 · End credits — scroll-scrubbed roll
+   Without JS: a plain, readable centered list. With JS: a tall corridor with
+   a sticky masked stage; scroll drives the column from below frame to above.
+   ========================================================================== */
+
+.halflight-credits {
+  padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+  background: var(--hl-abyss);
+}
+
+.halflight-js .halflight-credits {
+  height: 300vh;
+  padding: 0;
+}
+
+.halflight-credits__sticky {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.halflight-js .halflight-credits__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.halflight-credits__mask {
+  width: 100%;
+}
+
+.halflight-js .halflight-credits__mask {
+  height: 80svh;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    #000 15%,
+    #000 85%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0,
+    #000 15%,
+    #000 85%,
+    transparent 100%
+  );
+}
+
+.halflight-credits__roll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.9rem, 4.6svh, 3.2rem);
+  text-align: center;
+}
+
+.halflight-js .halflight-credits__roll {
+  transform: translateY(calc(80svh - var(--hl-roll-p, 0) * (80svh + 100%)));
+  will-change: transform;
+}
+
+.halflight-credits__presents {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  color: var(--hl-tungsten);
+}
+
+.halflight-credits__film {
+  margin: 0;
+  font-family: var(--hl-font-display);
+  font-size: clamp(1.7rem, 5vw, 3.2rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.halflight-credits__filmko {
+  margin: 0;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-credits__block {
+  max-width: 34em;
+}
+
+.halflight-credits__role {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  color: var(--hl-tungsten);
+}
+
+.halflight-credits__name {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.05em;
+}
+
+.halflight-credits__nameko {
+  display: block;
+  font-size: 0.85em;
+  font-weight: 400;
+  color: var(--hl-bone-dim);
+}
+
+.halflight-credits__end {
+  margin: clamp(1.4rem, 3.5svh, 2.6rem) 0 0;
+  font-family: var(--hl-font-display);
+  font-size: clamp(2.1rem, 6vw, 4rem); /* large type: red holds ≥3:1 */
+  letter-spacing: 0.06em;
+  color: var(--hl-red);
+}
+
+.halflight-credits__end :lang(ko) {
+  font-size: 0.5em;
+  font-weight: 600;
+  color: var(--hl-bone-dim);
+  vertical-align: 0.3em;
+}
+
+/* ==========================================================================
+   Footer — the lights come up
+   ========================================================================== */
+
+.halflight-footer {
+  padding: clamp(56px, 9vh, 110px) clamp(20px, 5vw, 64px)
+    clamp(72px, 12vh, 150px);
+  border-top: 1px solid var(--hl-line);
+  text-align: center;
+}
+
+.halflight-footer__fade {
+  margin: 0 0 1.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--hl-tungsten);
+}
+
+.halflight-footer__copy {
+  max-width: 36em;
+  margin: 0 auto 2rem;
+}
+
+.halflight-footer__copy :lang(ko) {
+  color: var(--hl-bone-dim);
+}
+
+.halflight-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 2.4rem;
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.halflight-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 600ms var(--hl-ease-out),
+    transform 600ms var(--hl-ease-out);
+  will-change: opacity, transform;
+}
+
+.halflight-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity only
+   ========================================================================== */
+
+/* Each glyph of the title rises out of the letterbox */
+@keyframes hl-ch-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Gate weave: the frame sits a hair loose in the projector gate.
+   steps(1, end) holds each position, then jumps — film, not jelly. */
+@keyframes hl-weave {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  9% {
+    transform: translate(0.6px, -0.7px);
+  }
+  21% {
+    transform: translate(-0.4px, 0.5px);
+  }
+  33% {
+    transform: translate(0.3px, 0.9px);
+  }
+  46% {
+    transform: translate(-0.7px, -0.3px);
+  }
+  58% {
+    transform: translate(0.5px, 0.4px);
+  }
+  71% {
+    transform: translate(-0.3px, -0.8px);
+  }
+  84% {
+    transform: translate(0.7px, 0.2px);
+  }
+  93% {
+    transform: translate(-0.5px, 0.6px);
+  }
+}
+
+/* The projectionist's cue mark: two quick dips per cycle, mostly steady */
+@keyframes hl-cue-blink {
+  0%,
+  90.5%,
+  93.5%,
+  100% {
+    opacity: 1;
+  }
+  91.2% {
+    opacity: 0.15;
+  }
+  92.1% {
+    opacity: 1;
+  }
+  92.8% {
+    opacity: 0.15;
+  }
+}
+
+/* Grain jumps position discretely, like a new frame of stock */
+@keyframes hl-grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-14px, 9px);
+  }
+  40% {
+    transform: translate(11px, -16px);
+  }
+  60% {
+    transform: translate(-7px, -11px);
+  }
+  80% {
+    transform: translate(16px, 7px);
+  }
+}
+
+/* The play button's red dot breathes while the cue sounds */
+@keyframes hl-cue-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — a complete, calm, static page
+   The reel becomes one still frame (drawn once by JS, or the CSS still);
+   the title neither weaves nor rises; the credit roll is a plain list;
+   grain and cue marks hold still. Audio stays user-triggerable.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .halflight-js .halflight-title__ch,
+  .halflight-js .halflight-title__weave,
+  .halflight-js .halflight-hero > .halflight-cuedot,
+  .halflight-js .halflight-grain,
+  .halflight-js .halflight-play[aria-pressed="true"] .halflight-play__dot {
+    animation: none;
+  }
+
+  .halflight-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .halflight-cuedot--reel {
+    transition: none;
+  }
+
+  .halflight-js .halflight-reel {
+    height: auto;
+  }
+
+  .halflight-js .halflight-reel__sticky {
+    position: static;
+    height: auto;
+    padding: clamp(48px, 8svh, 96px) 0;
+  }
+
+  .halflight-js .halflight-credits {
+    height: auto;
+    padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+  }
+
+  .halflight-js .halflight-credits__sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
+
+  .halflight-js .halflight-credits__mask {
+    height: auto;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .halflight-js .halflight-credits__roll {
+    transform: none;
+  }
+}
