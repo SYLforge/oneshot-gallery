@@ -278,3 +278,127 @@ body {
 .md-table tr:last-child td {
   border-bottom: 0;
 }
+
+/*
+ * ---- site chrome additions (header, home, palette) -------------------------
+ */
+
+/* Hidden scrollbar for horizontal chip rows. */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Elements tinted by the page accent follow --accent changes smoothly. */
+.accent-follow {
+  transition:
+    color 0.45s ease,
+    border-color 0.45s ease,
+    background-color 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accent-follow {
+    transition: none;
+  }
+}
+
+/* Index wall rows — accent bleed + numeral drift (transform set from JS). */
+.wall-row {
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.wall-row .wall-bleed {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wall-row:hover .wall-bleed,
+.wall-row:focus-within .wall-bleed {
+  opacity: 1;
+}
+
+.wall-row .wall-title,
+.wall-row .wall-no {
+  transition: color 0.3s ease;
+}
+
+.wall-row:hover .wall-title,
+.wall-row:focus-within .wall-title,
+.wall-row:hover .wall-no,
+.wall-row:focus-within .wall-no {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall-row,
+  .wall-row .wall-bleed,
+  .wall-row .wall-title,
+  .wall-row .wall-no {
+    transition: none;
+  }
+}
+
+/* Command palette (cmdk) — group headings and items live in a portal. */
+.palette [cmdk-input] {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.palette [cmdk-input]::placeholder {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+}
+
+.palette [cmdk-list] {
+  max-height: min(24rem, 50vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 0 8px;
+}
+
+.palette [cmdk-group-heading] {
+  padding: 12px 18px 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+.palette [cmdk-item] {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 18px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.palette [cmdk-item][data-selected="true"] {
+  background: color-mix(in oklab, var(--accent) 9%, transparent);
+}
+
+.palette [cmdk-empty] {
+  display: block;
+  padding: 28px 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}

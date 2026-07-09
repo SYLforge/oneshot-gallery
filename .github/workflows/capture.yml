@@ -1,9 +1,8 @@
 name: Capture
 
-# Manual-only for now. The real capture pipeline (scripts/capture.ts:
-# Playwright-driven poster-*.avif/webp, og.png, loop.webm derivatives into
-# public/media/<slug>/) lands in a later phase; this workflow reserves the
-# entry point and keeps the repo sane in the meantime.
+# Re-captures per-entry media (og.png, poster derivatives, optional loop.webm)
+# and opens a PR with the refreshed files. Captures are committed to git —
+# Vercel never runs Playwright.
 
 on:
   workflow_dispatch:
@@ -12,6 +11,11 @@ on:
         description: "Entry slug to capture (leave blank for all entries)"
         required: false
         type: string
+      loop:
+        description: "Also record 5s WebM scroll loops (slower)"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   capture:
@@ -31,10 +35,29 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Sanity — validate entries
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Validate entries
         run: pnpm validate
 
-      - name: Capture (placeholder)
-        run: |
-          echo "scripts/capture.ts is not implemented yet (later phase)."
-          echo "Requested slug: '${{ inputs.slug }}' (blank = all)"
+      - name: Build
+        run: pnpm build
+
+      - name: Capture
+        run: >
+          pnpm capture
+          ${{ inputs.slug && format('--slug {0}', inputs.slug) || '' }}
+          ${{ inputs.loop && '--loop' || '' }}
+
+      - name: Budget check
+        run: pnpm check-budget
+
+      - name: Open PR with refreshed media
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: refresh captured media"
+          title: "chore: refresh captured media"
+          body: "Automated capture run (slug: `${{ inputs.slug || 'all' }}`, loop: `${{ inputs.loop }}`)."
+          branch: chore/capture-refresh
+          add-paths: public/media/**

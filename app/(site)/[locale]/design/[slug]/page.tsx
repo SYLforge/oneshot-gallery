@@ -7,16 +7,19 @@ import { codeToHtml, type BundledLanguage } from "shiki";
 import { routing, type Locale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import {
+  getBreakdownDoc,
   getDesignDoc,
   getEntryMeta,
   getEntryTokens,
   getGalleryIndex,
   getPromptDoc,
   getRegistryItem,
+  hasOgImage,
   type PromptDoc,
   type RegistryFile,
 } from "@/lib/entries";
 import { inlineMarkdown, renderMarkdown } from "@/lib/markdown";
+import { pageAlternates } from "@/lib/seo";
 import type { EntryMeta, EntryTokens } from "@/lib/schema";
 import { aesthetics, industries, techniques, type TaxonomyTerm } from "@/registry/taxonomy";
 import CodeViewer, { type CodeFile } from "@/components/code-viewer";
@@ -47,6 +50,15 @@ export async function generateMetadata({
   return {
     title: entry.title[l],
     description: entry.description[l],
+    alternates: pageAlternates(l, `/design/${slug}`),
+    openGraph: hasOgImage(slug)
+      ? {
+          title: entry.title[l],
+          description: entry.description[l],
+          images: [{ url: `/media/${slug}/og.png`, width: 1200, height: 630 }],
+        }
+      : undefined,
+    twitter: hasOgImage(slug) ? { card: "summary_large_image" } : undefined,
   };
 }
 
@@ -480,12 +492,13 @@ export default async function DesignDetailPage({
   const registryItem = getRegistryItem(slug);
   const promptDoc = getPromptDoc(slug);
   const designHtml = renderMarkdown(getDesignDoc(slug));
+  const breakdownSource = getBreakdownDoc(slug, locale);
+  const breakdownHtml = breakdownSource
+    ? renderMarkdown(breakdownSource)
+    : null;
   const codeFiles = await highlightFiles(registryItem.files, slug);
 
-  const [t, tSite] = await Promise.all([
-    getTranslations("detail"),
-    getTranslations("site"),
-  ]);
+  const t = await getTranslations("detail");
 
   const prev = index > 0 ? entries[index - 1] : undefined;
   const next = index < entries.length - 1 ? entries[index + 1] : undefined;
@@ -502,22 +515,6 @@ export default async function DesignDetailPage({
       style={{ "--accent": meta.accent } as CSSProperties}
     >
       <div className="mx-auto max-w-[87.5rem] px-6 md:px-10">
-        {/* Top bar */}
-        <nav className="flex items-center justify-between border-b border-hairline py-4">
-          <Link
-            href="/"
-            className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted transition-colors duration-200 ease-out hover:text-text"
-          >
-            {tSite("name")}
-          </Link>
-          <Link
-            href="/gallery"
-            className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted transition-colors duration-200 ease-out hover:text-text"
-          >
-            {t("topGallery")}
-          </Link>
-        </nav>
-
         {/* Header band */}
         <header className="border-b border-hairline py-14 md:py-20">
           <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
@@ -626,6 +623,21 @@ export default async function DesignDetailPage({
           <DetailTabs
             ariaLabel={t("tabsAria")}
             items={[
+              // Breakdown leads and is the default tab.
+              ...(breakdownHtml
+                ? [
+                    {
+                      id: "breakdown",
+                      label: t("tabBreakdown"),
+                      panel: (
+                        <div
+                          className="md-doc max-w-3xl"
+                          dangerouslySetInnerHTML={{ __html: breakdownHtml }}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
               {
                 id: "code",
                 label: t("tabCode"),

@@ -5,24 +5,86 @@
     "description": "아트 디렉션이 완결된 풀페이지 프론트엔드 디자인의 오픈소스 갤러리. 모든 작품은 라이브 데모, 전체 소스 코드, 그리고 그것을 만들어낸 재현 가능한 AI 프롬프트를 함께 제공합니다."
   },
   "nav": {
-    "gallery": "갤러리",
-    "styles": "스타일",
-    "about": "소개",
-    "github": "깃허브"
+    "gallery": "Gallery · 갤러리",
+    "styles": "Styles · 스타일",
+    "about": "About · 소개",
+    "github": "GitHub",
+    "homeAria": "원샷 갤러리 — 홈",
+    "primaryAria": "주 메뉴",
+    "search": "⌘K · 검색",
+    "searchAria": "별관 검색",
+    "localeAria": "언어"
   },
   "home": {
     "kicker": "오픈소스 디자인 별관",
-    "installHint": "명령어 하나로 어떤 디자인이든 설치"
+    "statement": "그대로 <em>출시해도</em> 되는 풀페이지 디자인.",
+    "trifectaEn": "live demo · full source · the prompt behind it",
+    "trifectaKo": "라이브 데모 · 전체 소스 · 그것을 만든 프롬프트",
+    "installHint": "명령어 하나로 어떤 디자인이든 설치",
+    "wallKicker": "Index · 색인",
+    "wallAria": "인덱스 월 — 별관의 모든 작품",
+    "featuredKicker": "Featured · 대표작",
+    "viewEntry": "view entry · 작품 보기",
+    "howKicker": "How it works · 이용 방법",
+    "howStep1": "둘러보기 — 모든 작품은 살아 있는 풀페이지 데모",
+    "howStep2": "복사 또는 설치 — 전체 소스를 명령어 하나로",
+    "howStep3": "리믹스 — 그 프롬프트가 그대로 함께 옵니다",
+    "ctaLine": "Open source. MIT. 기여를 환영합니다.",
+    "ctaGithub": "GitHub ↗",
+    "ctaAbout": "about the annex · 별관 소개"
   },
   "footer": {
     "license": "MIT — 코드는 영원히 무료",
-    "builtWith": "서울에서 큐레이션"
+    "builtWith": "서울에서 큐레이션",
+    "github": "GitHub ↗"
   },
   "gallery": {
     "title": "Gallery · 갤러리",
     "kicker": "도착한 순서 그대로",
     "metaTitle": "갤러리",
-    "metaDescription": "별관의 모든 디자인 — 라이브 데모, 전체 소스, 그리고 그것을 만든 프롬프트까지."
+    "metaDescription": "별관의 모든 디자인 — 라이브 데모, 전체 소스, 그리고 그것을 만든 프롬프트까지.",
+    "count": "{count, plural, one {# design · #개의 디자인} other {# designs · #개의 디자인}}",
+    "empty": "no matches — loosen a filter · 조건을 풀어보세요",
+    "filtersAria": "필터",
+    "facetAesthetic": "Aesthetic · 미학",
+    "facetTechnique": "Technique · 기법",
+    "facetIndustry": "Industry · 산업",
+    "facetStack": "Stack · 스택",
+    "clear": "clear · 초기화",
+    "sortAria": "정렬 순서",
+    "sortNewest": "newest · 최신순",
+    "sortNo": "No. · 번호순",
+    "techniqueCount": "{count, plural, one {# technique · 기법 #} other {# techniques · 기법 #}}",
+    "mediaCode": "순수 코드",
+    "posterAlt": "{title} — 포스터"
+  },
+  "styles": {
+    "title": "Styles · 스타일",
+    "kicker": "별관의 미학 계보",
+    "metaTitle": "스타일",
+    "metaDescription": "화지에서 인광 터미널까지, 열네 갈래의 미학 계보 — 저마다의 작품과 기법, 그리고 규칙.",
+    "count": "{count, plural, one {# entry · #점} other {# entries · #점}}",
+    "coming": "coming · 준비 중",
+    "familyKicker": "Style · 스타일",
+    "familyTechniques": "techniques seen in this family · 이 계보의 기법",
+    "familyEmpty": "no entries yet — the first is on its way · 첫 작품을 준비 중입니다",
+    "backToStyles": "all styles · 모든 스타일"
+  },
+  "about": {
+    "title": "About · 소개",
+    "kicker": "별관에 대하여",
+    "metaTitle": "소개",
+    "metaDescription": "원샷 갤러리가 존재하는 이유: 라이브 데모, 전체 소스, 그리고 정직하고 재현 가능한 AI 프롬프트 — 전부 MIT로 무료."
+  },
+  "palette": {
+    "aria": "명령 팔레트",
+    "placeholder": "search the annex · 별관 검색",
+    "empty": "no results · 결과 없음",
+    "groupEntries": "Entries · 작품",
+    "groupFilters": "Filters · 필터",
+    "groupNav": "Navigate · 이동",
+    "filterItem": "필터: {label}",
+    "hint": "↑↓ 이동 · ↵ 열기 · esc 닫기"
   },
   "detail": {
     "index": "Index · 색인",
@@ -41,6 +103,7 @@
     "registrySummary": "registry config · 레지스트리 설정",
     "registryCaption": "최초 한 번만: components.json의 \"registries\" 맵에 @oneshot 레지스트리를 추가하세요.",
     "tabsAria": "작품 문서",
+    "tabBreakdown": "Breakdown · 해설",
     "tabCode": "Code · 코드",
     "tabPrompt": "Prompt · 프롬프트",
     "tabTokens": "Tokens · 토큰",

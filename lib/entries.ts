@@ -133,3 +133,28 @@ export function getPromptDoc(slug: string): PromptDoc {
 export function getDesignDoc(slug: string): string {
   return fs.readFileSync(designPath(slug, "DESIGN.md"), "utf8");
 }
+
+/**
+ * Raw breakdown.<locale>.mdx source (plain markdown despite the
+ * extension). Validated as a required file per entry, but returns null
+ * defensively so a missing doc degrades to a hidden tab, not a crash.
+ */
+export function getBreakdownDoc(slug: string, locale: string): string | null {
+  if (!/^[a-z]{2}$/.test(locale)) throw new Error(`invalid locale: ${locale}`);
+  const file = designPath(slug, `breakdown.${locale}.mdx`);
+  if (!fs.existsSync(file)) return null;
+  return fs.readFileSync(file, "utf8");
+}
+
+/** True when a pre-rendered poster exists in public/media/<slug>/. */
+export function hasPoster(slug: string): boolean {
+  assertSlug(slug);
+  return fs.existsSync(
+    path.join(ROOT, "public", "media", slug, "poster-960.webp"),
+  );
+}
+
+export function hasOgImage(slug: string): boolean {
+  assertSlug(slug);
+  return fs.existsSync(path.join(ROOT, "public", "media", slug, "og.png"));
+}

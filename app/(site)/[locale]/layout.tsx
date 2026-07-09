@@ -10,6 +10,10 @@ import {
   Schibsted_Grotesk,
 } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { getGalleryIndex } from "@/lib/entries";
+import PaletteProvider from "@/components/palette-provider";
+import SiteFooter from "@/components/site-footer";
+import SiteHeader from "@/components/site-header";
 import "../globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -75,7 +79,11 @@ export default async function SiteLayout({
     >
       <body>
         <NextIntlClientProvider>
-          {children}
+          <PaletteProvider entries={getGalleryIndex()}>
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+          </PaletteProvider>
           <div className="grain" aria-hidden />
         </NextIntlClientProvider>
       </body>

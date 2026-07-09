@@ -5,24 +5,86 @@
     "description": "An open-source gallery of art-directed full-page frontend designs. Every entry ships a live demo, the complete source code, and the reproducible AI prompt behind it."
   },
   "nav": {
-    "gallery": "Gallery",
-    "styles": "Styles",
-    "about": "About",
-    "github": "GitHub"
+    "gallery": "Gallery · 갤러리",
+    "styles": "Styles · 스타일",
+    "about": "About · 소개",
+    "github": "GitHub",
+    "homeAria": "Oneshot Gallery — home",
+    "primaryAria": "Primary",
+    "search": "⌘K · 검색",
+    "searchAria": "Search the annex",
+    "localeAria": "Language"
   },
   "home": {
     "kicker": "An open-source design annex",
-    "installHint": "Install any design with one command"
+    "statement": "Full-page designs you can actually <em>ship</em>.",
+    "trifectaEn": "live demo · full source · the prompt behind it",
+    "trifectaKo": "라이브 데모 · 전체 소스 · 그것을 만든 프롬프트",
+    "installHint": "Install any design with one command",
+    "wallKicker": "Index · 색인",
+    "wallAria": "The index wall — every entry in the annex",
+    "featuredKicker": "Featured · 대표작",
+    "viewEntry": "view entry · 작품 보기",
+    "howKicker": "How it works · 이용 방법",
+    "howStep1": "browse — every entry is a live, full-page demo",
+    "howStep2": "copy or install — full source, one command",
+    "howStep3": "remix — the exact prompt ships with it",
+    "ctaLine": "Open source. MIT. 기여를 환영합니다.",
+    "ctaGithub": "GitHub ↗",
+    "ctaAbout": "about the annex · 별관 소개"
   },
   "footer": {
     "license": "MIT — code free forever",
-    "builtWith": "Curated in Seoul"
+    "builtWith": "Curated in Seoul",
+    "github": "GitHub ↗"
   },
   "gallery": {
     "title": "Gallery · 갤러리",
     "kicker": "every entry, in order of arrival",
     "metaTitle": "Gallery",
-    "metaDescription": "Every design in the annex — live demo, full source, and the prompt behind it."
+    "metaDescription": "Every design in the annex — live demo, full source, and the prompt behind it.",
+    "count": "{count, plural, one {# design · #개의 디자인} other {# designs · #개의 디자인}}",
+    "empty": "no matches — loosen a filter · 조건을 풀어보세요",
+    "filtersAria": "Filters",
+    "facetAesthetic": "Aesthetic · 미학",
+    "facetTechnique": "Technique · 기법",
+    "facetIndustry": "Industry · 산업",
+    "facetStack": "Stack · 스택",
+    "clear": "clear · 초기화",
+    "sortAria": "Sort order",
+    "sortNewest": "newest · 최신순",
+    "sortNo": "No. · 번호순",
+    "techniqueCount": "{count, plural, one {# technique · 기법 #} other {# techniques · 기법 #}}",
+    "mediaCode": "pure code",
+    "posterAlt": "{title} — poster"
+  },
+  "styles": {
+    "title": "Styles · 스타일",
+    "kicker": "the aesthetic families of the annex",
+    "metaTitle": "Styles",
+    "metaDescription": "Fourteen aesthetic families, from washi paper to phosphor terminals — each with its own entries, techniques, and rules.",
+    "count": "{count, plural, one {# entry · #점} other {# entries · #점}}",
+    "coming": "coming · 준비 중",
+    "familyKicker": "Style · 스타일",
+    "familyTechniques": "techniques seen in this family · 이 계보의 기법",
+    "familyEmpty": "no entries yet — the first is on its way · 첫 작품을 준비 중입니다",
+    "backToStyles": "all styles · 모든 스타일"
+  },
+  "about": {
+    "title": "About · 소개",
+    "kicker": "what the annex is",
+    "metaTitle": "About",
+    "metaDescription": "Why Oneshot Gallery exists: live demos, complete source, and honest, reproducible AI prompts — free under MIT."
+  },
+  "palette": {
+    "aria": "Command palette",
+    "placeholder": "search the annex · 별관 검색",
+    "empty": "no results · 결과 없음",
+    "groupEntries": "Entries · 작품",
+    "groupFilters": "Filters · 필터",
+    "groupNav": "Navigate · 이동",
+    "filterItem": "filter: {label}",
+    "hint": "↑↓ move · ↵ open · esc close"
   },
   "detail": {
     "index": "Index · 색인",
@@ -41,6 +103,7 @@
     "registrySummary": "registry config · 레지스트리 설정",
     "registryCaption": "One-time setup: add the @oneshot registry to the \"registries\" map in components.json.",
     "tabsAria": "Entry documentation",
+    "tabBreakdown": "Breakdown · 해설",
     "tabCode": "Code · 코드",
     "tabPrompt": "Prompt · 프롬프트",
     "tabTokens": "Tokens · 토큰",
