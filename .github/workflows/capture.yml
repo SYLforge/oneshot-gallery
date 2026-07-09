@@ -1,0 +1,40 @@
+name: Capture
+
+# Manual-only for now. The real capture pipeline (scripts/capture.ts:
+# Playwright-driven poster-*.avif/webp, og.png, loop.webm derivatives into
+# public/media/<slug>/) lands in a later phase; this workflow reserves the
+# entry point and keeps the repo sane in the meantime.
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Entry slug to capture (leave blank for all entries)"
+        required: false
+        type: string
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Sanity — validate entries
+        run: pnpm validate
+
+      - name: Capture (placeholder)
+        run: |
+          echo "scripts/capture.ts is not implemented yet (later phase)."
+          echo "Requested slug: '${{ inputs.slug }}' (blank = all)"

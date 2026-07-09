@@ -9,14 +9,18 @@
     "start": "next start",
     "lint": "eslint",
     "registry:build": "tsx scripts/build-registry.ts",
-    "new-entry": "tsx scripts/new-entry.ts"
+    "new-entry": "tsx scripts/new-entry.ts",
+    "validate": "tsx scripts/validate.ts",
+    "check-budget": "tsx scripts/check-budget.ts"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "next": "16.2.10",
     "next-intl": "^4.13.1",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "shiki": "^4.3.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {

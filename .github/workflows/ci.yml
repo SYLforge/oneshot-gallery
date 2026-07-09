@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate entries (schema, provenance, imports, a11y markers)
+        run: pnpm validate
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build registry
+        run: pnpm registry:build
+
+      - name: Registry drift check
+        run: |
+          if ! git diff --exit-code registry.json __generated__; then
+            echo "::error::registry.json / __generated__ are stale. Run 'pnpm registry:build' locally and commit the regenerated files."
+            exit 1
+          fi
+
+      - name: Media budget
+        run: pnpm check-budget
+
+      - name: Build site
+        run: pnpm build

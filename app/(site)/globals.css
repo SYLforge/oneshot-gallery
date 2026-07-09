@@ -90,3 +90,191 @@ body {
     animation: none;
   }
 }
+
+/*
+ * ---- detail page additions (design/[slug]) ---------------------------------
+ */
+
+/* Shiki code blocks — build-time highlighted; line numbers via counters. */
+.code-block pre.shiki {
+  overflow-x: auto;
+  padding: 14px 16px 14px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.code-block pre.shiki code {
+  display: block;
+  counter-reset: ln;
+}
+
+.code-block pre.shiki .line {
+  counter-increment: ln;
+}
+
+.code-block pre.shiki .line::before {
+  content: counter(ln);
+  display: inline-block;
+  width: 3ch;
+  margin-right: 16px;
+  padding-right: 10px;
+  text-align: right;
+  border-right: 1px solid var(--hairline);
+  color: var(--muted);
+  opacity: 0.55;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Inline markdown inside prompt deviation items. */
+.deviation-item code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  padding: 0.05em 0.35em;
+}
+
+/* Hand-rolled markdown output (DESIGN.md). */
+.md-doc {
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.md-doc > :first-child {
+  margin-top: 0;
+}
+
+.md-doc h2,
+.md-doc h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.md-doc h2 {
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  margin: 2.75rem 0 1rem;
+}
+
+.md-doc h3 {
+  font-size: 1.35rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.md-doc h4,
+.md-doc h5 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  margin: 1.75rem 0 0.5rem;
+}
+
+.md-doc p {
+  margin: 0.8rem 0;
+  color: color-mix(in oklab, var(--text) 88%, transparent);
+}
+
+.md-doc ul {
+  list-style: none;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+
+.md-doc ul > li {
+  position: relative;
+  margin: 0.4rem 0;
+  padding-left: 1.5em;
+}
+
+.md-doc ul > li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+}
+
+.md-doc ol {
+  list-style: decimal;
+  margin: 0.8rem 0;
+  padding-left: 1.5em;
+}
+
+.md-doc ol > li {
+  margin: 0.4rem 0;
+  padding-left: 0.3em;
+}
+
+.md-doc ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--muted);
+}
+
+.md-doc code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  padding: 0.05em 0.35em;
+}
+
+.md-doc pre {
+  overflow-x: auto;
+  margin: 1rem 0;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.md-doc pre code {
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+.md-doc em {
+  font-style: italic;
+}
+
+.md-table {
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid var(--hairline);
+}
+
+.md-table table {
+  width: 100%;
+  min-width: 35rem;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.md-table th {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.md-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: top;
+}
+
+.md-table tr:last-child td {
+  border-bottom: 0;
+}
