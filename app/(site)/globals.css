@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/*
+ * "the annex" — the gallery's own chrome.
+ * A dark, quiet exhibition catalog: monochrome by default; the only color on
+ * screen is the accent of the entry being looked at (--accent is set per-view).
+ */
+:root {
+  --bg: #0b0b0c;
+  --surface: #141416;
+  --text: #ede9e0;
+  --muted: #8a8578;
+  --hairline: #232326;
+  --brand: #e8442e;
+  --accent: var(--brand);
+
+  --font-display: var(--font-instrument-serif), var(--font-noto-serif-kr), serif;
+  --font-ui: var(--font-schibsted), var(--font-noto-sans-kr), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-hairline: var(--hairline);
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+  --font-display: var(--font-display);
+  --font-ui: var(--font-ui);
+  --font-mono: var(--font-mono);
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* 3% grain — a knowing homage to the flagship; frozen for reduced motion */
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-3%, 2%);
+  }
+  40% {
+    transform: translate(2%, -3%);
+  }
+  60% {
+    transform: translate(-2%, -2%);
+  }
+  80% {
+    transform: translate(3%, 3%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+}

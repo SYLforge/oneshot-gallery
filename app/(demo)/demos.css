@@ -1,0 +1,7 @@
+/*
+ * Tailwind entry for demo routes only. Entries may be Tailwind-styled or
+ * vanilla-CSS; this file scans registry sources so Tailwind-styled entries
+ * get their utilities inside the (demo) root layout.
+ */
+@import "tailwindcss";
+@source "../../registry";

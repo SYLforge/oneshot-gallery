@@ -1,0 +1,21 @@
+{
+  "site": {
+    "name": "Oneshot Gallery",
+    "tagline": "Full-page designs you can actually ship.",
+    "description": "An open-source gallery of art-directed full-page frontend designs. Every entry ships a live demo, the complete source code, and the reproducible AI prompt behind it."
+  },
+  "nav": {
+    "gallery": "Gallery",
+    "styles": "Styles",
+    "about": "About",
+    "github": "GitHub"
+  },
+  "home": {
+    "kicker": "An open-source design annex",
+    "installHint": "Install any design with one command"
+  },
+  "footer": {
+    "license": "MIT — code free forever",
+    "builtWith": "Curated in Seoul"
+  }
+}
