@@ -4,6 +4,92 @@
   "homepage": "https://oneshot.gallery",
   "items": [
     {
+      "name": "blunt",
+      "type": "registry:block",
+      "title": "BLUNT — Riso Print Works",
+      "description": "A two-person risograph co-op in a Euljiro alley that hates minimalism and prints LOUD — misregistered wordmark, a table of draggable stickers, and a price list that includes the smell of ink.",
+      "dependencies": [],
+      "categories": [
+        "neo-brutalist",
+        "drag-physics",
+        "marquee",
+        "spring-press",
+        "feturbulence-texture"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/blunt/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/blunt/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/blunt/components/MarqueeBand.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/blunt/components/MarqueeBand.tsx"
+        },
+        {
+          "path": "registry/designs/blunt/components/PriceList.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/blunt/components/PriceList.tsx"
+        },
+        {
+          "path": "registry/designs/blunt/components/ShopFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/blunt/components/ShopFooter.tsx"
+        },
+        {
+          "path": "registry/designs/blunt/components/StickerBoard.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/blunt/components/StickerBoard.tsx"
+        },
+        {
+          "path": "registry/designs/blunt/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/blunt/fonts.ts"
+        },
+        {
+          "path": "registry/designs/blunt/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/blunt/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/blunt/hooks/useScrollEnergy.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/blunt/hooks/useScrollEnergy.ts"
+        },
+        {
+          "path": "registry/designs/blunt/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/blunt/page.tsx"
+        },
+        {
+          "path": "registry/designs/blunt/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/blunt/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/blunt/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/blunt/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"BLUNT — Riso Print Works\" installs into app/oneshot/blunt/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 2,
+        "accent": "#ff4b33",
+        "theme": "light",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "pale-signal",
       "type": "registry:block",
       "title": "PALE.SIGNAL — Deep Sky Listening Post",

@@ -1,0 +1,239 @@
+# BLUNT — breakdown
+
+## The hook
+
+Two people in a Euljiro alley own one risograph machine and a strong
+opinion: quiet design is a scam. Their shop front says so in ink black on
+recycled paper, in a wordmark that came off the drum misregistered and
+stayed that way, in a price list that bills you for the smell of ink
+(₩0 — included). The page never explains riso printing. It assumes you
+came here because you already want loud, and the only question left is
+B2 or A5.
+
+The design bet: brutalism reads as craft, not laziness, when every rough
+edge is repeated until it becomes a rule — 3px lines, 6px shadows, 0ms
+presses. Sloppy once is a mistake. Sloppy consistently is a typeface.
+
+## Art direction
+
+The palette is a machine inventory: one paper (`#f2ede1`, recycled stock,
+never white), one ink (`#101010`), and three drums — acid yellow, riso
+blue, fluorescent red. The rule that keeps it honest is a physics claim:
+where ink overlaps ink, `mix-blend-mode: multiply`, because that is what
+actual riso layers do on actual paper. The wordmark plates darken where
+they cross; the two-dot overprint test sticker shows blue × red going
+almost black; the paper-backed decals (barcode, price tag) stay opaque
+because a paper sticker occludes what it lands on. The blend mode is
+doing worldbuilding.
+
+Fluorescent red failed its interview as a text color — 2.9:1 on paper —
+and was reassigned: it is a plate, a stamp frame, a surface. Everything
+readable that touches red is ink type sitting *on* it (5.7:1). The one
+place red appears at text size (the SOLD OUT stamp) is an ink-type,
+red-frame construction for exactly this reason.
+
+Three faces, three jobs: Archivo Black shouts the Latin display, IBM Plex
+Mono keeps the books, and Do Hyeon renders *every Hangul glyph on the
+page* — both Latin stacks end in it, so Korean falls through with no
+markup. One Korean face across display, labels, and table notes is the
+tell that the shop hand-letters everything in the same condensed gothic.
+
+## Technique 1 — drag physics: the work table
+
+The signature section is a bordered cutting mat scattered with ten
+stickers — all CSS and inline SVG, no images — that you can fling around.
+The physics is hand-rolled and deliberately simple: a point mass with
+friction, restitution, and one good lie.
+
+The lie is torque. A real rigid body spins based on where force is applied;
+here, angular velocity is faked from the cross product of the drag velocity
+and the grab offset, sampled while the pointer moves:
+
+```ts
+// StickerBoard.tsx — grab a corner and yank: it spins.
+// Grab dead center: it doesn't.
+const torque = (ivx * -b.gy + ivy * b.gx) * 0.6;
+b.vr = b.vr * 0.5 + torque * 0.5;
+```
+
+`gx/gy` is the grab point relative to the sticker's center, normalized to
+±0.5. Centered grabs zero the cross term; corner grabs maximize it. It is
+three lines and it is 90% of why the board feels physical.
+
+Release starts a shared rAF loop that integrates every awake body and
+stops itself when the table goes quiet:
+
+```ts
+const f = Math.pow(FRICTION, dt / 16.7);      // 0.93, frame-rate normalized
+b.dx += b.vx * dt;  b.dy += b.vy * dt;  b.rot += b.vr * dt;
+b.vx *= f;          b.vy *= f;          b.vr *= f;
+if (b.dx < b.minX) { b.dx = b.minX; b.vx = Math.abs(b.vx) * 0.45; b.vr *= 0.6; }
+```
+
+Two structural decisions matter more than the constants. First, physics
+state is a *delta from the CSS-scattered base position* — the scatter
+(left/top percentages plus a `--blunt-rot` custom property per sticker)
+lives entirely in the stylesheet, so with JavaScript disabled the board
+shows the same mess, just still, and the JS only ever writes
+`style.transform`. Second, React renders the sticker shells exactly once;
+every frame after that is imperative. A drag re-renders nothing.
+
+A held sticker checks the clock on release: if the pointer has not moved
+for 90ms, velocity is zeroed — you *placed* it, and placement should not
+throw. Under reduced motion every release is a placement.
+
+## Technique 2 — the marquee that reads your scroll
+
+Two slogan tickers run in opposite directions, and the page's scroll
+direction reverses both: scroll down and row A goes left while row B goes
+right; scroll up and they swap. Scroll velocity feeds their speed. The
+interesting part is making the reversal feel like weight instead of a
+glitch — a signed speed that chases its target through an exponential
+lerp:
+
+```ts
+// MarqueeBand.tsx — a flip is a skid, not a teleport
+e.vel *= Math.pow(0.94, dt / 16.7);            // bleed scroll energy out
+const speed = Math.min(CAP, BASE + e.vel * BOOST);
+const k = 1 - Math.pow(0.88, dt / 16.7);
+curA += (e.dir * -speed - curA) * k;           // rows chase opposite signs
+offA = wrap(offA + curA * dt, wA);
+```
+
+When you reverse scroll, `curA` has to pass through zero before it picks
+up the other direction — the row visibly brakes, stops for a beat, and
+skids off the other way. That deceleration is the entire personality of
+the band.
+
+The plumbing: each row holds four identical copies of its slogan group,
+the offset wraps at one group's measured width (`ResizeObserver` keeps
+the measurement honest), and the whole band only spends frames while an
+`IntersectionObserver` says it is on screen. Scroll state lives in a
+mutable ref (`useScrollEnergy`) written by a passive scroll listener —
+no React state, no re-renders, the ticker loop just reads it. The moving
+rows are `aria-hidden`; every slogan is delivered exactly once in a
+visually hidden paragraph above them.
+
+## Technique 3 — spring-press, minus the spring
+
+Every button carries a 6px offset solid shadow — no blur, blur is fog.
+On `:active` the element translates *into* its own shadow while the
+shadow collapses to zero, and the transition rules are the whole joke:
+
+```css
+.blunt-press {
+  box-shadow: 6px 6px 0 0 var(--blunt-ink);
+  transition: transform 90ms linear, box-shadow 90ms linear;
+}
+.blunt-press:active {
+  transition-duration: 0ms;          /* the press is INSTANT */
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 0 var(--blunt-ink);
+}
+```
+
+The `0ms` press with a `90ms linear` release is documented here as
+anti-easing, on purpose. The taxonomy tag is `spring-press`, and a spring
+config was the obvious move — squash on press, overshoot on release. It
+was built and it felt wrong within seconds: a bouncy button on this page
+is a barista in a hardware store. A rubber stamp hits the paper at full
+speed and lifts off almost as fast; `linear` is not a compromise here,
+it is the correct curve for the gesture. The price-list rows take the
+same pair at 3px without the shadow collapse (a `tr` cannot carry the
+hard shadow cleanly across table layout), and the stickers reuse the 90ms
+linear ramp for their shadow swap on grab.
+
+## Technique 4 — paper that isn't flat
+
+The grain over the whole page is one static SVG rect run through
+`feTurbulence`:
+
+```xml
+<feTurbulence type="fractalNoise" baseFrequency="0.8"
+              numOctaves="2" stitchTiles="stitch" />
+<feColorMatrix type="matrix"
+               values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.1 0" />
+```
+
+The color matrix zeroes RGB and scales the noise alpha to 0.1, producing
+sparse black speckle; the wrapper multiplies it over the page at
+opacity 0.55. Net effect is roughly 5% darkening in the speckle — enough
+that flat paper stops looking like `#f2ede1` and starts looking like
+stock, not enough to threaten any contrast ratio (ink starts at 16.3:1).
+It is never animated. Grain in paper does not move, and a page that
+believes it is printed has to hold that line.
+
+## Motion math
+
+- **Friction 0.93 per normalized frame.** Total glide distance for a
+  release velocity `v0` is `v0 · 16.7 / (1 − 0.93)` ≈ `239 · v0` px. A
+  confident fling releases around 1.7 px/ms, so a hard throw travels
+  ~400px — most of the board, not all of it. The sticker you threw is
+  still yours.
+- **Restitution 0.45, spin damping 0.6.** Under half the energy survives a
+  wall hit, and rotation loses more than translation — so a sticker that
+  bounces settles flat instead of spinning in place like a beetle.
+- **Marquee approach `1 − 0.88^(dt/16.7)`.** Half-life of the speed error
+  is ~5.4 frames (~90ms) — coincidentally the press-out duration, which
+  makes the band's skid and the button's snap-back feel like one hand.
+- **Scroll energy attack 0.4 / decay 0.94.** The ticker notices a scroll
+  burst in two frames and forgets it over ~1 second — reactive, never
+  jittery.
+
+## Performance notes
+
+- Two rAF loops total (tickers, sticker physics), both self-terminating:
+  the marquee stops via `IntersectionObserver` when off screen, the
+  physics loop stops when every body sleeps (below 0.004 px/ms). Idle
+  page = zero frames.
+- Everything animated is `transform` (plus two `filter: drop-shadow`
+  state swaps); no layout or paint properties move. The grain, grid, and
+  stripes are static gradients/filters rasterized once.
+- Drags write `style.transform` directly on captured pointer events —
+  no React state in the hot path; a full fling causes zero re-renders.
+- `dt` is clamped to 48ms everywhere, so a background tab resuming never
+  teleports a sticker or a ticker.
+- No canvas, no images, no dependencies; the heaviest assets are three
+  Google font families.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) statics the tickers, turns sticker releases into
+  placements, and a CSS block kills the misregistration twitch and press
+  transitions. The page loses nothing but momentum.
+- **No-JS:** the sticker scatter is CSS; the tickers are bordered strips
+  of readable slogans; `.blunt-js` gates grab cursors and the twitch.
+  The no-JS page is a finished print.
+- **Keyboard:** every sticker is a focusable `role="button"` with an
+  `aria-roledescription` of "draggable sticker" — arrows nudge 10px,
+  Enter/Space lifts to the top, and a shared hint element is referenced
+  via `aria-describedby`. Focus is a 3px ring: ink on paper, riso blue on
+  yellow, paper on the footer's ink.
+- **Misregistration without double-speak:** the blue/red wordmark plates
+  are CSS pseudo-elements using `content: attr(data-text) / ""` — the
+  alt-text syntax keeps screen readers from reading BLUNT three times.
+- **Table that survives its own responsive design:** the price list is a
+  real `table` with explicit ARIA roles, so re-gridding rows into stacked
+  cards at 640px (with `data-th` labels drawn by `::before`) cannot cost
+  it its table semantics.
+- **Contrast:** ink on paper 16.3:1, ink on yellow 13.0:1, blue on paper
+  5.9:1, paper on blue 5.9:1, ink on red 5.7:1 — every functional pairing
+  clears AA with the grain's worst case included; red on paper (2.9:1)
+  exists only as plates and frames.
+
+## Remix ideas
+
+1. **Night market flyer wall.** Keep the physics, swap the stickers for
+   food-stall flyers (호떡, 붕어빵, 떡볶이), the cutting mat for corkboard,
+   and the marquee slogans for tonight's prices. The SOLD OUT stamp
+   becomes 완판 and moves hourly.
+2. **Punk label back-catalog.** The price list becomes a discography
+   table (one row struck through: PRESSING PLANT FIRE, 2021), the
+   marquee runs tour dates in both directions, and the misregistered
+   wordmark gets a third plate that only appears on `:hover` — the
+   remaster.
+3. **Municipal notice board, unauthorized.** Same ink-on-paper system
+   played straight: government forms as the table, official stamps as
+   stickers that you can — and this is the point — drag wherever you
+   want. The 급함 tag goes on everything.

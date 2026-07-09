@@ -1,5 +1,40 @@
 [
   {
+    "slug": "blunt",
+    "no": 2,
+    "title": {
+      "en": "BLUNT — Riso Print Works",
+      "ko": "블런트 — 리소 인쇄소"
+    },
+    "description": {
+      "en": "A two-person risograph co-op in a Euljiro alley that hates minimalism and prints LOUD — misregistered wordmark, a table of draggable stickers, and a price list that includes the smell of ink.",
+      "ko": "미니멀리즘을 싫어하는 을지로 골목의 2인 리소 인쇄 공방 — 핀 나간 워드마크, 마음껏 어지르는 스티커 작업대, 잉크 냄새까지 포함된 가격표."
+    },
+    "aesthetic": "neo-brutalist",
+    "techniques": [
+      "drag-physics",
+      "marquee",
+      "spring-press",
+      "feturbulence-texture"
+    ],
+    "industry": [
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff4b33",
+    "theme": "light",
+    "published": "2026-07-10",
+    "featured": false
+  },
+  {
     "slug": "pale-signal",
     "no": 3,
     "title": {
