@@ -46,4 +46,7 @@ jobs:
         run: pnpm check-budget
 
       - name: Build site
-        run: pnpm build
+        # next/font/google fetches ~30 font families from Google at build time
+        # (each entry declares its own faces). A cold cache occasionally flakes
+        # on one fetch; Next caches successful downloads, so a retry converges.
+        run: pnpm build || pnpm build || pnpm build
