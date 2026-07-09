@@ -1,0 +1,97 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "oneshot",
+  "homepage": "https://oneshot.gallery",
+  "items": [
+    {
+      "name": "pale-signal",
+      "type": "registry:block",
+      "title": "PALE.SIGNAL — Deep Sky Listening Post",
+      "description": "A decommissioned mountain-ridge radio observatory that still publishes nightly logs of what the sky said, rendered as a phosphor-green public terminal.",
+      "dependencies": [],
+      "categories": [
+        "terminal-core",
+        "typewriter",
+        "ascii-render",
+        "crt-scanline"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/pale-signal/components/BootSequence.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pale-signal/components/BootSequence.tsx"
+        },
+        {
+          "path": "registry/designs/pale-signal/components/Dishes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pale-signal/components/Dishes.tsx"
+        },
+        {
+          "path": "registry/designs/pale-signal/components/LogSection.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pale-signal/components/LogSection.tsx"
+        },
+        {
+          "path": "registry/designs/pale-signal/components/SignalField.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pale-signal/components/SignalField.tsx"
+        },
+        {
+          "path": "registry/designs/pale-signal/components/StationFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pale-signal/components/StationFooter.tsx"
+        },
+        {
+          "path": "registry/designs/pale-signal/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/pale-signal/fonts.ts"
+        },
+        {
+          "path": "registry/designs/pale-signal/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pale-signal/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/pale-signal/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pale-signal/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/pale-signal/hooks/useTypewriter.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pale-signal/hooks/useTypewriter.ts"
+        },
+        {
+          "path": "registry/designs/pale-signal/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/pale-signal/page.tsx"
+        },
+        {
+          "path": "registry/designs/pale-signal/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/pale-signal/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/pale-signal/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/pale-signal/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PALE.SIGNAL — Deep Sky Listening Post\" installs into app/oneshot/pale-signal/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 3,
+        "accent": "#33ff66",
+        "theme": "dark",
+        "prompt": {
+          "model": "claude-fable-5",
+          "modelLabel": "Claude Fable 5",
+          "tool": "claude-code",
+          "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    }
+  ]
+}

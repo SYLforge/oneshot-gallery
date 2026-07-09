@@ -12,7 +12,28 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "__generated__/**",
   ]),
+  {
+    // Entries must stay self-contained: the same files serve as app routes,
+    // shadcn registry items, and displayed source. Alias imports would break
+    // after installation into a consumer app.
+    files: ["registry/designs/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/*", "~/*"],
+              message:
+                "Entries are self-contained — use relative imports within the entry folder only.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

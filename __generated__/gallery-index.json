@@ -1,0 +1,36 @@
+[
+  {
+    "slug": "pale-signal",
+    "no": 3,
+    "title": {
+      "en": "PALE.SIGNAL — Deep Sky Listening Post",
+      "ko": "페일 시그널 — 심우주 청음소"
+    },
+    "description": {
+      "en": "A decommissioned mountain-ridge radio observatory that still publishes nightly logs of what the sky said, rendered as a phosphor-green public terminal.",
+      "ko": "퇴역한 산등성이 전파관측소가 아직도 밤마다 하늘의 말을 받아 적는, 인광 녹색의 공개 터미널."
+    },
+    "aesthetic": "terminal-core",
+    "techniques": [
+      "typewriter",
+      "ascii-render",
+      "crt-scanline"
+    ],
+    "industry": [
+      "science"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#33ff66",
+    "theme": "dark",
+    "published": "2026-07-10",
+    "featured": true
+  }
+]

@@ -1,0 +1,202 @@
+# PALE.SIGNAL — breakdown
+
+## The hook
+
+A mountain observatory was decommissioned in 2019, and nobody told its
+terminal. It still boots every night, still aims two of its three dishes at
+the sky, and still types out what it hears — pulsar heartbeats, the hum of
+the moon, static that sounded like rain — in the clipped bilingual shorthand
+of an operator who stopped being paid a long time ago. The page never
+explains any of this. You arrive mid-shift, the BIOS scrolls past, and the
+station assumes you know why you're here.
+
+The design bet: a log file can carry more feeling than a hero image, if
+every timestamp is doing literary work.
+
+## Art direction
+
+Terminal-core lives or dies on discipline. One green (`#33ff66` phosphor),
+one black (`#0a0f0a` — not pure black, a tube with the brightness turned
+down), one warning color that appears exactly twice on the whole page. The
+moment a second accent shows up, the fiction collapses into "hacker theme."
+
+Two typefaces play two characters. VT323 is the machine — Latin, digits,
+the dotted `......` status leaders. Nanum Gothic Coding is the human — every
+Hangul glyph on the page, compacted to `0.8em` so it sits inside VT323's
+baseline rhythm. The stack order does real work: `VT323, Nanum Gothic
+Coding, monospace` means Hangul typed into the boot `<pre>` falls through
+the Latin font into the Korean one with no markup at all.
+
+Contrast was the one place the brief had to bend. Dim trace `#1d5c31`
+measures 2.4:1 on tube black — beautiful, and illegible. So it was demoted
+to pure decoration (rules, section numerals, the faintest ASCII cells), and
+secondary text got a derived token instead: phosphor at 72% alpha, which
+composites to about `#27b54a` and holds 7.2:1.
+
+## Technique 1 — the typewriter that never lies
+
+The boot log is the first thing you see, and the first accessibility trap:
+type-on effects usually hide text from everyone who can't wait. Two
+decisions avoid that.
+
+First, the server renders the *finished* boot. `play` only flips on inside
+an effect, so with JavaScript disabled the page is a completed terminal, not
+a dead cursor:
+
+```tsx
+// BootSequence.tsx — SSR state is the completed boot screen
+const [play, setPlay] = useState(false);
+useEffect(() => {
+  if (reduced) { finish(); return; }        // reduced motion: stay complete
+  const id = window.setTimeout(() => setPlay(true), 60);
+  return () => window.clearTimeout(id);
+}, [reduced, finish]);
+```
+
+Second, the cadence is deliberately uneven. Real UARTs flush in bursts, so
+35% of ticks emit two characters, every tick jitters, and the line before
+the Korean sign-off holds a 3.5× beat — the terminal takes a breath before
+it says something that matters:
+
+```ts
+// useTypewriter.ts — uneven on purpose
+const burst = Math.random() < 0.35 ? 2 : 1;
+char = Math.min(char + burst, current.length);
+timerRef.current = window.setTimeout(step, charMs + Math.random() * jitterMs);
+// …between lines:
+const beat = line === lines.length - 1
+  ? linePauseMs * 3.5                        // the dramatic pause
+  : linePauseMs + Math.random() * 160;
+```
+
+Any key, tap, wheel, or scroll calls `finish()`, and a 7s hard timeout
+guarantees the boot can never trap anyone. The animated `<pre>` is
+`aria-hidden` inside a `role="img"` wrapper whose `aria-label` is the full
+log — screen readers get the whole text immediately, once.
+
+## Technique 2 — the ASCII sky
+
+The signature section rasterizes a scene into character density on a
+DPR-aware canvas: ~14px cells, the classic ramp `" .:-=+*#%@"`, `fillText`
+per cell. The scene is a sum of three fields, evaluated per cell per frame:
+
+```ts
+// SignalField.tsx — density = stars + carrier + bloom
+const r = hash(cx, cy);                      // deterministic per-cell star
+if (r > 0.962) {
+  const tw = 0.5 + 0.5 * Math.sin(t * (0.0006 + r * 0.0011) + r * 251);
+  v += ((r - 0.962) / 0.038) * (0.22 + 0.55 * tw);
+}
+const wave =                                  // three unrelated drift rates
+  Math.sin(x * 8.3 + t * 0.00093) * 0.36 +
+  Math.sin(x * 21.1 - t * 0.00061) * 0.17 +
+  Math.sin(x * 3.4 + t * 0.00037) * 0.47;
+const d = ((y - (0.58 + wave * 0.15)) * rows) / 7.5;
+v += Math.exp(-d * d) * (0.42 + 0.3 * (0.5 + 0.5 * Math.sin(x * 26 + t * 0.0016)));
+```
+
+The star field is a spatial hash, not `Math.random()` — each cell's star is
+stable across frames and twinkles at its own hashed rate. The carrier band
+is three sines whose frequencies and speeds share no common factor, so the
+waveform never visibly repeats.
+
+The third field is you. A gaussian bloom lerps toward the pointer; on touch
+devices, or after 2.6 seconds of pointer silence, an autonomous lissajous
+drift takes over — the station goes back to scanning on its own. Cells are
+bucketed into the four palette tokens and drawn one `fillStyle` per bucket,
+so a frame costs four style changes instead of four thousand.
+
+The canvas font is resolved from CSS (`getComputedStyle(canvas).fontFamily`),
+so the ASCII glyphs are real VT323 — the sky is typeset in the same voice as
+the page.
+
+## Technique 3 — CRT glass
+
+The whole page sits under a fixed, pointer-transparent three-layer overlay:
+1px scanlines every 3px, a glass-glare wash from the top, and a corner
+vignette. The trick that sells it is not the gradient — it's the timing.
+The glare breathes twice per 9.4s cycle; the content layer stumbles
+sideways for a single frame every 12.4s; the cursor blinks at 1.06s. Three
+periods, no common divisor, so the ambient motion never reads as a loop:
+
+```css
+/* one horizontal stumble per 12.4s — three ~19ms keyframe segments */
+@keyframes ps-jitter {
+  0%, 99.4%, 100% { transform: translateX(0); }
+  99.55% { transform: translateX(3px) skewX(-0.6deg); }
+  99.7%  { transform: translateX(-2px); }
+  99.85% { transform: translateX(1px); }
+}
+```
+
+Scanline ink is capped at 1px of `rgba(3,8,4,0.28)` per 3px so worst-case
+text contrast stays comfortably above AA. Under
+`prefers-reduced-motion: reduce`, every ambient animation is removed and the
+glass becomes a still photograph of itself.
+
+## Motion math
+
+Two numbers do most of the feel work in the signal field:
+
+- **Position lerp 0.085/frame.** Per frame the bloom covers 8.5% of the
+  remaining distance (normalized by `dt / 16.7` so 144Hz displays don't
+  double the speed). Half-life ≈ `ln(0.5)/ln(1 − 0.085)` ≈ 7.8 frames
+  ≈ 130ms — enough lag that the glow feels like heavy equipment slewing,
+  not a CSS cursor.
+- **Energy attack 0.06, release 0.025.** Asymmetric on purpose: the field
+  brightens toward you in ~11 frames of half-life but takes ~27 to forget
+  you. Attention arrives fast and decays slowly — which is the entire
+  personality of the station in two constants.
+
+The reveal easing `cubic-bezier(0.16, 1, 0.3, 1)` front-loads ~80% of the
+travel into the first 40% of the duration; with a 16px translate the tail
+settles sub-pixel, so 600ms reads as calm rather than slow. Reveal stagger
+is per observer batch (70ms), not per index — only elements that arrive
+together queue behind each other.
+
+## Performance notes
+
+- One rAF loop, throttled to ~64fps (`FRAME_MS = 15.5`) so high-refresh
+  displays don't pay double; `dt` is clamped to 48ms so a background tab
+  never causes a lurch.
+- An IntersectionObserver with 120px margin starts/stops the loop — the
+  field costs zero frames while offscreen.
+- DPR is capped at 2; at 1440×620 that's ~4,500 cells, of which typically
+  a third produce a visible glyph. Bucketed drawing keeps it to four
+  `fillStyle` assignments per frame.
+- Everything animated by CSS is `transform`, `opacity`, or `filter` —
+  compositor-only; the scanline/vignette layers are static gradients.
+- Log reveals write `class` + `transitionDelay` imperatively via IO, no
+  React re-render per entry; the typewriter re-renders a single `<pre>`.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) completes the boot instantly, freezes the ASCII field
+  on one composed static frame (a hand-picked `t = 47000` where the carrier
+  sits nicely), and a media query removes flicker, jitter, blink, and
+  reveal transitions.
+- **No-JS:** the pre-reveal hidden state only exists under a `.ps-js` class
+  added on mount, and dish-note hiding is gated the same way — with
+  JavaScript off, the entire page is plainly readable.
+- **Semantics:** the boot log and canvas are `role="img"` with full-text /
+  descriptive labels (bilingual for the canvas); the animated glyphs are
+  `aria-hidden`. Dish rows are native `<button>`s with
+  `aria-expanded`/`aria-controls`. Focus is a 2px phosphor ring with a
+  halo, `:focus-visible` only.
+- **Contrast:** phosphor 14.5:1, secondary 7.2:1, amber 10.6:1 — all AA+
+  under the scanline worst case; the 2.4:1 dim trace never carries meaning.
+
+## Remix ideas
+
+1. **Tide station.** Swap the star hash for a slow horizontal scan of tide
+   harmonics, phosphor → ice blue (`#7ad7ff` family), logs of what the sea
+   said at each hour. The lissajous drift becomes a buoy.
+2. **Number station.** Keep everything; replace the log entries with
+   five-digit groups read at intervals, the flagged amber entry is the one
+   night the numbers changed. The typewriter gains a shortwave warble
+   (pitch-jittered char cadence).
+3. **Seismograph vault.** Rotate the carrier band 90° into a vertical drum
+   trace, cells become `|‖▌█`, and the pointer bloom becomes pressure on
+   the needle — the page trembles (1-frame jitter) only when *you* move
+   too fast.

@@ -1,0 +1,744 @@
+/* ==========================================================================
+   PALE.SIGNAL — deep sky listening post
+   terminal-core · phosphor on tube black · every color a named token
+   Scoped by convention to .ps-root; classes prefixed ps-.
+   ========================================================================== */
+
+.ps-root {
+  /* -- palette ---------------------------------------------------------- */
+  --ps-black: #0a0f0a;            /* tube black — the unlit screen */
+  --ps-phosphor: #33ff66;         /* phosphor green — 14.5:1 on tube black */
+  --ps-phosphor-dim: rgba(51, 255, 102, 0.72); /* ≈ #27b54a — 7.2:1, secondary text */
+  --ps-dim-trace: #1d5c31;        /* decorative ONLY (2.4:1): rules, faint ASCII */
+  --ps-amber: #ffb000;            /* alert — 10.6:1 */
+  --ps-glare: #c8ffd9;            /* glass glare — low alpha washes + ASCII peaks */
+  --ps-grid-line: rgba(29, 92, 49, 0.4);   /* derived from dim trace */
+  --ps-scan-ink: rgba(3, 8, 4, 0.28);      /* derived: scanline ink */
+
+  /* -- type -------------------------------------------------------------- */
+  --ps-font-crt: var(--font-vt323), "VT323", "Courier New", monospace;
+  --ps-font-ko: var(--font-nanum-coding), "Nanum Gothic Coding", monospace;
+  /* Hangul falls through VT323 into Nanum Gothic Coding even without :lang */
+  --ps-font-stack: var(--font-vt323), var(--font-nanum-coding), monospace;
+
+  /* -- motion ------------------------------------------------------------ */
+  --ps-ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* reveals: fast in, long tail */
+  --ps-ease-crt: cubic-bezier(0.7, 0, 0.2, 1);    /* bloom: violent, then settles */
+  --ps-reveal-ms: 600ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--ps-black);
+  color: var(--ps-phosphor);
+  font-family: var(--ps-font-stack);
+  font-size: clamp(17px, 2.2vw + 10px, 21px);
+  line-height: 1.5;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: its own monospace, slightly compacted to sit on
+   the VT323 baseline rhythm. Never nest :lang(ko) inside :lang(ko). */
+.ps-root :lang(ko) {
+  font-family: var(--ps-font-ko);
+  font-size: 0.8em;
+  letter-spacing: -0.01em;
+}
+
+/* Phosphor selection, scoped to the entry root */
+.ps-root ::selection {
+  background: var(--ps-phosphor);
+  color: var(--ps-black);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a phosphor ring with a faint tube halo */
+.ps-root :focus-visible {
+  outline: 2px solid var(--ps-phosphor);
+  outline-offset: 3px;
+  border-radius: 1px;
+  box-shadow: 0 0 14px rgba(51, 255, 102, 0.45);
+}
+
+.ps-link {
+  color: var(--ps-phosphor);
+  text-decoration: underline;
+  text-decoration-color: var(--ps-dim-trace);
+  text-underline-offset: 3px;
+}
+
+.ps-link:hover {
+  text-decoration-color: var(--ps-phosphor);
+  text-shadow: 0 0 10px rgba(51, 255, 102, 0.6);
+}
+
+/* The content layer; the CRT overlay sits above it, pointer-events: none */
+.ps-screen {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Cursor — the living block
+   ========================================================================== */
+
+.ps-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 0.15em;
+  background: var(--ps-phosphor);
+  vertical-align: -0.12em;
+  box-shadow: 0 0 8px rgba(51, 255, 102, 0.8);
+}
+
+.ps-js .ps-cursor {
+  animation: ps-blink 1.06s steps(2, jump-none) infinite;
+}
+
+.ps-cursor--idle {
+  width: 0.5em;
+  height: 0.9em;
+}
+
+/* ==========================================================================
+   01 · Boot hero
+   ========================================================================== */
+
+.ps-hero {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: clamp(20px, 5vw, 64px);
+}
+
+.ps-hero__pre {
+  margin: 0;
+  min-height: 13em;
+  font-family: inherit;
+  font-size: clamp(15px, 1.6vw, 20px);
+  line-height: 1.55;
+  color: var(--ps-phosphor-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ps-hero__id {
+  margin-top: auto;
+  padding-top: 2rem;
+}
+
+.ps-title {
+  margin: 0 0 0.12em;
+  font-weight: 400;
+  font-size: clamp(3.1rem, 12.5vw, 10.5rem);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+}
+
+.ps-title__text {
+  display: inline-block;
+  text-shadow:
+    0 0 18px rgba(51, 255, 102, 0.55),
+    0 0 70px rgba(51, 255, 102, 0.22);
+  will-change: opacity, filter;
+}
+
+.ps-hero__sub {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.04em;
+}
+
+.ps-hero__meta {
+  margin: 0.5rem 0 0;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-hero__hint {
+  margin: 2.4rem 0 0;
+  font-size: 0.8em;
+  letter-spacing: 0.08em;
+  color: var(--ps-phosphor-dim);
+}
+
+/* Boot choreography — all gated behind .ps-js so no-JS renders everything */
+.ps-js .ps-hero__id.is-waiting {
+  opacity: 0;
+}
+
+.ps-js .ps-hero__id.is-on .ps-title__text {
+  animation: ps-bloom 950ms var(--ps-ease-crt) both;
+}
+
+.ps-js .ps-hero__id.is-on .ps-hero__sub,
+.ps-js .ps-hero__id.is-on .ps-hero__meta {
+  animation: ps-appear 600ms var(--ps-ease-out) both;
+}
+
+.ps-js .ps-hero__id.is-on .ps-hero__sub {
+  animation-delay: 480ms;
+}
+
+.ps-js .ps-hero__id.is-on .ps-hero__meta {
+  animation-delay: 640ms;
+}
+
+/* ==========================================================================
+   Section headers — » NN title · 한국어
+   ========================================================================== */
+
+.ps-sechead {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
+  border-bottom: 1px solid var(--ps-grid-line);
+}
+
+.ps-sechead__no {
+  font-size: 0.9em;
+  color: var(--ps-dim-trace); /* decorative numeral */
+}
+
+.ps-sechead__title {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 14px rgba(51, 255, 102, 0.35);
+}
+
+.ps-sechead__ko {
+  margin-left: 0.5rem;
+  color: var(--ps-phosphor-dim);
+  text-shadow: none;
+}
+
+/* ==========================================================================
+   02 · Tonight's log
+   ========================================================================== */
+
+.ps-log {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+}
+
+.ps-log__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.6rem, 3.5vh, 2.6rem);
+}
+
+.ps-log__entry {
+  padding-left: clamp(1rem, 3vw, 1.6rem);
+  border-left: 1px solid var(--ps-grid-line);
+}
+
+.ps-log__time {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.85em;
+  letter-spacing: 0.08em;
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-log__en {
+  margin: 0;
+}
+
+.ps-log__ko {
+  margin: 0.25rem 0 0;
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-log__flag {
+  letter-spacing: 0.06em;
+}
+
+.ps-log__entry--alert {
+  border-left: 2px solid var(--ps-amber);
+}
+
+.ps-log__entry--alert .ps-log__time,
+.ps-log__entry--alert .ps-log__flag {
+  color: var(--ps-amber);
+}
+
+@media (min-width: 900px) {
+  .ps-log__entry {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    column-gap: 1.5rem;
+  }
+
+  .ps-log__time {
+    grid-column: 1;
+    margin-top: 0.15rem;
+  }
+
+  .ps-log__en,
+  .ps-log__ko {
+    grid-column: 2;
+  }
+}
+
+/* ==========================================================================
+   03 · Live receive — the ASCII field
+   ========================================================================== */
+
+.ps-signal {
+  padding: clamp(64px, 10vh, 128px) 0;
+}
+
+.ps-signal__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+
+.ps-signal__head .ps-sechead {
+  flex: 1 1 24rem;
+  margin-bottom: 1.4rem;
+}
+
+.ps-signal__meta {
+  margin: 0 0 1.4rem;
+  font-size: 0.8em;
+  letter-spacing: 0.08em;
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-signal__stage {
+  position: relative;
+  height: clamp(340px, 64vh, 620px);
+  overflow: hidden;
+  border-top: 1px solid var(--ps-grid-line);
+  border-bottom: 1px solid var(--ps-grid-line);
+  cursor: crosshair;
+}
+
+.ps-signal__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* the renderer reads this computed family for ctx.font */
+  font-family: var(--ps-font-crt);
+}
+
+.ps-signal__caption {
+  max-width: 1240px;
+  margin: 1rem auto 0;
+  padding-inline: clamp(20px, 5vw, 64px);
+  font-size: 0.9em;
+  color: var(--ps-phosphor-dim);
+}
+
+/* ==========================================================================
+   04 · The dishes
+   ========================================================================== */
+
+.ps-dishes {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+}
+
+.ps-dishes__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px dashed var(--ps-grid-line);
+}
+
+.ps-dish {
+  border-bottom: 1px dashed var(--ps-grid-line);
+}
+
+.ps-dish__row {
+  display: grid;
+  grid-template-columns: 1.1rem 7.5rem 1fr 6.5rem 6rem 11.5rem;
+  grid-template-areas: "cross code name az el status";
+  gap: 0.35rem 0.9rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.95rem 0.5rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Instant state change — terminals do not ease their highlights */
+.ps-dish__row:hover,
+.ps-dish__row:focus-visible,
+.ps-dish__row[aria-expanded="true"] {
+  background: rgba(29, 92, 49, 0.22);
+}
+
+.ps-dish__cross {
+  grid-area: cross;
+  opacity: 0;
+  color: var(--ps-phosphor);
+}
+
+.ps-dish__row:hover .ps-dish__cross,
+.ps-dish__row:focus-visible .ps-dish__cross,
+.ps-dish__row[aria-expanded="true"] .ps-dish__cross {
+  opacity: 1;
+}
+
+.ps-dish__code {
+  grid-area: code;
+  letter-spacing: 0.06em;
+}
+
+.ps-dish__name {
+  grid-area: name;
+}
+
+.ps-dish__az {
+  grid-area: az;
+}
+
+.ps-dish__el {
+  grid-area: el;
+}
+
+.ps-dish__az,
+.ps-dish__el {
+  color: var(--ps-phosphor-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.ps-dish__status {
+  grid-area: status;
+  letter-spacing: 0.08em;
+}
+
+.ps-dish--tracking .ps-dish__status {
+  color: var(--ps-phosphor);
+}
+
+.ps-dish--holding .ps-dish__status {
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-dish--retired .ps-dish__status {
+  color: var(--ps-amber);
+}
+
+.ps-dish--retired .ps-dish__code,
+.ps-dish--retired .ps-dish__name {
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-dish__note {
+  max-width: 720px;
+  padding: 0.1rem 0.5rem 1.15rem 2.35rem;
+}
+
+.ps-dish__note p {
+  margin: 0 0 0.3rem;
+}
+
+.ps-dish__note p:lang(ko) {
+  color: var(--ps-phosphor-dim);
+}
+
+/* Hiding is JS-gated: without .ps-js every note is plainly visible */
+.ps-js .ps-dish__note.is-closed {
+  display: none;
+}
+
+.ps-js .ps-dish__note.is-open p {
+  animation: ps-appear 380ms var(--ps-ease-out) both;
+}
+
+.ps-js .ps-dish__note.is-open p + p {
+  animation-delay: 70ms;
+}
+
+@media (max-width: 760px) {
+  .ps-dish__row {
+    grid-template-columns: 1.1rem 1fr auto;
+    grid-template-areas:
+      "cross code   status"
+      ".     name   name"
+      ".     az     el";
+    row-gap: 0.15rem;
+  }
+
+  .ps-dish__el {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   05 · Footer / end of watch
+   ========================================================================== */
+
+.ps-footer {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 64px)
+    clamp(96px, 14vh, 160px);
+}
+
+.ps-footer__line {
+  margin: 0 0 1.8rem;
+}
+
+.ps-footer__time {
+  color: var(--ps-phosphor-dim);
+  letter-spacing: 0.08em;
+}
+
+.ps-footer__data {
+  margin: 0 0 2rem;
+}
+
+.ps-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px dotted var(--ps-grid-line);
+}
+
+.ps-footer__data dt {
+  flex: 0 0 6.5rem;
+  font-size: 0.8em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ps-phosphor-dim);
+}
+
+.ps-footer__data dd {
+  flex: 1 1 16rem;
+  margin: 0;
+}
+
+.ps-footer__copy {
+  margin: 0 0 2.6rem;
+}
+
+.ps-footer__nav {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+/* ==========================================================================
+   CRT glass — scanlines, glare flicker, vignette, jitter
+   ========================================================================== */
+
+.ps-crt {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.ps-crt__scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--ps-scan-ink) 0px,
+    var(--ps-scan-ink) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.ps-crt__glare {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 50% 8%,
+    rgba(200, 255, 217, 0.07),
+    transparent 55%
+  );
+  opacity: 0.8;
+}
+
+.ps-crt__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    130% 100% at 50% 45%,
+    transparent 60%,
+    rgba(2, 5, 3, 0.5) 100%
+  );
+}
+
+/* Rare one-frame horizontal jitter (~every 12.4s) and a glare breath.
+   Jitter lives on the fixed viewport-sized glass, never on .ps-screen:
+   an infinite animation on the full-height scroll wrapper promotes a
+   page-sized compositor layer (jank + broken tab captures). */
+.ps-js .ps-crt {
+  animation: ps-jitter 12.4s linear infinite;
+}
+
+.ps-js .ps-crt__glare {
+  animation: ps-flicker 9.4s linear infinite;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.ps-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--ps-reveal-ms) var(--ps-ease-out),
+    transform var(--ps-reveal-ms) var(--ps-ease-out);
+  will-change: opacity, transform;
+}
+
+.ps-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / filter only
+   ========================================================================== */
+
+@keyframes ps-blink {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ps-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Phosphor bloom: overdrive, collapse, overshoot, settle */
+@keyframes ps-bloom {
+  0% {
+    opacity: 0;
+    filter: brightness(3.5) blur(10px);
+  }
+  10% {
+    opacity: 1;
+    filter: brightness(3) blur(6px);
+  }
+  16% {
+    opacity: 0.25;
+    filter: brightness(0.9) blur(2px);
+  }
+  24% {
+    opacity: 1;
+    filter: brightness(2.2) blur(3px);
+  }
+  36% {
+    opacity: 0.7;
+    filter: brightness(1.05) blur(0.5px);
+  }
+  52% {
+    opacity: 1;
+    filter: brightness(1.7) blur(1.2px);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1) blur(0);
+  }
+}
+
+/* One horizontal stumble per cycle, ~19ms per segment at 12.4s */
+@keyframes ps-jitter {
+  0%,
+  99.4%,
+  100% {
+    transform: translateX(0);
+  }
+  99.55% {
+    transform: translateX(3px) skewX(-0.6deg);
+  }
+  99.7% {
+    transform: translateX(-2px);
+  }
+  99.85% {
+    transform: translateX(1px);
+  }
+}
+
+/* Two brief brightness breaths per 9.4s cycle */
+@keyframes ps-flicker {
+  0%,
+  31.2%,
+  32.1%,
+  67.3%,
+  67.8%,
+  100% {
+    opacity: 0.8;
+  }
+  31.4% {
+    opacity: 1;
+  }
+  31.8% {
+    opacity: 0.6;
+  }
+  67.5% {
+    opacity: 0.95;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — instant everything, one beautiful static frame
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-js .ps-crt,
+  .ps-js .ps-crt__glare,
+  .ps-js .ps-cursor,
+  .ps-js .ps-hero__id.is-on .ps-title__text,
+  .ps-js .ps-hero__id.is-on .ps-hero__sub,
+  .ps-js .ps-hero__id.is-on .ps-hero__meta,
+  .ps-js .ps-dish__note.is-open p {
+    animation: none;
+  }
+
+  .ps-js .ps-hero__id.is-waiting {
+    opacity: 1;
+  }
+
+  .ps-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
