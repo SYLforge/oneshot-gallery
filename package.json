@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3939",
     "prebuild": "tsx scripts/build-registry.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 3939",
     "lint": "eslint",
     "registry:build": "tsx scripts/build-registry.ts",
     "new-entry": "tsx scripts/new-entry.ts",

@@ -27,7 +27,7 @@
 
 ```bash
 pnpm install
-pnpm dev            # gallery at localhost:3000, your entry at /view/<slug>
+pnpm dev            # gallery at localhost:3939, your entry at /view/<slug>
 ```
 
 ## Adding an entry · 엔트리 추가

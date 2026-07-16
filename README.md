@@ -13,9 +13,9 @@ Plus a bilingual (한국어/English) technique breakdown and a design-token shee
 
 ## Status
 
-🚧 Pre-launch. Platform under construction; the launch roster targets 12+ designs across
-distinct aesthetic families — sumi-e, neo-brutalism, webtoon, dancheong, terminal-core,
-swiss typographic, and more.
+**12 designs across 12 aesthetic families** — sumi-e (flagship), neo-brutalism,
+dancheong, terminal-core, swiss typographic, glass, vaporwave, editorial, cinema,
+nature, bento, and luxury. All live, all installable, all bilingual.
 
 ## Principles
 
@@ -30,8 +30,22 @@ swiss typographic, and more.
 
 ```bash
 pnpm install
-pnpm dev
+pnpm dev          # gallery at http://localhost:3939
 ```
+
+Port `3939` is fixed (see `package.json`) to avoid collisions with other local projects.
+Override per-run with `pnpm dev -- --port <n>`.
+
+## Deploy
+
+The project is Vercel-ready (zero config). Click the button below, or:
+
+```bash
+pnpm build        # verify a clean production build first
+```
+
+Then push to GitHub and import the repo on [vercel.com/new](https://vercel.com/new).
+No environment variables are required — everything is static at build time.
 
 ## License
 

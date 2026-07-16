@@ -4,7 +4,7 @@
  *   pnpm capture                  all entries
  *   pnpm capture --slug sakura    one entry
  *   pnpm capture --loop           also record a 5s scroll loop (slower)
- *   pnpm capture --url http://localhost:3000   use an already-running server
+ *   pnpm capture --url http://localhost:3939   use an already-running server
  *
  * Requires a production build (`pnpm build`) unless --url is given.
  * Outputs to public/media/<slug>/: og.png, poster-{480,960,1440}.{avif,webp},
