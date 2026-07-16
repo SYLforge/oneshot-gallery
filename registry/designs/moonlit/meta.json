@@ -1,0 +1,44 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "moonlit",
+  "no": 16,
+  "title": {
+    "en": "MOONLIT — 2 AM Delivery",
+    "ko": "달빛 — 새벽 두 시의 배달"
+  },
+  "description": {
+    "en": "A late-night food delivery service told as a lonely, cinematic webtoon: a rider crosses an empty neon city to bring a warm meal to someone still awake. Cold indigo nights, one warm amber note at the handoff, and a delivery tracker that reads like a webtoon chapter — 주문 접수 → 조리 중 → 배달 출발 → 배달 완료.",
+    "ko": "잠든 도시를 가로지르는 새벽 배달을, 외롭고 시네마틱한 웹툰 한 화로 풀었다. 라이더가 텅 빈 네온 도시를 지나 잠들지 않은 누군가에게 따뜻한 한 끼를 전한다. 차가운 감청색의 밤, 따뜻한 한 점의 호박색 손길은 오직 전달 순간에만. 배달 트래커는 곧 웹툰의 한 화 — 주문 접수 → 조리 중 → 배달 출발 → 배달 완료."
+  },
+  "aesthetic": "webtoon",
+  "techniques": ["typewriter", "svg-line-draw", "marquee"],
+  "industry": ["retail-food"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-17",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "comfyui",
+    "provenance": {
+      "en": "Four webtoon illustrations generated in ComfyUI: Illustrious-XL merge checkpoint zenijiMixKWebtoon_v10 with the toonystarkKoreanWebtoonFlux LoRA @ 0.75; portrait scenes at 832x1216, the street scene at 1024x768, 30 steps, CFG 6.5, Euler a; each upscaled 2x with RealESRGAN and encoded to AVIF + WebP. Full recipe in image-recipe.md and the exported graph in workflows/.",
+      "ko": "네 점의 웹툰 일러스트는 ComfyUI로 생성: Illustrious-XL 계열 병합 체크포인트 zenijiMixKWebtoon_v10과 toonystarkKoreanWebtoonFlux LoRA @ 0.75; 인물/전달 장면은 832x1216, 거리 장면은 1024x768, 30스텝, CFG 6.5, Euler a; 각각 RealESRGAN 2배 업스케일 후 AVIF + WebP로 인코드. 전체 레시피는 image-recipe.md, 내보낸 그래프는 workflows/에."
+    },
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#4DA8FF",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-17",
+  "featured": false
+}

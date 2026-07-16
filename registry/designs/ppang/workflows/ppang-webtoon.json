@@ -1,0 +1,119 @@
+{
+  "name": "ppang-webtoon",
+  "description": "PPANG! bakery illustrations — Illustrious zenijiMixKWebtoon checkpoint + toonystarkKoreanWebtoonFlux LoRA @ 0.75, euler_ancestral 30 steps, CFG 6.5, RealESRGAN 2x. See image-recipe.md for per-asset prompts and seeds.",
+  "format": "ComfyUI API (prompt-graph export)",
+  "checkpoint_audit": {
+    "model_file": "zenijiMixKWebtoon_v10.safetensors",
+    "lineage": "Illustrious-XL merge (SD1.5-family, webtoon-tuned)",
+    "lora": "toonystarkKoreanWebtoonFlux.safetensors @ strength 0.75",
+    "audit_row": "docs/model-licenses.md#zenijiMixKWebtoon_v10",
+    "verdict_at_build_time": "NOT YET AUDITED — do not ship imagery from this model",
+    "note": "Assets are staged pending a maintainer-co-signed audit row establishing commercial-image-use and CC-BY-4.0 redistribution for the exact model file. See ASSETS-LICENSE.md."
+  },
+  "shared_settings": {
+    "sampler": "euler_ancestral",
+    "steps": 30,
+    "cfg": 6.5,
+    "scheduler": "normal",
+    "negative_prompt": "text, watermark, signature, logo, letters, caption, speech bubble, lowres, bad anatomy, bad hands, extra fingers, blurry, jpeg artifacts, 3d, photorealistic, grayscale, deformed, ugly, duplicate",
+    "upscale": "RealESRGAN_x4plus at 2x (0.5 denoise second pass for hero-dawn-bakery only)"
+  },
+  "nodes": {
+    "4": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": { "ckpt_name": "zenijiMixKWebtoon_v10.safetensors" }
+    },
+    "5": {
+      "class_type": "LoraLoader",
+      "inputs": {
+        "model": ["4", 0],
+        "clip": ["4", 1],
+        "lora_name": "toonystarkKoreanWebtoonFlux.safetensors",
+        "strength_model": 0.75,
+        "strength_clip": 0.75
+      }
+    },
+    "6": {
+      "class_type": "CLIPTextEncode",
+      "inputs": { "text": "<positive prompt per asset>", "clip": ["5", 1] }
+    },
+    "7": {
+      "class_type": "CLIPTextEncode",
+      "inputs": { "text": "<negative prompt>", "clip": ["5", 1] }
+    },
+    "8": {
+      "class_type": "EmptyLatentImage",
+      "inputs": { "width": "<832 / 1024 / 1024>", "height": "<1216 / 1024 / 768>", "batch_size": 1 }
+    },
+    "9": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["5", 0],
+        "positive": ["6", 0],
+        "negative": ["7", 0],
+        "latent_image": ["8", 0],
+        "seed": "<per-asset seed>",
+        "steps": 30,
+        "cfg": 6.5,
+        "sampler_name": "euler_ancestral",
+        "scheduler": "normal",
+        "denoise": 1.0
+      }
+    },
+    "10": {
+      "class_type": "VAEDecode",
+      "inputs": { "samples": ["9", 0], "vae": ["4", 2] }
+    },
+    "11": {
+      "class_type": "ImageUpscaleWithModel",
+      "inputs": {
+        "upscale_model": "RealESRGAN_x4plus.pth",
+        "image": ["10", 0]
+      }
+    },
+    "12": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": ["11", 0],
+        "upscale_method": "lanczos",
+        "width": "<ship width x2>",
+        "height": "<ship height x2>",
+        "crop": "disabled"
+      }
+    },
+    "13": {
+      "class_type": "SaveImage",
+      "inputs": { "images": ["12", 0], "filename_prefix": "ppang" }
+    }
+  },
+  "assets": [
+    {
+      "stem": "hero-dawn-bakery",
+      "dimensions": "832x1216",
+      "seed": 1042,
+      "second_pass_denoise": 0.5,
+      "prompt": "korean webtoon background art, a small neighborhood bakery on a narrow seoul side street before dawn, warm yellow light glowing from the storefront window, indigo pre-dawn sky with a faint pink horizon, quiet empty street, hanging wooden sign blank, awning, warm cream and brown palette, soft cell shading, clean lineart, vertical composition, cozy sentimental mood, no text, no letters"
+    },
+    {
+      "stem": "baker-character",
+      "dimensions": "832x1216",
+      "seed": 7781,
+      "second_pass_denoise": null,
+      "prompt": "korean webtoon character art, a young korean woman baker in her late twenties wearing a cream apron over warm clothes, hands resting on bread dough on a wooden table, soft warm window light from the left, gentle confident expression, brown hair tied back, cozy dawn bakery interior, warm cream and brown palette, clean lineart, flat cell shading, upper body, vertical composition, sentimental, no text, no letters"
+    },
+    {
+      "stem": "product-cream-bread",
+      "dimensions": "1024x1024",
+      "seed": 3091,
+      "second_pass_denoise": null,
+      "prompt": "korean webtoon food art, a single korean cream bread pastry (sang-keu-rim-ppang), golden brown crust dusted with flour, split open to show white cream filling, resting on warm cream paper, soft warm light, appetizing, clean lineart, flat warm shading, brown and cream palette, centered square composition, no text, no letters, no plate"
+    },
+    {
+      "stem": "interior-kitchen",
+      "dimensions": "1024x768",
+      "seed": 5560,
+      "second_pass_denoise": null,
+      "prompt": "korean webtoon background art, interior of a small bakery kitchen at dawn, stone oven glowing, wooden dough table with rising dough, warm wood cabinets, morning light streaming through a window, steam, cozy warm atmosphere, cream brown and amber palette, clean lineart, flat cell shading, wide landscape composition, sentimental, no people, no text, no letters"
+    }
+  ]
+}

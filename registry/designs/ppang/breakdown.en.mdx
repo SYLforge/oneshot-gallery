@@ -1,0 +1,275 @@
+# PPANG! — breakdown
+
+## The hook
+
+There is a bakery in Eunpyeong-gu that opens at 4 AM, not because it has
+to, but because the owner's grandmother did, and the hour the bread wakes
+up turned out to be hereditary. The page does not sell you bread. It is
+*one chapter of a webtoon* about that hour. You scroll the way you scroll
+a Naver Webtoon: an establishing shot of the bakery under a still-dark sky,
+the baker introduced by a speech bubble, the signature loaf named, the
+kitchen narrated over a wide shot, and a colophon that tells you where to
+find the place at dawn. The dawn itself is a character — the sky behind
+the hero climbs from indigo to gold as you read, and by the time you reach
+the kitchen the morning has arrived.
+
+The design bet: a page can be **a story about a place** without being a
+shop, and generated illustration earns its place when every panel is a
+drawing in a chapter — revealed panel-by-panel, captioned like a webtoon,
+never a grid of stock-looking cards.
+
+## Art direction
+
+Webtoon lives on warmth and rhythm. The ground is cream paper
+(`#faf6ee`), the voice is warm brown ink (`#3d2817`, 12.0:1), and there is
+exactly one warm accent — apricot `#e89b4c` — which appears where dawn
+light is: the OPEN lamp on the sign, the SFX stamp, the focus ring. The
+moment a second warm hue carries meaning, the page becomes a bakery menu.
+
+Two constraints did the hard work. First, the accent apricot measures only
+3.0:1 on cream, so it is **never functional text on paper** — everywhere
+the accent must speak it is banked to `amber-deep #a85f1c` (4.8:1, AA):
+section eyebrows, the hours' time numerals, the focus ring, the
+`::selection` ground. Apricot stays a surface and a large-display color.
+Second, the hero text sits over a dark scrim (a webtoon lower-third) so
+light text is AA at *every* dawn phase — robust against whichever of the
+three sky gradients is showing, and authentic to how webtoons caption
+their panels.
+
+The type refuses the obvious pairing. Black Han Sans is the Korean
+display voice — the wordmark 빵!, panel titles, SFX lettering — loud and
+warm, the cover of a chapter. Noto Serif KR holds every Korean body glyph
+in a warm serif, so the narration reads like a letter, not a menu.
+Fraunces is the English voice, italic, never larger than 0.62em of its
+Korean companion — the two languages distinguished by posture, the
+English leaning, the Korean standing. Stacks always lead with the Korean
+face, so Hangul never falls through to a default sans.
+
+## Technique 1 — the panel that wipes open (clip-path-reveal)
+
+The naive way to reveal an image is a fade. It reads as a slideshow. A
+webtoon panel doesn't fade in — it *arrives*, like a new cut being laid on
+the page. So every illustration reveals with a `clip-path` wipe, and each
+of the three panels uses a different direction so the cuts never repeat:
+
+```css
+/* styles.css — three directions, one per panel */
+.ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+  clip-path: inset(0 100% 0 0);       /* baker: left → right */
+}
+.ppang-product [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+  clip-path: inset(48% 48% 48% 48%);  /* signature: center → out */
+}
+.ppang-kitchen [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+  clip-path: inset(0 0 100% 0);       /* kitchen: top → bottom */
+}
+```
+
+The wipe lives on the panel's paper *mount*, not the art — the image
+itself is never displaced, only unclipped, so there's zero layout shift
+and no re-rasterization of the illustration. The transition is 1100ms on
+`ease-page` (`cubic-bezier(0.16,1,0.3,1)`), an easing that front-loads
+its travel and spends the tail settling sub-pixel, so the wipe reads as
+*deliberate* rather than slow. `clip-path` is compositor-friendly (it
+never touches layout), and the `is-visible` class is handed over by a
+single `IntersectionObserver` in `useReveal` — one observer for the whole
+page, no per-panel JS.
+
+The markup ships with the panels un-clipped (the `:not(.is-visible)` rule
+only applies under `.ppang-js`), so with JavaScript off every illustration
+is simply there. Under reduced motion the media query forces `clip-path:
+none` on every panel mount — the chapter is a printed comic, not a paused
+animation.
+
+## Technique 2 — the narrator reading aloud (char-split-reveal)
+
+A caption that appears all at once reads as a label. A caption that
+arrives glyph by glyph reads as *someone speaking*. Every narration line
+on the page — the baker's speech bubble, the kitchen caption, the
+product name — is split per Hangul syllable / Latin letter, with the real
+string kept whole for assistive tech:
+
+```tsx
+/* Narration.tsx — the real string for AT, aria-hidden glyphs for the eye */
+<span className="ppang-sr">{text}</span>
+<span aria-hidden="true" className="ppang-narration__row">
+  {glyphs.map((g, i) => (
+    <span className="ppang-narration__g"
+      style={{ "--pn": `${start + i * step}ms` }} as CSSProperties}>
+      {g === " " ? "\u00A0" : g}
+    </span>
+  ))}
+</span>
+```
+
+Each glyph carries its delay as a custom property (`--pn`), and the
+*only* thing JavaScript does at reveal time is add one class to the
+panel — the observer never touches a glyph. From there CSS runs the
+choreography: `transition-delay: var(--pn)` staggers the glyphs (38ms
+each for narration, 90ms for the product name), and the pre-reveal state
+(`opacity: 0`, a 0.5em drop) exists only under the `.ppang-js` root
+*and* only while the nearest panel is not yet `is-visible`. So no
+narration speaks before its panel has wiped open — the caption follows
+the drawing, the way a webtoon works.
+
+`Array.from` does the split, so Hangul syllables and jamo clusters
+survive as single code points (a syllable never breaks across spans);
+spaces become no-break spaces so a glyph never collapses at a line edge.
+The English line arrives half a beat after the Korean, by its own
+`--pn` delay — the second voice, leaning in.
+
+## Technique 3 — the diorama (pointer-parallax + scroll depth)
+
+The hero is not a flat frame; it's a diorama. Four layers drift at
+different rates as you scroll (the webtoon's depth) and, on fine
+pointers, lean toward the cursor:
+
+```css
+/* styles.css — each layer gets its own depth multiplier */
+.ppang-hero__far   { transform: translate3d(calc(var(--ppang-px) * -6px),
+                       calc(var(--ppang-py) * -4px + var(--ppang-sky-y) * 0.4), 0); }
+.ppang-hero__art   { transform: translate3d(calc(var(--ppang-px) * 10px),
+                       calc(var(--ppang-py) * 6px + var(--ppang-sky-y) * 0.7), 0); }
+.ppang-hero__sign  { transform: translate3d(calc(var(--ppang-px) * 18px),
+                       calc(var(--ppang-py) * 12px + var(--ppang-sky-y) * 1.1), 0); }
+```
+
+The far hill drifts slowest, the hanging sign fastest — the depth that
+sells the illusion. The cap lives in CSS (±6 / ±10 / ±18 px on pointer,
+60px on scroll), next to the layers. Two hooks feed the variables:
+`usePointerParallax` writes `--ppang-px/py ∈ [-1,1]` from the cursor
+(lerp 0.08/frame, parks itself when settled and the pointer has left);
+`useScrollProgress` writes `--ppang-sky-y` from how far the hero has
+left the viewport. Both are transform-only — the only per-frame writes
+on the whole page are four CSS custom properties on the root, all
+consumed by `transform`. On touch, the pointer hook disables itself
+(the diorama stays still); on coarse pointers you still get the scroll
+parallax. Under reduced motion, all four variables are pinned to 0 and
+the diorama is a composed still.
+
+The sign is an inline SVG (real Hangul 빵! in the loaded display face, a
+small OPEN lamp that breathes) painted over the awning — the
+illustration carries no text by design, so the actual signage is crisp
+vector at any resolution, and fully accessible (`role="img"` with a
+bilingual label). It sways ±1.1° on a 6.2s cycle; the lamp breathes on a
+5.3s cycle; the two share no common divisor, so the idle hero never
+visibly loops.
+
+## The dawn, scrubbed by scroll
+
+The signature backdrop: as you scroll the first 55% of the page, the sky
+behind the hero climbs from pre-dawn indigo through dawn blush to morning
+gold. Rather than animate gradient stops (expensive, jittery), the sky is
+**three stacked gradient elements whose opacity is the crossfade**:
+
+```css
+/* styles.css — phase A (indigo) fades out as dawn passes 0.5 */
+.ppang-hero__sky::before {
+  background: linear-gradient(180deg, #2a2547, var(--ppang-dawn-indigo), …);
+  opacity: calc(1 - clamp(var(--ppang-dawn) * 2, 0, 1));
+}
+/* phase C (gold) fades in as dawn passes 0.5 */
+.ppang-hero__gold {
+  background: linear-gradient(180deg, #c99a6a, #e9bf7e, …);
+  opacity: clamp((var(--ppang-dawn) - 0.5) * 2, 0, 1);
+}
+```
+
+`--ppang-dawn` is a single number in `[0,1]`, written once per rAF by
+`useScrollProgress` from `scrollY / maxScroll` (clamped to the first 55%
+of the page — by the kitchen, the morning has arrived and holds). The
+blush phase peaks in the middle of the dawn, computed as
+`1 - max(dawn - 0.5, 0.5 - dawn) * 2` — a triangular peak built from
+`max()`/`min()`, deliberately avoiding `abs()` (newer and unevenly
+supported) for the same result. With JS off, `--ppang-dawn` stays at its
+declared default of 0 — the hero opens on full pre-dawn indigo, which is
+the chapter's correct opening beat. Under reduced motion it's pinned to
+1 — morning has arrived.
+
+## The generated illustrations
+
+The four panels are generated in ComfyUI: the Illustrious-XL merge
+`zenijiMixKWebtoon_v10` with the `toonystarkKoreanWebtoonFlux` LoRA at
+0.75, 832×1216 / 1024×1024 / 1024×768, 30 steps, CFG 6.5, Euler a, each
+upscaled 2× with RealESRGAN. The full recipe ships in `image-recipe.md`
+and the exported graph in `workflows/`.
+
+Two decisions matter. First, **no image carries text** — by prompt and by
+negative prompt — so the bakery's name, the OPEN lamp, the SFX (쫀득!),
+and every caption are real HTML/SVG/CSS. Hangul stays crisp vector at any
+resolution, screen readers get real text, and the images can be
+regenerated (or swapped to an audited checkpoint) without retyping a
+single label. Second, the license audit: the checkpoint is **not yet
+audited** in `docs/model-licenses.md`, which is a G4 gate blocker until a
+maintainer co-signs an audit row. The entry is staged for that audit;
+swapping checkpoints later regenerates only the four files in
+`/media/ppang/`.
+
+## Motion math
+
+- **Glyph cadence 38ms.** The narrator's reading pace — slower than a
+  typewriter (which is ~30ms), fast enough to feel like speech. The
+  product name uses 90ms because it is a *title*, not narration.
+- **Pointer lerp 0.08/frame** (half-life ≈ 8 frames at 60fps). The
+  diorama notices the cursor in a blink and takes a moment to settle —
+  drift, not obedience. Computed from `dt` so it's framerate-independent.
+- **Panel wipe 1100ms, caption 800ms at +350ms.** The caption begins
+  only after the panel is meaningfully open, so the eye reads the
+  drawing first and the words second — exactly the order a webtoon
+  imposes.
+- The two ambient cycles (sway 6.2s, lamp 5.3s) and the hint drift (4.6s)
+  are mutually prime, so the idle hero never visibly loops.
+
+## Performance notes
+
+- One `IntersectionObserver` for every reveal on the page (`useReveal`),
+  threshold 0.16 — no per-element observers, no React re-renders on
+  scroll. The observer only writes `class` + `transitionDelay`.
+- `useScrollProgress` runs a single rAF, throttled to fire only on
+  scroll/resize/visibility, and writes two custom properties; it pauses
+  entirely on `visibilitychange` (hidden tab). `dt` is clamped to 48ms.
+- `usePointerParallax` runs its rAF *only while settling* — it parks
+  itself when the lerp converges and the pointer has left, so an idle
+  hero costs zero frames.
+- Every animation is `transform`, `opacity`, `filter`, or `clip-path`.
+  The four per-frame CSS-variable writes are all consumed by `transform`.
+  Zero layout-property animation anywhere.
+- Images: AVIF `<source>` + WebP `<img>` fallback, dimensions reserved
+  (no CLS), `loading="lazy"` + `decoding="async"` except the hero
+  (`eager`/`sync`, the first paint). Total payload ≈ 582 KB AVIF — well
+  under the 5120 KB budget.
+
+## Accessibility notes
+
+- **Reduced motion:** `--ppang-dawn` pinned at 1 (morning arrived), all
+  parallax variables at 0, all ambient cycles killed, every pre-reveal
+  state forced to final composition (panels `clip-path: none`, captions
+  `opacity: 1`, glyphs visible). The page reads as a printed chapter.
+- **No-JS:** every pre-reveal style is gated behind `.ppang-js`, added on
+  mount. The SSR page is the completed chapter — every illustration and
+  every line visible.
+- **Semantics:** the hero wordmark is an `h1` with `aria-label`; split
+  text keeps visually-hidden originals; the SVG sign is `role="img"`
+  with a bilingual label; decorative elements (far hill, lamp, hint,
+  SFX) are `aria-hidden`.
+- **Keyboard & touch:** the two interactive elements (address link,
+  top link) take a 2px amber-deep ring on `:focus-visible`. The parallax
+  self-disables on coarse pointers; the dawn still scrubs on scroll.
+- **Contrast:** ink 12.0:1, ink-soft 6.6:1, amber-deep 4.8:1 on paper;
+  hero text over the dark scrim clears AA at every dawn phase. Apricot
+  is never functional text on cream.
+
+## Remix ideas
+
+1. **Late-night ramen counter.** Keep the panel-wipe grammar and the
+   scroll-scrubbed sky (sunset → night → steam), swap the bakery for a
+   six-seat counter. The speech bubble becomes the chef's two-line
+   greeting; the SFX becomes the slap of noodles.
+2. **Bookshop closing up.** Invert the dawn: the sky scrubs *down* from
+   dusk to night as you scroll, the panels wipe closed instead of open
+   (`inset(0)` → `inset(0 100% 0 0)`), and the colophon lists the books
+   that found homes that day.
+3. **Webtoon itself.** Promote the panels into a true vertical-cut
+   sequence (8–12 panels), let the scroll *scrub* the wipe progress
+   directly (`clip-path inset` tied to scroll progress, not a one-shot
+   observer), and add an SFX-on-stomp interaction per panel.

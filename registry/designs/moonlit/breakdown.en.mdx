@@ -1,0 +1,254 @@
+# MOONLIT — breakdown
+
+## The hook
+
+Somewhere in the city it is 2 AM and someone is still awake — and someone
+else is on a motorcycle, bringing them dinner. MOONLIT is the brand that
+exists only in those six hours, and this page is one chapter of one order:
+from 접수 (received) at 01:47 to 완료 (delivered) at 02:23. The visitor is
+not a customer, they are a reader — and the page leans into the webtoon
+grammar hard enough that the scroll itself reads like a page-turn.
+
+The design bet: a delivery tracker is already a story. Status updates
+already have acts — the order, the kitchen, the road, the door. Webtoon
+panel pacing and a delivery-app tracker turn out to want almost the same
+rhythm. The page just makes that explicit, and then asks one further
+question — what does the rider's night actually feel like? — and answers
+it with cool indigo, neon, and exactly one warm note at the moment the
+meal changes hands.
+
+## Art direction
+
+This entry is the cold twin of PPANG! — PPANG!'s warm dawn bakery
+(orange, bread, morning light) is the model for what webtoon can be at
+its warmest, and MOONLIT deliberately does the opposite. Deep indigo
+night `#0b1020`, neon-blue `#4da8ff` as the only cold accent, and one
+amber `#e89b4c` reserved for the handoff alone. The rule that holds the
+palette together: count amber on screen at any moment. It should be
+zero, or it should be the entire handoff viewport. Anything in between
+is wrong — a little warmth decorating cold UI is the failure mode.
+
+Blue is allowed on normal text (7.5:1, AAA on the indigo), so unlike
+HALFLIGHT's red, blue is a working UI colour: active state, the live
+indicator, the section eyebrows. This is what makes the page read as a
+delivery app, not just a webtoon. The cold accent has to do work, because
+half the page's identity is "this is a real service, here are its hours,
+here is the order tracker".
+
+Four faces play four roles. Gugi is the splash — the wordmark `달빛` and
+the handoff headline, the only Korean display moments. Noto Sans KR is
+the prose voice — every Korean line of poetry, status, the rider's
+interior monologue. Space Grotesk is the English display — the `MOONLIT`
+wordmark, section heads, English body. Space Mono is the machine — every
+timestamp, order number, distance, hours cell. The body stack runs Space
+Grotesk into Noto Sans KR so Hangul falls through with no markup, and
+`:lang(ko)` pins Noto Sans KR with `word-break: keep-all`.
+
+## Technique 1 — typewriter: the delivery status that updates live
+
+The page's signature move is that Korean status lines type themselves out
+one glyph at a time, the way a real delivery tracker updates. The hook is
+a single function that types a string on demand:
+
+```ts
+// useTypewriter.ts — types `text` when `start` flips true
+const start = seen && (inView || true);
+const { shown, typing } = useTypewriter(RIDER_KO, start, 55);
+```
+
+The hook is IntersectionObserver-gated from the caller — `start` only
+flips true once the panel has been scrolled into view, so a status that
+hasn't been reached sits silent. The visible string lives in an
+`aria-hidden` span that the hook updates; the full string lives in a
+visually-hidden span beside it, so screen readers and find-in-page get
+the text whole, and the page is fully readable without JavaScript.
+
+The cursor is a `▋` block in neon-blue that blinks every 540 ms via a
+`steps(1, end)` keyframe. While typing, the cursor is forced visible
+(`is-typing` class); when typing is done, the cursor keeps blinking —
+the way a tracker waits for the next stage. Reduced motion collapses
+this: the hook runs to completion in a few frames (speed is set to 1
+glyph/frame under reduced motion), so the text arrives whole and the
+cursor is hidden via the reduced-motion media query.
+
+The same hook drives both the rider's intro status line and each of the
+four tracker stages (주문 접수, 조리 중, 배달 출발, 배달 완료). The
+tracker types each Korean label only when its row scrolls into view, so
+the page reads like four chapter beats, not one bulk dump.
+
+## Technique 2 — svg-line-draw: neon that lights as you scroll past
+
+The cold accent's signature is the SVG neon tube. The hero has one sign
+top-right; the street panel has two. Each is a single SVG `<path>` whose
+stroke is a tube (`fill: none; stroke: neon-bright; stroke-linecap:
+round`) wrapped in a tiny `feGaussianBlur` + `feMerge` filter that gives
+the stroke its halo. The draw is `stroke-dasharray` + `stroke-dashoffset`:
+
+```css
+.moonlit-neon__tube {
+  stroke-dasharray: 620;
+  stroke-dashoffset: 620; /* off */
+}
+.moonlit-js .moonlit-hero.is-lit .moonlit-neon__tube {
+  stroke-dashoffset: 0; /* draws in over 1400ms */
+  animation: ml-flicker 3.7s steps(1, end) 1.6s infinite;
+}
+```
+
+The `.is-lit` class is added by an IntersectionObserver in the Hero and
+StreetSequence components. Before the panel enters view, the tube sits
+dim (`stroke: steel`, dashoffset full). On scroll-in, the stroke
+brightens to `neon-bright` and the dashoffset eases to zero over 1400 ms
+— the sign switches on. Then a 3.3–4.1 s `steps(1, end)` flicker
+keyframe takes over: mostly steady, with two quick dips per cycle, the
+buzz of a tired neon tube that has been on since dinner.
+
+The two street signs stagger their draws by 180 / 460 ms so they don't
+switch on in unison — they read as two independent signs, lit by two
+different circuits. The tracker's vertical progress tube uses the same
+vocabulary: a 400-unit path whose dashoffset scrubs from 400 (no
+progress) to 0 (complete) as `--moonlit-progress` goes 0 → 1. The active
+stage advances monotonically with the reader's scroll — no timers, no
+lies — so the line is always honest about how much of the order has
+been read.
+
+## Technique 3 — marquee: headlight speed lines on the empty street
+
+The empty street panel needs motion without people. The rider is
+implied, off-frame, moving — and the headlight trail is what sells that.
+Two rows of thin cool-blue light streaks sweep across the panel as a
+pure-CSS marquee:
+
+```css
+.moonlit-street__trail-row {
+  width: 200%;          /* two panel-widths of streaks */
+  position: absolute;
+}
+.moonlit-js .moonlit-street.is-running .moonlit-street__trail-row--a {
+  animation: ml-trail 5.4s linear infinite;
+}
+@keyframes ml-trail {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+```
+
+Each streak is a thin `linear-gradient` bar (1–1.5 px tall) with a soft
+blue box-shadow halo, transparent at both ends so they read as motion
+rather than as bars. The two rows run at 5.4 s and 3.6 s (one reversed)
+so they never sync. The `.is-running` class is `once: false` on the
+IntersectionObserver, so the marquee pauses when the panel leaves view
+and resumes when it returns — no offscreen rAF. Reduced motion drops it
+to a single static frame; without JS the streaks sit at their first
+position and the panel is simply finished.
+
+The marquee technique id is reused from gradient-plaza (which uses it
+for a kinetic radio ticker). The two are honest about being different
+concrete applications of the same gallery-wide technique taxonomy — the
+tag means "looping transform-driven ticker", and both entries earn it.
+
+## The handoff — one viewport of warmth
+
+The page's argument lives in chapter 05. For five chapters the page has
+been indigo and blue and lonely; chapter 05 is allowed to be warm, and
+only chapter 05. The whole section gets a radial ember-amber bloom
+leaking from the right edge, opacity 0 → 1 over 1800 ms — dawn
+arriving through the door. The handoff image gets its own warm glow
+overlay. The title is set in Gugi, ember-bright: "따뜻하게,
+도착했습니다."
+
+The copy makes the page's argument in one sentence: what he handed over
+was not a bowl of food, it was the warmth of being reached, at the hour
+when no one reaches anyone. Every other light in the city is out —
+yours and his headlight are the only two still on. The signoff is
+bilingual, deadpan-tender: "잘 드세요. — 좋은 밤 되세요." / "EAT WELL. —
+GOOD NIGHT." Then chapter 06 brings the cold UI back: steel and blue,
+operating hours, coverage list, call-to-order. Amber was a chapter.
+
+## Motion math
+
+- **Typewriter step 55 ms.** A six-glyph Korean status line takes ~330
+  ms — quick enough to feel live, slow enough that each glyph registers.
+  The tracker's stage labels run at 60 ms (slightly slower, because
+  they are the page's chapter beats).
+- **Neon draw 1400 ms ease-night.** Long enough to watch the tube light
+  up; short enough that the second sign's 460 ms stagger reads as a
+  second sign, not a delay.
+- **Flicker 3.7 s / 3.3 s / 4.1 s.** Three ambient periods, no common
+  divisor — the dark never visibly loops. The flicker keyframe is two
+  quick dips per cycle (one ~50% at 48%, one ~50% at 79%), not a smooth
+  pulse — neon flickers, it doesn't fade.
+- **Headlight trail 5.4 s / 3.6 s.** Two rows, one reversed; ratio 3:2,
+  no shared beat.
+- **Dawn bloom 1800 ms.** The page's slowest motion, deliberately —
+  dawn does not arrive in a hurry.
+
+## Performance notes
+
+- Every animation is transform, opacity, stroke, or filter — never
+  layout. The marquee, the neon draw, the dawn bloom, the cursor blink,
+  the pulse dot, the flicker: all compositor-only.
+- The hero parallax is one passive `scroll` listener scheduling one rAF
+  that writes `transform` once. No layout reads after mount.
+- The IntersectionObservers (reveal, inView, inView-with-once-false for
+  the marquee, the tracker's active-stage observer) all disconnect on
+  unmount. No leak paths.
+- Every typing hook owns its own rAF and cancels it on cleanup; under
+  reduced motion the hook runs to completion in a handful of frames and
+  returns.
+- Images use `<picture>` with avif + webp sources and explicit
+  `width`/`height` so there is no layout shift. `loading="lazy"` on
+  every image except the hero (`loading="eager"`).
+- The total media payload is ~843 KB combined across the four AVIFs —
+  huge headroom under the 5120 KB budget.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) drives the hook behaviour, and the
+  `prefers-reduced-motion` media query overrides the rest: neon signs
+  hold their lit state without flicker, the headlight trail sits at its
+  first frame, the typing cursor is hidden, the dawn bloom sits at full
+  opacity, all `[data-reveal]` sit at their final state. The page is a
+  complete, calm, static document.
+- **No-JS:** every hidden pre-state (`[data-reveal]`, the dim neon
+  tube, the empty typewriter line) is gated behind `.moonlit-js`.
+  Without JavaScript the page is finished — every image visible, every
+  status line complete (the visually-hidden span carries the full
+  string), every neon sign lit.
+- **Typewriter semantics:** every typed line has the full string in a
+  visually-hidden span (`moonlit-sr`) for screen readers and
+  find-in-page; the visible animated span is `aria-hidden`. The status
+  block carries `role="status"` and `aria-live="polite"` so a screen
+  reader announces the rider assignment when it types.
+- **Tracker honesty:** the active stage advances monotonically with
+  scroll, not on a timer — the page never lies about the order's
+  state.
+- **Contrast:** moonlight 16.1:1 (AAA), moonlight-dim 7.8:1 (AA+),
+  neon-blue 7.5:1 (AAA on normal text — used for active state, live
+  indicator, section eyebrows), ember 8.3:1, steel 5.7:1 (AA on normal
+  text — chapter numerals, eyebrows, inactive steps). The handoff
+  title in Gugi at large size clears AA easily on the warm background.
+- **Keyboard:** native `<a>` and `<button>`-style anchors throughout;
+  custom neon-blue `:focus-visible` with a halo box-shadow. The CTA
+  buttons are reachable in source order.
+- **Touch:** no hover-only meaning. The hero parallax degrades silently
+  on touch (it is decorative, not informational); the marquee is
+  autonomous, not pointer-driven; the tracker advances on scroll, which
+  works identically on touch.
+
+## Remix ideas
+
+1. **The all-night diner.** Keep the whole grammar, swap the four
+   illustrations for four counter-stool moments at a 24-hour diner.
+   Amber moves from the handoff to the coffee — the one warm thing on
+   the page is now the cup, not the meal. The tracker becomes a
+   seat-availability ticker.
+2. **The night-shift nurse.** Same structure, different industry: rider
+   becomes a visiting nurse, the tracker becomes a med-pass schedule,
+   amber reserved for the moment a sleeping patient's vitals steady.
+   The neon signs become hospital corridor lamps.
+3. **The breakroom at 3 AM.** A service-industry companion: the rider
+   is one of several characters; the page becomes an ensemble, each
+   with their own typed status. Amber stays reserved for the one
+   moment someone sits down.

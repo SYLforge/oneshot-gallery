@@ -666,6 +666,106 @@
       }
     },
     {
+      "name": "moonlit",
+      "type": "registry:block",
+      "title": "MOONLIT — 2 AM Delivery",
+      "description": "A late-night food delivery service told as a lonely, cinematic webtoon: a rider crosses an empty neon city to bring a warm meal to someone still awake. Cold indigo nights, one warm amber note at the handoff, and a delivery tracker that reads like a webtoon chapter — 주문 접수 → 조리 중 → 배달 출발 → 배달 완료.",
+      "dependencies": [],
+      "categories": [
+        "webtoon",
+        "typewriter",
+        "svg-line-draw",
+        "marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/moonlit/components/DeliveryComplete.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/moonlit/components/DeliveryComplete.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/components/DeliveryTracker.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/moonlit/components/DeliveryTracker.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/moonlit/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/components/RiderIntro.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/moonlit/components/RiderIntro.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/components/ServiceFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/moonlit/components/ServiceFooter.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/components/StreetSequence.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/moonlit/components/StreetSequence.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/moonlit/fonts.ts"
+        },
+        {
+          "path": "registry/designs/moonlit/hooks/useInView.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/moonlit/hooks/useInView.ts"
+        },
+        {
+          "path": "registry/designs/moonlit/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/moonlit/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/moonlit/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/moonlit/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/moonlit/hooks/useTypewriter.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/moonlit/hooks/useTypewriter.ts"
+        },
+        {
+          "path": "registry/designs/moonlit/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/moonlit/page.tsx"
+        },
+        {
+          "path": "registry/designs/moonlit/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/moonlit/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/moonlit/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/moonlit/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MOONLIT — 2 AM Delivery\" installs into app/oneshot/moonlit/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 16,
+        "accent": "#4DA8FF",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-17",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "comfyui"
+      }
+    },
+    {
       "name": "ondo",
       "type": "registry:block",
       "title": "ONDO — Perfume Atelier, Seoul",
@@ -843,6 +943,116 @@
           "followUps": 0
         },
         "media": "code"
+      }
+    },
+    {
+      "name": "ppang",
+      "type": "registry:block",
+      "title": "PPANG! — Dawn Bakery",
+      "description": "A neighborhood Korean bakery that wakes at 4 AM so the first commuters smell bread — scrolled like a Naver Webtoon chapter: generated illustrations that reveal panel by panel, captions that arrive with each drawing, and a sky that climbs from indigo to morning gold as you read.",
+      "dependencies": [],
+      "categories": [
+        "webtoon",
+        "clip-path-reveal",
+        "char-split-reveal",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/ppang/components/BakerIntro.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/BakerIntro.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/BakeryFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/BakeryFooter.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/KitchenStory.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/KitchenStory.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/Narration.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/Narration.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/Picture.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/Picture.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/ProductShowcase.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/ProductShowcase.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/components/Sign.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/ppang/components/Sign.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/ppang/fonts.ts"
+        },
+        {
+          "path": "registry/designs/ppang/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ppang/hooks/usePointerParallax.ts"
+        },
+        {
+          "path": "registry/designs/ppang/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ppang/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/ppang/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ppang/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/ppang/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ppang/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/ppang/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/ppang/page.tsx"
+        },
+        {
+          "path": "registry/designs/ppang/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/ppang/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/ppang/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/ppang/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PPANG! — Dawn Bakery\" installs into app/oneshot/ppang/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 15,
+        "accent": "#e89b4c",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-17",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "comfyui"
       }
     },
     {

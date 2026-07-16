@@ -1,0 +1,1224 @@
+/* ==========================================================================
+   PPANG! — 새벽 빵집 / dawn bakery
+   webtoon · cream paper / brown ink / one warm apricot · a chapter scrolled
+   Scoped by convention to .ppang-root; classes prefixed ppang-.
+   ========================================================================== */
+
+.ppang-root {
+  /* -- palette ----------------------------------------------------------- */
+  --ppang-paper: #faf6ee;        /* the page — warm cream paper */
+  --ppang-paper-warm: #f3ead9;   /* aged paper — captions, mounts, hovers */
+  --ppang-ink: #3d2817;          /* warm brown ink — 12.0:1 on paper (AAA) */
+  --ppang-ink-soft: #6b513a;     /* ink thinned with milk — 6.6:1, secondary */
+  --ppang-apricot: #e89b4c;      /* the accent — 3.0:1 on paper: decorative;
+                                    4.9:1 as a surface carrying ink */
+  --ppang-amber-deep: #a85f1c;   /* banked apricot — 4.8:1, functional accent */
+  --ppang-dawn-indigo: #3a3357;  /* pre-dawn sky — decorative, never text */
+  --ppang-dawn-blush: #e9a9a0;   /* the pink middle of the dawn sky */
+  --ppang-crust: #b6742e;        /* baked-bread brown — decorative/large */
+  --ppang-paper-dim: rgba(250, 246, 238, 0.82); /* ≈ #d9d2c2 on indigo: 9.4:1 */
+  --ppang-hairline: rgba(61, 40, 23, 0.16);
+  --ppang-hairline-strong: rgba(61, 40, 23, 0.32);
+  --ppang-shadow: 0 18px 40px rgba(61, 40, 23, 0.12);
+
+  /* -- type ---------------------------------------------------------------- */
+  --ppang-font-kr: var(--font-kr), "Noto Serif KR", serif;
+  --ppang-font-display: var(--font-display), "Black Han Sans", var(--font-kr), sans-serif;
+  --ppang-font-en: var(--font-en), "Fraunces", serif;
+  /* Korean is load-bearing: display/kr always leads the stack so Hangul
+     never falls through to a default sans; English rides its own face. */
+  --ppang-font-stack: var(--font-kr), "Noto Serif KR", var(--font-en), serif;
+
+  /* -- motion --------------------------------------------------------------
+     Two easings on the whole page: ease-page (a turned page settling) for
+     entrances, ease-pan (gentler) for camera moves. Ambient cycles are
+     mutually prime so the idle page never visibly loops. */
+  --ppang-ease-page: cubic-bezier(0.16, 1, 0.3, 1);
+  --ppang-ease-pan: cubic-bezier(0.33, 1, 0.68, 1);
+  --ppang-reveal-ms: 950ms;
+  --ppang-panel-ms: 1100ms;
+  --ppang-glyph-ms: 850ms;
+  --ppang-caption-ms: 800ms;
+
+  /* scroll-tied dawns, written by useScrollProgress. Declared here with a
+     no-JS / pre-hydration fallback so the sky is never blank: dawn = 0 is
+     full pre-dawn indigo at the very top; dawn = 1 is morning gold. */
+  --ppang-dawn: 0;
+  --ppang-sky-y: 0px;
+  /* pointer parallax from usePointerParallax (hero diorama) */
+  --ppang-px: 0;
+  --ppang-py: 0;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--ppang-paper);
+  color: var(--ppang-ink);
+  font-family: var(--ppang-font-stack);
+  font-weight: 400;
+  font-size: clamp(16.5px, 0.85vw + 12px, 19px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean first-class: Noto Serif KR, slightly opened letter-spacing so the
+   syllables breathe. */
+.ppang-root :lang(ko) {
+  font-family: var(--ppang-font-kr);
+  letter-spacing: 0.01em;
+}
+
+/* Amber selection scoped to the root — amber-deep ground, paper text, so the
+   selected ink stays AA (4.8:1). */
+.ppang-root ::selection {
+  background: var(--ppang-amber-deep);
+  color: var(--ppang-paper);
+  text-shadow: none;
+}
+
+/* Keyboard focus: an amber ring, held one paper-thickness away. */
+.ppang-root :focus-visible {
+  outline: 2px solid var(--ppang-amber-deep);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Visually hidden, present for screen readers and find-in-page. */
+.ppang-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Paper — the page itself
+   One static feTurbulence grain pass (multiplied, ~6% ink) and a faint warm
+   vignette. Neither ever animates; the paper is a sheet, not a screen.
+   ========================================================================== */
+
+.ppang-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+
+.ppang-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 95% at 50% 38%,
+      transparent 55%,
+      rgba(232, 155, 76, 0.05) 100%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(61, 40, 23, 0.015) 0 1.5px,
+      transparent 1.5px 6px
+    );
+}
+
+/* ==========================================================================
+   Reveal primitives
+   Everything pre-reveal lives under .ppang-js: with JavaScript off the page
+   stands finished — every illustration and every line simply visible.
+   data-reveal elements fade-rise; data-reveal="panel" containers hand
+   is-visible to the clip-path wipe and the caption choreography inside.
+   ========================================================================== */
+
+.ppang-js [data-reveal]:not([data-reveal="panel"]) {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--ppang-reveal-ms) var(--ppang-ease-page),
+    transform var(--ppang-reveal-ms) var(--ppang-ease-page);
+}
+
+.ppang-js [data-reveal]:not([data-reveal="panel"]).is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Split glyphs — the hero wordmark and every narration share one cadence
+   system. Each glyph carries its own delay as --pn; only opacity/transform
+   ever animate. Pre-reveal state is gated behind .ppang-js AND the nearest
+   panel/hero being is-visible, so no narration speaks before its panel. */
+.ppang-hero__glyph,
+.ppang-narration__g {
+  display: inline-block;
+  transition:
+    opacity var(--ppang-glyph-ms) var(--ppang-ease-page) var(--pn, 0ms),
+    transform var(--ppang-glyph-ms) var(--ppang-ease-page) var(--pn, 0ms);
+}
+
+.ppang-js .ppang-hero:not(.is-visible) .ppang-hero__glyph,
+.ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-narration__g {
+  opacity: 0;
+  transform: translateY(0.5em);
+  transition: none;
+}
+
+/* English caption lines arrive half a breath after the Korean, by their own
+   --pn delay. */
+.ppang-bubble__en,
+.ppang-kitchen__en,
+.ppang-product__line-en {
+  transition:
+    opacity var(--ppang-caption-ms) var(--ppang-ease-page) var(--pn, 0ms),
+    transform var(--ppang-caption-ms) var(--ppang-ease-page) var(--pn, 0ms);
+}
+
+.ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-bubble__en,
+.ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-kitchen__en {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: none;
+}
+
+/* ==========================================================================
+   Hero — the establishing shot
+   Layers, back to front: dawn sky (fixed-ish) · far hill · bakery art ·
+   sign. The sky is scrubbed by --ppang-dawn; the scene layers drift on
+   --ppang-sky-y (scroll parallax) and --ppang-px/py (pointer parallax).
+   ========================================================================== */
+
+.ppang-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* The dawn sky. Three-stop gradient whose color stops are interpolated by
+   --ppang-dawn via three stacked layers crossfading on opacity — cheaper
+   and crisper than animating linear-gradient stops. Under reduced motion
+   (or no JS) --ppang-dawn is unset/0, and we instead show a composed fixed
+   gradient via the fallback below the media query. */
+.ppang-hero__sky {
+  position: absolute;
+  inset: -8% 0 0 0;
+  height: 116%;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--ppang-paper);
+  transform: translateY(var(--ppang-sky-y));
+}
+
+/* The three dawn phases, layered. Each is a full gradient; opacity is the
+   crossfade, driven by --ppang-dawn via clamp() math (no JS per-frame style
+   writes — the property is set once per rAF in the hook). */
+.ppang-hero__sky::before,
+.ppang-hero__sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* phase A — pre-dawn indigo, fades out as dawn climbs past 0.5 */
+.ppang-hero__sky::before {
+  background: linear-gradient(
+    180deg,
+    #2a2547 0%,
+    var(--ppang-dawn-indigo) 38%,
+    #6a5a72 72%,
+    var(--ppang-paper) 100%
+  );
+  opacity: calc(1 - clamp(var(--ppang-dawn) * 2, 0, 1));
+}
+
+/* phase B — dawn blush, peaks in the middle of the dawn. We avoid abs()
+   (newer, uneven support) and use a max()/min() pair instead — universally
+   supported, same triangular peak: opacity = 1 - |dawn - 0.5| * 2. */
+.ppang-hero__sky::after {
+  background: linear-gradient(
+    180deg,
+    #7a5e7a 0%,
+    var(--ppang-dawn-blush) 42%,
+    #f3c9a3 74%,
+    var(--ppang-paper) 100%
+  );
+  opacity: calc(
+    1 - max(var(--ppang-dawn) - 0.5, 0.5 - var(--ppang-dawn)) * 2
+  );
+}
+
+/* phase C — morning gold, the final state, painted as a sibling element so
+   the three can all coexist. opacity rises as dawn passes 0.5. */
+.ppang-hero__gold {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #c99a6a 0%,
+    #e9bf7e 38%,
+    #f6ddae 70%,
+    var(--ppang-paper) 100%
+  );
+  opacity: clamp((var(--ppang-dawn) - 0.5) * 2, 0, 1);
+}
+
+/* The diorama scene. pointer-events on so the parallax listens here, but
+   the layers inside are not interactive. */
+.ppang-hero__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Far hill silhouette — slowest drift. */
+.ppang-hero__far {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 32vh;
+  transform: translate3d(
+    calc(var(--ppang-px) * -6px),
+    calc(var(--ppang-py) * -4px + var(--ppang-sky-y) * 0.4),
+    0
+  );
+  opacity: 0.9;
+}
+
+/* The bakery art — the main depth layer. */
+.ppang-hero__art,
+.ppang-hero__art .ppang-picture__img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: auto;
+  height: 78%;
+  max-width: 96vw;
+  transform: translate3d(
+    calc(-50% + var(--ppang-px) * 10px),
+    calc(var(--ppang-py) * 6px + var(--ppang-sky-y) * 0.7),
+    0
+  );
+  filter: drop-shadow(0 22px 44px rgba(61, 40, 23, 0.22));
+}
+
+.ppang-hero__art {
+  pointer-events: none;
+}
+
+.ppang-hero__art .ppang-picture__img {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  width: 100%;
+  height: 100%;
+  transform: none;
+  filter: none;
+}
+
+/* The hanging sign — fastest drift, sways on its own 6.2s cycle. */
+.ppang-hero__sign {
+  position: absolute;
+  top: 6vh;
+  right: clamp(16px, 7vw, 96px);
+  width: clamp(120px, 16vw, 200px);
+  z-index: 3;
+  transform: translate3d(
+    calc(var(--ppang-px) * 18px),
+    calc(var(--ppang-py) * 12px + var(--ppang-sky-y) * 1.1),
+    0
+  );
+  animation: ppang-sign-sway 6.2s ease-in-out infinite;
+  transform-origin: 50% 0%;
+}
+
+@keyframes ppang-sign-sway {
+  0%,
+  100% {
+    rotate: -1.1deg;
+  }
+  50% {
+    rotate: 1.1deg;
+  }
+}
+
+.ppang-sign {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The sign's OPEN lamp breathes — 5.3s, prime to the sway's 6.2s. */
+.ppang-sign__lamp {
+  animation: ppang-lamp-breath 5.3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes ppang-lamp-breath {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+  }
+}
+
+/* The hero text block — a webtoon lower-third: a dark scrim guarantees the
+   light text is AA at every dawn phase (paper on the scrim's darkest point
+   is 11:1+). The scrim fades to transparent upward so the bakery art shows
+   through above it. This is more robust than color-mix interpolation and
+   more authentic to how webtoons caption their panels. */
+.ppang-hero__text {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding: clamp(28px, 6vw, 64px);
+  padding-bottom: clamp(72px, 12vh, 120px);
+  text-align: center;
+  color: var(--ppang-paper);
+  background: linear-gradient(
+    180deg,
+    rgba(42, 37, 71, 0) 0%,
+    rgba(42, 37, 71, 0.32) 30%,
+    rgba(42, 37, 71, 0.62) 70%,
+    rgba(42, 37, 71, 0.78) 100%
+  );
+}
+
+.ppang-hero__kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--ppang-font-kr);
+  font-size: clamp(0.82rem, 1.6vw, 1rem);
+  letter-spacing: 0.18em;
+  color: var(--ppang-paper-dim);
+  text-shadow: 0 1px 8px rgba(42, 37, 71, 0.4);
+}
+
+.ppang-hero__kicker-en {
+  display: block;
+  margin-top: 0.4em;
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  letter-spacing: 0.1em;
+  font-size: 0.86em;
+}
+
+.ppang-hero__title {
+  margin: 0;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-shadow: 0 3px 22px rgba(42, 37, 71, 0.45);
+}
+
+.ppang-hero__title-kr {
+  display: block;
+  font-family: var(--ppang-font-display);
+  font-size: clamp(4.6rem, 22vw, 16rem);
+  color: var(--ppang-paper);
+}
+
+.ppang-hero__title-en {
+  display: block;
+  margin-top: 0.12em;
+  font-family: var(--ppang-font-en);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 5.4vw, 3.6rem);
+  letter-spacing: 0.08em;
+  color: var(--ppang-apricot);
+}
+
+/* The scrim already guarantees AA at every dawn phase, so the text uses
+   fixed solid light colors over it. The KR wordmark is paper (≈ 12:1 over
+   the scrim's dark bottom); the EN subtitle is paper-dim (≈ 7:1); the
+   kicker is paper-dim. The one warm note in the hero is the hanging sign's
+   OPEN lamp and the apricot eyebrow on the *sections below* the hero, where
+   amber-deep carries the text at 4.8:1 on cream. */
+.ppang-hero__title-kr {
+  color: var(--ppang-paper);
+}
+
+.ppang-hero__title-en {
+  color: var(--ppang-paper-dim);
+}
+
+.ppang-hero__kicker {
+  color: var(--ppang-paper-dim);
+}
+
+.ppang-hero__lede {
+  margin: 1.6rem 0 0;
+  font-family: var(--ppang-font-kr);
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  font-weight: 500;
+  color: var(--ppang-paper-dim);
+  text-shadow: 0 1px 8px rgba(42, 37, 71, 0.4);
+}
+
+.ppang-hero__lede-en {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.9em;
+}
+
+.ppang-hero__hint {
+  position: relative;
+  z-index: 2;
+  margin: 0 auto clamp(18px, 4vh, 32px);
+  font-family: var(--ppang-font-kr);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  color: var(--ppang-paper-dim);
+  text-align: center;
+  animation: ppang-hint-drift 4.6s ease-in-out infinite;
+}
+
+.ppang-hero__hint :lang(en) {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  margin-left: 0.4em;
+}
+
+@keyframes ppang-hint-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(5px);
+    opacity: 0.5;
+  }
+}
+
+/* ==========================================================================
+   Section shell — eyebrow · title · English subtitle
+   ========================================================================== */
+
+.ppang-baker,
+.ppang-product,
+.ppang-kitchen {
+  padding-block: clamp(72px, 12vh, 140px);
+}
+
+.ppang-sechead {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  margin-bottom: clamp(2.4rem, 6vh, 4rem);
+}
+
+.ppang-sechead--center {
+  text-align: center;
+}
+
+.ppang-eyebrow {
+  margin: 0 0 1rem;
+  font-family: var(--ppang-font-en);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ppang-amber-deep);
+}
+
+.ppang-eyebrow :lang(ko) {
+  font-family: var(--ppang-font-kr);
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+
+.ppang-sechead__title {
+  margin: 0;
+  font-family: var(--ppang-font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.6vw, 3.6rem);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: var(--ppang-ink);
+}
+
+.ppang-sechead__title-en {
+  margin: 0.7rem 0 0;
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(0.98rem, 2vw, 1.25rem);
+  color: var(--ppang-ink-soft);
+}
+
+/* ==========================================================================
+   Panels — the illustrations, framed as webtoon cuts
+   A paper mount, a soft shadow, a panel number. Each panel reveals with a
+   direction-aware clip-path wipe. The art is never displaced, only unclipped.
+   ========================================================================== */
+
+.ppang-panel {
+  margin: 0;
+}
+
+.ppang-panel__mount {
+  position: relative;
+  background: var(--ppang-paper-warm);
+  border: 1px solid var(--ppang-hairline);
+  box-shadow: var(--ppang-shadow);
+  padding: clamp(8px, 1.2vw, 14px);
+  overflow: hidden;
+  /* the wipe lives on the mount; the art inside never moves */
+}
+
+.ppang-panel__art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ppang-panel__art .ppang-picture__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+.ppang-panel__no {
+  position: absolute;
+  top: clamp(14px, 2vw, 22px);
+  left: clamp(14px, 2vw, 22px);
+  z-index: 2;
+  font-family: var(--ppang-font-en);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--ppang-paper);
+  background: rgba(61, 40, 23, 0.82);
+  padding: 0.3em 0.7em;
+  border-radius: 2px;
+}
+
+/* The clip-path wipes — three directions so the cuts never repeat.
+   Pre-reveal (under .ppang-js, panel not is-visible) holds the inset; on
+   is-visible it wipes open over --ppang-panel-ms. */
+.ppang-js [data-reveal="panel"] .ppang-panel__mount {
+  transition: clip-path var(--ppang-panel-ms) var(--ppang-ease-page);
+}
+
+/* default: left-to-right wipe (the baker) */
+.ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+  clip-path: inset(0 100% 0 0);
+}
+
+/* product: center-outward */
+.ppang-product [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+  clip-path: inset(48% 48% 48% 48%);
+}
+
+/* kitchen: top-to-bottom */
+.ppang-kitchen [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+  clip-path: inset(0 0 100% 0);
+}
+
+.ppang-js [data-reveal="panel"].is-visible .ppang-panel__mount {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ==========================================================================
+   01 — the baker
+   A vertical portrait beside a speech bubble that points at it. The bubble's
+   text arrives glyph-by-glyph once the panel is visible.
+   ========================================================================== */
+
+.ppang-baker__stage {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+
+.ppang-baker__panel {
+  max-width: 460px;
+  justify-self: center;
+  width: 100%;
+}
+
+.ppang-bubble {
+  position: relative;
+  background: var(--ppang-paper-warm);
+  border: 1.5px solid var(--ppang-ink);
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 32px) clamp(22px, 3.4vw, 38px);
+  box-shadow: 4px 6px 0 var(--ppang-ink);
+}
+
+/* the tail pointing at the portrait (to the left) */
+.ppang-bubble__tail {
+  position: absolute;
+  left: -14px;
+  top: 44%;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 16px solid var(--ppang-ink);
+}
+
+.ppang-bubble__tail::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 3px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 13px solid var(--ppang-paper-warm);
+}
+
+.ppang-bubble__kr {
+  margin: 0;
+  font-family: var(--ppang-font-kr);
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height: 2;
+  color: var(--ppang-ink);
+}
+
+.ppang-bubble__row {
+  display: block;
+}
+
+.ppang-bubble__en {
+  margin: 1.2rem 0 0;
+  font-family: var(--ppang-font-en);
+  font-size: clamp(0.98rem, 1.8vw, 1.18rem);
+  color: var(--ppang-ink-soft);
+}
+
+.ppang-bubble__en em {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   02 — the signature
+   One centered loaf, name beside it. SFX lettering as a decorative stamp.
+   ========================================================================== */
+
+.ppang-product__stage {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(36px, 6vw, 84px);
+  align-items: center;
+}
+
+.ppang-product__panel {
+  max-width: 480px;
+  justify-self: center;
+  width: 100%;
+}
+
+.ppang-panel__mount--square {
+  aspect-ratio: 1 / 1;
+}
+
+.ppang-product__name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ppang-product__kr {
+  margin: 0;
+  font-family: var(--ppang-font-display);
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  line-height: 1;
+  color: var(--ppang-ink);
+  letter-spacing: 0.01em;
+}
+
+.ppang-product__en {
+  margin: 0 0 1rem;
+  font-family: var(--ppang-font-en);
+  font-weight: 600;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+  color: var(--ppang-amber-deep);
+  letter-spacing: 0.02em;
+}
+
+.ppang-product__notes {
+  margin: 0 0 1.4rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1.2rem;
+  border-top: 1px solid var(--ppang-hairline);
+  padding-top: 1rem;
+}
+
+.ppang-product__notes div {
+  display: contents;
+}
+
+.ppang-product__notes dt {
+  font-family: var(--ppang-font-en);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ppang-amber-deep);
+  align-self: center;
+}
+
+.ppang-product__notes dt:lang(ko) {
+  font-family: var(--ppang-font-kr);
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+.ppang-product__notes dd {
+  margin: 0;
+  font-family: var(--ppang-font-kr);
+  font-size: 0.96rem;
+  color: var(--ppang-ink);
+  align-self: center;
+}
+
+.ppang-product__notes dd:lang(en) {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  color: var(--ppang-ink-soft);
+}
+
+.ppang-product__line {
+  margin: 0;
+  font-family: var(--ppang-font-kr);
+  font-size: 1.05rem;
+  color: var(--ppang-ink);
+}
+
+.ppang-product__line-en {
+  margin: 0.3rem 0 0;
+  font-family: var(--ppang-font-en);
+  font-size: 0.92rem;
+  color: var(--ppang-ink-soft);
+}
+
+/* SFX — the 쫀득! stamp, rotated and stamped over the loaf's corner */
+.ppang-sfx {
+  position: absolute;
+  top: clamp(16px, 3vw, 30px);
+  right: clamp(16px, 3vw, 30px);
+  z-index: 2;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--ppang-font-display);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1;
+  color: var(--ppang-amber-deep);
+  background: var(--ppang-paper);
+  padding: 0.18em 0.32em;
+  border: 2px solid var(--ppang-amber-deep);
+  border-radius: 6px;
+  rotate: 8deg;
+  box-shadow: 3px 3px 0 var(--ppang-ink);
+  pointer-events: none;
+}
+
+.ppang-sfx__small {
+  font-size: 0.62em;
+}
+
+/* ==========================================================================
+   03 — the kitchen
+   A wide landscape with a caption strip over its lower third.
+   ========================================================================== */
+
+.ppang-kitchen__panel {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+.ppang-panel__mount--wide {
+  aspect-ratio: 4 / 3;
+}
+
+.ppang-kitchen__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(61, 40, 23, 0) 0%,
+    rgba(61, 40, 23, 0.62) 38%,
+    rgba(61, 40, 23, 0.86) 100%
+  );
+  color: var(--ppang-paper);
+  padding: clamp(48px, 10%, 120px) clamp(20px, 5vw, 56px) clamp(20px, 4vw, 36px);
+}
+
+.ppang-kitchen__kr {
+  margin: 0;
+  font-family: var(--ppang-font-kr);
+  font-weight: 500;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  line-height: 1.9;
+  color: var(--ppang-paper);
+}
+
+.ppang-kitchen__en {
+  margin: 0.8rem 0 0;
+  font-family: var(--ppang-font-en);
+  font-size: clamp(0.96rem, 1.8vw, 1.16rem);
+  color: var(--ppang-paper-dim);
+}
+
+.ppang-kitchen__en em {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   05 — the colophon footer
+   The hours ledger, the address, the sign-off. One reflowing block.
+   ========================================================================== */
+
+.ppang-footer {
+  background: var(--ppang-paper-warm);
+  border-top: 1px solid var(--ppang-hairline);
+  padding-block: clamp(80px, 14vh, 150px) clamp(48px, 8vh, 80px);
+}
+
+.ppang-footer__inner {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+}
+
+.ppang-footer__head {
+  max-width: 720px;
+  margin-bottom: clamp(2.4rem, 6vh, 4rem);
+}
+
+.ppang-footer__title {
+  margin: 0;
+  font-family: var(--ppang-font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  color: var(--ppang-ink);
+}
+
+.ppang-footer__title-en {
+  margin: 0.6rem 0 0;
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--ppang-ink-soft);
+}
+
+.ppang-hours {
+  margin: 0 0 clamp(3rem, 8vh, 5rem);
+  max-width: 720px;
+}
+
+.ppang-hours__row {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: clamp(16px, 3vw, 32px);
+  align-items: baseline;
+  padding-block: clamp(20px, 3vh, 32px);
+  border-top: 1px solid var(--ppang-hairline);
+}
+
+.ppang-hours__row:last-child {
+  border-bottom: 1px solid var(--ppang-hairline);
+}
+
+.ppang-hours__time {
+  font-family: var(--ppang-font-en);
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ppang-amber-deep);
+}
+
+.ppang-hours__label {
+  margin: 0;
+  font-family: var(--ppang-font-kr);
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  color: var(--ppang-ink);
+}
+
+.ppang-hours__en {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  color: var(--ppang-ink-soft);
+  font-size: 0.86em;
+}
+
+.ppang-footer__where {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: clamp(2.4rem, 6vh, 4rem);
+}
+
+.ppang-footer__brand {
+  margin: 0;
+  font-family: var(--ppang-font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--ppang-ink);
+}
+
+.ppang-footer__brand-en {
+  font-family: var(--ppang-font-en);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 0.62em;
+  letter-spacing: 0.04em;
+  color: var(--ppang-amber-deep);
+  margin-left: 0.4em;
+}
+
+.ppang-footer__addr {
+  font-style: normal;
+  font-family: var(--ppang-font-kr);
+  font-size: clamp(0.98rem, 1.8vw, 1.12rem);
+  line-height: 1.9;
+  color: var(--ppang-ink);
+}
+
+.ppang-footer__link {
+  color: var(--ppang-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ppang-hairline-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 220ms var(--ppang-ease-page);
+}
+
+.ppang-footer__link:hover,
+.ppang-footer__link:focus-visible {
+  text-decoration-color: var(--ppang-amber-deep);
+}
+
+.ppang-footer__addr-en {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  color: var(--ppang-ink-soft);
+  font-size: 0.9em;
+}
+
+.ppang-footer__sep {
+  color: var(--ppang-ink-soft);
+}
+
+.ppang-footer__signoff {
+  margin: 0 0 0.4rem;
+  max-width: 44rem;
+  font-family: var(--ppang-font-kr);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.9;
+  color: var(--ppang-ink);
+  padding-block: clamp(1.6rem, 4vh, 2.6rem);
+  border-top: 1px solid var(--ppang-hairline);
+  border-bottom: 1px solid var(--ppang-hairline);
+}
+
+.ppang-footer__signoff-en {
+  margin: 0 0 clamp(2.4rem, 6vh, 4rem);
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  font-size: clamp(0.96rem, 1.8vw, 1.12rem);
+  color: var(--ppang-ink-soft);
+}
+
+.ppang-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 3rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ppang-footer__copy {
+  margin: 0;
+  font-family: var(--ppang-font-kr);
+  font-size: 0.84rem;
+  color: var(--ppang-ink-soft);
+}
+
+.ppang-footer__copy :lang(en) {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+}
+
+.ppang-footer__top {
+  font-family: var(--ppang-font-kr);
+  font-size: 0.88rem;
+  color: var(--ppang-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ppang-hairline-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 220ms var(--ppang-ease-page);
+}
+
+.ppang-footer__top:hover,
+.ppang-footer__top:focus-visible {
+  text-decoration-color: var(--ppang-amber-deep);
+}
+
+.ppang-footer__top-en {
+  font-family: var(--ppang-font-en);
+  font-style: italic;
+  color: var(--ppang-ink-soft);
+  font-size: 0.92em;
+}
+
+/* ==========================================================================
+   Composition at other widths
+   ========================================================================== */
+
+@media (max-width: 880px) {
+  .ppang-baker__stage,
+  .ppang-product__stage {
+    grid-template-columns: 1fr;
+    gap: clamp(28px, 5vw, 44px);
+  }
+
+  .ppang-baker__panel,
+  .ppang-product__panel {
+    max-width: 560px;
+  }
+
+  /* On narrow screens the speech bubble sits under the portrait; its tail
+     points up. */
+  .ppang-bubble__tail {
+    left: 44%;
+    top: -14px;
+    border: none;
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 16px solid var(--ppang-ink);
+  }
+
+  .ppang-bubble__tail::after {
+    border: none;
+    top: 3px;
+    left: -10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 13px solid var(--ppang-paper-warm);
+  }
+
+  .ppang-hero__sign {
+    top: 4vh;
+    right: clamp(12px, 5vw, 24px);
+    width: clamp(96px, 22vw, 150px);
+  }
+}
+
+@media (max-width: 560px) {
+  .ppang-hours__row {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+
+  .ppang-footer__base {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ppang-kitchen__caption {
+    padding-top: clamp(56px, 22%, 140px);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the page as a finished chapter
+   The dawn is pinned at "arrived" (--ppang-dawn: 1 → morning gold), all
+   ambient cycles are killed, the parallax flattens, and every pre-reveal
+   state is forced to its final composition. The page reads as a printed
+   chapter, not a paused animation.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .ppang-root {
+    --ppang-dawn: 1;
+    --ppang-sky-y: 0px;
+    --ppang-px: 0;
+    --ppang-py: 0;
+  }
+
+  .ppang-hero__sign,
+  .ppang-sign__lamp,
+  .ppang-hero__hint {
+    animation: none;
+  }
+
+  .ppang-js [data-reveal]:not([data-reveal="panel"]),
+  .ppang-hero__glyph,
+  .ppang-narration__g,
+  .ppang-bubble__en,
+  .ppang-kitchen__en,
+  .ppang-product__line-en,
+  .ppang-js [data-reveal="panel"] .ppang-panel__mount,
+  .ppang-js .ppang-hero:not(.is-visible) .ppang-hero__glyph,
+  .ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-narration__g,
+  .ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-bubble__en,
+  .ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-kitchen__en,
+  .ppang-js [data-reveal="panel"]:not(.is-visible) .ppang-panel__mount {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+
+  .ppang-footer__link,
+  .ppang-footer__top {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Print — a quiet poster of the chapter
+   ========================================================================== */
+
+@media print {
+  .ppang-grain,
+  .ppang-root::before {
+    display: none;
+  }
+
+  .ppang-hero__sign,
+  .ppang-sign__lamp,
+  .ppang-hero__hint {
+    animation: none;
+  }
+}

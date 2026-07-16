@@ -1,0 +1,1402 @@
+/* ==========================================================================
+   MOONLIT — late-night food delivery as a lonely cinematic webtoon.
+   webtoon aesthetic, dark theme. Cool indigo night + one warm amber note
+   at the handoff. Three techniques on screen: typewriter delivery status,
+   svg-line-draw neon, and a marquee headlight trail.
+   Scoped by convention to .moonlit-root; classes prefixed moonlit-.
+   ========================================================================== */
+
+.moonlit-root {
+  /* -- palette ---------------------------------------------------------- */
+  --ml-night-deep: #0b1020; /* page ground — fully asleep city */
+  --ml-night-mid: #131a2e; /* secondary surface — panels, cards */
+  --ml-night-high: #1a2240; /* hover surface, raised card edges */
+  --ml-moonlight: #e8edf5; /* primary text — window with one lamp (13.6:1) */
+  --ml-moonlight-dim: #9aa6c2; /* secondary text — Korean glosses, captions (5.6:1) */
+  --ml-neon: #4da8ff; /* cold accent — neon signs, headlight glow, focus, active (4.7:1) */
+  --ml-neon-bright: #7cc4ff; /* neon at full draw — lit stroke (large/non-text only) */
+  --ml-ember: #e89b4c; /* the one warm note — the meal, the handoff, dawn (6.4:1) */
+  --ml-ember-bright: #ffba6a; /* dawn at full bloom — large/non-text only */
+  --ml-steel: #828cb0; /* metadata — chapter numerals, eyebrows, inactive steps (5.7:1, AA on small text) */
+  --ml-hairline: #27304a; /* decorative rules — moonlight @ 12% over night */
+  --ml-line-soft: rgba(77, 168, 255, 0.18); /* neon tube halo at rest */
+
+  /* -- type -------------------------------------------------------------- */
+  --ml-font-display: var(--font-gugi), var(--font-noto-sans-kr),
+    var(--font-space-grotesk), system-ui, sans-serif;
+  /* Hangul falls through the Latin face into Noto Sans KR, no markup needed */
+  --ml-font-body: var(--font-space-grotesk), var(--font-noto-sans-kr),
+    system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ml-font-mono: var(--font-space-mono), var(--font-noto-sans-kr),
+    "Courier New", monospace;
+  --ml-font-ko: var(--font-noto-sans-kr), "Noto Sans KR", system-ui, sans-serif;
+  --ml-font-splash: var(--font-gugi), "Gugi", var(--font-noto-sans-kr), cursive;
+
+  /* -- motion ------------------------------------------------------------ */
+  --ml-ease: cubic-bezier(0.22, 1, 0.36, 1); /* night — settle as the eye adjusts */
+  --ml-ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* -- geometry ---------------------------------------------------------- */
+  --ml-frame-w: min(1180px, 92vw); /* the master column width */
+  --ml-gutter: clamp(20px, 5vw, 64px);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background:
+    radial-gradient(140% 90% at 50% 0%, #161e3a 0%, transparent 55%),
+    linear-gradient(180deg, var(--ml-night-deep) 0%, var(--ml-night-mid) 100%);
+  color: var(--ml-moonlight);
+  font-family: var(--ml-font-body);
+  font-size: clamp(16px, 0.9vw + 11px, 18px);
+  line-height: 1.65;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: its own sans, natural breaks, its own rhythm. */
+.moonlit-root :lang(ko) {
+  font-family: var(--ml-font-ko);
+  word-break: keep-all;
+  letter-spacing: 0;
+}
+
+/* Cool neon-blue selection scoped to the entry root */
+.moonlit-root ::selection {
+  background: var(--ml-neon);
+  color: var(--ml-night-deep);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a haloed neon-blue rectangle */
+.moonlit-root :focus-visible {
+  outline: 2px solid var(--ml-neon);
+  outline-offset: 3px;
+  border-radius: 1px;
+  box-shadow: 0 0 0 4px rgba(77, 168, 255, 0.18);
+}
+
+.moonlit-mono {
+  font-family: var(--ml-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.moonlit-link {
+  color: var(--ml-moonlight);
+  text-decoration: underline;
+  text-decoration-color: var(--ml-line-soft);
+  text-underline-offset: 4px;
+}
+.moonlit-link:hover {
+  text-decoration-color: var(--ml-neon);
+}
+
+/* Visually hidden, still read aloud */
+.moonlit-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Shared section furniture
+   ========================================================================== */
+
+.moonlit-eyebrow {
+  margin: 0 0 0.7rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.28em;
+  color: var(--ml-steel);
+  text-transform: uppercase;
+}
+.moonlit-eyebrow--warm {
+  color: var(--ml-ember);
+}
+
+.moonlit-sechead {
+  margin: 0 0 clamp(1.4rem, 3vw, 2.2rem);
+  font-family: var(--ml-font-body);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+  line-height: 1.18;
+  letter-spacing: -0.005em;
+  color: var(--ml-moonlight);
+}
+.moonlit-sechead__ko {
+  display: block;
+  margin-top: 0.2em;
+  font-size: 0.52em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--ml-moonlight-dim);
+}
+
+/* ==========================================================================
+   Chapter 01 — Hero
+   ========================================================================== */
+
+.moonlit-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The sky gradient holds the top of the hero — moon climbs from here */
+.moonlit-hero__sky {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 40%;
+  background: radial-gradient(
+      100% 100% at 78% 0%,
+      rgba(77, 168, 255, 0.16) 0%,
+      rgba(77, 168, 255, 0.04) 32%,
+      transparent 65%
+    ),
+    linear-gradient(180deg, #0a0f1f 0%, rgba(11, 16, 32, 0) 100%);
+  z-index: 0;
+}
+
+/* The hero plate: the rider image, framed by negative space, lifted. */
+.moonlit-hero__plate {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  transform: scale(1.06);
+  transform-origin: 65% 60%;
+  will-change: transform;
+}
+.moonlit-hero__img {
+  display: block;
+  width: min(58vw, 720px);
+  height: auto;
+  object-fit: cover;
+  filter: saturate(0.78) contrast(1.04);
+  /* Frame the portrait: let the page gradient show through above */
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 16%,
+    #000 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 16%,
+    #000 88%,
+    transparent 100%
+  );
+}
+
+/* A soft scrim sits under the text so the cold UI reads over the image */
+.moonlit-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(11, 16, 32, 0) 0%, rgba(11, 16, 32, 0.82) 70%, var(--ml-night-deep) 100%),
+    linear-gradient(90deg, rgba(11, 16, 32, 0.92) 0%, rgba(11, 16, 32, 0.55) 38%, transparent 65%);
+  z-index: 2;
+}
+
+/* The moon — a single CSS disc high on the right edge of the frame */
+.moonlit-hero__moon {
+  position: absolute;
+  top: 12%;
+  right: 8%;
+  width: clamp(72px, 9vw, 128px);
+  height: clamp(72px, 9vw, 128px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 38%,
+    #f1f4fb 0%,
+    #d6dfee 38%,
+    #aab8d4 72%,
+    rgba(170, 184, 212, 0) 100%
+  );
+  box-shadow:
+    0 0 60px rgba(232, 237, 245, 0.18),
+    0 0 140px rgba(77, 168, 255, 0.1);
+  z-index: 2;
+  opacity: 0.92;
+}
+
+/* The neon sign — a CSS-driven SVG tube. Until JS lights it (.is-lit) it
+   sits dim; under reduced motion it is bright but does not flicker. */
+.moonlit-neon {
+  position: absolute;
+  top: clamp(20px, 4vw, 44px);
+  right: clamp(20px, 5vw, 64px);
+  width: clamp(120px, 12vw, 168px);
+  height: auto;
+  z-index: 4;
+  opacity: 0.92;
+}
+.moonlit-neon__tube {
+  fill: none;
+  stroke: var(--ml-steel);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 620;
+  stroke-dashoffset: 620;
+  filter: none;
+  transition: stroke 220ms linear;
+}
+/* Without JS, the neon is lit from the first paint. JS adds .moonlit-js so
+   we can dim it briefly and re-draw on scroll-in. */
+.moonlit-js .moonlit-neon__tube {
+  stroke: var(--ml-steel);
+  stroke-dashoffset: 620;
+  transition: stroke-dashoffset 1400ms var(--ml-ease) 200ms,
+    stroke 220ms linear;
+}
+.moonlit-js .moonlit-hero.is-lit .moonlit-neon__tube {
+  stroke: var(--ml-neon-bright);
+  stroke-dashoffset: 0;
+  animation: ml-flicker 3.7s steps(1, end) 1.6s infinite;
+}
+
+.moonlit-hero__inner {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+  padding: 0 var(--ml-gutter) clamp(72px, 12svh, 140px);
+}
+
+.moonlit-hero__kicker {
+  margin: 0 0 clamp(1rem, 2.5svh, 1.6rem);
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  color: var(--ml-moonlight);
+}
+.moonlit-hero__kicker-en {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-size: 0.78rem;
+  letter-spacing: 0.26em;
+  color: var(--ml-neon);
+}
+
+.moonlit-hero__title {
+  margin: 0;
+  font-family: var(--ml-font-body);
+  font-weight: 700;
+  font-size: clamp(3.2rem, 13vw, 8rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  color: var(--ml-moonlight);
+}
+.moonlit-hero__title-en {
+  display: block;
+  text-shadow: 0 0 26px rgba(77, 168, 255, 0.22);
+}
+.moonlit-hero__title-ko {
+  display: block;
+  margin-top: 0.1em;
+  font-family: var(--ml-font-splash);
+  font-weight: 400;
+  font-size: 0.42em;
+  letter-spacing: 0.02em;
+  color: var(--ml-neon-bright);
+  text-shadow: 0 0 18px rgba(124, 196, 255, 0.4);
+}
+
+.moonlit-hero__lede {
+  max-width: 30em;
+  margin: clamp(1rem, 2.4svh, 1.6rem) 0 0.4rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--ml-moonlight);
+}
+.moonlit-hero__lede-en {
+  max-width: 34em;
+  margin: 0 0 clamp(1.4rem, 3svh, 2.2rem);
+  font-size: 0.94rem;
+  color: var(--ml-moonlight-dim);
+}
+
+.moonlit-hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0;
+  padding: 0.5em 0.9em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--ml-moonlight-dim);
+  border: 1px solid var(--ml-hairline);
+  border-radius: 2px;
+  background: rgba(19, 26, 46, 0.55);
+}
+.moonlit-hero__statusdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ml-neon);
+  box-shadow: 0 0 8px rgba(77, 168, 255, 0.8);
+}
+.moonlit-js .moonlit-hero__statusdot {
+  animation: ml-pulse 2s ease-in-out infinite;
+}
+
+.moonlit-hero__hint {
+  position: absolute;
+  bottom: clamp(18px, 4svh, 32px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  color: var(--ml-steel);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Chapter 02 — Rider intro
+   ========================================================================== */
+
+.moonlit-rider {
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+  padding: clamp(80px, 12svh, 150px) var(--ml-gutter)
+    clamp(60px, 10svh, 120px);
+}
+.moonlit-rider__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(1.4rem, 4vw, 3.4rem);
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .moonlit-rider__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.moonlit-panel {
+  margin: 0;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--ml-night-mid);
+  border: 1px solid var(--ml-hairline);
+}
+.moonlit-panel__art {
+  position: relative;
+  aspect-ratio: 832 / 1216;
+  overflow: hidden;
+}
+.moonlit-panel__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.85) contrast(1.02) brightness(0.92);
+}
+.moonlit-panel__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 30%, transparent 40%, rgba(11, 16, 32, 0.55) 100%),
+    linear-gradient(180deg, rgba(11, 16, 32, 0) 60%, rgba(11, 16, 32, 0.7) 100%);
+}
+.moonlit-panel__chip {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  margin: 0;
+  padding: 0.32em 0.6em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--ml-moonlight);
+  background: rgba(11, 16, 32, 0.78);
+  border: 1px solid var(--ml-hairline);
+}
+.moonlit-panel__cap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  border-top: 1px solid var(--ml-hairline);
+  background: var(--ml-night-mid);
+}
+.moonlit-panel__cap :lang(ko) {
+  color: var(--ml-moonlight);
+  font-weight: 500;
+}
+.moonlit-panel__cap span:not(:lang(ko)) {
+  color: var(--ml-moonlight-dim);
+  font-size: 0.92em;
+}
+
+.moonlit-rider__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2svh, 1.4rem);
+}
+
+/* The status block — a delivery-tracker card with timestamp + typed line */
+.moonlit-status {
+  border: 1px solid var(--ml-hairline);
+  background: linear-gradient(
+    180deg,
+    rgba(26, 34, 64, 0.55) 0%,
+    rgba(19, 26, 46, 0.55) 100%
+  );
+  padding: clamp(1rem, 2.4svh, 1.4rem) clamp(1rem, 2.4svh, 1.4rem);
+}
+.moonlit-status__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--ml-steel);
+}
+.moonlit-status__time {
+  color: var(--ml-neon);
+  font-size: 0.9rem;
+}
+.moonlit-status__state {
+  color: var(--ml-moonlight);
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+.moonlit-status__line {
+  margin: 0;
+  font-size: clamp(1rem, 1.7vw, 1.18rem);
+  line-height: 1.45;
+  color: var(--ml-moonlight);
+  font-weight: 500;
+  min-height: 1.45em;
+}
+.moonlit-status__cursor {
+  display: inline-block;
+  margin-left: 0.05em;
+  color: var(--ml-neon);
+  transform: translateY(-0.05em);
+  opacity: 0;
+}
+.moonlit-js .moonlit-status__cursor {
+  animation: ml-blink 540ms steps(1, end) infinite;
+}
+.moonlit-js .moonlit-status__cursor.is-typing {
+  opacity: 1;
+  animation: ml-blink 540ms steps(1, end) infinite;
+}
+
+.moonlit-rider__prose {
+  margin: 0;
+  font-size: clamp(0.98rem, 1.5vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--ml-moonlight);
+}
+.moonlit-rider__prose-en {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ml-moonlight-dim);
+  font-style: italic;
+}
+
+.moonlit-rider__facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--ml-hairline);
+}
+.moonlit-rider__facts li {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 0.2rem 1rem;
+  padding: 0.85rem 0.2rem;
+  border-bottom: 1px solid var(--ml-hairline);
+  align-items: baseline;
+}
+.moonlit-rider__factk {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--ml-steel);
+  text-transform: uppercase;
+}
+.moonlit-rider__factv {
+  font-size: 1rem;
+  color: var(--ml-neon);
+  letter-spacing: 0.05em;
+}
+.moonlit-rider__factg {
+  grid-column: 2;
+  font-size: 0.85rem;
+  color: var(--ml-moonlight-dim);
+  font-style: italic;
+}
+@media (max-width: 540px) {
+  .moonlit-rider__facts li {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+
+/* ==========================================================================
+   Chapter 03 — Live tracker
+   ========================================================================== */
+
+.moonlit-track {
+  max-width: min(900px, 92vw);
+  margin: 0 auto;
+  padding: clamp(60px, 10svh, 120px) var(--ml-gutter)
+    clamp(60px, 10svh, 120px);
+}
+.moonlit-track__intro {
+  margin: 0 0 clamp(2rem, 5svh, 3rem);
+  max-width: 36em;
+  font-size: 0.96rem;
+  color: var(--ml-moonlight-dim);
+}
+.moonlit-track__intro .moonlit-mono {
+  color: var(--ml-neon);
+}
+
+.moonlit-track__wrap {
+  position: relative;
+  padding-left: 8rem;
+}
+@media (max-width: 600px) {
+  .moonlit-track__wrap {
+    padding-left: 5.4rem;
+  }
+}
+
+/* The SVG progress tube — drawn left-to-right vertically as the active
+   stage advances. */
+.moonlit-track__line {
+  position: absolute;
+  left: 7.2rem;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+@media (max-width: 600px) {
+  .moonlit-track__line {
+    left: 4.6rem;
+  }
+}
+.moonlit-track__line-bg {
+  stroke: var(--ml-hairline);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.moonlit-track__line-fg {
+  stroke: var(--ml-neon-bright);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  /* Path length 400 (viewBox), drawn by dashoffset = 400 × (1 - p) */
+  stroke-dasharray: 400;
+  stroke-dashoffset: calc(400 - 400 * var(--moonlit-progress, 0));
+  filter: url(#moonlit-track-glow);
+  transition: stroke-dashoffset 800ms var(--ml-ease);
+  vector-effect: non-scaling-stroke;
+}
+
+.moonlit-track__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1.6rem, 3svh, 2.4rem);
+}
+
+.moonlit-track__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 0 1.2rem;
+  align-items: start;
+  /* visual node sits on the tube axis; align to the leftmost time cell */
+}
+@media (max-width: 600px) {
+  .moonlit-track__row {
+    grid-template-columns: 3.6rem 1fr;
+    gap: 0 0.8rem;
+  }
+}
+
+.moonlit-track__time {
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--ml-steel);
+  padding-top: 0.18rem;
+}
+.moonlit-track__row.is-active .moonlit-track__time {
+  color: var(--ml-neon);
+}
+
+/* The node that sits on the progress line, drawn over the SVG */
+.moonlit-track__node {
+  position: absolute;
+  left: -0.6rem;
+  top: 0.3rem;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  /* Pull the node onto the tube axis */
+  transform: translateX(-0.4rem);
+}
+.moonlit-track__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ml-night-mid);
+  border: 2px solid var(--ml-steel);
+  transition: background 220ms linear, border-color 220ms linear,
+    box-shadow 220ms linear;
+}
+.moonlit-track__row.is-active .moonlit-track__dot {
+  background: var(--ml-neon);
+  border-color: var(--ml-neon-bright);
+  box-shadow: 0 0 0 3px rgba(77, 168, 255, 0.18),
+    0 0 12px rgba(77, 168, 255, 0.7);
+}
+
+.moonlit-track__body {
+  grid-column: 2;
+  padding-bottom: 0.4rem;
+}
+.moonlit-track__label {
+  margin: 0 0 0.4rem;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.2em 0.7em;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  font-weight: 700;
+  color: var(--ml-moonlight);
+  letter-spacing: -0.005em;
+}
+.moonlit-track__label :lang(ko) {
+  font-family: var(--ml-font-ko);
+  font-weight: 700;
+}
+.moonlit-track__row:not(.is-active) .moonlit-track__label {
+  color: var(--ml-moonlight-dim);
+}
+.moonlit-track__en {
+  font-size: 0.66em;
+  letter-spacing: 0.18em;
+  color: var(--ml-steel);
+  font-weight: 400;
+}
+.moonlit-track__row.is-active .moonlit-track__en {
+  color: var(--ml-neon);
+}
+.moonlit-track__note {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ml-moonlight);
+}
+.moonlit-track__row:not(.is-active) .moonlit-track__note {
+  color: var(--ml-moonlight-dim);
+}
+.moonlit-track__note-en {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  color: var(--ml-moonlight-dim);
+  font-style: italic;
+}
+
+/* The cursor on the typed label rides the same blink as the rider status */
+.moonlit-track__label .moonlit-status__cursor {
+  font-size: 0.82em;
+}
+
+/* ==========================================================================
+   Chapter 04 — The empty street (headlight trail marquee + neon signs)
+   ========================================================================== */
+
+.moonlit-street {
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+  padding: clamp(60px, 10svh, 120px) var(--ml-gutter)
+    clamp(60px, 10svh, 120px);
+}
+.moonlit-street__panel {
+  position: relative;
+  margin-top: clamp(1.4rem, 3svh, 2.2rem);
+  aspect-ratio: 1024 / 768;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid var(--ml-hairline);
+  background: var(--ml-night-deep);
+}
+.moonlit-street__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8) brightness(0.78) contrast(1.05);
+}
+.moonlit-street__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 50%, transparent 35%, rgba(11, 16, 32, 0.75) 100%),
+    linear-gradient(180deg, rgba(11, 16, 32, 0.2) 0%, transparent 30%, transparent 60%, rgba(11, 16, 32, 0.7) 100%);
+}
+
+/* The two neon signs hang over the street. They sit dim until .is-lit,
+   then they brighten + draw on. */
+.moonlit-street__sign {
+  position: absolute;
+  pointer-events: none;
+  filter: none;
+  opacity: 0.9;
+}
+.moonlit-street__sign--a {
+  top: 14%;
+  left: 8%;
+  width: clamp(110px, 14vw, 200px);
+  transform: rotate(-2deg);
+}
+.moonlit-street__sign--b {
+  top: 22%;
+  right: 9%;
+  width: clamp(95px, 12vw, 170px);
+  transform: rotate(1.5deg);
+}
+.moonlit-street__tube {
+  fill: none;
+  stroke: var(--ml-steel);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 540;
+  stroke-dashoffset: 0;
+  transition: stroke 220ms linear;
+}
+.moonlit-js .moonlit-street__tube {
+  stroke-dashoffset: 540;
+  transition: stroke-dashoffset 1400ms var(--ml-ease), stroke 220ms linear;
+}
+.moonlit-js .moonlit-street.is-lit .moonlit-street__sign--a .moonlit-street__tube {
+  stroke: var(--ml-neon-bright);
+  stroke-dashoffset: 0;
+  transition-delay: 200ms;
+  animation: ml-flicker 4.1s steps(1, end) 1.6s infinite;
+}
+.moonlit-js .moonlit-street.is-lit .moonlit-street__sign--b .moonlit-street__tube {
+  stroke: var(--ml-neon-bright);
+  stroke-dashoffset: 0;
+  transition-delay: 460ms;
+  animation: ml-flicker 3.3s steps(1, end) 2.1s infinite;
+}
+
+/* The headlight trail — a marquee of light streaks that sweep across the
+   panel. Two rows at different speeds; each streak is offset via --moonlit-s. */
+.moonlit-street__trail {
+  position: absolute;
+  inset: 40% 0 0 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* Clip the streaks to the panel */
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 80%, transparent 100%);
+}
+.moonlit-street__trail-row {
+  display: flex;
+  gap: 14%;
+  width: 200%;
+  height: 0;
+  position: absolute;
+  left: 0;
+}
+.moonlit-street__trail-row--a {
+  top: 8%;
+}
+.moonlit-street__trail-row--b {
+  top: 30%;
+}
+.moonlit-street__streak {
+  flex: 0 0 28%;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    rgba(124, 196, 255, 0) 0%,
+    rgba(124, 196, 255, 0.55) 50%,
+    rgba(124, 196, 255, 0) 100%
+  );
+  box-shadow: 0 0 8px rgba(77, 168, 255, 0.5);
+  opacity: 0.8;
+}
+.moonlit-street__streak--thin {
+  height: 1px;
+  opacity: 0.5;
+  flex: 0 0 18%;
+}
+
+/* Under .moonlit-js + .is-running, the rows translate X to make speed lines.
+   Pause when the panel is not running (offscreen / reduced motion). */
+.moonlit-js .moonlit-street.is-running .moonlit-street__trail-row--a {
+  animation: ml-trail 5.4s linear infinite;
+}
+.moonlit-js .moonlit-street.is-running .moonlit-street__trail-row--b {
+  animation: ml-trail 3.6s linear infinite reverse;
+}
+
+/* Overlaid UI on the street panel */
+.moonlit-street__label,
+.moonlit-street__mono,
+.moonlit-street__mono-en {
+  position: absolute;
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  z-index: 3;
+}
+.moonlit-street__label {
+  top: clamp(14px, 3vw, 24px);
+  left: clamp(14px, 3vw, 26px);
+  color: var(--ml-moonlight);
+  background: rgba(11, 16, 32, 0.62);
+  padding: 0.4em 0.7em;
+  border: 1px solid var(--ml-hairline);
+}
+.moonlit-street__label-no {
+  color: var(--ml-neon);
+  margin-right: 0.4em;
+}
+.moonlit-street__mono {
+  bottom: clamp(38px, 7vw, 64px);
+  left: clamp(14px, 3vw, 26px);
+  color: var(--ml-moonlight);
+  font-size: clamp(0.92rem, 1.6vw, 1.15rem);
+  letter-spacing: 0;
+  font-weight: 500;
+  font-family: var(--ml-font-ko);
+  text-shadow: 0 1px 12px rgba(11, 16, 32, 0.9);
+}
+.moonlit-street__mono-en {
+  bottom: clamp(18px, 4vw, 36px);
+  left: clamp(14px, 3vw, 26px);
+  color: var(--ml-moonlight-dim);
+  font-family: var(--ml-font-mono);
+  letter-spacing: 0.08em;
+}
+
+.moonlit-street__caption {
+  max-width: 38em;
+  margin: clamp(1.2rem, 3svh, 1.8rem) 0 0;
+  font-size: 0.95rem;
+  color: var(--ml-moonlight-dim);
+}
+.moonlit-street__caption :lang(ko) {
+  display: block;
+  margin-top: 0.4em;
+  color: var(--ml-moonlight);
+}
+
+/* ==========================================================================
+   Chapter 05 — The handoff (the warm climax)
+   ========================================================================== */
+
+.moonlit-handoff {
+  position: relative;
+  padding: clamp(80px, 14svh, 180px) var(--ml-gutter)
+    clamp(80px, 14svh, 180px);
+  overflow: hidden;
+  isolation: isolate;
+  /* The whole section is the one warm moment — the page ground warms here */
+  background:
+    radial-gradient(110% 70% at 100% 40%, rgba(232, 155, 76, 0.18) 0%, transparent 55%),
+    linear-gradient(180deg, var(--ml-night-deep) 0%, #0d1326 60%, var(--ml-night-deep) 100%);
+}
+/* The dawn-bloom layer — leaks in from the right edge, blooms on .is-lit */
+.moonlit-handoff__dawn {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    60% 80% at 95% 35%,
+    rgba(255, 186, 106, 0.32) 0%,
+    rgba(232, 155, 76, 0.12) 30%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 1800ms var(--ml-ease-out-soft);
+  pointer-events: none;
+}
+.moonlit-js .moonlit-handoff.is-lit .moonlit-handoff__dawn {
+  opacity: 1;
+}
+.moonlit-handoff__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+}
+
+.moonlit-handoff__title {
+  margin: 0 0 clamp(1.4rem, 3svh, 2rem);
+  font-family: var(--ml-font-splash);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  color: var(--ml-ember-bright);
+  text-shadow: 0 0 32px rgba(232, 155, 76, 0.4);
+}
+.moonlit-handoff__title :lang(ko) {
+  display: block;
+}
+.moonlit-handoff__title-en {
+  display: block;
+  margin-top: 0.18em;
+  font-family: var(--ml-font-body);
+  font-weight: 500;
+  font-size: 0.46em;
+  letter-spacing: -0.005em;
+  color: var(--ml-moonlight);
+  text-shadow: none;
+}
+
+.moonlit-handoff__panel {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: clamp(1.4rem, 4vw, 3rem);
+  align-items: center;
+}
+@media (max-width: 820px) {
+  .moonlit-handoff__panel {
+    grid-template-columns: 1fr;
+  }
+}
+.moonlit-handoff__art {
+  position: relative;
+  aspect-ratio: 832 / 1216;
+  max-height: 78svh;
+  overflow: hidden;
+  border-radius: 2px;
+  border: 1px solid rgba(232, 155, 76, 0.22);
+  box-shadow: 0 0 0 1px rgba(11, 16, 32, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.moonlit-handoff__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.02) contrast(1.03);
+}
+.moonlit-handoff__warmglow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    70% 60% at 90% 30%,
+    rgba(255, 186, 106, 0.32) 0%,
+    rgba(232, 155, 76, 0.08) 35%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 1800ms var(--ml-ease-out-soft) 200ms;
+}
+.moonlit-js .moonlit-handoff.is-lit .moonlit-handoff__warmglow {
+  opacity: 1;
+}
+
+.moonlit-handoff__cap {
+  grid-column: 1 / -1;
+  margin: clamp(1rem, 2svh, 1.4rem) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  font-size: 0.9rem;
+  color: var(--ml-moonlight-dim);
+}
+.moonlit-handoff__cap :lang(ko) {
+  color: var(--ml-ember);
+  font-weight: 500;
+}
+
+.moonlit-handoff__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.moonlit-handoff__line {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--ml-moonlight);
+}
+.moonlit-handoff__line-en {
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: var(--ml-moonlight-dim);
+  font-style: italic;
+}
+.moonlit-handoff__signoff {
+  margin: 0.6rem 0 0;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  color: var(--ml-ember);
+}
+.moonlit-handoff__signoff-en {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.24em;
+  color: var(--ml-steel);
+}
+
+/* ==========================================================================
+   Chapter 06 — Service panel + footer
+   ========================================================================== */
+
+.moonlit-service {
+  padding: clamp(80px, 12svh, 150px) var(--ml-gutter)
+    clamp(40px, 6svh, 80px);
+  border-top: 1px solid var(--ml-hairline);
+}
+.moonlit-service__inner {
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+}
+.moonlit-service__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.8rem);
+  margin: 0 0 clamp(2rem, 4svh, 3rem);
+}
+@media (max-width: 760px) {
+  .moonlit-service__grid {
+    grid-template-columns: 1fr;
+  }
+}
+.moonlit-service__cell {
+  padding: clamp(1.2rem, 2.4svh, 1.6rem);
+  background: linear-gradient(
+    180deg,
+    rgba(26, 34, 64, 0.42) 0%,
+    rgba(19, 26, 46, 0.42) 100%
+  );
+  border: 1px solid var(--ml-hairline);
+  border-radius: 2px;
+}
+.moonlit-service__cellk {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--ml-steel);
+  text-transform: uppercase;
+}
+.moonlit-service__cellv {
+  margin: 0 0 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+}
+.moonlit-service__cellv :lang(ko) {
+  font-size: clamp(1.1rem, 1.9vw, 1.35rem);
+  font-weight: 700;
+  color: var(--ml-moonlight);
+}
+.moonlit-service__cellen {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--ml-neon);
+}
+.moonlit-service__celln {
+  margin: 0 0 0.3rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ml-moonlight);
+}
+.moonlit-service__celln-en {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ml-moonlight-dim);
+  font-style: italic;
+}
+
+.moonlit-service__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+.moonlit-service__btn {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 1em 1.5em;
+  background: var(--ml-neon);
+  color: var(--ml-night-deep);
+  text-decoration: none;
+  border-radius: 2px;
+  border: 1px solid var(--ml-neon);
+  transition: background 200ms linear, color 200ms linear, border-color 200ms linear;
+}
+.moonlit-service__btn:hover {
+  background: var(--ml-neon-bright);
+  border-color: var(--ml-neon-bright);
+}
+.moonlit-service__btn--ghost {
+  background: transparent;
+  color: var(--ml-moonlight);
+  border: 1px solid var(--ml-hairline);
+}
+.moonlit-service__btn--ghost:hover {
+  background: rgba(77, 168, 255, 0.08);
+  border-color: var(--ml-neon);
+  color: var(--ml-moonlight);
+}
+.moonlit-service__btnline {
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+.moonlit-service__btnline--ko {
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* Footer */
+.moonlit-footer {
+  padding: clamp(50px, 8svh, 90px) var(--ml-gutter)
+    clamp(50px, 8svh, 90px);
+  border-top: 1px solid var(--ml-hairline);
+  background: var(--ml-night-deep);
+}
+.moonlit-footer__grid {
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 2.4rem;
+  align-items: baseline;
+  padding-bottom: clamp(1.4rem, 3svh, 2rem);
+  border-bottom: 1px solid var(--ml-hairline);
+}
+.moonlit-footer__brand :lang(ko) {
+  font-family: var(--ml-font-splash);
+  font-size: 1.4rem;
+  color: var(--ml-neon-bright);
+}
+.moonlit-footer__branden {
+  margin-left: 0.6em;
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  color: var(--ml-steel);
+}
+.moonlit-footer__meta {
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--ml-moonlight-dim);
+}
+.moonlit-footer__koan {
+  max-width: var(--ml-frame-w);
+  margin: clamp(1.6rem, 3svh, 2.4rem) auto 0.2rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  font-weight: 500;
+  color: var(--ml-moonlight);
+  line-height: 1.35;
+}
+.moonlit-footer__koan-en {
+  max-width: var(--ml-frame-w);
+  margin: 0 auto;
+  font-size: 0.96rem;
+  color: var(--ml-moonlight-dim);
+  font-style: italic;
+}
+.moonlit-footer__base {
+  max-width: var(--ml-frame-w);
+  margin: clamp(1.6rem, 3svh, 2.4rem) auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2rem;
+  align-items: center;
+  padding-top: clamp(1.2rem, 2svh, 1.6rem);
+  border-top: 1px solid var(--ml-hairline);
+}
+.moonlit-footer__copy {
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: var(--ml-steel);
+}
+.moonlit-footer__top {
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  color: var(--ml-neon);
+  text-decoration: none;
+}
+.moonlit-footer__top:hover {
+  color: var(--ml-neon-bright);
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.moonlit-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 600ms var(--ml-ease),
+    transform 600ms var(--ml-ease);
+  will-change: opacity, transform;
+}
+.moonlit-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / stroke / filter only
+   ========================================================================== */
+
+/* Neon flicker — a tired tube, mostly steady, two quick dips per cycle */
+@keyframes ml-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  47% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.62;
+  }
+  49% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  79% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 1;
+  }
+}
+
+/* Status dot — the page's only "live" indicator */
+@keyframes ml-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.88);
+  }
+}
+
+/* Typing cursor — blinking block */
+@keyframes ml-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Headlight trail — sweep across the panel. The row is 200% wide, so moving
+   by -50% of itself equals one panel-width sweep, then it loops. */
+@keyframes ml-trail {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — a complete, calm, static page.
+   The neon signs hold their lit state without flicker; the headlight trail
+   sits at its first frame; nothing types — the full text is already in the
+   DOM via the visually-hidden spans; the dawn bloom sits at full opacity.
+   The page is fully readable; every animation simply holds its end state.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .moonlit-js .moonlit-neon__tube,
+  .moonlit-js .moonlit-street__tube {
+    stroke-dashoffset: 0 !important;
+    stroke: var(--ml-neon-bright);
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .moonlit-js .moonlit-hero__statusdot,
+  .moonlit-js .moonlit-status__cursor,
+  .moonlit-js .moonlit-street__trail-row--a,
+  .moonlit-js .moonlit-street__trail-row--b {
+    animation: none !important;
+  }
+
+  .moonlit-js .moonlit-status__cursor {
+    opacity: 0;
+  }
+
+  .moonlit-js .moonlit-street.is-running .moonlit-street__trail-row--a,
+  .moonlit-js .moonlit-street.is-running .moonlit-street__trail-row--b {
+    transform: none;
+  }
+
+  .moonlit-js .moonlit-hero__plate {
+    transform: scale(1.06);
+  }
+
+  .moonlit-js .moonlit-track__line-fg {
+    transition: none;
+  }
+
+  .moonlit-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .moonlit-handoff__dawn,
+  .moonlit-handoff__warmglow {
+    opacity: 1;
+    transition: none;
+  }
+}

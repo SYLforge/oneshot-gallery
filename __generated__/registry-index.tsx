@@ -2,7 +2,7 @@
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
-export const demoSlugs = ["blunt","giwa","gradient-plaza","halflight","hanji-slate","kemuri","lumen-nord","ondo","pale-signal","raster","sup","yeobaek"] as const;
+export const demoSlugs = ["blunt","giwa","gradient-plaza","halflight","hanji-slate","kemuri","lumen-nord","moonlit","ondo","pale-signal","ppang","raster","sup","yeobaek"] as const;
 
 export const demoIndex: Record<string, ComponentType> = {
   "blunt": dynamic(() => import("@/registry/designs/blunt/page")),
@@ -12,8 +12,10 @@ export const demoIndex: Record<string, ComponentType> = {
   "hanji-slate": dynamic(() => import("@/registry/designs/hanji-slate/page")),
   "kemuri": dynamic(() => import("@/registry/designs/kemuri/page")),
   "lumen-nord": dynamic(() => import("@/registry/designs/lumen-nord/page")),
+  "moonlit": dynamic(() => import("@/registry/designs/moonlit/page")),
   "ondo": dynamic(() => import("@/registry/designs/ondo/page")),
   "pale-signal": dynamic(() => import("@/registry/designs/pale-signal/page")),
+  "ppang": dynamic(() => import("@/registry/designs/ppang/page")),
   "raster": dynamic(() => import("@/registry/designs/raster/page")),
   "sup": dynamic(() => import("@/registry/designs/sup/page")),
   "yeobaek": dynamic(() => import("@/registry/designs/yeobaek/page")),

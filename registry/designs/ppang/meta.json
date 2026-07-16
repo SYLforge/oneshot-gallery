@@ -1,0 +1,44 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "ppang",
+  "no": 15,
+  "title": {
+    "en": "PPANG! — Dawn Bakery",
+    "ko": "빵! — 새벽 빵집"
+  },
+  "description": {
+    "en": "A neighborhood Korean bakery that wakes at 4 AM so the first commuters smell bread — scrolled like a Naver Webtoon chapter: generated illustrations that reveal panel by panel, captions that arrive with each drawing, and a sky that climbs from indigo to morning gold as you read.",
+    "ko": "첫 출근길이 빵 냄새로 따뜻하도록 새벽 4시에 일어나는 동네 빵집 — 네이버 웹툰 한 화를 스크롤하듯: 생성 일러스트가 패널마다 드러나고, 그림이 들어올 때마다 자막이 따라오며, 읽는 사이 하늘은 감청색에서 아침 금빛으로 오른다."
+  },
+  "aesthetic": "webtoon",
+  "techniques": ["clip-path-reveal", "char-split-reveal", "pointer-parallax"],
+  "industry": ["retail-food"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-17",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "comfyui",
+    "provenance": {
+      "en": "Four illustrations generated in ComfyUI: Illustrious-XL merge checkpoint zenijiMixKWebtoon_v10 with the toonystarkKoreanWebtoonFlux LoRA @ 0.75; 832x1216 / 1024x1024 / 1024x768, 30 steps, CFG 6.5, Euler a; each upscaled 2x with RealESRGAN and encoded to AVIF + WebP. Full recipe in image-recipe.md and the exported graph in workflows/.",
+      "ko": "네 점 일러스트는 ComfyUI로 생성: Illustrious-XL 계열 병합 체크포인트 zenijiMixKWebtoon_v10과 toonystarkKoreanWebtoonFlux LoRA @ 0.75; 832x1216 / 1024x1024 / 1024x768, 30스텝, CFG 6.5, Euler a; 각각 RealESRGAN 2배 업스케일 후 AVIF + WebP로 인코드. 전체 레시피는 image-recipe.md, 내보낸 그래프는 workflows/에."
+    },
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#e89b4c",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-17",
+  "featured": false
+}
