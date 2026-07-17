@@ -11,9 +11,10 @@ on the page is a way of asking you to match its pace: a poem that appears
 one glyph per tick of an incense clock, paintings that take two seconds to
 settle out of water, a menu that prices time instead of grams.
 
-The design bet: on a light page with no imagery budget, *simulated smoke*
-can carry more atmosphere than any photograph — because a photograph of
-smoke is still, and stillness is the one thing smoke never does.
+The design bet: on a light page where the only imagery is three generated
+sumi-e plates, *simulated smoke* can carry more atmosphere than any
+photograph — because a photograph of smoke is still, and stillness is the
+one thing smoke never does.
 
 ## Art direction
 
@@ -112,14 +113,22 @@ was burning before you arrived.
 
 ## Technique 2 — the ink that settles
 
-The three plates are not images. Each is layered vector ink — silhouettes
+The three plates are generated sumi-e paintings (ComfyUI; see PROMPT.md's
+image-recipe), but they are not dropped in as flat `<img>` tags — that
+would have erased the signature interaction. Instead each painting is
+embedded as an SVG `<image>` inside the same per-plate art group that the
+hand-drawn vector version used, so the displacement-settle filter still
+owns it. (The plates first shipped as layered vector ink — silhouettes
 under `feGaussianBlur` at several radii for wet edges, opacity as aerial
-perspective, the smoke stroke in plate three drawn three times (widths
-13/6/2.2 at rising opacity) like a loaded brush retracing itself. On top
-of each art group sits the reveal:
+perspective, the smoke stroke in plate three drawn three times like a
+loaded brush retracing itself. The art was swapped to raster for richer
+sumi texture; the filter wrapper is unchanged.) On top of each art group
+sits the reveal:
 
 ```tsx
-{/* InkPlates.tsx — per-plate turbulence feeding a displacement map */}
+{/* InkPlates.tsx — per-plate turbulence feeding a displacement map.
+    The <image> inside the filtered <g> is the generated painting;
+    the feDisplacementMap acts on it exactly as it did on vector ink. */}
 <filter id="kemuri-p1-settle" x="-14%" y="-14%" width="128%" height="128%">
   <feTurbulence type="fractalNoise" baseFrequency="0.011 0.017" numOctaves="2" seed="19" result="w" />
   <feDisplacementMap in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G" />

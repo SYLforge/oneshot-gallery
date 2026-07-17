@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "chado",
+  "no": 20,
+  "title": {
+    "en": "CHADŌ — The Way of Tea",
+    "ko": "차도 — 다도, 차의 길"
+  },
+  "description": {
+    "en": "A virtual tea ceremony paced like the four-hour rite compressed into one scroll. Aged washi paper, ink, and a single accent of matcha green; ceremonial headers set vertically in tategaki, the chasen whisk drawing itself as you breathe the bowl into being. The whole ceremony exists so that one bowl of tea can be received with full attention.",
+    "ko": "네 시간의 다회를 한 번의 스크롤로 압축한 가상 다도. 오래된 화지와 먹, 그리고 단 하나의 말차빛 강조. 의례의 머리말은 세로쓰기 다테가키로, 차센이 스스로 그려지며 당신이 숨 쉬는 동안 한 그릇의 차가 빚어진다. 차 전체 의식은 오직 한 그릇의 차를 온전한 주의로 받기 위해 존재한다."
+  },
+  "aesthetic": "washi-sumi-e",
+  "techniques": ["scroll-scrub-pinned", "svg-line-draw", "feturbulence-texture"],
+  "industry": ["wellness", "culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-17",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#5d6b3a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-17",
+  "featured": false
+}

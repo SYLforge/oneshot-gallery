@@ -1,0 +1,112 @@
+{
+  "name": "minhwa-folk-paintings",
+  "description": "MINHWA illustrations — Illustrious bismuthIllustrious_v80 checkpoint + toonystarkKoreanWebtoonFlux LoRA @ 0.4 (a light folk-painting hand, not a webtoon line), euler_ancestral 30 steps, CFG 7, RealESRGAN 2x. See image-recipe.md for per-asset prompts and seeds.",
+  "format": "ComfyUI API (prompt-graph export)",
+  "checkpoint_audit": {
+    "model_file": "bismuthIllustrious_v80.safetensors",
+    "lineage": "Illustrious-XL merge (SDXL base)",
+    "lora": "toonystarkKoreanWebtoonFlux.safetensors @ strength 0.4",
+    "audit_row": "docs/model-licenses.md#bismuthIllustrious_v80",
+    "verdict_at_build_time": "CONDITIONAL — see notes",
+    "note": "The bismuthIllustrious_v80 row in docs/model-licenses.md is audited CONDITIONAL as of 2026-07-17: commercial image use is permitted under the inherited CreativeML Open RAIL++-M license, with two open items (merge ancestry disclosure, CC BY 4.0 redistribution compatibility) pending maintainer co-sign to OK. Per ASSETS-LICENSE.md this permits the imagery to ship with the gallery today. See image-recipe.md for the LoRA-strength rationale (0.4 keeps the folk-painting brush, avoids webtoon line)."
+  },
+  "shared_settings": {
+    "sampler": "euler_ancestral",
+    "steps": 30,
+    "cfg": 7,
+    "scheduler": "normal",
+    "negative_prompt": "text, watermark, signature, logo, letters, caption, speech bubble, modern, photorealistic, 3d render, grayscale, anime screentone, lowres, bad anatomy, blurry, jpeg artifacts, deformed, ugly, duplicate, frame, border",
+    "upscale": "RealESRGAN_x4plus at 2x"
+  },
+  "nodes": {
+    "4": {
+      "class_type": "CheckpointLoaderSimple",
+      "inputs": { "ckpt_name": "bismuthIllustrious_v80.safetensors" }
+    },
+    "5": {
+      "class_type": "LoraLoader",
+      "inputs": {
+        "model": ["4", 0],
+        "clip": ["4", 1],
+        "lora_name": "toonystarkKoreanWebtoonFlux.safetensors",
+        "strength_model": 0.4,
+        "strength_clip": 0.4
+      }
+    },
+    "6": {
+      "class_type": "CLIPTextEncode",
+      "inputs": { "text": "<positive prompt per asset>", "clip": ["5", 1] }
+    },
+    "7": {
+      "class_type": "CLIPTextEncode",
+      "inputs": { "text": "<negative prompt>", "clip": ["5", 1] }
+    },
+    "8": {
+      "class_type": "EmptyLatentImage",
+      "inputs": { "width": "<832 / 1024 / 1024>", "height": "<1216 / 1024 / 768>", "batch_size": 1 }
+    },
+    "9": {
+      "class_type": "KSampler",
+      "inputs": {
+        "model": ["5", 0],
+        "positive": ["6", 0],
+        "negative": ["7", 0],
+        "latent_image": ["8", 0],
+        "seed": "<per-asset seed>",
+        "steps": 30,
+        "cfg": 7,
+        "sampler_name": "euler_ancestral",
+        "scheduler": "normal",
+        "denoise": 1.0
+      }
+    },
+    "10": {
+      "class_type": "VAEDecode",
+      "inputs": { "samples": ["9", 0], "vae": ["4", 2] }
+    },
+    "11": {
+      "class_type": "ImageUpscaleWithModel",
+      "inputs": {
+        "upscale_model": "RealESRGAN_x4plus.pth",
+        "image": ["10", 0]
+      }
+    },
+    "12": {
+      "class_type": "ImageScale",
+      "inputs": {
+        "image": ["11", 0],
+        "upscale_method": "lanczos",
+        "width": "<ship width x2>",
+        "height": "<ship height x2>",
+        "crop": "disabled"
+      }
+    },
+    "13": {
+      "class_type": "SaveImage",
+      "inputs": { "images": ["12", 0], "filename_prefix": "minhwa" }
+    }
+  },
+  "assets": [
+    {
+      "stem": "hero-tiger-magpie",
+      "dimensions": "832x1216",
+      "seed": 21807,
+      "second_pass_denoise": 0.5,
+      "prompt": "korean minhwa folk painting, hojakdo, a tiger sitting under a pine tree looking up at a magpie perched on a branch, naive charming folk art style, flat vivid pigments, obangsaek five-color palette of blue-green red yellow white black, aged hanji paper ground, bold ink outlines, cheerful symbolic mood, vertical scroll composition, traditional joseon folk painting, no text, no letters, no signature"
+    },
+    {
+      "stem": "peony-prosperity",
+      "dimensions": "1024x1024",
+      "seed": 4419,
+      "second_pass_denoise": null,
+      "prompt": "korean minhwa folk painting, moran-do, several peonies in full bloom with lush green leaves, naive charming folk art style, flat vivid pigments, obangsaek palette red pink yellow green white, aged hanji paper ground, bold ink outlines, prosperous generous mood, centered square composition, traditional joseon folk painting, no text, no letters, no signature"
+    },
+    {
+      "stem": "sun-moon-longevity",
+      "dimensions": "1024x768",
+      "seed": 8362,
+      "second_pass_denoise": null,
+      "prompt": "korean minhwa folk painting, sipjangsaeng ten longevity symbols, a sun and a moon in the sky, mountains and water and rocks below, a pine tree, a crane, a deer, a turtle, ganoderma mushroom of immortality, all gathered in one landscape, naive charming folk art style, flat vivid pigments, obangsaek five-color palette, aged hanji paper ground, bold ink outlines, symbolic abundant mood, wide landscape composition, traditional joseon folk painting, no text, no letters, no signature"
+    }
+  ]
+}

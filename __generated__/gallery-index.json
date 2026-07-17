@@ -35,6 +35,41 @@
     "featured": false
   },
   {
+    "slug": "chado",
+    "no": 20,
+    "title": {
+      "en": "CHADŌ — The Way of Tea",
+      "ko": "차도 — 다도, 차의 길"
+    },
+    "description": {
+      "en": "A virtual tea ceremony paced like the four-hour rite compressed into one scroll. Aged washi paper, ink, and a single accent of matcha green; ceremonial headers set vertically in tategaki, the chasen whisk drawing itself as you breathe the bowl into being. The whole ceremony exists so that one bowl of tea can be received with full attention.",
+      "ko": "네 시간의 다회를 한 번의 스크롤로 압축한 가상 다도. 오래된 화지와 먹, 그리고 단 하나의 말차빛 강조. 의례의 머리말은 세로쓰기 다테가키로, 차센이 스스로 그려지며 당신이 숨 쉬는 동안 한 그릇의 차가 빚어진다. 차 전체 의식은 오직 한 그릇의 차를 온전한 주의로 받기 위해 존재한다."
+    },
+    "aesthetic": "washi-sumi-e",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "svg-line-draw",
+      "feturbulence-texture"
+    ],
+    "industry": [
+      "wellness",
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#5d6b3a",
+    "theme": "light",
+    "published": "2026-07-17",
+    "featured": false
+  },
+  {
     "slug": "giwa",
     "no": 8,
     "title": {
@@ -172,6 +207,40 @@
     "featured": false
   },
   {
+    "slug": "hanok",
+    "no": 19,
+    "title": {
+      "en": "HANOK — The Building Is the Layout",
+      "ko": "한옥 — 집이 곧 레이아웃"
+    },
+    "description": {
+      "en": "A heritage atelier documents a Korean hanok where the wooden structure becomes the page — a scroll-scrubbed exploded axonometric that disassembles the roof, beams, columns, floor, and foundation into labeled joinery, then walks you through three climate zones: the warm ondol room, the cool maru hall, and the open madang courtyard under seasonal light.",
+      "ko": "한국 전통 한옥의 목조 구조를 페이지 구조 자체로 옮긴 문화유산 아틀리에 — 스크롤에 따라 지붕·대들보·기둥·마루·주춧돌이 분해되며 결구(연결)를 드러내는 폭발 등각 투상도, 그리고 따뜻한 온돌방, 서늘한 마루, 열린 마당을 계절의 빛 아래로 지나가는 세 기후 구역."
+    },
+    "aesthetic": "korean-traditional",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "text-path",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#9c3a2e",
+    "theme": "light",
+    "published": "2026-07-17",
+    "featured": false
+  },
+  {
     "slug": "kemuri",
     "no": 1,
     "title": {
@@ -200,7 +269,7 @@
         "dom"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#c96f2e",
     "theme": "light",
     "published": "2026-07-10",
@@ -239,6 +308,40 @@
     "accent": "#6ff2c3",
     "theme": "dark",
     "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "minhwa",
+    "no": 18,
+    "title": {
+      "en": "MINHWA — A Gallery of Wishes",
+      "ko": "민화 — 소원의 그림"
+    },
+    "description": {
+      "en": "A joyful folk-painting gallery where every motif is a wish — tiger and magpie for good news, peony for prosperity, the ten longevity symbols under sun and moon. Minhwa reveals its symbols with a stamp and a pop, lets you walk the five obangsaek colors as a navigable system, and seals each section with a vermillion 인장. Built on aged hanji, obangsaek pigment, and a bold Korean display face — the bright opposite of austere ink.",
+      "ko": "그림 하나마다 소원을 담은, 정겹고 넉넉한 민화 갤러리 — 호랑이와 까치는 기쁜 소식, 모란은 부귀, 해와 달 아래 십장생은 오래오래 사는 마음. 민화는 상징을 도장처럼 쾅, 톡 드러내 보이고, 오방색 다섯 빛을 걸어 다니게 하고, 매 장마다 붉은 인장을 찍어준다. 오래된 한지 위, 오방색 안료와 힘 있는 한국어 디스플레이로 — 정객한 먹과는 정반대의 밝은 쪽."
+    },
+    "aesthetic": "korean-traditional",
+    "techniques": [
+      "spring-press",
+      "char-split-reveal",
+      "scroll-scrub-pinned"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "comfyui",
+    "accent": "#c8362b",
+    "theme": "light",
+    "published": "2026-07-17",
     "featured": false
   },
   {
@@ -410,6 +513,41 @@
     "accent": "#e30613",
     "theme": "light",
     "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "shan-shui",
+    "no": 17,
+    "title": {
+      "en": "SHAN-SHUI — Mountain & Water",
+      "ko": "산수 — 산과 물"
+    },
+    "description": {
+      "en": "A procedurally-generated, infinitely-scrolling Chinese ink landscape that paints itself live in the browser. Mountains recede through layered ink density, mist pools in the valleys and follows your hand, a vermillion seal marks the scroll. Every ridge, tree and wisp is code — no images, no dependencies.",
+      "ko": "브라우저 안에서 스스로를 그리며 끝없이 펼쳐지는, 절차적으로 생성된 중국 수묵 산수. 산은 먹의 농도로 멀어지고, 안개는 골짜기에 고여 당신의 손을 따른다. 한 점의 주홍 낙관이 두루마리를 찍는다. 산맥도, 나무도, 한 줌의 안개도 모두 코드로 그려진다 — 이미지도, 의존성도 없다."
+    },
+    "aesthetic": "washi-sumi-e",
+    "techniques": [
+      "canvas-particles",
+      "pointer-parallax",
+      "scroll-scrub-pinned"
+    ],
+    "industry": [
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#a83232",
+    "theme": "light",
+    "published": "2026-07-17",
     "featured": false
   },
   {

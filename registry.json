@@ -90,6 +90,111 @@
       }
     },
     {
+      "name": "chado",
+      "type": "registry:block",
+      "title": "CHADŌ — The Way of Tea",
+      "description": "A virtual tea ceremony paced like the four-hour rite compressed into one scroll. Aged washi paper, ink, and a single accent of matcha green; ceremonial headers set vertically in tategaki, the chasen whisk drawing itself as you breathe the bowl into being. The whole ceremony exists so that one bowl of tea can be received with full attention.",
+      "dependencies": [],
+      "categories": [
+        "washi-sumi-e",
+        "scroll-scrub-pinned",
+        "svg-line-draw",
+        "feturbulence-texture"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/chado/components/BreathCue.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/BreathCue.tsx"
+        },
+        {
+          "path": "registry/designs/chado/components/Ceremony.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/Ceremony.tsx"
+        },
+        {
+          "path": "registry/designs/chado/components/ChasenDraw.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/ChasenDraw.tsx"
+        },
+        {
+          "path": "registry/designs/chado/components/Colophon.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/Colophon.tsx"
+        },
+        {
+          "path": "registry/designs/chado/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/chado/components/OneBowl.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/OneBowl.tsx"
+        },
+        {
+          "path": "registry/designs/chado/components/Tokonoma.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chado/components/Tokonoma.tsx"
+        },
+        {
+          "path": "registry/designs/chado/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/chado/fonts.ts"
+        },
+        {
+          "path": "registry/designs/chado/hooks/useBreathPace.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chado/hooks/useBreathPace.ts"
+        },
+        {
+          "path": "registry/designs/chado/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chado/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/chado/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chado/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/chado/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chado/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/chado/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/chado/page.tsx"
+        },
+        {
+          "path": "registry/designs/chado/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/chado/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/chado/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/chado/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"CHADŌ — The Way of Tea\" installs into app/oneshot/chado/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 20,
+        "accent": "#5d6b3a",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-17",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "giwa",
       "type": "registry:block",
       "title": "GIWA — Under Painted Eaves",
@@ -466,6 +571,111 @@
       }
     },
     {
+      "name": "hanok",
+      "type": "registry:block",
+      "title": "HANOK — The Building Is the Layout",
+      "description": "A heritage atelier documents a Korean hanok where the wooden structure becomes the page — a scroll-scrubbed exploded axonometric that disassembles the roof, beams, columns, floor, and foundation into labeled joinery, then walks you through three climate zones: the warm ondol room, the cool maru hall, and the open madang courtyard under seasonal light.",
+      "dependencies": [],
+      "categories": [
+        "korean-traditional",
+        "scroll-scrub-pinned",
+        "text-path",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/hanok/components/ClimateZones.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanok/components/ClimateZones.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/components/ExplodedAxonometric.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanok/components/ExplodedAxonometric.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/components/HanokFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanok/components/HanokFooter.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanok/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/components/JoineryDetail.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanok/components/JoineryDetail.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/components/SeasonalLight.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/hanok/components/SeasonalLight.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/hanok/fonts.ts"
+        },
+        {
+          "path": "registry/designs/hanok/hooks/useCharSplit.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanok/hooks/useCharSplit.ts"
+        },
+        {
+          "path": "registry/designs/hanok/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanok/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/hanok/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanok/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/hanok/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanok/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/hanok/hooks/useSeason.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/hanok/hooks/useSeason.ts"
+        },
+        {
+          "path": "registry/designs/hanok/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/hanok/page.tsx"
+        },
+        {
+          "path": "registry/designs/hanok/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/hanok/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/hanok/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/hanok/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"HANOK — The Building Is the Layout\" installs into app/oneshot/hanok/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 19,
+        "accent": "#9c3a2e",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-17",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "kemuri",
       "type": "registry:block",
       "title": "KEMURI — Smoke & Stillness",
@@ -567,7 +777,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -663,6 +873,116 @@
           "followUps": 0
         },
         "media": "code"
+      }
+    },
+    {
+      "name": "minhwa",
+      "type": "registry:block",
+      "title": "MINHWA — A Gallery of Wishes",
+      "description": "A joyful folk-painting gallery where every motif is a wish — tiger and magpie for good news, peony for prosperity, the ten longevity symbols under sun and moon. Minhwa reveals its symbols with a stamp and a pop, lets you walk the five obangsaek colors as a navigable system, and seals each section with a vermillion 인장. Built on aged hanji, obangsaek pigment, and a bold Korean display face — the bright opposite of austere ink.",
+      "dependencies": [],
+      "categories": [
+        "korean-traditional",
+        "spring-press",
+        "char-split-reveal",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/minhwa/components/FolkFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/FolkFooter.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/LongevitySymbols.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/LongevitySymbols.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/Narration.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/Narration.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/ObangsaekNavigator.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/ObangsaekNavigator.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/PeonyProsperity.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/PeonyProsperity.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/Picture.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/Picture.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/components/SealMark.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/minhwa/components/SealMark.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/minhwa/fonts.ts"
+        },
+        {
+          "path": "registry/designs/minhwa/hooks/useLongevityScrub.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/minhwa/hooks/useLongevityScrub.ts"
+        },
+        {
+          "path": "registry/designs/minhwa/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/minhwa/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/minhwa/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/minhwa/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/minhwa/hooks/useSealStamp.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/minhwa/hooks/useSealStamp.ts"
+        },
+        {
+          "path": "registry/designs/minhwa/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/minhwa/page.tsx"
+        },
+        {
+          "path": "registry/designs/minhwa/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/minhwa/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/minhwa/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/minhwa/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MINHWA — A Gallery of Wishes\" installs into app/oneshot/minhwa/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 18,
+        "accent": "#c8362b",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-17",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "comfyui"
       }
     },
     {
@@ -1139,6 +1459,116 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "shan-shui",
+      "type": "registry:block",
+      "title": "SHAN-SHUI — Mountain & Water",
+      "description": "A procedurally-generated, infinitely-scrolling Chinese ink landscape that paints itself live in the browser. Mountains recede through layered ink density, mist pools in the valleys and follows your hand, a vermillion seal marks the scroll. Every ridge, tree and wisp is code — no images, no dependencies.",
+      "dependencies": [],
+      "categories": [
+        "washi-sumi-e",
+        "canvas-particles",
+        "pointer-parallax",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/shan-shui/components/Cadence.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/Cadence.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/components/LandscapeCanvas.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/LandscapeCanvas.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/components/Loader.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/Loader.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/components/ScrollGuide.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/ScrollGuide.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/components/SealStamp.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/shan-shui/components/SealStamp.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/shan-shui/fonts.ts"
+        },
+        {
+          "path": "registry/designs/shan-shui/hooks/landscape.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/shan-shui/hooks/landscape.ts"
+        },
+        {
+          "path": "registry/designs/shan-shui/hooks/usePointerMist.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/shan-shui/hooks/usePointerMist.ts"
+        },
+        {
+          "path": "registry/designs/shan-shui/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/shan-shui/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/shan-shui/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/shan-shui/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/shan-shui/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/shan-shui/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/shan-shui/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/shan-shui/page.tsx"
+        },
+        {
+          "path": "registry/designs/shan-shui/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/shan-shui/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/shan-shui/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/shan-shui/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"SHAN-SHUI — Mountain & Water\" installs into app/oneshot/shan-shui/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 17,
+        "accent": "#a83232",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-17",
           "oneshot": false,
           "followUps": 0
         },

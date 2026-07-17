@@ -1,0 +1,48 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "minhwa",
+  "no": 18,
+  "title": {
+    "en": "MINHWA — A Gallery of Wishes",
+    "ko": "민화 — 소원의 그림"
+  },
+  "description": {
+    "en": "A joyful folk-painting gallery where every motif is a wish — tiger and magpie for good news, peony for prosperity, the ten longevity symbols under sun and moon. Minhwa reveals its symbols with a stamp and a pop, lets you walk the five obangsaek colors as a navigable system, and seals each section with a vermillion 인장. Built on aged hanji, obangsaek pigment, and a bold Korean display face — the bright opposite of austere ink.",
+    "ko": "그림 하나마다 소원을 담은, 정겹고 넉넉한 민화 갤러리 — 호랑이와 까치는 기쁜 소식, 모란은 부귀, 해와 달 아래 십장생은 오래오래 사는 마음. 민화는 상징을 도장처럼 쾅, 톡 드러내 보이고, 오방색 다섯 빛을 걸어 다니게 하고, 매 장마다 붉은 인장을 찍어준다. 오래된 한지 위, 오방색 안료와 힘 있는 한국어 디스플레이로 — 정객한 먹과는 정반대의 밝은 쪽."
+  },
+  "aesthetic": "korean-traditional",
+  "techniques": [
+    "spring-press",
+    "char-split-reveal",
+    "scroll-scrub-pinned"
+  ],
+  "industry": ["culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-17",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "comfyui",
+    "provenance": {
+      "en": "Three minhwa illustrations generated in ComfyUI: Illustrious-XL merge checkpoint bismuthIllustrious_v80 with the toonystarkKoreanWebtoonFlux LoRA at 0.4 strength (a light folk-painting hand, not a webtoon line); 832x1216 / 1024x1024 / 1024x768, 30 steps, CFG 7, Euler a; each upscaled 2x with RealESRGAN and encoded to AVIF + WebP. Full recipe in image-recipe.md, exported graph in workflows/.",
+      "ko": "세 점 민화 일러스트는 ComfyUI로 생성: Illustrious-XL 계열 병합 체크포인트 bismuthIllustrious_v80에 toonystarkKoreanWebtoonFlux LoRA를 0.4 세기로(웹툰 선이 아니라 민화 특유의 넉넉한 붓맛을 위해 약하게) 얹었음; 832x1216 / 1024x1024 / 1024x768, 30스텝, CFG 7, Euler a; 각각 RealESRGAN 2배 업스케일 후 AVIF + WebP로 인코드. 전체 레시피는 image-recipe.md, 내보낸 그래프는 workflows/에."
+    },
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#c8362b",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-17",
+  "featured": false
+}

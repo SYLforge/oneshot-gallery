@@ -28,7 +28,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "Three sumi-e plates generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 768x1024, 32 steps, CFG 7, then upscaled 2x with RealESRGAN and encoded to AVIF + WebP. The plates are embedded as SVG <image> elements so the entry's signature feTurbulence + feDisplacementMap ink-settle filter still acts on them; the smoke remains canvas, the washi grain and censer remain SVG. Full recipe in PROMPT.md image-recipe.",
+      "ko": "세 폭의 수묵 도판은 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 768x1024, 32스텝, CFG 7, 이후 RealESRGAN 2배 업스케일 및 AVIF + WebP 인코딩. 도판은 SVG <image> 요소로 삽입되어 이 엔트리의 시그니처인 feTurbulence + feDisplacementMap 잉크 가라앉음 필터가 그대로 작동하며, 연기는 여전히 캔버스, 와시 결과 향로는 SVG로 남는다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "light",

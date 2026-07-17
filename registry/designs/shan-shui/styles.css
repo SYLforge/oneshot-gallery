@@ -1,0 +1,1034 @@
+/* ==========================================================================
+   山水 SHAN-SHUI — procedurally-generated ink landscape
+   washi-sumi-e · xuan / sumi / pale-wash / vermillion chop · a hand-scroll
+   Scoped by convention to .shan-root; classes prefixed shan-.
+   ========================================================================== */
+
+.shan-root {
+  /* -- palette ----------------------------------------------------------- */
+  --shan-xuan: #f4ede0;          /* the rice paper — every ridge is brushed on it */
+  --shan-xuan-aged: #ece3d2;     /* older paper — guide panels, aged hems */
+  --shan-sumi: #1a1714;          /* the ink stone, fully ground — 15.3:1 on xuan */
+  --shan-ink-strong: #3a342c;    /* sumi + one dip of water — 10.6:1 */
+  --shan-ink-mid: #5a5249;       /* sumi thinned — body prose, mid ridges — 6.6:1 */
+  --shan-ink-soft: #7d756a;      /* a pale wash — captions, far ridges — 3.9:1, large only */
+  --shan-pale-wash: #9a9488;     /* farthest ridges dissolving — 2.6:1, decorative only */
+  --shan-mist: #b8b1a3;          /* the mist — paint, never text — 1.8:1 */
+  --shan-vermillion: #a83232;    /* the artist's chop — 5.7:1 on xuan (large/non-text) */
+  --shan-vermillion-deep: #8a2626; /* banked seal — functional accent — 7.6:1 */
+  --shan-xuan-dim: rgba(244, 237, 224, 0.72); /* ≈ #cfc7b6 on sumi — 11.7:1 */
+  --shan-hairline: rgba(26, 23, 20, 0.16);
+  --shan-hairline-strong: rgba(26, 23, 20, 0.3);
+
+  /* -- type ---------------------------------------------------------------- */
+  --shan-font-latin: var(--font-cormorant), "Cormorant Garamond", serif;
+  --shan-font-zh-display: var(--font-mashan), "Ma Shan Zheng", serif;
+  --shan-font-zh-body: var(--font-notosc), "Noto Serif SC", serif;
+  /* CJK falls through Cormorant into the brush face with no markup */
+  --shan-font-stack: var(--font-cormorant), var(--font-mashan), var(--font-notosc), serif;
+
+  /* -- motion ---------------------------------------------------------------
+     Two easings: scroll (rises fast, settles long) for entrances, stone
+     (deliberate, weighted) for the seal press and section pins. */
+  --shan-ease-scroll: cubic-bezier(0.22, 1, 0.36, 1);
+  --shan-ease-stone: cubic-bezier(0.65, 0, 0.35, 1);
+  --shan-reveal-ms: 900ms;
+  --shan-glyph-ms: 1100ms;
+  --shan-loader-lift: 680ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--shan-xuan);
+  color: var(--shan-sumi);
+  font-family: var(--shan-font-stack);
+  font-weight: 400;
+  font-size: clamp(17px, 1vw + 12px, 20px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Chinese is first-class: the brush face for display, the mincho for body.
+   Either way, the glyphs get a little room to breathe. */
+.shan-root :lang(zh) {
+  font-family: var(--shan-font-zh-body);
+  letter-spacing: 0.04em;
+}
+
+/* Vermillion selection, scoped to the entry root. Banked seal ground so the
+   selected xuan text stays AA (7.6:1). */
+.shan-root ::selection {
+  background: var(--shan-vermillion-deep);
+  color: var(--shan-xuan);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a vermillion-deep ring, held one paper-thickness away. */
+.shan-root :focus-visible {
+  outline: 2px solid var(--shan-vermillion-deep);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+
+.shan-foot :focus-visible {
+  outline-color: var(--shan-vermillion);
+}
+
+/* Visually hidden, present for screen readers and find-in-page. */
+.shan-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.shan-sheet {
+  position: relative;
+}
+
+/* Glyphs cut into the seals — always the brush face, wherever the seal appears. */
+.shan-sealglyph {
+  font-family: var(--shan-font-zh-display);
+}
+
+/* ==========================================================================
+   Xuan — the paper itself
+   One static feTurbulence grain pass (multiplied, ≤5% ink) and a faint
+   amber age-vignette at the edges. Neither ever animates; the paper is old.
+   ========================================================================== */
+
+.shan-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+
+.shan-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 95% at 50% 42%,
+      transparent 55%,
+      rgba(168, 50, 50, 0.05) 100%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(26, 23, 20, 0.014) 0 2px,
+      transparent 2px 8px
+    );
+}
+
+/* ==========================================================================
+   Reveal primitives
+   Everything pre-reveal lives under .shan-js: with JavaScript off the page
+   stands finished. data-reveal elements fade-rise; data-reveal="scene"
+   containers never move themselves — they only hand `is-visible` to the
+   choreography inside.
+   ========================================================================== */
+
+.shan-js [data-reveal]:not([data-reveal="scene"]) {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--shan-reveal-ms) var(--shan-ease-scroll),
+    transform var(--shan-reveal-ms) var(--shan-ease-scroll);
+}
+
+.shan-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Split glyphs — the wordmark and the couplet share one cadence system.
+   Each glyph carries its own delay as --kd; only opacity/transform/filter
+   ever animate. */
+.shan-hero__glyph,
+.shan-cadence__g {
+  display: inline-block;
+  transition:
+    opacity var(--shan-glyph-ms) var(--shan-ease-scroll) var(--kd, 0ms),
+    transform var(--shan-glyph-ms) var(--shan-ease-scroll) var(--kd, 0ms),
+    filter var(--shan-glyph-ms) var(--shan-ease-scroll) var(--kd, 0ms);
+}
+
+.shan-js .shan-hero:not(.is-entered) .shan-hero__glyph,
+.shan-js .shan-hero:not(.is-entered) .shan-cadence__g,
+.shan-js [data-reveal="scene"]:not(.is-visible) .shan-cadence__g {
+  opacity: 0;
+  transform: translateY(0.14em);
+  filter: blur(4px);
+  transition: none;
+}
+
+/* ==========================================================================
+   Loader — the seal, then the paper lifts
+   Rendered only after mount and never under reduced motion, so it can never
+   hide content from anyone.
+   ========================================================================== */
+
+.shan-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--shan-xuan);
+}
+
+.shan-loader__seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.shan-loader__seal svg {
+  transform: rotate(-5deg);
+  animation: shan-seal-press 720ms var(--shan-ease-stone) both;
+}
+
+@keyframes shan-seal-press {
+  0% {
+    opacity: 0;
+    transform: scale(1.18) rotate(-1deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.96) rotate(-5.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-5deg);
+  }
+}
+
+.shan-loader__word {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--shan-ink-mid);
+  opacity: 0;
+  animation: shan-fade 600ms var(--shan-ease-scroll) 380ms forwards;
+}
+
+.shan-loader__word :lang(zh) {
+  text-transform: none;
+  letter-spacing: 0.18em;
+  margin-left: 0.6em;
+}
+
+@keyframes shan-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+.shan-loader.is-lifting {
+  animation: shan-paper-lift var(--shan-loader-lift) var(--shan-ease-stone)
+    forwards;
+}
+
+@keyframes shan-paper-lift {
+  to {
+    opacity: 0;
+    transform: translateY(-2.5%);
+  }
+}
+
+/* ==========================================================================
+   Hero — the landscape, the wordmark
+   Layers, bottom to top: landscape canvas (0) · text (1). The mountains
+   stand behind the wordmark the way real mountains stand behind a colophon.
+   ========================================================================== */
+
+.shan-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.shan-landscape {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* The canvas accepts pointer events only on fine pointers (for mist pull);
+   touch falls through to scroll. The hook only listens to mouse/pen anyway. */
+@media (hover: hover) and (pointer: fine) {
+  .shan-landscape {
+    pointer-events: auto;
+  }
+}
+
+.shan-landscape__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.shan-hero__inner {
+  position: relative;
+  z-index: 1;
+  padding: clamp(24px, 6vw, 64px);
+}
+
+.shan-hero__kicker {
+  margin: 0 0 2rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--shan-vermillion-deep);
+  text-shadow: 0 1px 0 var(--shan-xuan);
+}
+
+.shan-hero__kickerzh {
+  display: inline-block;
+  margin-left: 1em;
+  text-transform: none;
+  letter-spacing: 0.16em;
+  font-family: var(--shan-font-zh-display);
+}
+
+.shan-hero__title {
+  margin: 0;
+  font-family: var(--shan-font-latin);
+  font-weight: 500;
+  font-size: clamp(3.4rem, 15vw, 11rem);
+  line-height: 0.95;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em; /* optically recenters the tracked line */
+  color: var(--shan-sumi);
+  text-shadow: 0 2px 0 var(--shan-xuan);
+}
+
+.shan-hero__sub {
+  margin: 1.6rem 0 0;
+  font-family: var(--shan-font-zh-display);
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  letter-spacing: 0.18em;
+  color: var(--shan-ink-strong);
+  text-shadow: 0 1px 0 var(--shan-xuan);
+}
+
+.shan-hero__rule {
+  width: 64px;
+  height: 1px;
+  margin: 2.4rem auto;
+  background: var(--shan-vermillion);
+  box-shadow: 0 0 0 1px rgba(244, 237, 224, 0.6);
+}
+
+.shan-hero__line {
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--shan-sumi);
+  max-width: 38rem;
+  margin-inline: auto;
+  text-shadow: 0 1px 0 var(--shan-xuan);
+}
+
+.shan-hero__linezh {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.95em;
+  color: var(--shan-ink-mid);
+  font-family: var(--shan-font-zh-body);
+}
+
+.shan-hero__est {
+  margin: 2.2rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  color: var(--shan-ink-mid);
+  text-shadow: 0 1px 0 var(--shan-xuan);
+}
+
+.shan-hero__est :lang(zh) {
+  margin-left: 0.6em;
+}
+
+.shan-hero__hint {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--shan-ink-mid);
+  white-space: nowrap;
+  animation: shan-hint-drift 11.3s ease-in-out infinite;
+  text-shadow: 0 1px 0 var(--shan-xuan);
+}
+
+.shan-hero__hint :lang(zh) {
+  margin-right: 0.8em;
+  font-family: var(--shan-font-zh-display);
+}
+
+@keyframes shan-hint-drift {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(-50%) translateY(5px);
+    opacity: 0.55;
+  }
+}
+
+/* ==========================================================================
+   Section shell — eyebrow · title · line
+   ========================================================================== */
+
+.shan-guide,
+.shan-seal {
+  padding-block: clamp(96px, 15vh, 176px);
+}
+
+.shan-eyebrow {
+  margin: 0 0 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--shan-vermillion-deep);
+}
+
+/* ==========================================================================
+   02 — the scroll guide (scroll-scrub-pinned)
+   A pinned stage whose parallax layers part with scroll progress. --p (0..1)
+   is written by a scroll listener in ScrollGuide's mounting; without JS the
+   layers rest at their composed resting positions.
+   ========================================================================== */
+
+.shan-guide__stage {
+  position: relative;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(48px, 7vw, 96px);
+}
+
+.shan-guide__art {
+  position: relative;
+  height: clamp(220px, 34vh, 360px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* --p is driven by the scroll-scrub; defaults to a composed mid-state */
+  --p: 0.5;
+}
+
+.shan-guide__layer {
+  position: absolute;
+  font-family: var(--shan-font-zh-display);
+  line-height: 1;
+  transition: transform 200ms var(--shan-ease-scroll);
+}
+
+.shan-guide__layer--far {
+  font-size: clamp(7rem, 22vw, 16rem);
+  color: var(--shan-pale-wash);
+  transform: translateY(calc(-40px * var(--p))) scale(calc(1 - 0.06 * var(--p)));
+  opacity: 0.55;
+}
+.shan-guide__layer--mid {
+  font-size: clamp(6rem, 19vw, 14rem);
+  color: var(--shan-ink-soft);
+  transform: translateY(calc(-20px * var(--p))) translateX(calc(-30px * var(--p))) scale(calc(1 - 0.04 * var(--p)));
+  opacity: 0.7;
+}
+.shan-guide__layer--near {
+  font-size: clamp(5.5rem, 17vw, 13rem);
+  color: var(--shan-ink-mid);
+  transform: translateY(calc(8px * var(--p))) translateX(calc(40px * var(--p)));
+  opacity: 0.85;
+}
+.shan-guide__layer--fg {
+  font-size: clamp(5rem, 15vw, 12rem);
+  color: var(--shan-sumi);
+  transform: translateY(calc(30px * var(--p))) translateX(calc(-18px * var(--p)));
+}
+
+.shan-guide__copy {
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.shan-guide__title {
+  margin: 0;
+  font-family: var(--shan-font-latin);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  line-height: 1.18;
+  letter-spacing: 0.03em;
+  color: var(--shan-sumi);
+}
+
+.shan-guide__titlezh {
+  display: block;
+  margin-top: 0.3em;
+  font-family: var(--shan-font-zh-display);
+  font-size: 0.7em;
+  letter-spacing: 0.12em;
+  color: var(--shan-vermillion-deep);
+}
+
+.shan-guide__lede {
+  margin: 1.6rem 0 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  color: var(--shan-ink-mid);
+}
+
+.shan-guide__ledezh {
+  display: block;
+  margin-top: 0.6rem;
+  font-family: var(--shan-font-zh-body);
+  color: var(--shan-ink-strong);
+}
+
+.shan-guide__distances {
+  list-style: none;
+  margin: clamp(2.4rem, 5vh, 3.6rem) 0 0;
+  padding: 0;
+  text-align: left;
+  counter-reset: dist;
+}
+
+.shan-guide__row {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas:
+    "zh py en"
+    "note note note";
+  gap: 0.3rem 1.2rem;
+  align-items: baseline;
+  padding-block: clamp(20px, 3vh, 32px);
+  border-top: 1px solid var(--shan-hairline);
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 800ms var(--shan-ease-scroll) var(--kd, 0ms),
+    transform 800ms var(--shan-ease-scroll) var(--kd, 0ms);
+}
+
+.shan-js [data-reveal="scene"].is-visible .shan-guide__row {
+  opacity: 1;
+  transform: none;
+}
+
+.shan-guide__row:last-child {
+  border-bottom: 1px solid var(--shan-hairline);
+}
+
+.shan-guide__zh {
+  grid-area: zh;
+  font-family: var(--shan-font-zh-display);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  color: var(--shan-vermillion-deep);
+  line-height: 1;
+}
+
+.shan-guide__py {
+  grid-area: py;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--shan-ink-soft);
+  letter-spacing: 0.04em;
+}
+
+.shan-guide__en {
+  grid-area: en;
+  font-family: var(--shan-font-latin);
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  color: var(--shan-sumi);
+}
+
+.shan-guide__note {
+  grid-area: note;
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+  color: var(--shan-ink-mid);
+}
+
+.shan-guide__notezh {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--shan-font-zh-body);
+  color: var(--shan-ink-strong);
+}
+
+.shan-guide__couplet {
+  margin: clamp(2.4rem, 5vh, 3.6rem) 0 0;
+  font-family: var(--shan-font-zh-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: 0.14em;
+  color: var(--shan-sumi);
+  line-height: 1.6;
+}
+
+.shan-guide__couplet-en {
+  margin: 0.6rem 0 0;
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  color: var(--shan-ink-mid);
+}
+
+/* ==========================================================================
+   03 — the seal stamp (the artist's chop)
+   The one interactive flourish. A real button; the impression blooms on press.
+   ========================================================================== */
+
+.shan-seal__inner {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  text-align: center;
+}
+
+.shan-seal__title {
+  margin: 0;
+  font-family: var(--shan-font-latin);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  color: var(--shan-sumi);
+}
+
+.shan-seal__titlezh {
+  display: block;
+  margin-top: 0.3em;
+  font-family: var(--shan-font-zh-display);
+  font-size: 0.7em;
+  letter-spacing: 0.1em;
+  color: var(--shan-vermillion-deep);
+}
+
+.shan-seal__line {
+  max-width: 40rem;
+  margin: 1.6rem auto 0;
+  color: var(--shan-ink-mid);
+}
+
+.shan-seal__linezh {
+  display: block;
+  margin-top: 0.6rem;
+  font-family: var(--shan-font-zh-body);
+  color: var(--shan-ink-strong);
+}
+
+.shan-seal__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.6rem, 3vh, 2.4rem);
+  margin-top: clamp(2.4rem, 5vh, 3.6rem);
+}
+
+.shan-seal__paper {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  background: var(--shan-xuan-aged);
+  border: 1px solid var(--shan-hairline);
+  box-shadow: 0 1px 0 rgba(26, 23, 20, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The impression left behind — invisible until the first stamp, then a
+   fresh one blooms each press (key={count} remounts it). */
+.shan-seal__impression {
+  width: 96px;
+  height: 96px;
+  transform: rotate(-4deg);
+  opacity: 0;
+}
+
+.shan-seal__impression.is-stamped {
+  animation: shan-impress 700ms var(--shan-ease-stone) forwards;
+}
+
+@keyframes shan-impress {
+  0% {
+    opacity: 0;
+    transform: scale(1.18) rotate(-1deg);
+  }
+  55% {
+    opacity: 0.95;
+    transform: scale(0.96) rotate(-4.5deg);
+  }
+  100% {
+    opacity: 0.92;
+    transform: scale(1) rotate(-4deg);
+  }
+}
+
+.shan-seal__btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--shan-sumi);
+  font: inherit;
+}
+
+.shan-seal__btnface {
+  display: block;
+  transition: transform 200ms var(--shan-ease-stone);
+}
+
+.shan-seal__btn:hover .shan-seal__btnface,
+.shan-seal__btn:focus-visible .shan-seal__btnface {
+  transform: translateY(-4px);
+}
+
+.shan-seal__btn.is-pressing .shan-seal__btnface {
+  animation: shan-chop 900ms var(--shan-ease-stone);
+}
+
+@keyframes shan-chop {
+  0% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+  35% {
+    transform: translateY(6px) scale(0.94) rotate(-4deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.shan-seal__btnlabel {
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--shan-vermillion-deep);
+}
+
+.shan-seal__btnlabelzh {
+  display: block;
+  margin-top: 0.3em;
+  text-transform: none;
+  letter-spacing: 0.16em;
+  font-family: var(--shan-font-zh-display);
+  font-size: 1.1em;
+}
+
+.shan-seal__count {
+  margin: clamp(1.6rem, 3vh, 2.4rem) 0 0;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--shan-ink-mid);
+}
+
+.shan-seal__count :lang(zh) {
+  display: block;
+  margin-top: 0.3rem;
+  font-style: normal;
+  font-family: var(--shan-font-zh-body);
+}
+
+/* ==========================================================================
+   04 — the colophon (the one inversion)
+   The page inverts once: sumi ground, xuan voice. Vermillion is finally
+   allowed to be loud — it clears AA on sumi.
+   ========================================================================== */
+
+.shan-foot {
+  background: var(--shan-sumi);
+  color: var(--shan-xuan);
+  padding: clamp(110px, 18vh, 200px) clamp(20px, 6vw, 72px)
+    clamp(48px, 7vh, 72px);
+}
+
+.shan-foot__inner {
+  max-width: 880px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.shan-foot__eyebrow {
+  margin: 0 0 1.4rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--shan-vermillion);
+}
+
+.shan-foot__title {
+  margin: 0;
+  font-family: var(--shan-font-latin);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.4vw, 3.9rem);
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.shan-foot__titlezh {
+  display: block;
+  margin-top: 0.4em;
+  font-family: var(--shan-font-zh-display);
+  font-size: 0.62em;
+  letter-spacing: 0.12em;
+  color: var(--shan-vermillion);
+}
+
+.shan-foot__line {
+  max-width: 44rem;
+  margin: 1.8rem auto 0;
+  color: var(--shan-xuan-dim);
+}
+
+.shan-foot__linezh {
+  display: block;
+  margin-top: 0.6rem;
+  font-family: var(--shan-font-zh-body);
+  color: var(--shan-xuan);
+}
+
+.shan-foot__btn {
+  position: relative;
+  display: inline-block;
+  margin-top: 3.2rem;
+  padding: 1.05em 2.6em;
+  border: 1px solid rgba(244, 237, 224, 0.4);
+  color: var(--shan-xuan);
+  text-decoration: none;
+  font-size: 0.88rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+/* The ink-fill: a scaleX pseudo-element, compositor-only. */
+.shan-foot__btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--shan-vermillion);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 520ms var(--shan-ease-stone);
+}
+
+.shan-foot__btn:hover::before,
+.shan-foot__btn:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.shan-foot__btntext {
+  position: relative;
+  transition: color 320ms var(--shan-ease-stone) 120ms;
+}
+
+.shan-foot__btn:hover .shan-foot__btntext,
+.shan-foot__btn:focus-visible .shan-foot__btntext {
+  color: var(--shan-xuan);
+}
+
+.shan-foot__btnzh {
+  display: block;
+  margin-top: 0.3em;
+  font-family: var(--shan-font-zh-display);
+  font-size: 1.05em;
+  letter-spacing: 0.12em;
+  text-transform: none;
+}
+
+.shan-foot__grid {
+  max-width: 880px;
+  margin: clamp(72px, 12vh, 120px) auto 0;
+  border-top: 1px solid rgba(244, 237, 224, 0.18);
+  padding-top: clamp(36px, 6vh, 56px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem 3rem;
+  justify-content: space-between;
+  align-items: baseline;
+  text-align: left;
+}
+
+.shan-foot__grid p {
+  margin: 0;
+}
+
+.shan-foot__brand {
+  font-family: var(--shan-font-zh-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.16em;
+  color: var(--shan-xuan);
+}
+
+.shan-foot__branden {
+  margin-left: 0.6em;
+  font-family: var(--shan-font-latin);
+  font-size: 0.7em;
+  letter-spacing: 0.3em;
+  color: var(--shan-xuan-dim);
+}
+
+.shan-foot__meta {
+  font-size: 0.85rem;
+  color: var(--shan-xuan-dim);
+}
+
+.shan-foot__meta :lang(zh) {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--shan-font-zh-body);
+}
+
+.shan-foot__koan {
+  margin: clamp(36px, 6vh, 56px) 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--shan-xuan-dim);
+}
+
+.shan-foot__koanzh {
+  display: block;
+  margin-top: 0.4rem;
+  font-style: normal;
+  font-family: var(--shan-font-zh-body);
+  color: var(--shan-xuan);
+}
+
+.shan-foot__base {
+  border-top: 1px solid rgba(244, 237, 224, 0.12);
+  padding-top: clamp(24px, 4vh, 36px);
+}
+
+.shan-foot__copy {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--shan-xuan-dim);
+}
+
+.shan-foot__copy :lang(zh) {
+  margin-left: 0.4em;
+  font-family: var(--shan-font-zh-body);
+}
+
+.shan-foot__dedication {
+  margin: clamp(40px, 7vh, 64px) auto 0;
+  max-width: 44rem;
+  font-size: 0.82rem;
+  line-height: 1.85;
+  color: var(--shan-xuan-dim);
+}
+
+.shan-foot__dedication em {
+  color: var(--shan-vermillion);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Composition at other widths
+   ========================================================================== */
+
+@media (max-width: 720px) {
+  .shan-guide__row {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "zh en"
+      "py py"
+      "note note";
+    row-gap: 0.4rem;
+  }
+
+  .shan-guide__py {
+    font-size: 0.82rem;
+  }
+
+  .shan-foot__grid {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .shan-hero__kickerzh {
+    display: block;
+    margin: 0.5em 0 0;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the page as a finished painting
+   The landscape paints one composed still (LandscapeCanvas), the loader
+   never mounts (Loader), the parallax layers rest at their composed state,
+   and CSS flattens every transition and ambient cycle.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .shan-loader {
+    display: none;
+  }
+
+  .shan-hero__hint,
+  .shan-loader__seal svg,
+  .shan-loader__word {
+    animation: none;
+  }
+
+  .shan-js [data-reveal]:not([data-reveal="scene"]),
+  .shan-hero__glyph,
+  .shan-cadence__g,
+  .shan-guide__row,
+  .shan-js .shan-hero:not(.is-entered) .shan-hero__glyph,
+  .shan-js .shan-hero:not(.is-entered) .shan-cadence__g,
+  .shan-js [data-reveal="scene"]:not(.is-visible) .shan-cadence__g {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .shan-foot__btn::before,
+  .shan-foot__btntext,
+  .shan-seal__btnface,
+  .shan-guide__layer {
+    transition: none;
+  }
+
+  .shan-guide__art {
+    --p: 0.5;
+  }
+}

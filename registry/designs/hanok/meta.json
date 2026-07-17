@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "hanok",
+  "no": 19,
+  "title": {
+    "en": "HANOK — The Building Is the Layout",
+    "ko": "한옥 — 집이 곧 레이아웃"
+  },
+  "description": {
+    "en": "A heritage atelier documents a Korean hanok where the wooden structure becomes the page — a scroll-scrubbed exploded axonometric that disassembles the roof, beams, columns, floor, and foundation into labeled joinery, then walks you through three climate zones: the warm ondol room, the cool maru hall, and the open madang courtyard under seasonal light.",
+    "ko": "한국 전통 한옥의 목조 구조를 페이지 구조 자체로 옮긴 문화유산 아틀리에 — 스크롤에 따라 지붕·대들보·기둥·마루·주춧돌이 분해되며 결구(연결)를 드러내는 폭발 등각 투상도, 그리고 따뜻한 온돌방, 서늘한 마루, 열린 마당을 계절의 빛 아래로 지나가는 세 기후 구역."
+  },
+  "aesthetic": "korean-traditional",
+  "techniques": ["scroll-scrub-pinned", "text-path", "char-split-reveal"],
+  "industry": ["culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-17",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#9c3a2e",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-17",
+  "featured": false
+}

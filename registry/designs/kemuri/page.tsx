@@ -17,9 +17,10 @@ import { useReveal } from "./hooks/useReveal";
  * stillness; the page is that hour, rehearsed. Washi and sumi, ember and
  * gold leaf; EB Garamond speaking English slowly, Zen Old Mincho holding
  * the Japanese upright. One censer, one ribbon of curl-noise smoke, three
- * ink paintings that settle out of water, a ledger of hours, and a dark
- * room at the end. Everything on screen is code — the smoke is canvas, the
- * paintings are SVG. No photograph would be still enough.
+ * sumi-e plates that settle out of water, a ledger of hours, and a dark
+ * room at the end. The smoke is canvas, the washi grain and censer are
+ * SVG, and the three plates are generated sumi-e paintings embedded as
+ * SVG <image> so the ink-settle displacement filter still owns them.
  *
  * `.kemuri-js` is added imperatively on mount (it never changes, so it is a
  * signal to CSS that JS is alive, not React state): every pre-reveal style

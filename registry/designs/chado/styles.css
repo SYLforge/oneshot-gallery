@@ -1,0 +1,1303 @@
+/* ==========================================================================
+   CHADŌ 茶道 — The Way of Tea
+   washi-sumi-e · aged paper, warm ink, one matcha accent
+   ma (間) is the design — the pause between beats is the ceremony
+   Scoped by convention to .chado-root; classes prefixed chado-.
+   ========================================================================== */
+
+.chado-root {
+  /* -- palette ------------------------------------------------------------ */
+  --ch-washi: #e8e2d4;        /* the aged page — everything happens against it */
+  --ch-washi-warm: #ece7da;   /* the page's lit skin — hero & climax ground */
+  --ch-tokonoma: #d9d2c2;     /* the alcove — recessed, older paper */
+  --ch-sumi: #2b2620;         /* warm ink — never pure black (11.61:1 on washi) */
+  --ch-ink-soft: #6b6358;     /* sumi thinned — secondary text (4.58:1) */
+  --ch-rule: #b8ad96;         /* hairlines only (1.4:1) — never text */
+  --ch-matcha: #5d6b3a;       /* the one living accent — decorative & large (4.48:1) */
+  --ch-matcha-deep: #4a5630;  /* matcha as text — AA on paper (6.10:1) */
+  /* derived */
+  --ch-rule-faint: rgba(184, 173, 150, 0.45);
+  --ch-shadow: rgba(43, 38, 32, 0.12);
+
+  /* -- type ---------------------------------------------------------------- */
+  --ch-font-latin: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --ch-font-ja: var(--font-mincho), "Shippori Mincho", serif;
+  /* Cormorant first: Latin resolves there, CJK falls through into Shippori */
+  --ch-font-stack: var(--font-cormorant), var(--font-mincho),
+    Georgia, serif;
+
+  /* -- motion -------------------------------------------------------------- */
+  --ch-ease-tea: cubic-bezier(0.16, 1, 0.3, 1);  /* entrances: soft, long tail */
+  --ch-ease-bow: cubic-bezier(0.65, 0, 0.35, 1); /* the breath & bowl: weighted */
+  --ch-reveal-ms: 1100ms;
+
+  /* Scroll-scrub default: 1 = every tine drawn, bowl full. JS lowers it per
+     chashitsu; reduced-motion and no-JS never touch it. */
+  --ch-scrub: 1;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--ch-washi);
+  color: var(--ch-sumi);
+  font-family: var(--ch-font-stack);
+  font-size: clamp(16px, 0.42vw + 14px, 19px);
+  line-height: 1.85;
+  overflow-x: hidden;
+  overflow-x: clip;
+  /* warm age-vignette — paper yellowed evenly in a drawer */
+  background-image: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(91, 80, 58, 0.06) 100%
+  );
+}
+
+/* Japanese is a first language of this ceremony: Shippori, looser leading,
+   a touch of positive tracking for mincho legibility. */
+.chado-root :lang(ja) {
+  font-family: var(--ch-font-ja);
+  letter-spacing: 0.02em;
+  line-height: 1.9;
+}
+
+/* Matcha selection, scoped to the entry root */
+.chado-root ::selection {
+  background: var(--ch-matcha);
+  color: var(--ch-washi);
+}
+
+/* Keyboard focus: a matcha ring, offset like a tea-cloth mark */
+.chado-root :focus-visible {
+  outline: 2px solid var(--ch-matcha-deep);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.chado-ceremony-doc {
+  position: relative;
+  z-index: 1;
+}
+
+/* The washi grain overlay — fixed, full viewport, pointer-transparent,
+   below the content (z-index 0 on the root stacking context above). */
+.chado-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================================================
+   Shared — kicker, section titles
+   ========================================================================== */
+
+.chado-kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--ch-font-latin);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ch-ink-soft);
+}
+
+.chado-kicker::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 1px;
+  margin-bottom: 1.1rem;
+  background: var(--ch-matcha);
+}
+
+.chado-kicker :lang(ja) {
+  letter-spacing: 0.18em;
+}
+
+.chado-kicker--center {
+  text-align: center;
+}
+
+.chado-kicker--center::before {
+  margin-inline: auto;
+}
+
+.chado-section-title {
+  margin: 0 0 0.6rem;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  color: var(--ch-sumi);
+}
+
+.chado-section-title--center {
+  text-align: center;
+}
+
+.chado-section-sub {
+  margin: 0;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: var(--ch-ink-soft);
+}
+
+.chado-section-sub--center {
+  text-align: center;
+}
+
+/* ==========================================================================
+   01 · Hero — the chashitsu gate, with the tategaki title
+   ========================================================================== */
+
+.chado-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--ch-washi-warm);
+  background-image: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(91, 80, 58, 0.05) 100%
+  );
+  padding: clamp(24px, 6vw, 76px);
+  display: flex;
+  flex-direction: column;
+}
+
+.chado-hero__folio {
+  margin: 0;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ch-ink-soft);
+}
+
+.chado-hero__folio :lang(ja) {
+  font-style: normal;
+  font-family: var(--ch-font-ja);
+}
+
+.chado-hero__stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "title" "col";
+  gap: clamp(2.5rem, 6vh, 4rem) clamp(2rem, 6vw, 5rem);
+  align-content: center;
+  padding: clamp(2rem, 8vh, 5rem) 0;
+}
+
+@media (min-width: 860px) {
+  .chado-hero__stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    grid-template-areas: "col title";
+    align-items: center;
+  }
+}
+
+/* -- the tategaki title 茶道 --------------------------------------------- */
+.chado-tategaki {
+  grid-area: title;
+  margin: 0;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  /* THE signature: vertical writing mode, right-to-left columns */
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: clamp(7rem, 18vw, 14rem);
+  line-height: 1.02;
+  letter-spacing: 0.06em;
+  color: var(--ch-sumi);
+  justify-self: center;
+  max-height: 80vh;
+  max-height: 80svh;
+}
+
+@media (min-width: 860px) {
+  .chado-tategaki {
+    justify-self: end;
+  }
+}
+
+.chado-tategaki__ch {
+  display: block;
+}
+
+/* Tategaki glyph rise — JS-gated; the no-JS title is simply written. */
+.chado-js .chado-tategaki__ch {
+  animation: ch-tategaki-rise 1300ms var(--ch-ease-tea) both;
+  animation-delay: calc(180ms + var(--ch-ci, 0) * 220ms);
+}
+
+/* -- the right-hand column: wordmark, proposition, breath cue ----------- */
+.chado-hero__col {
+  grid-area: col;
+  max-width: 34rem;
+}
+
+.chado-hero__kicker {
+  margin: 0 0 1rem;
+  font-family: var(--ch-font-latin);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ch-ink-soft);
+}
+
+.chado-hero__kicker::before {
+  content: "";
+  display: inline-block;
+  width: 2.4rem;
+  height: 1px;
+  margin-right: 0.8rem;
+  vertical-align: middle;
+  background: var(--ch-matcha);
+}
+
+.chado-hero__kicker :lang(ja) {
+  letter-spacing: 0.16em;
+}
+
+.chado-hero__name {
+  margin: 0 0 0.4rem;
+  font-family: var(--ch-font-latin);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 7vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ch-sumi);
+}
+
+.chado-hero__reading {
+  margin: 0 0 2.4rem;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ch-ink-soft);
+}
+
+.chado-hero__reading :lang(ja) {
+  font-style: normal;
+  font-family: var(--ch-font-ja);
+}
+
+.chado-hero__proposition {
+  margin: 0 0 1rem;
+  max-width: 30rem;
+  font-family: var(--ch-font-ja);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 2;
+  color: var(--ch-sumi);
+}
+
+.chado-hero__proposition--en {
+  margin-bottom: 2.6rem;
+  font-family: var(--ch-font-latin);
+  font-size: 0.98em;
+  line-height: 1.78;
+  color: var(--ch-ink-soft);
+}
+
+/* Scroll prompt at the foot of the column */
+.chado-hero__scrollhint {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3rem 0 0;
+  font-family: var(--ch-font-latin);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ch-ink-soft);
+}
+
+.chado-hero__scrollhint :lang(ja) {
+  font-family: var(--ch-font-ja);
+  letter-spacing: 0.12em;
+  text-transform: none;
+}
+
+.chado-hero__scrollline {
+  display: block;
+  width: 3.5rem;
+  height: 1px;
+  background: var(--ch-rule);
+}
+
+/* ==========================================================================
+   The breath cue — the ceremonial clock (4-4-4 box breath)
+   ========================================================================== */
+
+.chado-breath {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin: 2.4rem 0 0;
+  min-height: 4rem;
+}
+
+.chado-breath__orb {
+  position: relative;
+  display: block;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: var(--ch-matcha);
+  flex: 0 0 auto;
+  /* the breathing scale — keyed off data-breath so it runs on the compositor */
+  transform: scale(0.92);
+  transform-origin: center;
+  transition: transform 4000ms cubic-bezier(0.33, 1, 0.68, 1); /* ease-out inhale */
+}
+
+.chado-breath[data-breath="0"] .chado-breath__orb {
+  transform: scale(1);
+  transition-duration: 4000ms;
+  transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.chado-breath[data-breath="1"] .chado-breath__orb {
+  transform: scale(1);
+  transition-duration: 4000ms;
+  transition-timing-function: linear;
+}
+
+.chado-breath[data-breath="2"] .chado-breath__orb {
+  transform: scale(0.92);
+  transition-duration: 4000ms;
+  transition-timing-function: cubic-bezier(0.32, 0, 0.67, 0); /* ease-in exhale */
+}
+
+.chado-breath[data-breath="3"] .chado-breath__orb {
+  transform: scale(0.92);
+  transition-duration: 2000ms;
+  transition-timing-function: linear;
+}
+
+/* two faint rings that ride the breath — opacity-only ambient */
+.chado-breath__rings {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3.2rem;
+  height: 3.2rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.chado-breath__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--ch-matcha);
+  opacity: 0;
+}
+
+.chado-breath[data-breath="0"] .chado-breath__ring--1 {
+  animation: ch-ring-out 4000ms cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.chado-breath[data-breath="2"] .chado-breath__ring--2 {
+  animation: ch-ring-out 4000ms cubic-bezier(0.32, 0, 0.67, 0) both;
+}
+
+.chado-breath__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--ch-font-latin);
+  line-height: 1.3;
+}
+
+.chado-breath__ja {
+  font-family: var(--ch-font-ja);
+  font-size: 1.1rem;
+  color: var(--ch-sumi);
+  letter-spacing: 0.1em;
+}
+
+.chado-breath__en {
+  font-size: 0.74rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ch-ink-soft);
+}
+
+/* the label cross-fades on phase change */
+.chado-breath__label {
+  animation: ch-label-fade 320ms var(--ch-ease-tea) both;
+}
+
+/* ==========================================================================
+   02 · Ceremony beats — four turns, each a held breath (massive ma)
+   ========================================================================== */
+
+.chado-ceremony {
+  padding: clamp(110px, 22vh, 240px) clamp(20px, 6vw, 48px);
+}
+
+.chado-ceremony__head {
+  max-width: 44rem;
+  margin: 0 auto clamp(5rem, 14vh, 9rem);
+}
+
+.chado-ceremony__beats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 60rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  /* the ma between beats — vast, deliberate */
+  gap: clamp(6rem, 18vh, 12rem);
+}
+
+.chado-beat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.4rem 3rem;
+}
+
+@media (min-width: 820px) {
+  .chado-beat {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+}
+
+.chado-beat__index {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+@media (min-width: 820px) {
+  .chado-beat__index {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+}
+
+.chado-beat__no {
+  font-family: var(--ch-font-ja);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1;
+  color: var(--ch-matcha-deep);
+}
+
+.chado-beat__rule {
+  display: block;
+  flex: 1;
+  min-width: 2rem;
+  height: 1px;
+  background: var(--ch-rule-faint);
+  margin-top: 1.2rem;
+}
+
+@media (min-width: 820px) {
+  .chado-beat__rule {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+.chado-beat__title {
+  margin: 0 0 1.4rem;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  line-height: 1.4;
+  color: var(--ch-sumi);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem 1.2rem;
+}
+
+.chado-beat__title em {
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.62em;
+  color: var(--ch-ink-soft);
+}
+
+.chado-beat__p {
+  margin: 0;
+  max-width: 34rem;
+}
+
+.chado-beat__p--ja {
+  margin-bottom: 0.8rem;
+  line-height: 2.05;
+}
+
+.chado-beat__p--en {
+  margin-bottom: 0;
+  font-family: var(--ch-font-latin);
+  font-size: 0.95em;
+  line-height: 1.74;
+  color: var(--ch-ink-soft);
+}
+
+/* ==========================================================================
+   03 · The chashitsu — the chasen draw-on (scroll-scrub-pinned + svg-line-draw)
+   ========================================================================== */
+
+.chado-chashitsu {
+  padding: clamp(110px, 22vh, 220px) clamp(20px, 6vw, 48px);
+}
+
+.chado-chashitsu__head {
+  max-width: 44rem;
+  margin: 0 auto clamp(4rem, 10vh, 6rem);
+}
+
+.chado-chashitsu__scene {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vh, 4rem) clamp(3rem, 6vw, 5rem);
+  max-width: 74rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 900px) {
+  .chado-chashitsu__scene {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+
+  /* the pin: the plate holds while the preparation text flows past */
+  .chado-chashitsu__plate {
+    position: sticky;
+    top: clamp(4rem, 12vh, 7rem);
+    align-self: start;
+  }
+}
+
+.chado-chashitsu__plate {
+  margin: 0;
+}
+
+.chado-chashitsu__art {
+  display: block;
+  width: 100%;
+  max-width: 26rem;
+  height: auto;
+  margin-inline: auto;
+}
+
+.chado-chashitsu__cap {
+  margin: 1.2rem auto 0;
+  max-width: 26rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ch-ink-soft);
+  display: grid;
+  gap: 0.2rem;
+}
+
+.chado-chashitsu__cap em {
+  font-family: var(--ch-font-latin);
+}
+
+/* The chasen — the handle & node are static; the tines draw with scroll. */
+.chado-chasen__handle,
+.chado-chasen__tine {
+  fill: none;
+  stroke: var(--ch-sumi);
+  stroke-linecap: round;
+  stroke-width: 2.4;
+}
+
+.chado-chasen__handle {
+  stroke-width: 6;
+  stroke: var(--ch-sumi);
+  /* handle always fully present */
+  stroke-dasharray: none;
+}
+
+.chado-chasen__node {
+  fill: var(--ch-sumi);
+  opacity: 0.85;
+}
+
+.chado-chasen__tine {
+  /* pathLength=1, dashoffset = 1 − scrub. Default scrub 1 → tine drawn. */
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--ch-scrub, 1));
+  stroke-width: 1.6;
+  opacity: 0.92;
+}
+
+.chado-chasen__tine--inner {
+  stroke-width: 1.2;
+  opacity: 0.7;
+}
+
+/* The bowl — the shell draws with the whisk; the tea blooms at the end. */
+.chado-bowl__shell,
+.chado-bowl__rim,
+.chado-bowl__foam {
+  fill: none;
+  stroke: var(--ch-sumi);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chado-bowl__shell,
+.chado-bowl__foam {
+  /* pathLength=1 is set as the SVG attribute; here we only drive the draw */
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--ch-scrub, 1));
+}
+
+.chado-bowl__rim {
+  fill: var(--ch-tokonoma);
+  stroke-width: 2.2;
+}
+
+/* the matcha surface — blooms only as the preparation completes:
+   opacity calc(scrub·5 − 4) maps scrub 0.8→1 onto 0→1; the browser
+   clamps opacity to [0,1] for free. Default scrub 1 → tea present. */
+.chado-bowl__tea {
+  fill: var(--ch-matcha);
+  opacity: calc(var(--ch-scrub, 1) * 5 - 4);
+}
+
+/* -- the preparation text ---------------------------------------------- */
+.chado-chashitsu__text {
+  max-width: 32rem;
+}
+
+.chado-chashitsu__step-title {
+  margin: 0 0 0.4rem;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--ch-sumi);
+}
+
+.chado-chashitsu__step-sub {
+  margin: 0 0 2rem;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--ch-ink-soft);
+}
+
+.chado-chashitsu__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.8rem, 4vh, 2.8rem);
+}
+
+.chado-chashitsu__steps li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.4rem 1rem;
+}
+
+.chado-chashitsu__step-no {
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--ch-matcha-deep);
+  padding-top: 0.15rem;
+}
+
+/* ==========================================================================
+   04 · Tokonoma — the alcove (paper on paper, the second tategaki)
+   ========================================================================== */
+
+.chado-tokonoma {
+  padding: clamp(110px, 22vh, 220px) clamp(20px, 6vw, 48px);
+}
+
+.chado-tokonoma__head {
+  max-width: 44rem;
+  margin: 0 auto clamp(4rem, 10vh, 6rem);
+}
+
+.chado-tokonoma__recess {
+  position: relative;
+  max-width: 68rem;
+  margin-inline: auto;
+  background: var(--ch-tokonoma);
+  /* the alcove frame — rebated from the edge, sumi hairline */
+  padding: clamp(3rem, 8vh, 5rem) clamp(2.5rem, 6vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vh, 4rem);
+  align-items: center;
+  justify-items: center;
+}
+
+@media (min-width: 860px) {
+  .chado-tokonoma__recess {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* faint alcove frame line */
+.chado-tokonoma__recess::before {
+  content: "";
+  position: absolute;
+  inset: 2.2vw 2.2vw;
+  border: 1px solid var(--ch-rule-faint);
+  pointer-events: none;
+}
+
+.chado-tokonoma__paper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+}
+
+/* -- the hanging scroll: the tea poem in tategaki ---------------------- */
+.chado-scroll {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.chado-scroll__rod {
+  width: clamp(4rem, 9vw, 5.5rem);
+  height: 4px;
+  background: var(--ch-sumi);
+  border-radius: 2px;
+  opacity: 0.85;
+}
+
+.chado-scroll__rod--bottom {
+  height: 6px;
+  width: clamp(4.4rem, 10vw, 6rem);
+}
+
+.chado-scroll__poem {
+  margin: 0;
+  padding: 1.2rem 0.8rem;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  line-height: 1.9;
+  letter-spacing: 0.08em;
+  color: var(--ch-sumi);
+  max-height: 60vh;
+  max-height: 60svh;
+}
+
+.chado-scroll__poem span {
+  display: block;
+}
+
+.chado-scroll__cap {
+  margin-top: 0.6rem;
+  max-width: 16rem;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  text-align: center;
+  color: var(--ch-ink-soft);
+}
+
+/* -- the ikebana — one stem, drawn once on reveal ---------------------- */
+.chado-ikebana {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.chado-ikebana__art {
+  display: block;
+  width: clamp(8rem, 18vw, 11rem);
+  height: auto;
+  margin-inline: auto;
+}
+
+.chado-ikebana__vessel {
+  fill: var(--ch-sumi);
+  opacity: 0.88;
+}
+
+.chado-ikebana__water {
+  fill: none;
+  stroke: var(--ch-sumi);
+  stroke-width: 1;
+  opacity: 0.4;
+}
+
+.chado-ikebana__stem,
+.chado-ikebana__leaf {
+  fill: none;
+  stroke: var(--ch-sumi);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.chado-ikebana__leaf {
+  fill: var(--ch-sumi);
+  fill-opacity: 0.12;
+  stroke-width: 1.6;
+}
+
+/* the stem & leaf draw once, time-based, on reveal — the only time-based
+   draw on the page (every other stroke is scroll-scrubbed or static) */
+.chado-ikebana__stem,
+.chado-ikebana__leaf {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+.chado-js .chado-tokonoma [data-reveal] .chado-ikebana__stem,
+.chado-js .chado-tokonoma [data-reveal] .chado-ikebana__leaf {
+  stroke-dashoffset: 1;
+}
+
+.chado-js .chado-tokonoma [data-reveal].is-visible .chado-ikebana__stem {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1600ms var(--ch-ease-tea) 200ms;
+}
+
+.chado-js .chado-tokonoma [data-reveal].is-visible .chado-ikebana__leaf {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1200ms var(--ch-ease-tea) 900ms;
+}
+
+/* the one matcha bloom — the alcove's single accent */
+.chado-ikebana__bloom {
+  fill: var(--ch-matcha);
+}
+
+.chado-ikebana__bloom-core {
+  fill: var(--ch-matcha-deep);
+}
+
+.chado-ikebana__cap {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  color: var(--ch-ink-soft);
+}
+
+.chado-ikebana__cap em {
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+}
+
+.chado-ikebana__cap :lang(ja) {
+  font-family: var(--ch-font-ja);
+}
+
+/* ==========================================================================
+   05 · One bowl — the climax (一服)
+   ========================================================================== */
+
+.chado-bowlsec {
+  padding: clamp(130px, 26vh, 260px) clamp(20px, 6vw, 48px);
+  background: var(--ch-washi-warm);
+  background-image: radial-gradient(
+    ellipse at center,
+    transparent 58%,
+    rgba(91, 80, 58, 0.05) 100%
+  );
+}
+
+.chado-bowlsec__inner {
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.chado-bowlsec__art {
+  display: block;
+  width: min(22rem, 80%);
+  height: auto;
+  margin: 0 auto clamp(2rem, 5vh, 3rem);
+}
+
+/* the steam — the page's one ambient loop (opacity/transform only) */
+.chado-bowlsec__steam {
+  opacity: 0.5;
+}
+
+.chado-bowlsec__wisp {
+  fill: none;
+  stroke: var(--ch-sumi);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+  transform-origin: center bottom;
+  animation: ch-steam 7.2s ease-in-out infinite;
+}
+
+.chado-bowlsec__wisp--2 {
+  animation-delay: -2.4s;
+  opacity: 0.4;
+}
+
+.chado-bowlsec__wisp--3 {
+  animation-delay: -4.8s;
+  opacity: 0.45;
+}
+
+.chado-bowlsec__shell,
+.chado-bowlsec__rim {
+  fill: none;
+  stroke: var(--ch-sumi);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chado-bowlsec__rim {
+  fill: var(--ch-washi-warm);
+  stroke-width: 2.2;
+}
+
+.chado-bowlsec__tea {
+  fill: var(--ch-matcha);
+}
+
+.chado-bowlsec__foam {
+  fill: none;
+  stroke: var(--ch-washi-warm);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+.chado-bowlsec__title {
+  margin: 0 0 0.3rem;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  font-size: clamp(3.5rem, 9vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--ch-sumi);
+}
+
+.chado-bowlsec__reading {
+  margin: 0 0 2.4rem;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ch-ink-soft);
+}
+
+.chado-bowlsec__line {
+  margin: 0 auto 1rem;
+  max-width: 28rem;
+  font-family: var(--ch-font-latin);
+  font-size: 1.02rem;
+  line-height: 1.78;
+  color: var(--ch-ink-soft);
+}
+
+.chado-bowlsec__line--ja {
+  margin-bottom: 0.8rem;
+  font-family: var(--ch-font-ja);
+  font-size: 1.1rem;
+  line-height: 2;
+  color: var(--ch-sumi);
+}
+
+.chado-bowlsec__seal {
+  margin: 2.8rem 0 0;
+  font-family: var(--ch-font-ja);
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+  color: var(--ch-matcha-deep);
+}
+
+/* ==========================================================================
+   06 · Colophon — the closing
+   ========================================================================== */
+
+.chado-colophon {
+  padding: clamp(90px, 16vh, 170px) clamp(20px, 6vw, 48px)
+    clamp(96px, 16vh, 180px);
+  border-top: 1px solid var(--ch-rule-faint);
+}
+
+.chado-colophon__inner {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.chado-colophon__title {
+  margin: 0 0 0.4rem;
+  font-family: var(--ch-font-ja);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: var(--ch-sumi);
+}
+
+.chado-colophon__sub {
+  margin: 0 0 3rem;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--ch-ink-soft);
+}
+
+.chado-colophon__ledger {
+  margin: 0 0 3.2rem;
+  max-width: 44rem;
+}
+
+.chado-colophon__ledger > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.5rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px dotted var(--ch-rule);
+}
+
+.chado-colophon__ledger dt {
+  flex: 0 0 12rem;
+  font-family: var(--ch-font-latin);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ch-ink-soft);
+  line-height: 2.2;
+}
+
+.chado-colophon__ledger dt :lang(ja) {
+  font-family: var(--ch-font-ja);
+  letter-spacing: 0.1em;
+  text-transform: none;
+}
+
+.chado-colophon__ledger dd {
+  flex: 1 1 16rem;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.chado-colophon__ledger dd :lang(ja) {
+  font-family: var(--ch-font-ja);
+}
+
+.chado-colophon__close {
+  margin: 0 0 1rem;
+  max-width: 32rem;
+  font-family: var(--ch-font-ja);
+  font-size: 1.05rem;
+  line-height: 2;
+  color: var(--ch-sumi);
+}
+
+.chado-colophon__close--en {
+  margin-bottom: 3rem;
+  font-family: var(--ch-font-latin);
+  font-size: 0.98em;
+  line-height: 1.74;
+  color: var(--ch-ink-soft);
+}
+
+.chado-colophon__legal {
+  margin: 0 0 1.6rem;
+  font-family: var(--ch-font-latin);
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: var(--ch-ink-soft);
+}
+
+.chado-colophon__top {
+  display: inline-block;
+  font-family: var(--ch-font-latin);
+  font-size: 0.9rem;
+  color: var(--ch-sumi);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ch-rule);
+  padding-bottom: 1px;
+  transition: color 300ms var(--ch-ease-tea);
+}
+
+.chado-colophon__top :lang(ja) {
+  font-family: var(--ch-font-ja);
+}
+
+.chado-colophon__top:hover,
+.chado-colophon__top:focus-visible {
+  color: var(--ch-matcha-deep);
+  border-bottom-color: var(--ch-matcha);
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.chado-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--ch-reveal-ms) var(--ch-ease-tea),
+    transform var(--ch-reveal-ms) var(--ch-ease-tea);
+  will-change: opacity, transform;
+}
+
+.chado-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity only
+   ========================================================================== */
+
+@keyframes ch-tategaki-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.22em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ch-label-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ch-ring-out {
+  from {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes ch-steam {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: translateY(2px);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-3px);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — one calm, fully-composed static ceremony
+   - breath cue: orb sits full & still (phase "rest"), no rings, no label fade
+   - tategaki: rendered statically, no glyph rise
+   - chasen: every tine drawn, bowl full (scrub stays 1), plate unpins
+   - ikebana stem: drawn, no draw transition
+   - steam: still
+   - reveals: present, no motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .chado-js .chado-tategaki__ch {
+    animation: none;
+  }
+
+  .chado-breath__orb,
+  .chado-breath[data-breath="0"] .chado-breath__orb,
+  .chado-breath[data-breath="1"] .chado-breath__orb,
+  .chado-breath[data-breath="2"] .chado-breath__orb,
+  .chado-breath[data-breath="3"] .chado-breath__orb {
+    transform: scale(1);
+    transition: none;
+  }
+
+  .chado-breath__ring,
+  .chado-breath[data-breath="0"] .chado-breath__ring--1,
+  .chado-breath[data-breath="2"] .chado-breath__ring--2 {
+    animation: none;
+    opacity: 0;
+  }
+
+  .chado-breath__label {
+    animation: none;
+  }
+
+  .chado-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .chado-chashitsu__plate {
+    position: static;
+  }
+
+  .chado-js .chado-tokonoma [data-reveal] .chado-ikebana__stem,
+  .chado-js .chado-tokonoma [data-reveal] .chado-ikebana__leaf,
+  .chado-js
+    .chado-tokonoma
+    [data-reveal].is-visible
+    .chado-ikebana__stem,
+  .chado-js
+    .chado-tokonoma
+    [data-reveal].is-visible
+    .chado-ikebana__leaf {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .chado-bowlsec__wisp,
+  .chado-bowlsec__wisp--2,
+  .chado-bowlsec__wisp--3 {
+    animation: none;
+    opacity: 0.3;
+  }
+}
+
+/* ==========================================================================
+   Small screens — the tategaki stays upright but smaller; grids collapse
+   (handled inline above). Ensure the title never overflows narrow widths.
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .chado-tategaki {
+    font-size: clamp(5rem, 26vw, 7rem);
+    max-height: 60vh;
+    max-height: 60svh;
+  }
+
+  .chado-scroll__poem {
+    font-size: 1.15rem;
+    max-height: 50vh;
+    max-height: 50svh;
+  }
+}

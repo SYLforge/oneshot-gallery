@@ -9,18 +9,94 @@ const SETTLE_FROM = 110;
 const SETTLE_MS = 1900;
 
 /**
- * Section 03 — the plates. Three sumi-e paintings, drawn entirely in SVG:
- * layered soft-edged ink shapes under a per-plate feTurbulence +
- * feDisplacementMap filter. While a plate waits below the fold its
- * displacement scale sits at 110 — the ink is still water. As it enters the
- * viewport, a rAF loop eases the *scale attribute* down to 0 and the
- * painting settles into itself. Only the displacement scale animates; the
- * turbulence (baseFrequency, seed) never changes, so the noise texture is
- * computed once and each frame pays displacement only.
+ * Section 03 — the plates. Three sumi-e paintings.
+ *
+ * The art itself is now generated: ComfyUI sumi-e plates living at
+ * /media/kemuri/plate-N-*.avif. But the signature interaction survives —
+ * "ink settling out of water" — because each painting is embedded inside
+ * an SVG via `<image>` and wrapped in the SAME per-plate
+ * feTurbulence + feDisplacementMap filter the vector version used. SVG
+ * filters operate on raster art exactly as on vector art, so while a plate
+ * waits below the fold its displacement scale sits at 110 (the painting is
+ * still weather), and as it enters the viewport a rAF loop eases the
+ * `scale` attribute down to 0 and the painting settles into itself. Only
+ * the displacement scale animates; the turbulence (baseFrequency, seed)
+ * never changes, so the noise texture is computed once and each frame pays
+ * displacement only.
  *
  * With JavaScript off the markup scale is already 0: the plates are simply
  * finished paintings. Under reduced motion they are never disturbed.
+ *
+ * Why SVG `<image>` and not a plain `<img>` with `filter: url()`: keeping
+ * the art inside the SVG lets the displacement region, filter primitives,
+ * and the no-JS `scale="0"` markup contract stay byte-for-byte identical
+ * to the vector version — the rAF loop still calls `setAttribute` on the
+ * same `<feDisplacementMap>` element it always did.
  */
+
+type Plate = {
+  /** number glyph shown in the caption */
+  no: "壱" | "弐" | "参";
+  /** latin numeral used in filter ids (kemuri-pN-settle) — kept ASCII so the
+   *  url(#...) reference and any CSS selector stay encoding-safe. */
+  id: 1 | 2 | 3;
+  /** filename stem under /media/kemuri/, e.g. "plate-1-distant-mountains". */
+  stem: string;
+  /** bilingual alt — same role="img" contract the vector version kept. */
+  alt: string;
+  /** per-plate turbulence seed (kept from the vector plates — same weather). */
+  seed: number;
+  /** per-plate turbulence baseFrequency (kept from the vector plates). */
+  freq: string;
+  caption: {
+    no: "壱" | "弐" | "参";
+    ja: string;
+    en: string;
+  };
+};
+
+const PLATES: readonly Plate[] = [
+  {
+    no: "壱",
+    id: 1,
+    stem: "plate-1-distant-mountains",
+    seed: 19,
+    freq: "0.011 0.017",
+    alt: "Sumi-e ink painting: three ranges of mountains dissolving into mist, a small gold sun low in the sky. 水墨画 — 霞に溶けていく三重の山なみ、低い空に小さな金の日。",
+    caption: {
+      no: "壱",
+      ja: "遠山 — 山は近づいてこない。それが山のやさしさ。",
+      en: "Distant mountains. They never come closer — that is their kindness.",
+    },
+  },
+  {
+    no: "弐",
+    id: 2,
+    stem: "plate-2-bare-branch",
+    seed: 31,
+    freq: "0.013 0.019",
+    alt: "Sumi-e ink painting: a single bare branch reaching in from the right, one ember-colored bud at its tip. 水墨画 — 右から伸びる一本の枯枝、先端にひとつの熾色の芽。",
+    caption: {
+      no: "弐",
+      ja: "枯枝 — 枝は何も持たない。持たないことを、うまくやる。",
+      en: "A bare branch. It holds nothing, and holds it well.",
+    },
+  },
+  {
+    no: "参",
+    id: 3,
+    stem: "plate-3-censer-smoke",
+    seed: 47,
+    freq: "0.009 0.015",
+    alt: "Sumi-e ink painting: a censer at the foot of the paper, one stick of incense, a ribbon of smoke written upward in a single stroke. 水墨画 — 紙の裾に香炉、一本の線香、ひと筆で上へ書かれた煙。",
+    caption: {
+      no: "参",
+      ja: "一炷 — 墨と水と、辛抱。煙も同じ書き方で書かれる。",
+      en: "One stick. Ink, water, patience — smoke is written the same way.",
+    },
+  },
+];
+
 export default function InkPlates() {
   const listRef = useRef<HTMLDivElement | null>(null);
   const reduced = usePrefersReducedMotion();
@@ -102,205 +178,75 @@ export default function InkPlates() {
       </div>
 
       <div className="kemuri-plates__row" ref={listRef}>
-        {/* ---- Plate I — distant mountains -------------------------------- */}
-        <figure className="kemuri-plate">
-          <div className="kemuri-plate__paper">
-            <svg
-              className="kemuri-plate__art"
-              viewBox="0 0 440 560"
-              role="img"
-              aria-label="Sumi-e ink painting: three ranges of mountains dissolving into mist, a small gold sun low in the sky. 水墨画 — 霞に溶けていく三重の山なみ、低い空に小さな金の日。"
-            >
-              <defs>
-                <filter id="kemuri-p1-settle" x="-14%" y="-14%" width="128%" height="128%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.011 0.017" numOctaves="2" seed="19" result="w" />
-                  <feDisplacementMap in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G" />
-                </filter>
-                <filter id="kemuri-p1-soft7"><feGaussianBlur stdDeviation="7" /></filter>
-                <filter id="kemuri-p1-soft3"><feGaussianBlur stdDeviation="3" /></filter>
-                <filter id="kemuri-p1-soft12"><feGaussianBlur stdDeviation="12" /></filter>
-                <filter id="kemuri-p1-soft1"><feGaussianBlur stdDeviation="1.1" /></filter>
-              </defs>
-              <g filter="url(#kemuri-p1-settle)">
-                <circle cx="330" cy="118" r="26" fill="#b08d4a" opacity="0.28" filter="url(#kemuri-p1-soft7)" />
-                <circle cx="330" cy="118" r="19" fill="#b08d4a" opacity="0.8" />
-                <path
-                  d="M0 316 C60 288 118 302 168 292 C224 280 260 296 312 288 C360 282 404 292 440 284 L440 560 L0 560 Z"
-                  fill="#8a8178"
-                  opacity="0.3"
-                  filter="url(#kemuri-p1-soft7)"
-                />
-                <path
-                  d="M0 372 C48 358 96 330 148 302 C176 288 196 292 216 310 C262 350 320 362 440 356 L440 560 L0 560 Z"
-                  fill="#8a8178"
-                  opacity="0.52"
-                  filter="url(#kemuri-p1-soft3)"
-                />
-                <rect x="-20" y="336" width="480" height="72" fill="#efe7d8" opacity="0.55" filter="url(#kemuri-p1-soft12)" />
-                <path
-                  d="M0 470 C70 440 140 452 210 436 C290 418 356 434 440 414 L440 560 L0 560 Z"
-                  fill="#1c1814"
-                  opacity="0.82"
-                  filter="url(#kemuri-p1-soft1)"
-                />
-                <g stroke="#1c1814" fill="none" strokeLinecap="round" opacity="0.85">
-                  <path d="M96 452 C94 440 98 432 92 420" strokeWidth="2.4" />
-                  <path d="M92 424 L106 419" strokeWidth="1.4" />
-                  <path d="M94 434 L81 429" strokeWidth="1.4" />
-                  <path d="M89 419 L96 412" strokeWidth="1.2" />
-                </g>
-              </g>
-            </svg>
-          </div>
-          <figcaption className="kemuri-plate__caption">
-            <span className="kemuri-plate__no" aria-hidden="true">壱</span>
-            <span lang="ja" className="kemuri-plate__ja">遠山 — 山は近づいてこない。それが山のやさしさ。</span>
-            <span className="kemuri-plate__en">
-              Distant mountains. They never come closer — that is their
-              kindness.
-            </span>
-          </figcaption>
-        </figure>
-
-        {/* ---- Plate II — the bare branch ---------------------------------- */}
-        <figure className="kemuri-plate">
-          <div className="kemuri-plate__paper">
-            <svg
-              className="kemuri-plate__art"
-              viewBox="0 0 440 560"
-              role="img"
-              aria-label="Sumi-e ink painting: a single bare branch reaching in from the right, one ember-colored bud at its tip. 水墨画 — 右から伸びる一本の枯枝、先端にひとつの熾色の芽。"
-            >
-              <defs>
-                <filter id="kemuri-p2-settle" x="-14%" y="-14%" width="128%" height="128%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.013 0.019" numOctaves="2" seed="31" result="w" />
-                  <feDisplacementMap in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G" />
-                </filter>
-                <filter id="kemuri-p2-soft4"><feGaussianBlur stdDeviation="4" /></filter>
-                <filter id="kemuri-p2-soft05"><feGaussianBlur stdDeviation="0.5" /></filter>
-              </defs>
-              <g filter="url(#kemuri-p2-settle)">
-                {/* the branch's own memory — a wash shadow */}
-                <g
-                  transform="translate(7 12)"
-                  stroke="#8a8178"
-                  fill="none"
-                  strokeLinecap="round"
-                  opacity="0.22"
-                  filter="url(#kemuri-p2-soft4)"
-                >
-                  <path d="M440 168 C360 178 300 196 246 224 C210 242 186 260 168 282" strokeWidth="7" />
-                </g>
-                <g
-                  stroke="#1c1814"
-                  fill="none"
-                  strokeLinecap="round"
-                  filter="url(#kemuri-p2-soft05)"
-                >
-                  {/* brush pressure: the same limb, three loads of ink */}
-                  <path d="M440 168 C378 174 330 186 288 204" strokeWidth="7.5" opacity="0.92" />
-                  <path d="M296 200 C258 218 216 240 190 262" strokeWidth="4.2" opacity="0.9" />
-                  <path d="M196 258 C186 268 176 276 167 286" strokeWidth="2" opacity="0.88" />
-                  {/* twigs */}
-                  <path d="M312 196 C308 178 312 164 304 150" strokeWidth="2.2" opacity="0.85" />
-                  <path d="M305 152 L310 136" strokeWidth="1.2" opacity="0.8" />
-                  <path d="M258 222 C252 238 254 252 246 262" strokeWidth="1.9" opacity="0.8" />
-                  <path d="M222 240 C216 230 218 220 212 212" strokeWidth="1.6" opacity="0.75" />
-                  <path d="M182 270 L171 263" strokeWidth="1.2" opacity="0.7" />
-                </g>
-                {/* ink flecks — where the brush breathed */}
-                <circle cx="332" cy="176" r="1.6" fill="#1c1814" opacity="0.4" />
-                <circle cx="240" cy="238" r="1.2" fill="#1c1814" opacity="0.32" />
-                {/* the one warm thing */}
-                <circle cx="165" cy="288" r="9" fill="#c96f2e" opacity="0.22" filter="url(#kemuri-p2-soft4)" />
-                <circle cx="165" cy="288" r="4.4" fill="#c96f2e" opacity="0.92" />
-              </g>
-            </svg>
-          </div>
-          <figcaption className="kemuri-plate__caption">
-            <span className="kemuri-plate__no" aria-hidden="true">弐</span>
-            <span lang="ja" className="kemuri-plate__ja">枯枝 — 枝は何も持たない。持たないことを、うまくやる。</span>
-            <span className="kemuri-plate__en">
-              A bare branch. It holds nothing, and holds it well.
-            </span>
-          </figcaption>
-        </figure>
-
-        {/* ---- Plate III — one stick of smoke ------------------------------ */}
-        <figure className="kemuri-plate">
-          <div className="kemuri-plate__paper">
-            <svg
-              className="kemuri-plate__art"
-              viewBox="0 0 440 560"
-              role="img"
-              aria-label="Sumi-e ink painting: a censer at the foot of the paper, one stick of incense, a ribbon of smoke written upward in a single stroke. 水墨画 — 紙の裾に香炉、一本の線香、ひと筆で上へ書かれた煙。"
-            >
-              <defs>
-                <filter id="kemuri-p3-settle" x="-14%" y="-14%" width="128%" height="128%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.009 0.015" numOctaves="2" seed="47" result="w" />
-                  <feDisplacementMap in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G" />
-                </filter>
-                <filter id="kemuri-p3-soft6"><feGaussianBlur stdDeviation="6" /></filter>
-                <filter id="kemuri-p3-soft25"><feGaussianBlur stdDeviation="2.5" /></filter>
-                <filter id="kemuri-p3-soft06"><feGaussianBlur stdDeviation="0.6" /></filter>
-                <filter id="kemuri-p3-soft10"><feGaussianBlur stdDeviation="10" /></filter>
-              </defs>
-              <g filter="url(#kemuri-p3-settle)">
-                {/* the smoke — one path, three loads of ink */}
-                <g fill="none" strokeLinecap="round">
-                  <path
-                    d="M224 424 C218 384 244 356 228 316 C214 282 240 254 226 214 C216 182 236 158 228 122 C224 104 230 88 226 72"
-                    stroke="#8a8178"
-                    strokeWidth="13"
-                    opacity="0.12"
-                    filter="url(#kemuri-p3-soft6)"
-                  />
-                  <path
-                    d="M224 424 C218 384 244 356 228 316 C214 282 240 254 226 214 C216 182 236 158 228 122 C224 104 230 88 226 72"
-                    stroke="#8a8178"
-                    strokeWidth="6"
-                    opacity="0.2"
-                    filter="url(#kemuri-p3-soft25)"
-                  />
-                  <path
-                    d="M224 424 C218 384 244 356 228 316 C214 282 240 254 226 214 C216 182 236 158 228 122 C224 104 230 88 226 72"
-                    stroke="#8a8178"
-                    strokeWidth="2.2"
-                    opacity="0.42"
-                    filter="url(#kemuri-p3-soft06)"
+        {PLATES.map((plate) => (
+          <figure className="kemuri-plate" key={plate.no}>
+            <div className="kemuri-plate__paper">
+              {/*
+                The painting rides inside an SVG so the displacement-settle
+                filter (feTurbulence + feDisplacementMap) can act on it.
+                viewBox matches the vector plates' 440x560; the raster covers
+                it via preserveAspectRatio="xMidYMid slice" (the paintings are
+                3:4, near enough to fill the frame with a hair's crop).
+                The filter region is padded -14%/128% so displaced pixels at
+                the edge do not clamp — same as before.
+              */}
+              <svg
+                className="kemuri-plate__art"
+                viewBox="0 0 440 560"
+                role="img"
+                aria-label={plate.alt}
+              >
+                <defs>
+                  <filter
+                    id={`kemuri-p${plate.id}-settle`}
+                    x="-14%"
+                    y="-14%"
+                    width="128%"
+                    height="128%"
+                  >
+                    <feTurbulence
+                      type="fractalNoise"
+                      baseFrequency={plate.freq}
+                      numOctaves="2"
+                      seed={plate.seed}
+                      result="w"
+                    />
+                    <feDisplacementMap
+                      in="SourceGraphic"
+                      in2="w"
+                      scale="0"
+                      xChannelSelector="R"
+                      yChannelSelector="G"
+                    />
+                  </filter>
+                </defs>
+                <g filter={`url(#kemuri-p${plate.id}-settle)`}>
+                  <image
+                    href={`/media/kemuri/${plate.stem}.avif`}
+                    x="0"
+                    y="0"
+                    width="440"
+                    height="560"
+                    preserveAspectRatio="xMidYMid slice"
+                    // AVIF is decoded by every modern browser's SVG <image>;
+                    // the WebP fallback for older engines is documented in
+                    // PROMPT.md image-recipe. The plate's paper frame,
+                    // hairline mount, and caption live in CSS unchanged.
                   />
                 </g>
-                <ellipse cx="226" cy="78" rx="32" ry="18" fill="#8a8178" opacity="0.13" filter="url(#kemuri-p3-soft10)" />
-                {/* censer */}
-                <path d="M180 470 C180 492 200 502 220 502 C240 502 260 492 260 470 Z" fill="#1c1814" fillOpacity="0.88" />
-                <ellipse cx="220" cy="470" rx="40" ry="7" fill="#1c1814" fillOpacity="0.88" />
-                <ellipse cx="220" cy="469" rx="33" ry="4.6" fill="#e3d7c0" />
-                <path
-                  d="M182 468 C190 464 205 462 220 462 C235 462 250 464 258 468"
-                  fill="none"
-                  stroke="#b08d4a"
-                  strokeOpacity="0.8"
-                  strokeWidth="1.3"
-                />
-                <g stroke="#1c1814" strokeWidth="3.6" strokeLinecap="round">
-                  <path d="M196 500 L192 514" />
-                  <path d="M220 503 L220 517" />
-                  <path d="M244 500 L248 514" />
-                </g>
-                <ellipse cx="220" cy="468" rx="16" ry="3" fill="#8a8178" fillOpacity="0.5" />
-                <path d="M220 468 L224 428" stroke="#1c1814" strokeWidth="1.6" strokeLinecap="round" />
-                <circle cx="224" cy="428" r="2.4" fill="#c96f2e" />
-              </g>
-            </svg>
-          </div>
-          <figcaption className="kemuri-plate__caption">
-            <span className="kemuri-plate__no" aria-hidden="true">参</span>
-            <span lang="ja" className="kemuri-plate__ja">一炷 — 墨と水と、辛抱。煙も同じ書き方で書かれる。</span>
-            <span className="kemuri-plate__en">
-              One stick. Ink, water, patience — smoke is written the same way.
-            </span>
-          </figcaption>
-        </figure>
+              </svg>
+            </div>
+            <figcaption className="kemuri-plate__caption">
+              <span className="kemuri-plate__no" aria-hidden="true">
+                {plate.caption.no}
+              </span>
+              <span lang="ja" className="kemuri-plate__ja">
+                {plate.caption.ja}
+              </span>
+              <span className="kemuri-plate__en">{plate.caption.en}</span>
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );

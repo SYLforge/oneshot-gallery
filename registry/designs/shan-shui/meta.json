@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "shan-shui",
+  "no": 17,
+  "title": {
+    "en": "SHAN-SHUI — Mountain & Water",
+    "ko": "산수 — 산과 물"
+  },
+  "description": {
+    "en": "A procedurally-generated, infinitely-scrolling Chinese ink landscape that paints itself live in the browser. Mountains recede through layered ink density, mist pools in the valleys and follows your hand, a vermillion seal marks the scroll. Every ridge, tree and wisp is code — no images, no dependencies.",
+    "ko": "브라우저 안에서 스스로를 그리며 끝없이 펼쳐지는, 절차적으로 생성된 중국 수묵 산수. 산은 먹의 농도로 멀어지고, 안개는 골짜기에 고여 당신의 손을 따른다. 한 점의 주홍 낙관이 두루마리를 찍는다. 산맥도, 나무도, 한 줌의 안개도 모두 코드로 그려진다 — 이미지도, 의존성도 없다."
+  },
+  "aesthetic": "washi-sumi-e",
+  "techniques": ["canvas-particles", "pointer-parallax", "scroll-scrub-pinned"],
+  "industry": ["atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-17",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#a83232",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-17",
+  "featured": false
+}

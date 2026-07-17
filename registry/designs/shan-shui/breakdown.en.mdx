@@ -1,0 +1,278 @@
+# SHAN-SHUI — breakdown
+
+## The hook
+
+There is a painting that paints itself, and it never finishes. You arrive
+mid-scroll — the mountains were already there — and the only thing asked of
+you is to keep reading, because the reading *is* the unrolling of a Chinese
+hand-scroll (手卷). Mountains recede not by getting smaller but by getting
+paler, the way a real ridge dissolves into haze; mist pools in the valleys
+and leans, almost imperceptibly, toward your hand; and somewhere deep in the
+scroll the weather turns from spring plum-haze to drowned winter cloud
+without ever cutting. When you reach the colophon, the page tells you
+plainly: nothing you saw was a painting. Every ridge was summed from value
+noise, every wisp of mist was a radial gradient, every foreground pine was
+a recursive brushstroke. The painting is the code.
+
+The design bet: on a light page with a zero-byte image budget, a
+**procedurally-generated landscape** can carry more contemplative weight
+than any static photograph — because a photograph of mountains is still, and
+a real hand-scroll is the one thing a photograph can never be: unending.
+
+## The benchmark, and what this entry does about it
+
+`{Shan, Shui}*` by LingDong (https://github.com/LingDong-/shan-shui-inf) is
+the canonical "can code be the painting?" reference — a procedurally-generated,
+infinitely-scrolling Chinese landscape that synthesizes mountains, trees,
+mist and waterfalls from noise and draws them as **SVG**. It is widely
+admired, and this entry exists in respectful conversation with it. Three
+deliberate differences aim to feel at least as crafted:
+
+1. **Canvas, not SVG.** The authentic sumi medium is wet ink on paper.
+   Canvas radial-gradient mist, blurred ridge-top washes, and feathered
+   foliage read as paint; SVG silhouettes read as vector. The trade is
+   resolution-independence for atmosphere — accepted, and named in the
+   colophon.
+2. **Ink density as depth.** Five ridge layers, farthest first, each paler
+   and smaller. This enacts 远山如黛 ("distant mountains are like eyebrow
+   pigment") — the Northern-Song principle that distance is ink alpha, not
+   perspective — literally, in the alpha channel of every fill.
+3. **Reactive.** The benchmark is a fixed, autoplaying scroll. This one
+   breathes: the scroll *is* the unrolling (page-scroll drives a world-x
+   offset through the noise), mist leans toward a fine pointer, and the
+   weather cycles through four seasons as you read.
+
+## Art direction
+
+Washi-sumi-e lives on restraint. The ground is cream rice paper (`#f4ede0`),
+the voice is ink (`#1a1714`, 15.3:1), and there is exactly one warm color —
+vermillion `#a83232` — which appears where a chop actually appears: the
+seal, the one accent, the artist entering the painting. A second warm hue
+anywhere and the page becomes a tourist postcard.
+
+Two constraints did the hard work. First, vermillion measures 5.7:1 on xuan
+(AA for large text and non-text) but only 2.7:1 on sumi, so on the dark
+colophon it is decorative-only (the seal as object) and a working token
+`vermillion-deep #8a2626` (7.6:1) was derived for functional accents on
+either ground: eyebrows, the focus ring, the `::selection` ground. Second,
+the type refuses the obvious pairing. Cormorant Garamond speaks English the
+way a literati hand holds a brush — lightly — and Ma Shan Zheng (硬笔行楷)
+holds every Chinese display glyph upright; Noto Serif SC carries the prose-
+scale Chinese where the brush face would be illegible. The stack order
+means the giant 山水 falls through Cormorant into the brush face with no
+markup. The two languages are distinguished by posture, not size: English
+italicizes, calligraphy never leans.
+
+## Technique 1 — value noise, ridges, and ink density as distance
+
+The naive way to draw mountains is to hand-author a polyline. It reads as a
+logo. Real ridges are self-similar across scale: a peak has sub-peaks, which
+have sub-sub-peaks. That structure is exactly what fractal Brownian motion
+(fBm) gives you — the sum of several octaves of smooth noise at doubling
+frequency and halving amplitude:
+
+```ts
+// hooks/landscape.ts — the ridge profile is four octaves of value noise
+const OCTAVE_FREQS = [1, 2.05, 4.4, 9.1];
+const OCTAVE_WEIGHTS = [1, 0.52, 0.27, 0.13];
+
+function ridgeHeight(layer, x, scrollX, stageH) {
+  const wx = (x + scrollX) * layer.freq + layer.phase;
+  let h = 0, wSum = 0;
+  for (let o = 0; o < OCTAVE_FREQS.length; o++) {
+    h += (valueNoise(wx * OCTAVE_FREQS[o], layer.phase * OCTAVE_FREQS[o]) - 0.5)
+         * OCTAVE_WEIGHTS[o];
+    wSum += OCTAVE_WEIGHTS[o];
+  }
+  h /= wSum;
+  // ridge-sharpen: reflect around 0.5 — pointed peaks, rounded valleys
+  const ridge = 0.5 - Math.abs(h);
+  return layer.baseY * stageH - ridge * layer.amp * stageH * 2.2;
+}
+```
+
+Two details sell it. First, the `0.5 - Math.abs(h)` ridge transform: raw fBm
+produces rolling hills, but mountain silhouettes have pointed peaks and
+rounded valleys. Reflecting the noise around its midpoint sharpens the peaks
+without changing the frequency content — the cheapest "make it look like
+mountains" trick there is. Second, the permutation table is seeded (`1368`,
+a Ming year), so the scroll is the *same painting* on every visit.
+Determinism is the difference between a landscape and a screensaver.
+
+Then the shan-shui principle itself, enacted in the alpha channel:
+
+```ts
+// hooks/landscape.ts — five layers, ink density IS the depth
+const RIDGE_LAYERS = [
+  { depth: 0, ink: 0.14, rgb: [154,148,136] }, // pale-wash — dissolving
+  { depth: 1, ink: 0.26, rgb: [125,117,106] }, // ink-soft
+  { depth: 2, ink: 0.42, rgb: [90,82,73]   },  // ink-mid
+  { depth: 3, ink: 0.62, rgb: [58,52,44]   },  // ink-strong
+  { depth: 4, ink: 0.82, rgb: [26,23,20]   },  // sumi — the foreground
+];
+```
+
+远山如黛 — "distant mountains are like eyebrow pigment". Each nearer layer
+is darker, taller, and rides lower on the paper. The farthest ridge is
+almost the paper itself. That is aerial perspective expressed as five
+`rgba()` fills, and it is the entire depth model: there is no perspective
+projection anywhere on this page.
+
+The scroll drives a world-x offset, and each layer is parallaxed by its
+depth (`worldX × (0.4 + depth·0.16)`), so far ridges drift slower than near
+ones — reinforcing the depth without any projection. Because `ridgeHeight`
+is a pure function of world-x, the same call generates the scroll forever in
+both directions. The hand-scroll is literally endless because it is a
+function, not an asset.
+
+## Technique 2 — pointer-reactive mist
+
+Mist is the soul of a Chinese landscape — it is where the mountains breathe.
+Each of ~26 mist blobs is a soft radial gradient (xuan-colored, fading to
+transparent) pooled in the valley *between* two ridge layers, born already
+mid-breath so the first frame is composed:
+
+```ts
+// LandscapeCanvas.tsx — mist pools in valleys, leans toward the hand
+const grad = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r);
+grad.addColorStop(0,    `rgba(244,237,224,${alpha})`);
+grad.addColorStop(0.45, `rgba(244,237,224,${alpha * 0.5})`);
+grad.addColorStop(1,    `rgba(244,237,224,0)`);
+```
+
+Two forces move the mist, and neither ever steers it. The first is an
+autonomous two-sine breeze (`7·sin(0.13t) + 4·sin(0.31t+0.7)`, periods
+mutually prime) that drifts the blobs horizontally — on touch devices, or
+whenever no hand is present, this is the only motion, and it is enough. The
+second is the pointer: a fine pointer biases where each blob *pools*
+(vertically, toward the hand's y) with an energy value that lerps
+asymmetrically — attack 0.045, release 0.016 per 60fps frame:
+
+```ts
+// LandscapeCanvas.tsx — the painting notices a hand, then forgets slowly
+const reach = Math.exp(-(dx * dx) / (W * W * 0.08)); // only nearby blobs
+targetY = m.ry + (ptr.y - m.ry ... ) * reach * PTR_MIST_PULL;
+const k = tgt.e > ptr.e ? PTR_ATTACK : PTR_RELEASE; // asymmetric
+ptr.e += (tgt.e - ptr.e) * k * fr;
+```
+
+Half-life in: ~15 frames (a quarter second). Half-life out: ~40 frames
+(nearly three seconds). The mist notices your hand the way the painting
+would notice someone leaning close to it, and forgets the way smoke forgets
+a draft. Scroll velocity adds a capped horizontal gust (±60 px/s), so a
+flick sends visible weather through the valleys — but only flavors the
+drift, never overrides it. This is the `pointer-parallax` and
+`canvas-particles` technique: a particle field whose behavior is layered
+(autonomous breeze + pointer pull + scroll gust), each force capped so the
+sum stays weather, never a cursor toy.
+
+## Technique 3 — the scroll-scrubbed parallax, and the four seasons
+
+The scroll guide (section 02) is the `scroll-scrub-pinned` moment. A stage
+holds four characters — 遠山如黛 — at four depths, sizes, and opacities, and
+they part as you scroll past. The mechanism is one custom property:
+
+```ts
+// ScrollGuide.tsx — write ONE number from scroll, no layout writes
+const update = () => {
+  const rect = art.getBoundingClientRect();
+  const travel = window.innerHeight + rect.height;
+  const p = Math.max(0, Math.min(1, (innerHeight - rect.top) / travel));
+  art.style.setProperty("--p", p.toFixed(3));
+};
+const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+```
+
+CSS consumes `--p` in pure transform math — each layer translates and scales
+by a different multiple of it, so the four characters separate into depth
+as you read, enacting the three-distance principle (三遠) the section is
+explaining. No React re-render on scroll, no layout property touched, one
+rAF-gated write to one element. The pre-reveal state rests at `--p: 0.5`
+under reduced motion — a composed mid-separation.
+
+Layered over the whole scroll is the slowest motion on the page: the four
+seasons. The world-x position maps onto a position in an endless
+spring→summer→autumn→winter cycle (2400 world-px per boundary), and the two
+adjacent seasons are *blended* by a 0..1 factor — mist density, far-ridge
+fade, a faint sky wash, and a rare seasonal accent (vermillion plum dots in
+spring, falling snow motes in winter) all crossfade. The weather never cuts;
+it changes the way weather does. One full cycle is ~9600 world-px of scroll
+— long enough that a casual reader sees weather, not a loop.
+
+## Motion math
+
+Three numbers give the landscape its temperament:
+
+- **Pointer attack 0.045 / release 0.016.** The mist-energy lerps, normalized
+  to 60fps. Half-life ≈ 15 frames in, ≈ 40 frames out. Attention arrives in
+  a breath and leaves the way the smell of ink leaves a room.
+- **Breeze periods 0.13 / 0.31 rad/s.** ~48s and ~20s, mutually prime (no
+  common divisor), so the autonomous drift never visibly repeats within a
+  session.
+- **Season boundary 2400 world-px.** At a typical scroll rate that is ~30
+  seconds of reading per season — slow enough to feel like weather, fast
+  enough that a determined reader sees all four.
+
+Everything else obeys two easings: `ease-scroll`
+(`cubic-bezier(0.22,1,0.36,1)`) front-loads travel and spends the tail
+settling sub-pixel, so 900–1100ms reads as calm; `ease-stone`
+(`cubic-bezier(0.65,0,0.35,1)`) is symmetric and weighted for the two
+physical moves — the seal press and the button ink-fill. Ambient cycles
+(mist breath 6.8s, hint drift 11.3s) are mutually prime with each other and
+with both cadences.
+
+## Performance notes
+
+- One rAF loop for the landscape, throttled to ~64fps (`FRAME_MS = 15.5`),
+  `dt` clamped to 48ms so a background tab never causes a lurch on return.
+  The loop stops via IntersectionObserver (120px margin) *and*
+  `visibilitychange` — zero frames offscreen or tab-hidden.
+- DPR capped at 2. A ridge layer costs one `beginPath` + ~W/6 line segments
+  + one `fill` per layer (5 layers), plus a blurred top-edge wash for the
+  wet-on-wet rim. Mist is 26 radial gradients; trees are cached per
+  world-tile (deterministic) and only the visible tile range is drawn.
+- The scroll listener for `--p` is rAF-gated and writes one custom property;
+  the scroll-velocity hook records into a ref, never re-rendering React.
+- The washi grain is one static `feTurbulence` rect — filters never animate
+  anywhere on the page.
+- All CSS animation is `transform`, `opacity`, `filter`. Reveals write
+  `class` + `transitionDelay` from one observer callback. The page
+  re-renders exactly twice after mount: loader lift start, loader unmount.
+
+## Accessibility notes
+
+- **Reduced motion:** the loader never mounts (and `display: none` as a
+  belt), the landscape warms up and paints one composed still (a held
+  breath of mist, mid-plum-spring), the parallax layers rest at `--p: 0.5`,
+  and a media query flattens every transition and ambient cycle. The result
+  is a finished painting, not a paused video.
+- **No-JS:** every pre-reveal style is gated behind `.shan-js`, added on
+  mount. The SSR page is the completed page — the xuan grain, the static
+  copy, the seal impression all stand without a single script.
+- **Semantics:** the canvas stage is `role="img"` with a bilingual EN/ZH
+  description; split text keeps visually-hidden originals; the wordmark is
+  an `h1` with `aria-label`; the seal is a real `<button>` with an
+  `aria-live` count; decorative seals and the hint are `aria-hidden`.
+- **Keyboard & touch:** the seal button and the rewind link take a 2px
+  vermillion-deep ring on `:focus-visible` — vermillion in the colophon.
+  The mist self-drifts on touch; the canvas only captures pointer events on
+  fine pointers, so touch always scrolls.
+- **Contrast:** sumi 15.3:1, ink-strong 10.6:1, ink-mid 6.6:1, vermillion-deep
+  7.6:1 on xuan; xuan 15.3:1, xuan-dim 11.7:1 on sumi. Pale-wash, mist, and
+  vermillion-on-sumi never carry meaning. The wordmark carries a
+  paper-colored text-shadow so it stays ≈ 8:1 under a passing wisp.
+
+## Remix ideas
+
+1. **A vertical hanging scroll (立軸).** Flip the axis: world-y drives the
+   generation, mountains stack vertically, mist falls instead of pools. The
+   scroll becomes a single composition viewed all at once — the Song
+   hanging-scroll format, where the hand-scroll is the long format.
+2. **Traveler among mountains (行旅圖).** Add a tiny figure (one stroke) that
+   walks the foreground ridge as you scroll, deterministically placed per
+   tile — the Fan Kuan motif, where the human is a punctuation mark against
+   the mountain.
+3. **Rain on the river.** A second particle layer — diagonal rain streaks
+   whose angle responds to scroll velocity, pooling into ripples on an
+   implied water surface at the bottom hem. The summer season becomes a
+   monsoon; the mist thickens into drizzle.

@@ -1,0 +1,1196 @@
+/* ==========================================================================
+   HANOK — the building is the layout
+   korean-traditional · unfinished pine + earthen wall + one dancheong eave-red
+   Scoped by convention to .hanok-root; classes prefixed hanok-.
+   The mortise-and-tenon joinery (no nails) becomes the grid system; the page
+   has distinct climate zones — warm ondol (온돌방), cool maru (마루), open
+   madang (마당) — and a curved-eave (처마) frame at the top.
+   ========================================================================== */
+
+.hanok-root {
+  /* -- palette ----------------------------------------------------------- */
+  --hanok-paper: #efe7d6;        /* earth-paper — the pale 흙벽 the atelier is drawn on */
+  --hanok-ink: #3d2f1c;          /* ink-beam — darkened beam wood, all body text (10.5:1) */
+  --hanok-wood: #c4a87a;         /* wood-raw — unfinished pine/hinoki; surfaces only */
+  --hanok-beam: #6b5436;         /* beam-mid — structural beams + functional accent on light (5.8:1) */
+  --hanok-wall: #d4c4a8;         /* earth-wall — 흙벽 fills inside structure and panels */
+  --hanok-stone: #b8b0a4;        /* courtyard-stone — 마당 ground; decorative */
+  --hanok-red: #9c3a2e;          /* eave-red — 단청 trim accent: focus, ::selection, eave line (5.6:1) */
+  --hanok-red-deep: #7c2a20;     /* derived deeper red, used where red sits on warm/dark grounds */
+  --hanok-ink-soft: #5a4a32;     /* secondary text — beam-mid darkened to AA body (6.6:1) */
+  --hanok-ink-faint: #8a7459;    /* tertiary: large/uppercase labels only (3.4:1) */
+  --hanok-sky: #e8e2d4;          /* sky-bone — open-sky/madang ground, cooler than paper */
+  --hanok-snow: #f6f2e7;         /* winter overlay + maru cool deck */
+
+  /* derived working tokens */
+  --hanok-hairline: rgba(61, 47, 28, 0.16);          /* rules, grid lines */
+  --hanok-hairline-strong: rgba(61, 47, 28, 0.34);   /* emphasized rules */
+  --hanok-wall-soft: rgba(212, 196, 168, 0.55);      /* panel wash on paper */
+  --hanok-wood-soft: rgba(196, 168, 122, 0.32);
+
+  /* -- type --------------------------------------------------------------- */
+  --hanok-font-serif: var(--font-nanum), var(--font-noto-kr), "Apple SD Gothic Neo",
+    "Malgun Gothic", serif;
+  --hanok-font-body: var(--font-noto-kr), "Apple SD Gothic Neo", "Malgun Gothic",
+    serif;
+  --hanok-font-mono: var(--font-jbmono), var(--font-noto-kr), "Courier New",
+    monospace;
+
+  /* -- motion ------------------------------------------------------------- */
+  --hanok-ease-timber: cubic-bezier(0.16, 1, 0.3, 0.1);  /* structure settling */
+  --hanok-ease-eave: cubic-bezier(0.65, 0, 0.35, 1);     /* curved-eave brush */
+
+  /* -- season-driven (madang sky + eave shadow) --------------------------- */
+  /* default = spring. data-season on the root swaps these. */
+  --hanok-sky-tone: #e8e2d4;
+  --hanok-sky-warm: #ece0c8;
+  --hanok-eave-shadow: rgba(61, 47, 28, 0.22);
+  --hanok-season-tag: #6b5436;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--hanok-paper);
+  color: var(--hanok-ink);
+  font-family: var(--hanok-font-body);
+  font-size: clamp(16px, 0.42vw + 14px, 18px);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* -- Season palettes: only the madang sky ground + eave shadow recolor.
+   Wood grain, earth wall, and all text hold still — wood and earth do not
+   change with the season; only the light does. ------------------------- */
+
+.hanok-root[data-season="spring"] {
+  --hanok-sky-tone: #ece2cf;
+  --hanok-sky-warm: #f0e3c9;
+  --hanok-eave-shadow: rgba(61, 47, 28, 0.22);
+  --hanok-season-tag: #6b5436;
+}
+
+.hanok-root[data-season="summer"] {
+  --hanok-sky-tone: #dde4d2;
+  --hanok-sky-warm: #e2e9d6;
+  --hanok-eave-shadow: rgba(46, 58, 38, 0.18);
+  --hanok-season-tag: #4f6044;
+}
+
+.hanok-root[data-season="autumn"] {
+  --hanok-sky-tone: #e6d6bd;
+  --hanok-sky-warm: #ecd2b0;
+  --hanok-eave-shadow: rgba(92, 56, 28, 0.26);
+  --hanok-season-tag: #8a4a1c;
+}
+
+.hanok-root[data-season="winter"] {
+  --hanok-sky-tone: #eef0ec;
+  --hanok-sky-warm: #f4f3ec;
+  --hanok-eave-shadow: rgba(70, 84, 104, 0.16);
+  --hanok-season-tag: #566275;
+}
+
+.hanok-root *,
+.hanok-root *::before,
+.hanok-root *::after {
+  box-sizing: border-box;
+}
+
+/* Korean is first-class: Noto Serif KR everywhere Hangul appears, with
+   keep-all so phrases never shatter mid-word. */
+.hanok-root :lang(ko) {
+  font-family: var(--hanok-font-body);
+  word-break: keep-all;
+  line-break: strict;
+}
+
+/* Eave-red selection, scoped to the entry root — the one place the
+   dancheong trim pigment touches selection. */
+.hanok-root ::selection {
+  background: var(--hanok-red);
+  color: var(--hanok-snow);
+}
+
+/* Keyboard focus: an eave-red ring. 3px solid clears the 3:1 non-text
+   contrast minimum for UI components; offset lifts it off the target. */
+.hanok-root :focus-visible {
+  outline: 3px solid var(--hanok-red);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Page-wide wood-grain texture — one static feTurbulence sheet in multiply.
+   The long horizontal fiber direction reads as sawn pine. Never animated.
+   Pointer-transparent. Lives at the page root so every zone inherits it.
+   ========================================================================== */
+
+.hanok-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+
+.hanok-page {
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Section headers — NN · title 한국어 — note
+   The number sits like a folio stamped on a beam.
+   ========================================================================== */
+
+.hanok-sechead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 1.2rem;
+  margin-bottom: clamp(1.8rem, 4vh, 2.8rem);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--hanok-hairline);
+}
+
+.hanok-sechead__no {
+  font-family: var(--hanok-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--hanok-red);
+}
+
+.hanok-sechead__title {
+  margin: 0;
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1.4rem, 2.7vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+.hanok-sechead__title [lang="ko"] {
+  margin-left: 0.4rem;
+  font-weight: 500;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-sechead__note {
+  margin: 0 0 0 auto;
+  font-size: 0.85rem;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-sechead__note [lang="ko"] {
+  margin-left: 0.25rem;
+}
+
+/* ==========================================================================
+   01 · Hero — the curved-eave frame over the building silhouette
+   ========================================================================== */
+
+.hanok-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(56px, 9vh, 104px) clamp(20px, 5vw, 56px) clamp(28px, 4vh, 44px);
+  text-align: center;
+  background: linear-gradient(
+    to bottom,
+    var(--hanok-sky-warm) 0%,
+    var(--hanok-paper) 62%
+  );
+  background-color: var(--hanok-paper);
+  transition: background 600ms var(--hanok-ease-timber);
+}
+
+.hanok-hero__overline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.3rem 1.6rem;
+  margin: 0 0 auto;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-hero__overline [lang="ko"] {
+  margin-left: 0.3rem;
+}
+
+.hanok-hero__title {
+  margin: clamp(2rem, 7vh, 4rem) 0 0.4rem;
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(3.4rem, 13vw, 9rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  color: var(--hanok-ink);
+}
+
+/* The char-split reveal: each glyph settles on its own timer. aria-label
+   on the wrapper holds the full string for AT; the spans are aria-hidden.
+   Without .hanok-js every glyph is simply at rest (visible). */
+.hanok-js .hanok-hero__title .hanok-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.5em);
+  animation: hanok-char-settle 820ms var(--hanok-ease-timber) forwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes hanok-char-settle {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hanok-hero__sub {
+  margin: 0;
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+  font-weight: 400;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-hero__tagline {
+  margin: clamp(1.4rem, 3vh, 2rem) 0 0;
+  max-width: 30ch;
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.hanok-hero__tagline [lang="ko"] {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--hanok-ink-soft);
+}
+
+/* The curved-eave path with the bilingual subline riding it (textPath).
+   text-path technique tag. The eave is the eave-red dancheong trim line. */
+.hanok-hero__eave {
+  display: block;
+  width: min(560px, 92vw);
+  height: auto;
+  margin: clamp(2.4rem, 6vh, 3.6rem) auto 0;
+}
+
+.hanok-eave__curve {
+  fill: none;
+  stroke: var(--hanok-red);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  /* draw-on: dasharray is the path length (set inline via pathLength=1);
+     offset animates 1 → 0 once on mount under .hanok-js. */
+}
+
+.hanok-js .hanok-eave__curve {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: hanok-eave-draw 1.6s var(--hanok-ease-eave) 0.2s forwards;
+}
+
+@keyframes hanok-eave-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.hanok-eave__text {
+  font-family: var(--hanok-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  fill: var(--hanok-ink-faint);
+  text-transform: uppercase;
+}
+
+.hanok-hero__specline {
+  margin: clamp(2rem, 4vh, 2.8rem) 0 0;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-hero__specline [lang="ko"] {
+  margin-left: 0.3rem;
+}
+
+.hanok-hero__hint {
+  margin: clamp(1.6rem, 3vh, 2.2rem) 0 0;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--hanok-ink-faint);
+}
+
+/* ==========================================================================
+   02 · Exploded axonometric — the signature, scroll-scrubbed (scroll-scrub-pinned)
+   ========================================================================== */
+
+.hanok-explode {
+  position: relative;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+/* The scrub runway exists only when JS can drive it. */
+.hanok-js .hanok-explode {
+  height: 320vh;
+}
+
+.hanok-explode__sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.8rem, 2vh, 1.6rem);
+  padding-block: clamp(72px, 11vh, 140px);
+}
+
+.hanok-js .hanok-explode .hanok-explode__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  padding-block: clamp(20px, 4vh, 48px);
+}
+
+.hanok-explode__svg {
+  display: block;
+  width: min(760px, 100%);
+  height: auto;
+  max-height: 66vh;
+  max-height: 66svh;
+  margin-inline: auto;
+}
+
+/* -- structural layers (the building's five planes) ---------------------- */
+
+.hanok-layer {
+  /* set inline by JS via transform; default = assembled */
+}
+
+.hanok-roof__tile {
+  fill: var(--hanok-beam);
+}
+
+.hanok-roof__ridge {
+  fill: var(--hanok-ink);
+}
+
+.hanok-roof__eave-trim {
+  fill: none;
+  stroke: var(--hanok-red);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.hanok-roof__rafter {
+  stroke: var(--hanok-beam);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.hanok-beam__timber {
+  fill: var(--hanok-wood);
+  stroke: var(--hanok-beam);
+  stroke-width: 1.2;
+}
+
+.hanok-beam__tenon {
+  fill: var(--hanok-wood);
+  stroke: var(--hanok-beam);
+  stroke-width: 1;
+}
+
+.hanok-column__post {
+  fill: var(--hanok-wood);
+  stroke: var(--hanok-beam);
+  stroke-width: 1.2;
+}
+
+.hanok-wall__fill {
+  fill: var(--hanok-wall);
+}
+
+.hanok-floor__maru {
+  fill: var(--hanok-wood);
+  stroke: var(--hanok-beam);
+  stroke-width: 1;
+}
+
+.hanok-floor__plank {
+  stroke: var(--hanok-beam);
+  stroke-width: 0.8;
+  opacity: 0.5;
+}
+
+.hanok-foundation__stone {
+  fill: var(--hanok-stone);
+  stroke: var(--hanok-beam);
+  stroke-width: 1;
+}
+
+/* -- callouts: drawn with stroke-dashoffset, scrubbed by scroll ---------- */
+
+.hanok-callout__line {
+  fill: none;
+  stroke: var(--hanok-ink-faint);
+  stroke-width: 1.2;
+}
+
+.hanok-callout__dot {
+  fill: var(--hanok-red);
+}
+
+.hanok-callout__label {
+  font-family: var(--hanok-font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  fill: var(--hanok-ink);
+}
+
+.hanok-callout__kr {
+  font-family: var(--hanok-font-serif);
+  font-size: 16px;
+  font-weight: 700;
+  fill: var(--hanok-red-deep);
+}
+
+.hanok-callout__kr-gloss {
+  font-family: var(--hanok-font-body);
+  font-size: 11px;
+  fill: var(--hanok-ink-soft);
+}
+
+/* the key callout (mortise-and-tenon detail) gets the eave-red line */
+.hanok-callout__line--key {
+  stroke: var(--hanok-red);
+  stroke-width: 1.6;
+}
+
+/* Narrow screens: in-SVG callouts hand off to an HTML legend. */
+.hanok-explode__legend {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .hanok-callout {
+    display: none;
+  }
+
+  .hanok-explode__legend {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0.8rem auto 0;
+    max-width: 30rem;
+    padding: 0;
+    list-style: none;
+    counter-reset: layer;
+  }
+
+  .hanok-explode__legend li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 0.8rem;
+    align-items: baseline;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--hanok-hairline);
+    counter-increment: layer;
+  }
+
+  .hanok-explode__legend li::before {
+    content: counter(layer, decimal-leading-zero);
+    font-family: var(--hanok-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    color: var(--hanok-red);
+  }
+
+  .hanok-explode__legend .hanok-legend__kr {
+    font-family: var(--hanok-font-serif);
+    font-weight: 700;
+    color: var(--hanok-red-deep);
+  }
+
+  .hanok-explode__legend .hanok-legend__gloss {
+    grid-column: 2;
+    font-family: var(--hanok-font-mono);
+    font-size: 0.82rem;
+    color: var(--hanok-ink);
+  }
+}
+
+/* ==========================================================================
+   03 · Climate zones — ondol / maru / madang
+   Each zone's spatial treatment matches its real thermal character.
+   ========================================================================== */
+
+.hanok-zones {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 56px);
+}
+
+/* -- ONDOL (온돌방) — warm, enclosed, dense content ----------------------
+   A contained panel, warm earth-wall background, tight rhythm, the text
+   packed close the way a heated room gathers people. A faint warm wash. */
+.hanok-zone--ondol {
+  position: relative;
+  background: var(--hanok-wall);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--hanok-wall) 88%, var(--hanok-paper)) 0%,
+    var(--hanok-wall) 100%
+  );
+  border: 1px solid var(--hanok-hairline-strong);
+  border-radius: 4px;
+  padding: clamp(32px, 5vw, 56px) clamp(24px, 4vw, 48px);
+  margin-bottom: clamp(2.4rem, 6vh, 4rem);
+  box-shadow: inset 0 0 0 6px var(--hanok-paper),
+    inset 0 0 0 7px var(--hanok-hairline);
+}
+
+.hanok-zone--ondol::after {
+  /* the underfloor heat — a warm line glowing beneath the floor */
+  content: "";
+  position: absolute;
+  left: clamp(24px, 4vw, 48px);
+  right: clamp(24px, 4vw, 48px);
+  bottom: clamp(20px, 3vw, 32px);
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--hanok-red) 30%,
+    var(--hanok-red) 70%,
+    transparent
+  );
+  opacity: 0.5;
+}
+
+/* -- MARU (마루) — cool, open, airy, sparse -------------------------------
+   Wide horizontal band, paper ground with the cool deck, generous
+   whitespace, the text set sparse and wide — the breezy wooden hall. */
+.hanok-zone--maru {
+  position: relative;
+  background: var(--hanok-snow);
+  border-top: 1px solid var(--hanok-hairline);
+  border-bottom: 1px solid var(--hanok-hairline);
+  padding: clamp(48px, 8vh, 88px) clamp(28px, 6vw, 80px);
+  margin-bottom: clamp(2.4rem, 6vh, 4rem);
+}
+
+.hanok-zone--maru::before,
+.hanok-zone--maru::after {
+  /* the maru's recessed floor planks — the wooden hall's deck lines */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--hanok-hairline);
+}
+
+.hanok-zone--maru::before {
+  top: 14px;
+}
+
+.hanok-zone--maru::after {
+  bottom: 14px;
+}
+
+/* -- MADANG (마당) — central, sky-open, the empty/hero moment --------------
+   The open courtyard under the sky. Season-driven ground, an eave shadow
+   cast across it, and the lowest density — the page breathes here. */
+.hanok-zone--madang {
+  position: relative;
+  background: var(--hanok-sky-tone);
+  background: linear-gradient(
+    180deg,
+    var(--hanok-sky-warm) 0%,
+    var(--hanok-sky-tone) 70%,
+    var(--hanok-stone) 100%
+  );
+  border: 1px solid var(--hanok-hairline);
+  border-radius: 4px;
+  padding: clamp(56px, 10vh, 104px) clamp(24px, 5vw, 56px);
+  text-align: center;
+  transition: background 520ms var(--hanok-ease-timber);
+  overflow: hidden;
+}
+
+/* the eave shadow cast across the courtyard — drifts with the season */
+.hanok-zone--madang::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 64px;
+  background: linear-gradient(
+    180deg,
+    var(--hanok-eave-shadow) 0%,
+    transparent 100%
+  );
+  transform: translateY(0);
+  transition: transform 520ms var(--hanok-ease-timber),
+    background 520ms var(--hanok-ease-timber);
+}
+
+.hanok-root[data-season="summer"] .hanok-zone--madang::before {
+  transform: translateY(-6px);
+}
+
+.hanok-root[data-season="autumn"] .hanok-zone--madang::before {
+  transform: translateY(8px);
+}
+
+.hanok-root[data-season="winter"] .hanok-zone--madang::before {
+  transform: translateY(14px);
+}
+
+/* zone heads ------------------------------------------------------------- */
+
+.hanok-zone__tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.8rem;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--hanok-red);
+}
+
+.hanok-zone--maru .hanok-zone__tag,
+.hanok-zone--madang .hanok-zone__tag {
+  color: var(--hanok-beam);
+}
+
+.hanok-zone__title {
+  margin: 0 0 0.4rem;
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.hanok-zone__title [lang="ko"] {
+  color: var(--hanok-ink);
+}
+
+.hanok-zone__sub {
+  margin: 0 0 clamp(1.6rem, 3vh, 2.4rem);
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: var(--hanok-ink-soft);
+}
+
+/* ondol body — dense, two columns where space allows */
+.hanok-zone--ondol .hanok-zone__body {
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.hanok-zone--ondol .hanok-zone__body p {
+  margin: 0 0 1rem;
+  max-width: 64ch;
+}
+
+.hanok-zone--ondol .hanok-zone__body p[lang="ko"] {
+  color: var(--hanok-ink-soft);
+  margin-bottom: 1.6rem;
+}
+
+@media (min-width: 760px) {
+  .hanok-zone--ondol .hanok-zone__body {
+    columns: 2;
+    column-gap: clamp(2rem, 4vw, 3.4rem);
+  }
+
+  .hanok-zone--ondol .hanok-zone__body p {
+    break-inside: avoid;
+  }
+}
+
+/* maru body — sparse, wide, airy. The words sit far apart, like people
+   taking the cool air on a wooden hall. */
+.hanok-zone--maru .hanok-zone__body {
+  display: grid;
+  gap: clamp(2.4rem, 5vw, 4rem);
+  max-width: none;
+}
+
+@media (min-width: 720px) {
+  .hanok-zone--maru .hanok-zone__body {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+}
+
+.hanok-zone--maru .hanok-marufact {
+  margin: 0;
+}
+
+.hanok-zone--maru .hanok-marufact__no {
+  display: block;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--hanok-red);
+  margin-bottom: 0.6rem;
+}
+
+.hanok-zone--maru .hanok-marufact__line {
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.hanok-zone--maru .hanok-marufact__line [lang="ko"] {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.88em;
+  color: var(--hanok-ink-soft);
+}
+
+/* madang body — centered, minimal, the empty hero moment */
+.hanok-zone--madang .hanok-zone__body {
+  max-width: 40ch;
+  margin-inline: auto;
+}
+
+.hanok-zone--madang .hanok-madang__haiku {
+  margin: 0 0 1.2rem;
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.hanok-zone--madang .hanok-madang__haiku [lang="ko"] {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8em;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-zone--madang .hanok-madang__note {
+  margin: 0;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-zone__readmore {
+  display: inline-block;
+  margin-top: 1.4rem;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--hanok-red);
+  text-decoration: underline;
+  text-decoration-color: var(--hanok-hairline-strong);
+  text-underline-offset: 4px;
+  text-transform: uppercase;
+}
+
+.hanok-zone__readmore:hover {
+  text-decoration-color: var(--hanok-red);
+}
+
+/* Zone reveal — each zone rises into place as the beam it rests on.
+   Without .hanok-js the zone is simply at rest (visible). */
+.hanok-js .hanok-zone {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 700ms var(--hanok-ease-timber),
+    transform 700ms var(--hanok-ease-timber);
+}
+
+.hanok-js .hanok-zone.is-shown {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   04 · Seasonal light toggle — the four seasons of the madang
+   ========================================================================== */
+
+.hanok-season {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 56px);
+}
+
+.hanok-season__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.4rem;
+  padding: 0.4rem;
+  border: 1px solid var(--hanok-hairline-strong);
+  border-radius: 999px;
+  background: var(--hanok-paper);
+}
+
+.hanok-season__opt {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 7rem;
+  padding: 0.7rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--hanok-ink-soft);
+  font-family: var(--hanok-font-serif);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: color 220ms var(--hanok-ease-timber),
+    background 420ms var(--hanok-ease-timber);
+}
+
+.hanok-season__opt [lang="ko"] {
+  display: block;
+  font-size: 0.82em;
+  margin-top: 0.15rem;
+}
+
+.hanok-season__opt:hover {
+  color: var(--hanok-ink);
+}
+
+.hanok-season__opt[aria-pressed="true"] {
+  background: var(--hanok-ink);
+  color: var(--hanok-snow);
+}
+
+.hanok-season__auto {
+  margin-left: 0.6rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--hanok-hairline-strong);
+  border-radius: 999px;
+  background: none;
+  color: var(--hanok-ink-soft);
+  font-family: var(--hanok-font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 220ms var(--hanok-ease-timber),
+    border-color 220ms var(--hanok-ease-timber);
+}
+
+.hanok-season__auto[aria-pressed="true"] {
+  color: var(--hanok-red);
+  border-color: var(--hanok-red);
+}
+
+.hanok-season__note {
+  margin: 1rem 0 0;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.8rem;
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-season__note [lang="ko"] {
+  margin-left: 0.3rem;
+}
+
+/* ==========================================================================
+   05 · Joinery detail — the mortise-and-tenon blueprint (no nails)
+   ========================================================================== */
+
+.hanok-joinery {
+  max-width: 980px;
+  margin-inline: auto;
+  padding: clamp(72px, 11vh, 140px) clamp(20px, 5vw, 56px);
+}
+
+.hanok-joinery__grid {
+  display: grid;
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+  margin-top: clamp(1.6rem, 3vh, 2.4rem);
+}
+
+@media (min-width: 720px) {
+  .hanok-joinery__grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+  }
+}
+
+.hanok-joinery__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+}
+
+.hanok-joinery__blueprint {
+  fill: none;
+  stroke: var(--hanok-ink-soft);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.hanok-joinery__timber {
+  fill: var(--hanok-wood);
+  stroke: var(--hanok-beam);
+  stroke-width: 1.6;
+}
+
+.hanok-joinery__tenon {
+  fill: var(--hanok-wood);
+  stroke: var(--hanok-red);
+  stroke-width: 1.8;
+}
+
+.hanok-joinery__mortise {
+  fill: var(--hanok-paper);
+  stroke: var(--hanok-red);
+  stroke-width: 1.4;
+}
+
+.hanok-joinery__dim {
+  font-family: var(--hanok-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  fill: var(--hanok-ink-faint);
+}
+
+.hanok-joinery__arrow {
+  fill: none;
+  stroke: var(--hanok-red);
+  stroke-width: 1.2;
+}
+
+.hanok-joinery__copy {
+  display: grid;
+  gap: 1rem;
+}
+
+.hanok-joinery__copy p {
+  margin: 0;
+  max-width: 52ch;
+}
+
+.hanok-joinery__copy p[lang="ko"] {
+  color: var(--hanok-ink-soft);
+}
+
+.hanok-joinery__list {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.hanok-joinery__list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 0.8rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px dotted var(--hanok-hairline-strong);
+  font-family: var(--hanok-font-mono);
+  font-size: 0.84rem;
+}
+
+.hanok-joinery__list li::before {
+  content: "◆";
+  color: var(--hanok-red);
+  font-size: 0.7em;
+  line-height: 1.6;
+}
+
+.hanok-joinery__list [lang="ko"] {
+  color: var(--hanok-ink-soft);
+  font-family: var(--hanok-font-serif);
+  font-size: 0.92rem;
+}
+
+/* ==========================================================================
+   06 · Footer — beam-dark, the atelier's stamp
+   ========================================================================== */
+
+.hanok-footer {
+  margin-top: clamp(48px, 8vh, 96px);
+  background: var(--hanok-ink);
+  color: var(--hanok-snow);
+}
+
+.hanok-footer__inner {
+  display: grid;
+  gap: clamp(2rem, 5vh, 3.2rem);
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 56px)
+    clamp(48px, 7vh, 80px);
+}
+
+.hanok-footer__giant {
+  margin: 0;
+  max-width: 22ch;
+  font-family: var(--hanok-font-serif);
+  font-size: clamp(1.7rem, 4.8vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.hanok-footer__giant [lang="ko"] {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.72em;
+  font-weight: 400;
+  color: var(--hanok-wall);
+}
+
+.hanok-footer__data {
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.hanok-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dotted rgba(246, 242, 231, 0.22);
+}
+
+.hanok-footer__data dt {
+  flex: 0 0 6rem;
+  font-family: var(--hanok-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--hanok-wall);
+}
+
+.hanok-footer__data dd {
+  margin: 0;
+}
+
+.hanok-footer__data [lang="ko"] {
+  color: var(--hanok-wall);
+  margin-left: 0.3rem;
+}
+
+.hanok-footer__link {
+  color: var(--hanok-snow);
+  text-decoration: underline;
+  text-decoration-color: var(--hanok-red);
+  text-underline-offset: 3px;
+}
+
+.hanok-footer__link:hover {
+  color: var(--hanok-red);
+}
+
+.hanok-footer__legal {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--hanok-wall);
+}
+
+.hanok-footer__legal [lang="ko"] {
+  margin-left: 0.3rem;
+}
+
+/* footer focus: eave-red still clears 3:1 on the dark ink ground */
+.hanok-footer :focus-visible {
+  outline-color: var(--hanok-red);
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / stroke-dashoffset only
+   ========================================================================== */
+
+@keyframes hanok-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — one beautiful static frame
+   - char-split: glyphs at rest (no settle animation)
+   - eave path: drawn immediately (offset 0)
+   - explode: runway collapses, diagram assembled, labels visible
+   - zones: at rest (no rise), visible
+   - season: frozen at the current pick (auto-cycle stops in useSeason)
+   The page is still a complete, readable structure.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hanok-js .hanok-hero__title .hanok-char {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hanok-js .hanok-eave__curve {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .hanok-js .hanok-explode {
+    height: auto;
+  }
+
+  .hanok-js .hanok-explode .hanok-explode__sticky {
+    position: static;
+    height: auto;
+    padding-block: clamp(72px, 11vh, 140px);
+  }
+
+  .hanok-js .hanok-zone {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hanok-hero {
+    transition: none;
+  }
+
+  .hanok-zone--madang,
+  .hanok-zone--madang::before,
+  .hanok-season__opt {
+    transition: none;
+  }
+}
+
+/* No-JS safety net: even if .hanok-js somehow never lands (script disabled,
+// SSR-only), every pre-reveal state must be the finished page. The
+// .hanok-js-gated rules above ONLY apply under .hanok-js, so without it
+// chars are visible, the eave is drawn, zones are shown, the explode runway
+// is a normal section. Nothing depends on JS to be legible. */

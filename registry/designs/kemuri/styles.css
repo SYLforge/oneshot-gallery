@@ -558,6 +558,13 @@
   display: block;
   width: 100%;
   height: auto;
+  /* The SVG carries viewBox="0 0 440 560"; modern engines derive the
+     aspect ratio from it, but pinning it here as well means the box is
+     reserved even before the embedded raster <image> decodes — no CLS,
+     and the washi-aged paper shows through (not a white hole) while the
+     AVIF streams in. */
+  aspect-ratio: 440 / 560;
+  background: var(--kemuri-washi-aged);
 }
 
 .kemuri-plate__caption {

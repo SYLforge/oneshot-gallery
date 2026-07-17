@@ -1,0 +1,260 @@
+# CHADŌ 茶道 — breakdown
+
+## The hook
+
+A tea ceremony is not a product; it is a practiced pause. CHADŌ commits to
+that premise at the extreme: the most restrained, most empty, most slow
+entry in the gallery, where the only spectacle is the discipline of what
+is left out. The page is a virtual chanoyu — the four-hour rite compressed
+into one scroll, paced in breaths. The hero's title 茶道 climbs a vertical
+column in tategaki, the authentic Japanese reading direction that almost
+no Western "Japanese-inspired" site uses. A matcha orb breathes on a 4-4-4
+cycle. A bamboo whisk draws itself as you scroll, until one bowl of tea
+blooms into being. Then the bowl is set down, and it ends.
+
+The design bet: on a gallery full of motion pieces, the slowest entry —
+where motion is almost forbidden and the craft is the *ma* between beats —
+can hold its own by being unmistakably itself. The restraint is the craft.
+
+## Art direction
+
+Everything happens against aged washi (`#e8e2d4`), with a warmer lit skin
+(`#ece7da`) for the hero and climax and a darker recessed paper
+(`#d9d2c2`) for the tokonoma alcove. Warm sumi ink (`#2b2620`, 11.61:1)
+does the speaking — never pure black, because wabi-sabi avoids the harsh.
+The single accent is matcha green `#5d6b3a`, the one living color on the
+page. It appears only as small, expensive things: the whisk's bamboo
+tines, the bowl's tea surface, a single ikebana bloom, a hairline of
+emphasis, the focus ring.
+
+There is one contrast decision that shaped everything: matcha `#5d6b3a`
+on washi measures 4.48:1 — just under the AA body threshold of 4.5. The
+brief asked explicitly to verify it. So matcha is restricted to decorative
+and large uses (strokes, fills, hairlines), and a derived `matcha-deep
+#4a5630` (6.10:1) carries any word that would otherwise fall short — the
+beat numerals, the bowl's romanized name, the closing seal. The brand
+accent stays `#5d6b3a`; the text-grade token keeps the page honest.
+
+Two serifs, two roles. Shippori Mincho carries every CJK glyph — chosen
+because its vertical metrics were drawn first, so it sets the tategaki
+title and the alcove scroll poem without complaint. Cormorant Garamond
+answers in Latin: the wordmark, the English annotations, the colophon, the
+romanized breath beats. The family stack does quiet work — Cormorant first,
+Shippori second — so kanji fall through into the Japanese serif with no
+markup.
+
+## The signature — tategaki (縦書き)
+
+The hero title 茶道 is set in `writing-mode: vertical-rl; text-orientation:
+upright` — vertical text, the authentic Japanese reading direction. This is
+the most under-used authentic Japanese interaction on the web; the
+gallery's asian-aesthetics reference names it a Tier-1 differentiator that
+"almost no Western Japanese-inspired site uses" (§4). The two kanji split
+into `aria-hidden` spans behind an `aria-label`, each carrying its index as
+a custom property, so the header can write itself top-to-bottom — the only
+direction a brush ever travels:
+
+```tsx
+<h1 className="chado-tategaki" lang="ja" aria-label="茶道（さどう）">
+  {TITLE.map((ch, i) => (
+    <span aria-hidden="true" className="chado-tategaki__ch"
+      style={{ "--ch-ci": i } as CSSProperties}>{ch}</span>
+  ))}
+</h1>
+```
+
+```css
+.chado-tategaki {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: clamp(7rem, 18vw, 14rem);
+}
+.chado-js .chado-tategaki__ch {
+  animation: ch-tategaki-rise 1300ms var(--ch-ease-tea) both;
+  animation-delay: calc(180ms + var(--ch-ci, 0) * 220ms);
+}
+```
+
+Tategaki is kept deliberately scarce — it appears exactly twice (the hero
+title and the tokonoma scroll) so it reads as sacred rather than decorative.
+Under reduced motion the glyphs render statically (no rise); the vertical
+layout is unchanged, because the writing mode is the content, not the
+animation.
+
+## Technique — the breath-paced cue (scroll-scrub-pinned's sibling)
+
+The page is paced by a hero breathing cue on a 4-4-4 box-breath cycle:
+inhale 4s · hold 4s · exhale 4s · rest 2s — a 14-second bow, the pace of
+someone breathing opposite the kettle. A matcha orb scales with the breath;
+under it a romanized label (`吸う · 止む · 吐く · 間`) cross-fades as the phase
+turns. The whole page is implicitly paced by it: content arrives, then
+waits. The opposite of busy.
+
+The cycle is driven by a phase index, so the scale (CSS) and the label
+(React) never drift apart:
+
+```ts
+// useBreathPace — one setTimeout per phase, not per frame
+const tick = () => {
+  phaseIdx = ((phaseIdx + 1) % 4) as BreathPhase;
+  setPhase(phaseIdx);
+  timeoutId = setTimeout(tick, BREATH_DURATIONS[phaseIdx]);
+};
+```
+
+The scale itself is pure CSS keyed off `data-breath={phase}`, so it runs on
+the compositor (transform only). The cycle pauses when the hero leaves the
+viewport (an IntersectionObserver in `page.tsx` flips `cueActive`) and when
+the tab is hidden, so no timer runs for an empty room. Under reduced motion
+the hook pins the phase to "rest" and the orb simply sits, full and still.
+
+This is the honest reading of "breath-paced scroll." Forcibly throttling
+native scroll velocity (wheel hijacking) is an accessibility hazard and
+would fight `prefers-reduced-motion`; instead the cue achieves the
+experiential goal — guiding the user to slow down — through pacing and vast
+*ma*, while leaving scroll control entirely with the user.
+
+## Technique — the chasen draws itself (scroll-scrub-pinned + svg-line-draw)
+
+The matcha preparation is a brush-stroke draw-on. The chashitsu (tea
+preparation scene) pins with `position: sticky` while the four-step temae
+text flows past, and a scroll-scrubbed chasen draws its bamboo tines into a
+bowl. Every tine is a `pathLength=1` path whose dashoffset is the inverse of
+scroll progress:
+
+```css
+.chado-chasen__tine {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--ch-scrub, 1));
+}
+/* the tea surface blooms only as the preparation completes:
+   scrub 0.8 → 1 maps to opacity 0 → 1, browser clamps for free */
+.chado-bowl__tea {
+  fill: var(--ch-matcha);
+  opacity: calc(var(--ch-scrub, 1) * 5 - 4);
+}
+```
+
+The pin is native sticky, so no layout is scripted:
+
+```css
+@media (min-width: 900px) {
+  .chado-chashitsu__plate {
+    position: sticky;
+    top: clamp(4rem, 12vh, 7rem);
+    align-self: start;
+  }
+}
+```
+
+The scrub is a small rAF loop. Each frame does exactly one read (the
+scene's rect) and one write (a custom property) — read before write, so
+layout is never thrashed — and the raw progress is lerp-smoothed with a
+dt-normalized factor so a 120Hz display does not scrub twice as fast as a
+60Hz one:
+
+```ts
+// useScrollProgress — one read, one lerp, one write
+const center = rect.top + rect.height / 2;
+const span = Math.max(Math.min(rect.height * 0.9, vh * 1.2), 1);
+const raw = (vh * 0.62 - center) / span;
+const target = Math.min(1, Math.max(0, raw));
+value += (target - value) * (1 - Math.pow(0.88, dt / 16.7));
+el.style.setProperty("--ch-scrub", value.toFixed(4));
+```
+
+An IntersectionObserver starts and stops the loop, and a `visibilitychange`
+listener stops it when the tab is hidden, so an offscreen chashitsu costs
+zero frames. The `vh * 1.2` cap matters on mobile: single-column chashitsu
+get tall, and without the cap the whisk would still be drawing long after
+the bowl scrolled away.
+
+Under `prefers-reduced-motion` the hook writes `--ch-scrub: 1` once and a
+media query sets the plate to `position: static` — a completed preparation,
+statically waiting. Without JavaScript the CSS default does the same: every
+tine is drawn and the bowl is full.
+
+The tokonoma's ikebana is the page's one *time-based* draw (every other
+stroke is scroll-scrubbed or static): a single stem and leaf that draw once
+on reveal, staggered, so the alcove arrives assembled.
+
+## Technique — aged washi paper (feturbulence-texture)
+
+The paper is a single full-viewport SVG `feTurbulence` pass —
+`fractalNoise`, baseFrequency 0.62, 2 octaves, seed 17 — mapped by
+`feColorMatrix` to sumi at ≤4.5% alpha and multiplied over everything. It
+is aged fibers, not film grain, and it never animates:
+
+```jsx
+<filter id="chado-grain-f">
+  <feTurbulence type="fractalNoise" baseFrequency="0.62"
+    numOctaves={2} seed="17" stitchTiles="stitch" />
+  <feColorMatrix type="matrix"
+    values="0 0 0 0 0.17  0 0 0 0 0.15  0 0 0 0 0.125  0 0 0 0.045 0" />
+</filter>
+```
+
+A warm age-vignette (`radial-gradient` to `rgba(91,80,58,0.06)` at the
+edges) makes the page read as paper yellowed evenly in a drawer. The
+tokonoma adds its own paper: a darker `tokonoma` ground, a 1px sumi frame
+rebated 2.2vw in, and a second `feTurbulence` (baseFrequency 0.04) only
+inside the recess — so the alcove reads as deeper, older paper. Stillness
+is the material; no grain moves.
+
+## The ma between beats
+
+Where a landing page stacks features, CHADŌ stacks pauses. The four
+ceremony beats — roji, tsukubai, wa-kei-sei-jaku, the host's bow — sit
+with `clamp(6rem, 18vh, 12rem)` of air between them, the largest inter-
+element gap in the gallery. Section padding runs 22–26vh. Each beat is a
+short bilingual statement with vast negative space around it; the section
+exists so that the white between statements can exist. This is the *ma*
+(間) principle made layout: the meaningful pause is the design.
+
+## Accessibility notes
+
+- **Reduced motion:** the breath orb sits full and still (no rings, no
+  label animation), the tategaki renders statically (no glyph rise, the
+  vertical layout intact), every chasen tine is drawn and the plate
+  unpins (`position: static`), the ikebana stem is drawn without its
+  transition, the bowl's steam is still, and reveals are present without
+  motion. One calm, fully-composed static ceremony.
+- **No-JS:** every pre-reveal state is gated behind `.chado-js`, added on
+  mount. With JavaScript off the page is a finished document — a tea rite
+  degrades to paper. The `--ch-scrub` default of 1 leaves the whisk drawn
+  and the bowl full.
+- **Semantics:** the tategaki `h1` keeps `茶道（さどう）` in `aria-label` and
+  hides its animated spans; SVG scenes are `role="img"` with bilingual
+  `<title>` / `<figcaption>`; the beats are an ordered list; focus is a
+  2px `matcha-deep` `:focus-visible` ring.
+- **Contrast:** sumi 11.61:1, ink-soft 4.58:1, matcha-deep 6.10:1 — all AA
+  or better. The 4.48:1 matcha and the 1.4:1 rule never carry a word.
+
+## Performance notes
+
+- Two timers exist on the page: one `setTimeout` chain for the breath cue
+  (one tick per phase, not per frame) and one rAF loop for the chasen
+  scrub, alive only while its chashitsu intersects a generous observer
+  margin and the tab is visible. Each scrub frame is one
+  `getBoundingClientRect` and one custom-property write.
+- Everything animated is `transform`, `opacity`, or `stroke-dashoffset`;
+  the pin is native sticky, not scripted layout.
+- Reveals write `class` + `transitionDelay` imperatively from one
+  IntersectionObserver — no React re-renders on scroll anywhere.
+- Zero images, zero dependencies; the heaviest assets are two font
+  families, and Latin/CJK subsetting is left to next/font.
+
+## Remix ideas
+
+1. **The incense clock.** Replace tea with a graded incense trail that
+   burns down as you scroll; the breath cue becomes the
+   Koh-doh (incense-way) guest's measured inhale. Tategaki keeps the
+   headers; the bowl becomes a censer.
+2. **Seasonal kisetsu.** TAWARAYA's "twelve months" move: the palette
+   drifts through the year (cherry, verdant, maple, snow) while the
+   ceremony structure stays fixed. One accent color per season; the
+   bowl changes.
+3. **The tea lesson.** Turn the four beats into four clickable lessons
+   where each pin reveals the next step of temae on demand (not on
+   scroll) — a calm, self-paced tea school. The breath cue paces each
+   lesson's reading time.

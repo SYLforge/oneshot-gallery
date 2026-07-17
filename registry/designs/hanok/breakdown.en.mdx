@@ -1,0 +1,209 @@
+# HANOK — breakdown
+
+## The hook
+
+There is a house in Hahoe Village that was built in 1807 and is being
+recorded, joint by joint, by a small atelier called Jipdam (집담 — "the
+house talks"). This page is their record. The conceit is literal: **the
+building's wooden structure is the page layout.** The mortise-and-tenon
+joinery that holds the house together — no nails, just wood interlocking
+with wood — becomes the grid logic. The page has distinct climate zones
+like a real hanok: a warm enclosed room, a cool open hall, an empty
+sky-open courtyard. And the building disassembles itself, on scroll, into
+the five labeled planes it is made of.
+
+The design bet: a heritage page can be a structural drawing rather than a
+photograph, and the layout itself can carry the building's thermal logic —
+density for warmth, openness for cool, emptiness for the court under the
+sky.
+
+## Art direction
+
+Korean-traditional usually reaches for dancheong's five colors. This entry
+reaches for the *frame* instead: unfinished pine `#c4a87a`, darker
+structural beams `#6b5436` / `#3d2f1c`, pale earthen wall `#d4c4a8`, and
+courtyard stone `#b8b0a4` — the palette of wood and earth before any
+paint. The one dancheong mark is **eave-red `#9c3a2e`**, and it appears
+only where it appears on a real hanok: at the eaves. It is the curved-eave
+underline, the roof's upturned tips, the focus ring, the single key callout
+that points at the mortise in the exploded view, and the tenon outline in
+the joinery blueprint. A nod to GIWA's seokganju family — but where GIWA
+floods the five obangsaek, HANOK uses one red, sparingly, exactly as a real
+hanok reserves its dancheong for the eave trim.
+
+The texture is wood — one static `feTurbulence` sheet in multiply, the
+long horizontal fiber direction of sawn pine (`baseFrequency 0.012 ×
+0.48`), fixed over the viewport, never animated. The earth-wall roughness
+reads from the warm color and the grain beneath. The type is structural:
+Noto Serif KR carries the parts of the building, Nanum Myeongjo carves the
+hero name and zone headings, JetBrains Mono reads the blueprint. A serif
+feels architectural — load-bearing, cut into the wood.
+
+## Technique 1 — the exploded axonometric (scroll-scrub-pinned)
+
+The signature. A hanok is a section drawing before it is a plan: the
+curved-eave roof (처마·지붕), the great beam (대들보), the columns (기둥),
+the maru floor (마루), and the foundation stones (주춧돌) stack in a clear
+vertical order, joined by mortise-and-tenon. The page disassembles that
+stack into an exploded axonometric as you scroll.
+
+The section is 320vh tall (the height JS-gated, so no-JS collapses it); a
+sticky 100svh stage holds the SVG. Scroll progress drives, per frame, a
+`translate3d` on each layer group:
+
+```ts
+// ExplodedAxonometric.tsx — five layers, each with its signed travel
+const LAYERS = [
+  { id: "roof",        cy: 120, spread: -168, ... },
+  { id: "beam",        cy: 210, spread:  -86, ... },
+  { id: "column",      cy: 320, spread:  -44, ... },
+  { id: "floor",       cy: 410, spread:  +96, ... },
+  { id: "foundation",  cy: 470, spread: +168, ... },
+];
+
+const apply = useCallback((p: number) => {
+  const e = smoothstep(clamp01((p - 0.06) / 0.72));
+  LAYERS.forEach((layer, i) => {
+    g.style.transform = `translate3d(0, ${(layer.spread * e).toFixed(2)}px, 0)`;
+    // ...callout dashoffset + label opacity...
+  });
+}, []);
+useScrollProgress(sectionRef, apply, !reduced);
+```
+
+The travel ratios are the craft: roof and foundation (the outer planes)
+move 168px while the inner sandwich moves 44–96px — a **3.4:1
+outer:inner ratio**, the standard convention of an architectural exploded
+diagram, which is what sells the Z-axis without any 3D. The callout lines
+draw in with `stroke-dashoffset` (`pathLength=1`, so the math is
+unit-free) over staggered windows `p ∈ [0.30+0.07i, 0.48+0.07i]`, with the
+bilingual labels (EN mono + KR serif + gloss) fading in at 1.5× the same
+window. Each callout lives inside its layer's `<g>`, so the label always
+travels with the part it points at. The beam callout — the one that points
+at the mortise-and-tenon — is the **key callout**, drawn in eave-red.
+
+The server-rendered state is the assembled section, callouts drawn, labels
+visible; no-JS and reduced-motion simply keep it, and the CSS collapses
+the runway. Under 720px the in-SVG callouts hand off to an HTML legend.
+
+## Technique 2 — the curved-eave text path (text-path)
+
+The hero's bilingual subline rides the curved eave (처마) itself. An SVG
+path is bowed like a real hanok roof edge — a broad, shallow upward arc —
+and the words follow it via `textPath`:
+
+```tsx
+// Hero.tsx — the eave-red trim line, drawn once, with the subline on it
+<path
+  id="hanok-eave-path"
+  className="hanok-eave__curve"
+  d="M 24 78 Q 120 30, 280 38 Q 440 46, 536 18"
+  pathLength={1}
+  fill="none"
+/>
+<text className="hanok-eave__text">
+  <textPath href="#hanok-eave-path" startOffset="50%" textAnchor="middle">
+    MORTISE & TENON · NO NAILS · 장부이음 · 못 없는 집
+  </textPath>
+</text>
+```
+
+The curve itself is drawn once on mount with `stroke-dashoffset` (`1 → 0`,
+1.6s `ease-eave`), so the eave-red line lays down like a loaded brush and
+the text is already seated on it. Reduced-motion parks the dashoffset at
+`0` (drawn immediately); no-JS the same. The eave is the one place the
+dancheong red becomes a line — it traces the roof edge, exactly as the
+trim paint does on a real hanok.
+
+A second SVG below it draws the gable silhouette (ridge + two upturned
+eave hooks with red tips + four columns + foundation stones) in the
+structural palette, so the hero already announces: *this is a building,
+and it is the layout.*
+
+## Technique 3 — the title's character split (char-split-reveal)
+
+The hero name HANOK settles glyph by glyph rather than fading in as a
+block — each letter finds its seat the way a tenon finds its mortise. The
+split is accessible: the `<h1>` carries the full string in `aria-label`,
+and the animated spans are `aria-hidden`, so a screen reader announces
+"HANOK 한옥" once and intact while sighted visitors see the settle:
+
+```tsx
+// Hero.tsx — aria-label holds the truth, spans carry only the animation
+<h1 aria-label="HANOK 한옥">
+  <span aria-hidden="true">
+    {glyphs.map((t, i) => (
+      <span
+        key={t.key}
+        className="hanok-char"
+        style={{ "--d": `${200 + i * 90}ms` } as React.CSSProperties}
+      >
+        {t.ch}
+      </span>
+    ))}
+  </span>
+  <span className="hanok-hero__sub" lang="ko">한옥 · 집이 곧 레이아웃</span>
+</h1>
+```
+
+`useCharSplit` uses `Array.from`, which splits on code points — so a
+Hangul syllable settles as one glyph (not shattered into jamo), the right
+granularity for display copy. The animation is `translateY(0.5em) → 0 +
+opacity`, 820ms `ease-timber`, 90ms stagger. Without `.hanok-js` every
+glyph is simply at rest (visible); under reduced-motion the CSS parks the
+animation and the title is immediately whole.
+
+## The climate zones — layout as thermal logic
+
+The three zone sections are not three feature cards; they are three
+spatial treatments whose *composition* carries the room's real thermal
+character — the climate-zone-scroll concept.
+
+**ONDOL (온돌방) — warm, enclosed, dense.** A contained panel with a double
+border and inset shadow, warm earth-wall background, and the body text set
+in **two columns** packed close — the way a heated room gathers people. A
+warm red line glows beneath the floor (the underfloor heat, made visible).
+Density is the design metaphor for warmth.
+
+**MARU (마루) — cool, open, airy.** A wide snow-ground band, generous
+whitespace, and **three sparse facts set far apart** in a 3-column grid.
+The words sit as far from each other as people taking the cool air on a
+wooden hall. Openness is the design metaphor for coolness.
+
+**MADANG (마당) — central, sky-open, the empty hero moment.** The
+season-driven sky ground, an eave shadow drifting across it, and the
+**fewest words on the page** — a bilingual haiku that changes per season.
+Emptiness is the design metaphor for the courtyard under the sky.
+
+Each zone rises into place on first scroll-into-view (`useInView →
+is-shown`, 700ms `ease-timber`, `translateY 22 → 0 + opacity`). Without
+`.hanok-js` every zone is at rest (visible).
+
+## The seasons — wood holds still, light moves
+
+The madang is open to the sky, so it changes with the season. A segmented
+control lets the visitor pick spring / summer / autumn / winter, or leave
+the page to auto-cycle (~5.2s per season). Picking a season sets
+`data-season` on the root, and CSS recolors **only** the madang sky ground
+(spring warm / summer green-breezy / autumn amber / winter snow-cold) and
+the eave-shadow angle (which drifts 0 / −6 / +8 / +14 px across seasons).
+The wood grain, the earth wall, and all text hold still — because wood and
+earth do not change with the season; only the light does. That rule is
+what keeps the page from reading like a weather widget.
+
+The auto-cycle is a `setInterval`, paused on tab-hidden and **frozen under
+prefers-reduced-motion** (the season is then fixed at the last pick or
+spring). Each option is a real `<button>` with `aria-pressed`; AUTO is its
+own button, disabled under reduced motion.
+
+## Reduced motion & no-JS
+
+The contract: the page is a complete, readable structure with or without
+motion or script. Under reduced-motion, the char-split parks glyphs at
+rest, the eave is drawn immediately, the exploded runway collapses to the
+assembled diagram with all labels visible, the zones are at rest, and the
+season is frozen. Without JavaScript, the SSR state *is* the finished
+page — every pre-reveal style is gated behind a `.hanok-js` class that
+never lands, so glyphs are visible, the eave is drawn, zones are shown,
+the diagram is assembled, and the season defaults to spring. Nothing
+depends on a script to be legible.

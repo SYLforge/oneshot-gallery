@@ -1,0 +1,141 @@
+# MINHWA 민화 — breakdown
+
+## The hook
+
+A minhwa is a wish painted by hand. Every motif carries meaning: the tiger
+under the pine with the magpie above (호작도) is a wish for glad tidings and
+protection; the peony in full bloom (모란) is a wish for prosperity and
+honor; the ten things that do not age, gathered under sun and moon
+(십장생), is the deepest wish of all — long life. MINHWA is a gallery of
+those wishes, painted by unnamed Joseon hands for households that could not
+afford a literati scroll — rough where the literati refined, generous where
+they withheld, meaning first and finish second.
+
+The design bet: minhwa has no direct competitor among award-winning sites
+(the gallery's own reference doc calls this the "Korean-traditional gap").
+An entry that modernizes the folk picture itself — naive, vivid, symbolic,
+joyful — rather than the dancheong line (GIWA's territory) fills the gap no
+Awwwards winner occupies. The page is the bright opposite of KEMURI's
+austere zen.
+
+## Art direction
+
+Aged hanji (`#f5efe1`) is the ground; ink-black `#1a1410` (흑, 13.6:1 AAA)
+carries every word that matters. The accent system is the **obangsaek
+(오방색)** — the five-color cosmology of Korean decorative tradition — but
+treated as a *system with roles*, not a swatch set. Each hue owns a
+direction, a season, an element, and the motif it lives in:
+
+- `jeok` `#c8362b` (적 · south/summer/fire) — the functional red: focus,
+  selection, the signature stroke (4.7:1 AA)
+- `cheong` `#2f6e6a` (청 · east/spring/wood) — pine, tiger's sky, fine text
+  (5.0:1 AA)
+- `hwang` `#d99a1f` (황 · center/soil/emperor) — the sun, longevity gold;
+  **display-only** (2.6:1 on hanji, never text)
+- `baek` `#fbf8ef` (백 · west/autumn/metal) — the moon, powdered-shell
+  breath, card grounds
+- `heuk` `#1a1410` (흑 · north/winter/water) — ink line, every functional
+  glyph
+
+Three typefaces, three voices. **Gaegu** (the naive hand-brushed village
+face) is the wordmark 민화, motif titles, the seal. **Noto Serif KR** is
+every Korean body glyph — the warm docent. **Fraunces** is the English
+gallery-card subtitle. Korean always leads; English is the leaning italic
+companion, never larger. The page reads Hangul-first.
+
+## Technique — symbol-reveal with a stamp (char-split-reveal + spring-press)
+
+Each minhwa motif reveals with a cheerful pop, not an austere ink-settle —
+because minhwa is cheerful. A stamp (motif-stamp: opacity 0→1, scale
+0.82→1 with a `cubic-bezier(0.34, 1.56, 0.64, 1)` overshoot, 760ms) lands
+the painting onto its mount, and the symbol-meaning narration types itself
+glyph-by-glyph underneath — a curator reading aloud. The hero tiger-magpie
+gets the full treatment; the peony and longevity panels reveal the same
+way at staggered offsets.
+
+Under reduced motion every motif is already stamped and every line already
+typed (no pop, no glyph cadence); without JavaScript the page is a finished
+folk-painting gallery — every wish visible, every meaning captioned.
+
+## Technique — the obangsaek navigator (a palette as a system)
+
+The ObangsaekNavigator is the page's didactic heart. Selecting one of the
+five colors sets `--minhwa-accent-live` on the root, which retints the
+focus ring, the section eyebrow, and the hover washes instantly — **pigment
+does not ease.** Each color's row explains its direction, season, element,
+and the motif it lives in, so the palette teaches itself. This is the
+obangsaek used as a cosmological color system, the way a real dancheong
+painter uses it — not as decoration.
+
+## Technique — the 인장 seal-stamp (the signature interaction)
+
+A minhwa painter signs a finished work with a red vermillion seal — the
+mark that says "this one is mine, this one is done." MINHWA turns that into
+a UI confirmation pattern. The visitor presses the seal-stamp button (or,
+on coarse pointers / reduced motion, it self-stamps when its panel enters
+view), and a vermillion 도장 presses down onto the peony section with an
+even `ease-press` descend, lands, and a 1px ink rim expands to certify the
+mark. Pressing a seal is a physical act — the button carries a hand-drawn
+`4px 5px 0` offset shadow as the one playful element. The seal `useSealStamp`
+hook self-stamps on touch and reduced-motion so no visitor misses the
+certification; on fine pointers it waits for the press, because pressing is
+the point.
+
+## The generated imagery (provenance)
+
+The three minhwa illustrations are generated in ComfyUI (Illustrious
+`bismuthIllustrious_v80` + `toonystarkKoreanWebtoonFlux` LoRA @ 0.4, 832×1216,
+30 steps, CFG 7, RealESRGAN 2×, AVIF+WebP). The full recipe ships in
+`image-recipe.md` and the exported graph in `workflows/minhwa.json`. The
+`bismuthIllustrious_v80` row in `docs/model-licenses.md` is audited
+**CONDITIONAL** as of 2026-07-17: commercial image use is permitted under
+the inherited CreativeML Open RAIL++-M license; two items (merge ancestry
+disclosure, CC BY 4.0 redistribution compatibility) await maintainer
+co-sign, and per `ASSETS-LICENSE.md` this permits the imagery to ship today.
+The images ship under CC BY 4.0 with the honest caveat that purely
+AI-generated imagery may not be copyrightable in all jurisdictions.
+
+The illustrations contain no text — every Hangul caption, symbol meaning,
+and seal is real HTML/SVG so it stays crisp and accessible.
+
+## Accessibility notes
+
+- **Reduced motion:** motifs land already stamped, narration types land
+  whole, the seal sits pressed, the longevity scrub pins to its final
+  symbol, obangsaek tint swaps remain instant (they are not motion). One
+  fully-composed folk-painting gallery.
+- **No-JS:** every pre-reveal state is gated behind `.minhwa-js`, added on
+  mount. With JavaScript off the page is a finished gallery — every wish
+  visible, every meaning captioned, the seal at rest.
+- **Contrast:** heuk 13.6:1, ink-soft 6.5:1, jeok 4.7:1, cheong 5.0:1 —
+  all AA or better. Hwang (2.6:1) is display/decorative only, or sits as a
+  dot over heuk. Baek is never text on hanji.
+- **Semantics:** each minhwa panel is a `<figure>` with a bilingual
+  `<figcaption>`; the longevity symbols are an ordered list; focus is a
+  2px jeok `:focus-visible` ring that retints with the obangsaek.
+
+## Performance notes
+
+- The only per-frame writes are two CSS custom properties
+  (`--minhwa-longevity` on the sticky stage, `--minhwa-accent-live` on the
+  root on selection) — both transform/opacity-derived.
+- The two ambient hero cycles (sun 7.1s, moon 6.3s) share no common
+  divisor, so the idle hero never visibly loops. rAF pauses offscreen and
+  on `visibilitychange`.
+- Reveals write `class` + `transitionDelay` imperatively from one
+  IntersectionObserver — no React re-renders on scroll.
+- Three AVIF illustrations (~439 KB total) under the 5120 KB cap. Zero
+  dependencies; heaviest assets are three font families, Latin/CJK
+  subsetting left to next/font.
+
+## Remix ideas
+
+1. **The wedding screen.** Replace the three motifs with a minhwa wedding
+   screen (혼례폭병) — each panel a wish for the couple, the seal pressed
+   to "confirm" the union.
+2. **The dream book.** Each visitor "dreams" a motif (a one-click picker),
+   the page generates a personalized minhwa wish and seals it — a folk-art
+   fortune-telling interaction.
+3. **The fold.** A real eight-panel minhwa folding screen (병풍) that
+   unfolds horizontally on scroll, each panel revealing a season. The
+   obangsaek navigator retints by season.

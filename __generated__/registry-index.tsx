@@ -2,21 +2,25 @@
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
-export const demoSlugs = ["blunt","giwa","gradient-plaza","halflight","hanji-slate","kemuri","lumen-nord","moonlit","ondo","pale-signal","ppang","raster","sup","yeobaek"] as const;
+export const demoSlugs = ["blunt","chado","giwa","gradient-plaza","halflight","hanji-slate","hanok","kemuri","lumen-nord","minhwa","moonlit","ondo","pale-signal","ppang","raster","shan-shui","sup","yeobaek"] as const;
 
 export const demoIndex: Record<string, ComponentType> = {
   "blunt": dynamic(() => import("@/registry/designs/blunt/page")),
+  "chado": dynamic(() => import("@/registry/designs/chado/page")),
   "giwa": dynamic(() => import("@/registry/designs/giwa/page")),
   "gradient-plaza": dynamic(() => import("@/registry/designs/gradient-plaza/page")),
   "halflight": dynamic(() => import("@/registry/designs/halflight/page")),
   "hanji-slate": dynamic(() => import("@/registry/designs/hanji-slate/page")),
+  "hanok": dynamic(() => import("@/registry/designs/hanok/page")),
   "kemuri": dynamic(() => import("@/registry/designs/kemuri/page")),
   "lumen-nord": dynamic(() => import("@/registry/designs/lumen-nord/page")),
+  "minhwa": dynamic(() => import("@/registry/designs/minhwa/page")),
   "moonlit": dynamic(() => import("@/registry/designs/moonlit/page")),
   "ondo": dynamic(() => import("@/registry/designs/ondo/page")),
   "pale-signal": dynamic(() => import("@/registry/designs/pale-signal/page")),
   "ppang": dynamic(() => import("@/registry/designs/ppang/page")),
   "raster": dynamic(() => import("@/registry/designs/raster/page")),
+  "shan-shui": dynamic(() => import("@/registry/designs/shan-shui/page")),
   "sup": dynamic(() => import("@/registry/designs/sup/page")),
   "yeobaek": dynamic(() => import("@/registry/designs/yeobaek/page")),
 };
