@@ -1,0 +1,247 @@
+# TYPEWAVE — breakdown
+
+## The hook
+
+There is an electronic artist who refuses every instrument except the
+typeface. Their release has BPM and durations and liner notes; it has a
+tracklist and an end credit. What it does not have is audio, or video, or a
+single image. The "waveform" is a letter being stretched; the "timeline" is
+a variable-font axis being scrubbed; the "ticker" is a marquee band of
+lyrics. This page takes that premise literally: every visualizer you see is
+typography in motion, and nothing else.
+
+The design bet: kinetic typography can be a complete music visualizer. A
+page where the type *is* the spectrum analyzer, the play head, and the lyric
+roll — with zero media payload — can feel more rhythmic than a hero video,
+because the rhythm is yours to drive with the scroll.
+
+## Art direction
+
+Kinetic-typography here means type as the only lit surface. The ground is
+pure `#000` — the stage with the lights off — and the only thing on it is
+the type: ink `#fafafa` for voice (20.1:1, AAA), ink-dim `#98948a` for the
+machine metadata (6.9:1, AA+), and exactly one acid accent `#c6ff3a` (17.8:1
+on the black). The acid is held as an *event*, not a color scheme: the focus
+ring, the selection, the scrub playhead, the inverted marquee band, the
+section-head numbers, the faint spectrum hairlines. Count acid appearances
+per viewport and the answer should be small. No second hue, no gradient, no
+grain — adding any of those would dilute the idea that the type is the
+instrument.
+
+Four faces play four roles. Archivo is the synthesizer: a variable font
+loaded with the width axis (wdth 62–125) and the weight axis (wght 100–900),
+and the width axis is the whole kinetic premise. Black Han Sans is the
+Korean drum — heavy, blocky, the mass the wordmark translates into. Noto
+Sans KR is the Korean body voice. Space Mono is the patch sheet: BPM,
+timecodes, track numbers, axis readouts. The display stack
+(`Archivo, Black Han Sans, sans`) lets a Korean glyph in a display head fall
+through Archivo into Black Han Sans — a deliberate heavy face, not the
+default sans — and `:lang(ko)` pins Korean to its own families with
+`word-break: keep-all`.
+
+## Technique 1 — char-split-reveal, made reactive
+
+The classic char-split ships an `aria-label` on the parent and `aria-hidden`
+spans per glyph, staggered in. TYPEWAVE keeps the grammar and adds a second
+layer: the glyphs *react*. The hero wordmark TYPEWAVE rises in glyph by
+glyph (45ms stagger, 640ms rise), and then — under a fine pointer, without
+reduced motion — the page's scroll velocity writes each glyph's `scaleX`.
+Screen readers still read "TYPEWAVE" once; sighted visitors watch it stretch
+with their scroll like a waveform reacting to amplitude.
+
+The velocity is a single shared ref, fed by a small hook:
+
+```ts
+// useScrollVelocity.ts — the amplitude bus
+const onScroll = () => {
+  raw = Math.min(Math.abs(dy / dt) / maxOut, 1.6); // |v| in px/ms, normalized
+  if (!raf) raf = requestAnimationFrame(tick);
+};
+const tick = () => {
+  ref.current += (target - ref.current) * 0.14 * k; // approach the sample
+  raw *= 0.86;                                        // the sample cools
+  if (ref.current > 0.001 || raw > 0.001) raf = requestAnimationFrame(tick);
+};
+```
+
+Crucially, `ref` is a `useRef`, not state — so the hero and the tracklist
+head can read `velRef.current` inside their own rAF loops every frame
+without triggering a React re-render. The hero's loop then writes one
+transform per glyph, with an alternating phase so the stretch reads as a
+wave rather than a uniform bulge:
+
+```ts
+// Hero.tsx — amplitude written into the glyphs
+const amp = shown * VEL_GAIN; // 0.42 max added stretch
+for (let i = 0; i < glyphs.length; i++) {
+  const phase = (i % 2 === 0 ? 1 : -0.7) * amp;
+  glyphs[i].style.transform = `scaleX(${(1 + phase).toFixed(4)})`;
+}
+```
+
+The split itself is aria-safe: the `<h1>` carries `aria-label="TYPEWAVE"`,
+the visual spans are `aria-hidden`, and the entrance animation uses
+`animation-fill-mode: backwards` *only* under `.typewave-js` — so without
+JavaScript the glyphs sit at the 100% keyframe (fully visible) and nothing
+is hidden. Under reduced motion the velocity hook never arms and the glyphs
+rest at `scaleX(1)`.
+
+The closer wordmark "PLAY IT AGAIN" reuses the exact same char-split
+vocabulary so the page opens and closes on the same gesture — but it parks
+at the morph's terminal state (wdth 125, wght 900) and only animates its
+entrance. The page ends on a held, resolved chord, not another loop.
+
+## Technique 2 — scroll-scrub-pinned: an axis as a timeline
+
+The signature is a 320vh corridor that pins a 100svh stage. Scroll progress
+maps the wordmark TYPEWAVE across the full range of Archivo's axes —
+`font-variation-settings` interpolates `'wdth' 62 → 125` and `'wght' 100 →
+900` as the corridor scrubs 0 → 1. It is an audio timeline: the wordmark
+opens thin and narrow at the head, fills out and stretches wide through the
+body, and slams to its widest/heaviest at the tail — like a filter sweeping
+the spectrum.
+
+```ts
+// ScrubWordmark.tsx — scroll progress is the only clock the morph has
+const ease = (t) => t * t * (3 - 2 * t); // smoothstep
+const apply = (p) => {
+  const e = ease(p);
+  const wdth = lerp(62, 125, e);
+  const wght = lerp(100, 900, e);
+  word.style.fontVariationSettings = `'wdth' ${wdth}, 'wght' ${wght}`;
+};
+// in the rAF loop the shown position trails the target like mass
+currentP += (targetPRef.current - currentP) * 0.14 * k;
+```
+
+The smoothstep matters: it makes the morph's *middle* travel fastest, so the
+wordmark spends the most time at its extremes (thin/narrow and wide/heavy)
+and the least at its midpoint — exactly what a filter sweep feels like.
+Linear easing, by contrast, would make the morph feel like a stopwatch.
+
+A Space Mono HUD sits on the stage — `wdth 84`, `wght 340`, `0 → 1 · scrub` —
+written imperatively into refs only when the values change, so the readout
+ticks like a patch readout instead of re-rendering React. A 2px vertical
+acid playhead tracks the position with a 2.4s `ease-in-out alternate`
+opacity pulse (a held beat, not a flicker), and an 8-row faint-acid hairline
+grid sits behind the wordmark as a spectrum baseline.
+
+The loop pauses offscreen (IntersectionObserver, 120px margin) and on hidden
+tabs (`visibilitychange`); `dt` is clamped to 48ms. Under reduced motion the
+corridor collapses to normal flow, the wordmark parks at a composed late
+frame (wdth 118, wght 760), the HUD pins to those exact values, and the
+playhead sits at 80%. No-JS: the same static state, because the 320vh
+corridor height exists *only* under `.typewave-js` — the section is normal
+flow without it.
+
+## Technique 3 — marquee: crossed-speed lyric tickers
+
+Three marquee bands scroll at crossed speeds and directions on a lifted
+panel strip: the top band drifts left at 38s, the middle band drifts right
+at 30s (counterpoint), and the third band is *inverted* — acid ground, black
+text — and scrolls left at 22s, the fastest and the loudest. Each band's
+track is duplicated, and the loop is a `translateX(-50%)` keyframe:
+
+```css
+.typewave-marquee__track--l { animation: typewave-marq-l 38s linear infinite; }
+@keyframes typewave-marq-l {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+```
+
+The three periods (38s / 30s / 22s) share no common divisor, so the bands
+never visibly re-sync — the strip reads as three independent voices in
+counterpoint. The marquees are pure CSS: the IntersectionObserver only
+toggles an `is-running` class that flips `animation-play-state` between
+`paused` and `running`, so there is no per-frame JavaScript for the tickers
+at all. They start paused (no work offscreen) and run only when onscreen,
+and only under `.typewave-js`. Under reduced motion the media query cancels
+the animation and the bands sit static and fully readable — the lyric lines
+are real bilingual microcopy, never lorem, so a stopped ticker is still a
+readable list.
+
+## Motion math
+
+- **Velocity normalization 2.2 px/ms.** A casual wheel tick reads ~0.5; a
+  hard flick saturates at 1.0. The stretch reacts to *effort*, not to every
+  pixel — a sensitivity that reacted to the raw pixel rate would jitter on
+  every trackpad brush.
+- **Vel-stretch decay 0.16/frame ≈ 60ms half-life.** The release is faster
+  than the scrub's 0.14/frame approach on purpose: the hero should snap back
+  to rest when you stop, while the scrub morph trails with the mass of a
+  tape transport. Two different materials, two different decays.
+- **Smoothstep on the morph.** `t²(3 − 2t)` concentrates travel at the
+  extremes; linear would feel mechanical, and an ease-in-out cubic would
+  spend too long in the middle. Smoothstep is the cheapest curve that reads
+  as "a sweep".
+- **Marquee periods 38/30/22s.** `gcd(38,30)=2`, `gcd(30,22)=2`,
+  `gcd(38,22)=2` — but the *least common multiple* of all three is
+  6270s ≈ 1h44m, far longer than anyone scrolls. The bands never re-sync in
+  practice; the counterpoint is permanent.
+
+## Performance notes
+
+- **One velocity ref, many consumers.** `useScrollVelocity` updates a single
+  `useRef` on scroll; the hero glyphs and the tracklist head each run their
+  own rAF that reads `velRef.current`. Zero React re-renders per scroll
+  frame — the only state changes on the page are the one-time
+  `.typewave-js` class and the IntersectionObserver class toggles.
+- **The scrub's rAF early-returns logic is in the lerp itself** — it always
+  applies while visible (the morph should stay smooth even when held), but
+  the loop is paused entirely offscreen and on hidden tabs. `dt` is clamped
+  to 48ms so a background tab never lurches on return.
+- **The marquees are zero-JS-per-frame.** CSS `linear` keyframes on
+  `transform`; JS only toggles `animation-play-state`. An idle marquee that
+  is onscreen costs the compositor, not the main thread.
+- **No canvas, no images, no audio.** The entry's entire payload is code:
+  the heaviest per-frame work is setting `fontVariationSettings` on one
+  element and `transform` on eight glyph spans. DPR is irrelevant; there is
+  nothing to be DPR-aware about.
+- **`will-change: transform, opacity`** is set only on the split glyphs
+  (the elements that actually animate per frame), and nowhere else — the
+  page avoids the `will-change: all` anti-pattern.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) disables the velocity hook (the ref stays at 0),
+  collapses the scrub corridor to normal flow, parks the wordmark at
+  wdth 118/wght 760 with the HUD pinned to match, stops the marquees
+  static, and shows every reveal. The media query also kills char rise,
+  the acid pulse, and the head tracking. The finished, readable page is the
+  reduced-motion page.
+- **No-JS:** every hidden pre-state (`[data-reveal]`, the scrub corridor
+  height, the marquee animations, the char-split pre-state) is gated behind
+  `.typewave-js`. Without JavaScript the page is a complete, readable
+  document — the wordmark stands at its resting width, the scrub is a
+  normal section showing the parked wordmark, the marquees are static lyric
+  lines, the tracklist is a plain list.
+- **Semantics:** the split wordmarks carry `aria-label` on the heading with
+  `aria-hidden` glyph spans; the scrub stage sits in a `role="img"` wrapper
+  with a full bilingual description of the morph; the marquee bands are
+  decorative `aria-hidden` (the lyric lines are atmosphere, not content —
+  the real copy is the tracklist); the playhead is decorative.
+- **Touch:** the velocity stretch and head tracking are fine-pointer only
+  (the page scroll itself is the interaction on touch); the marquees
+  self-animate; nothing essential lives behind hover.
+- **Contrast:** ink 20.1:1, ink-dim 6.9:1, ink-on-acid 17.8:1 — all AA+ on
+  the ground; acid (17.8:1 on ground) clears AA normal text but is held for
+  display type and marks rather than body copy, so the page never reads as
+  "green type on black".
+
+## Remix ideas
+
+1. **The album roll.** Keep the scrub engine, make the corridor traverse
+   four wordmarks — one per track — each parked at a different wdth/wght,
+   and let the velocity stretch ripple *between* them as you cross a
+   boundary. The tracklist becomes a chapter strip on the side.
+2. **Live lyric mode.** Replace the marquee bands with a single char-split
+   line that re-types itself from a held corpus as you scroll, velocity
+   controlling the type-on rate — a typewriter whose speed is your scroll,
+   crossed with the char-split. Acid becomes the caret.
+3. **The visualizer that listens.** Add an optional (user-gesture) Web Audio
+   analyser fed by the visitor's microphone; route its RMS bins onto the
+   per-glyph `scaleX` instead of scroll velocity. The wordmark becomes a
+   real spectrum analyzer for whatever is playing in the room — the same
+   engine, a different amplitude source.

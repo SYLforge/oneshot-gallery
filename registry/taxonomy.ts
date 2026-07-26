@@ -126,6 +126,46 @@ export const aesthetics: TaxonomyTerm[] = [
       ko: "원근 그리드, 색수차 드리프트, 폐쇄된 쇼핑몰의 라디오.",
     },
   },
+  {
+    id: "kinetic-typography",
+    label: { en: "Kinetic Typography", ko: "키네틱 타이포그래피" },
+    blurb: {
+      en: "Type in motion — stretching, splitting, riding the scroll as the hero.",
+      ko: "움직이는 타이포 — 늘어나고, 쪼개지고, 스크롤을 타는 주인공.",
+    },
+  },
+  {
+    id: "retro-y2k",
+    label: { en: "Retro / Y2K", ko: "레트로·Y2K" },
+    blurb: {
+      en: "Dopamine color, chrome, pixel dust — the warm glow of a 2003 CRT.",
+      ko: "도파민 컬러, 크롬, 픽셀 먼지 — 2003년 CRT의 따뜻한 빛.",
+    },
+  },
+  {
+    id: "tactile-craft",
+    label: { en: "Tactile Craft", ko: "택타일 크래프트" },
+    blurb: {
+      en: "Handmade textures, embroidery, riso layers — design you can almost touch.",
+      ko: "수공 질감, 자수, 리소 레이어 — 거의 만질 수 있는 디자인.",
+    },
+  },
+  {
+    id: "three-d-immersive",
+    label: { en: "3D / Immersive", ko: "3D·이머시브" },
+    blurb: {
+      en: "Scenes you orbit, products you rotate, worlds built in the viewport.",
+      ko: "궤도를 도는 신, 회전하는 제품, 뷰포트에 지어진 세계.",
+    },
+  },
+  {
+    id: "ink-bloom",
+    label: { en: "Ink & Bloom", ko: "잉크·블룸" },
+    blurb: {
+      en: "Ink that blooms into petals — fluid, generative, alive.",
+      ko: "꽃잎으로 피어나는 잉크 — 유동적, 생성적, 살아 있는.",
+    },
+  },
 ];
 
 /**

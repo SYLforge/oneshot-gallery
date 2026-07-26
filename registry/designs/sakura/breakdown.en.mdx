@@ -1,0 +1,311 @@
+# SAKURA — breakdown
+
+## The hook
+
+There is a page that does only one thing, and it does it the whole way down:
+black ink drops fall from a deep night sky, strike an invisible waterline,
+and bloom into cherry petals that drift on a wind you can lean with your
+hand and slowly fade. That is the entire premise — *ink & bloom* — and the
+page refuses to decorate around it. No brand sells anything here; the page
+is the product, performing the Japanese idea of *mono no aware* (ものの
+あわれ), the gentle, appreciative sadness that beauty is transient. Every
+petal is born, drifts, and is forgotten; the page stages the forgetting.
+
+This is the Oneshot Gallery's labeled answer to
+[oneshot-sakura](https://oneshot-sakura.vercel.app/) — the reference whose
+ink-to-bloom premise inspired the gallery's `ink-bloom` family. The thesis
+is the same premise, re-expressed from scratch: trilingual, installable,
+fully source-included, MIT, and free. Where the reference offers one hero,
+this ships the complete page, the tokens, and this honest prompt.
+
+The design bet is the same one KEMURI (the washi-sumi-e flagship) made for
+smoke, pointed the other way: a *simulated* bloom, advected through a real
+fluid-physics curl-noise field, carries more feeling than any video of
+falling petals — because a video ends, and this garden never does.
+
+## Art direction
+
+Ink-bloom lives or dies on the night. The ground is deep ink
+(`#0e0a0f`), the speaking voice is a near-white warmed with the faintest
+blush (`#f6eef0`, 17.2:1 — AAA), and there is one accent — blossom pink
+`#e8869e` — which appears where a petal is alive: the kickers, the verse
+numerals, the focus ring, the selection ground, the card frame. A single
+warm mote, gold `#c9a85a`, appears exactly three places: the hero rule, the
+seal stamp, the one drifting pollen grain. The moment a second warm hue or a
+gradient blob arrives, the page becomes a screensaver.
+
+One constraint did the hard work, and it is the opposite of KEMURI's.
+KEMURI's ember failed AA on washi (2.9:1) and had to be banked; here the
+blossom accent measures 7.8:1 on the ink-night ground — it clears AA even
+for body text. So blossom is permitted to speak everywhere, and the palette
+is unusually generous for a dark theme. `blossom-deep #c75a76` (4.6:1 on the
+raised ink-panel) is reserved for the one place the full blossom would read
+too bright. The page never inverts (KEMURI flipped to a dark room once;
+here the dark is the home).
+
+The type refuses the obvious trilingual trap. Shippori Mincho holds every
+Japanese glyph — the vertical 桜花 title, the verse markers 一二三四, the
+seal — because Shippori was drawn for vertical metrics first. Noto Serif KR
+is the Korean main voice, the one that actually speaks (벚꽃, the verse
+body, the ledes). Cormorant Garamond is the Latin subtitle — the wordmark,
+the English beneath, the numerals. The stack order (`Cormorant, Noto Serif
+KR, Shippori, serif`) means Hangul and kanji fall through the Latin face
+into their own with no markup. The three languages are distinguished by
+role, not just size: Korean speaks, Japanese decorates, English translates.
+
+## Technique 1 — the ink-to-petal bloom (canvas-particles)
+
+The naive way to animate falling petals is to give each a random wander and
+a gravity tick. It reads as confetti, or snow — because independent random
+walks have no *structure*, and real petals on spring air move together,
+eddies forming and persisting in an incompressible flow. You can get all of
+that without a fluid solver, and this page reuses the exact trick KEMURI
+uses for smoke — pointed downward.
+
+Take any smooth scalar field ψ (the *potential*) and define the velocity as
+its rotated gradient:
+
+```ts
+// useBloomCanvas.ts — divergence-free flow: velocity = (∂ψ/∂y, −∂ψ/∂x)
+const cx =
+  (psi(x, y + CURL_EPS, t) - psi(x, y - CURL_EPS, t)) / (2 * CURL_EPS);
+const cy =
+  -(psi(x + CURL_EPS, y, t) - psi(x - CURL_EPS, y, t)) / (2 * CURL_EPS);
+```
+
+This is the 2D *curl* of ψ, and a rotated gradient is divergence-free by
+construction: ∂vx/∂x + ∂vy/∂y = 0. Whatever noise you pour into ψ, the
+resulting flow conserves area — petals advected by it swirl around the
+potential's contour lines forever without ever compressing. That single
+property is the difference between petals on wind and petals on confetti.
+
+ψ is two octaves of seeded value noise (feature sizes ~170px and ~64px),
+with the field itself drifting leftward and upward:
+
+```ts
+// useBloomCanvas.ts — the wind field travels with the petals
+function psi(x: number, y: number, t: number): number {
+  const xr = x + t * FIELD_DRIFT_X; // −10 px/s
+  const yr = y + t * FIELD_DRIFT_Y; // −14 px/s
+  return (
+    valueNoise(xr * GUST_LARGE, yr * GUST_LARGE) - 0.5 +
+    (valueNoise(xr * GUST_SMALL + 23.1, yr * (GUST_SMALL * 1.3) + 7.7) - 0.5) * 0.4
+  );
+}
+```
+
+Without that drift, petals swim through frozen turbulence and look like
+they're climbing a rope; with it, each gust is born, travels, and dies with
+the petals it belongs to. (KEMURI's smoke rises its field upward at 26 px/s;
+this garden drifts its field left-and-up at (−10, −14), the way spring
+weather actually moves.)
+
+Where this page diverges from KEMURI is the *source*. Smoke is a continuous
+plume from a censer mouth; petals here are *born* in events. An ink drop
+falls under gravity (580 px/s², terminal 480 px/s); the moment it crosses
+the waterline at `y = 0.42·H`, it splashes (4–7 micro-droplets flung
+upward, life 0.5 s) and **blooms** — a ring of 8–14 petal particles spawns
+outward at 40–90 px/s with an angular spread, then hands them to the curl
+field:
+
+```ts
+// useBloomCanvas.ts — the bloom at the waterline
+const bloom = (x: number) => {
+  const n = BLOOM_MIN + ((rand() * BLOOM_SPREAD) | 0);
+  const baseAngle = rand() * Math.PI * 2;
+  for (let k = 0; k < n; k++) {
+    // find a dead petal slot, recycle it into a fresh outward-bound petal
+    const ang = baseAngle + (k / n) * Math.PI * 2 + (rand() - 0.5) * 0.8;
+    const spd = BURST_VEL_MIN + rand() * BURST_VEL_SPREAD;
+    parts[o] = x; parts[o + 1] = waterY;
+    parts[o + 2] = Math.cos(ang) * spd;
+    parts[o + 3] = Math.sin(ang) * spd * 0.6 + PETAL_SINK; // they sink, not rise
+    // ...
+  }
+};
+```
+
+Petals sink at −22 px/s — cherry blossoms *fall*, they do not rise, which
+is the inversion of KEMURI's +46 px/s smoke buoyancy. They relax toward the
+field at 1.8 s⁻¹ (inertia, not obedience), live 7–13 s, and fade on a
+square-root curve so they cross "barely there" early and spend most of
+their life as a whisper. Three prerendered sprite tones (fresh blossom, mid
+bloom, pale edge) give variety without per-particle shading; each petal is
+one `drawImage` of a 5-pointed notched-blossom path. Before first paint the
+system pre-advects 90 steps of 90ms, so you never see the garden being
+planted — it was blooming before you arrived.
+
+## Technique 2 — the wind that leans toward your hand (pointer-parallax)
+
+Two outside influences bend the garden without ever steering it.
+
+- **Pointer.** A capped horizontal pull (≤ ±70 px/s) toward the cursor,
+  gated by an energy value with asymmetric lerps — attack 0.06, release
+  0.02 per 60fps frame. The petals notice your hand in about a quarter
+  second and take three to forget it. The pull's reach falls off with
+  vertical distance from the pointer (a Gaussian over `H`), so a hand at
+  the top of the garden barely stirs the petals at the bottom — wind has
+  locality. On touch, or after 2.6 s of silence, the energy decays to zero
+  and the autonomous breeze takes back over.
+- **Click/tap.** A pointer-down pushes an `InkDropRequest` into a queue
+  that the canvas's rAF loop drains: a fresh drop is released from the top
+  of the stage above the tap's x, falls, and blooms where you touched. This
+  is the signature interaction — you drop ink, and the garden answers. The
+  queue is never coalesced, so a rapid double-tap yields two blooms.
+
+```ts
+// usePointerInk.ts — click/tap enqueues an ink drop, pointer-move sets wind bias
+const onPointerDown = (ev: PointerEvent) => {
+  const { x } = localXY(ev.clientX, ev.clientY);
+  drops.current.push({ x, y: 0, t: performance.now() });
+};
+```
+
+The whole pointer subsystem never re-renders React. `usePointerInk` writes
+raw position + energy into a ref; the canvas's own rAF loop reads it and
+frame-rate-normalizes the attack/release. This is the same pattern KEMURI's
+`useScrollVelocity` uses for scroll, lifted to pointer space.
+
+## Technique 3 — petals that arrive with your reading (scroll-scrub-pinned)
+
+The verse section is the soul of the page, and it is the one place the bloom
+is coupled to scroll. The section is ~260vh tall; its inner stage is
+`position: sticky; top: 0; height: 100svh`, so the four verses *pin* in
+place while you scroll through them. A `useScrollProgress` hook measures
+the section's box against the viewport top into a ref (no React renders),
+and two consumers read that ref:
+
+1. **The bloom canvas** (via the `progress` prop). As `raw` runs 0→1, the
+   autonomous drop interval shrinks (`AUTO_DROP_INTERVAL / (1 + p · 2.2)` —
+   up to ~3.2× more drops at full progress) and a *density floor* enforces
+   that at least `progress · 0.7 · count` petals are alive at any moment,
+   recycling dead slots to meet it. So petals *accumulate* as you read the
+   verses — the garden fills with bloom — and when you scrub back, the floor
+   drops and petals clear naturally as they fade. Petals are not permanent;
+   that is the entire point of mono no aware.
+
+2. **The verse crossfade.** A tiny rAF loop lerps the raw progress into a
+   smoothed value (frame-rate normalized at 8 s⁻¹) and writes
+   `data-active="<i>"` onto the verse stack whenever the active index
+   changes. CSS matches on it: the verse whose `data-i` equals the stack's
+   `data-active` is opacity 1; the others fade and lift. The same change
+   sets `aria-hidden` so a screen reader always reads the visible verse —
+   scrubbing is not just visual, it is semantic.
+
+```ts
+// VerseScrub.tsx — smoothed progress drives both the canvas and the verse swap
+smoothed.current += (raw - smoothed.current) * (1 - Math.exp(-dt * 8));
+const active = verseForProgress(smoothed.current);
+if (stack.getAttribute("data-active") !== String(active)) {
+  stack.setAttribute("data-active", String(active));
+  // ... and update aria-hidden on each verse to match
+}
+```
+
+The four verses are the mono no aware sequence — *arrival → bloom → fall →
+memory* — and scrubbing is how you walk through them. Scrub forward and the
+garden fills; scrub back and it empties; the verses crossfade to match. The
+pinned stage means you can dwell on any one as long as you like, and the
+bloom keeps arriving underneath it.
+
+## Motion math
+
+Two numbers give the garden its temperament:
+
+- **Velocity relaxation 1.8 s⁻¹.** Per frame, a petal covers
+  `1 − e^(−dt·1.8)` of the gap between its velocity and the field's — a
+  half-life of ~385ms. Heavier than KEMURI's smoke (2.4 s⁻¹, ~290ms) because
+  petals have more drag than smoke; the garden drifts where the smoke
+  climbed. Framerate-independent by construction, computed from `dt`.
+- **Attack 0.06 / release 0.02.** The pointer-energy lerps, normalized to
+  60fps. Half-life ≈ 12 frames in, ≈ 34 frames out. The garden turns toward
+  a hand about as fast as KEMURI's smoke, and forgets slightly faster —
+  petals are lighter than smoke, and the wind moves on.
+
+Everything else obeys two easings: `ease-bloom`
+(`cubic-bezier(0.22,1,0.36,1)`) front-loads travel and spends the tail
+settling, so 900–1100ms reads as unfurling rather than slow; `ease-ink`
+(`cubic-bezier(0.65,0,0.35,1)`) is symmetric and weighted for the two
+physical moves — the loader's night lift and the button's bloom-fill.
+Ambient cycles (waterline shimmer 6.2s, hint drift 8.6s) are mutually prime
+with each other and with the breeze periods (~33s, ~15s), so the idle garden
+never visibly loops.
+
+## Performance notes
+
+- One rAF loop for the bloom, throttled to ~64fps (`FRAME_MS = 15.5`),
+  `dt` clamped to 48ms so a background tab never causes a lurch on return.
+  The loop stops via IntersectionObserver (80px margin) *and*
+  `visibilitychange` — zero frames offscreen or tab-hidden.
+- DPR capped at 2; petal count scales with stage area (120–520). A petal
+  costs 8 value-noise evaluations for the curl (4 ψ samples × 2 octaves)
+  and one `drawImage` of a prerendered sprite — no per-particle
+  `createRadialGradient`, no shadows, no per-frame path building.
+- The warmup (90 × 90ms steps) runs once, synchronously, at mount: ~8s of
+  simulated time for about a frame's worth of work.
+- The verse binder is a separate featherweight rAF (also throttled,
+  15.5ms) that does six lines of math and at most one DOM attribute write
+  per change — it never re-renders React.
+- All CSS animation is `transform`, `opacity`, `filter`. Reveals write
+  `class` + `transitionDelay` from one observer callback; the verse swap
+  writes one `data-active` attribute. No React re-renders on scroll
+  anywhere on the page.
+
+## Accessibility notes
+
+- **Reduced motion:** the loader never mounts (and `display: none` as a
+  belt), the bloom warms up and paints one composed still (the garden
+  mid-bloom, one drop frozen mid-fall, petals resting where the breeze
+  holds them), the verse section shows the first verse statically, and a
+  media query flattens every transition and ambient cycle. The result is a
+  finished garden, not a paused video.
+- **No-JS:** every pre-reveal style is gated behind `.sakura-js`, added on
+  mount; the SSR page is the completed page — the first verse visible, the
+  wordmark present, the garden's meaning conveyed by the canvas's
+  `role="img"` label even though the canvas itself is empty without JS.
+- **Semantics:** every canvas stage is `role="img"` with a bilingual
+  (KO/EN) description; the wordmark is an `h1` with `aria-label`; the
+  vertical 桜花 is `aria-hidden` (decorative); the verse stack manages
+  `aria-hidden` so only the active verse is read; decorative seals are
+  `aria-hidden`.
+- **Keyboard & touch:** the two interactive elements (the bloom-again
+  button, the top link) take a 2px blossom ring on `:focus-visible`. The
+  garden self-drifts on touch; pointer-down drops ink for everyone;
+  nothing anywhere lives behind hover.
+- **Contrast:** petal-white 17.2:1, bloom 12.6:1, blossom 7.8:1 (even
+  text-safe), gold 8.6:1, ink-soft 7.3:1 — all on ink-night. Moss-ink
+  (3.1:1) is large/decorative only and never carries meaning. Worst case
+  under a passing petal, the wordmark still reads ≈ 9:1.
+
+## How it answers oneshot-sakura
+
+The reference site inspired the `ink-bloom` family and, in part, the
+gallery. This entry is the labeled response: the same unprotectable premise
+(ink falls and blooms into petals), re-expressed from scratch with no
+borrowed code or assets, and shipped under MIT with the complete source, the
+tokens, and this honest prompt. Where the reference offers one hero, SAKURA
+ships a full page — hero, four scrubbed verses, an open garden, a footer —
+trilingual (Korean main, Japanese decorative, English subtitle), reduced-
+motion safe, no-JS degradable, and installable with one command. The
+ink-to-petal transition is built on a real divergence-free curl-noise field
+(the same engine KEMURI uses for smoke, inverted to sink), not a canned
+animation; and the scroll-scrubbed verse section — where petals accumulate
+as you read and clear as you leave — is a signature moment the reference
+does not have.
+
+## Remix ideas
+
+1. **Autumn.** Keep the curl field and the bloom-on-impact event; swap the
+   petal sprite for a maple leaf (a seven-pointed path), shift the palette
+   from blossom to ember-and-rust, and let the "drops" become rain. The
+   waterline becomes a puddle; mono no aware becomes *tsuyu* — the autumn
+   dew.
+2. **Snow garden.** Invert the bloom: particles spawn at the top (not the
+   waterline), drift down with near-zero buoyancy and high drag, and never
+   bloom — they *accumulate* at the bottom of the stage, building a static
+   snowfield that the scroll-scrub clears. The verse becomes silence.
+3. **Bonfire night.** Replace the ink drop with an ember and the petal with
+   a spark; the bloom becomes a *burst* (radial, high velocity, short life,
+   gravity returning them down). The curl field gains a buoyancy pulse on
+   each burst. Palette shifts to a single warm gold on the ink-night — the
+   garden becomes a fireplace.

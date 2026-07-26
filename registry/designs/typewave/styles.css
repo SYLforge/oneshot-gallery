@@ -1,0 +1,933 @@
+/* ==========================================================================
+   TYPEWAVE — type that plays like a track
+   kinetic-typography · pure black, one acid accent · the width axis is the wave
+   Scoped by convention to .typewave-root; classes prefixed typewave-.
+   ========================================================================== */
+
+.typewave-root {
+  /* -- palette: pure black ground, ink, one acid ------------------------- */
+  --tw-ground: #000000;     /* the stage */
+  --tw-ink: #fafafa;        /* primary text + resting wordmark — 20.1:1 on ground */
+  --tw-ink-dim: #98948a;    /* secondary text — 6.9:1 on ground */
+  --tw-ink-faint: #5f5d57;  /* decorative: hairlines, dim bands, grid */
+  --tw-acid: #c6ff3a;       /* the one accent — 17.8:1 on ground */
+  --tw-acid-dim: rgba(198, 255, 58, 0.34); /* derived: playhead glow, focus halo */
+  --tw-panel: #0e0e0e;      /* lifted dark surfaces — ink reads 11.7:1, acid 16.3:1 */
+  --tw-ink-on-acid: #000000; /* inverted text on acid fills — 17.8:1 on the acid */
+  --tw-line: rgba(250, 250, 250, 0.14);   /* decorative hairlines */
+  --tw-line-faint: rgba(250, 250, 250, 0.07);
+
+  /* -- type -------------------------------------------------------------- */
+  /* The synthesizer: Archivo carries the Latin display + the wordmark; a
+     Korean glyph in a display head falls through to Black Han Sans (heavy,
+     blocky) rather than the default sans. */
+  --tw-font-display: var(--font-archivo), var(--font-black-han), "Archivo",
+    "Helvetica Neue", Arial, sans-serif;
+  /* Korean display: the heavy drum, used for the Korean wordmark lines. */
+  --tw-font-ko-display: var(--font-black-han), var(--font-archivo),
+    "Apple SD Gothic Neo", sans-serif;
+  /* Body stack: Noto Sans KR carries every Hangul glyph in prose. */
+  --tw-font-body: var(--font-archivo), var(--font-noto-kr), "Archivo",
+    "Helvetica Neue", Arial, sans-serif;
+  --tw-font-ko: var(--font-noto-kr), "Noto Sans KR", "Apple SD Gothic Neo",
+    sans-serif;
+  /* The patch sheet: BPM, timecodes, track numbers. */
+  --tw-font-mono: var(--font-space-mono), var(--font-noto-kr), "Courier New",
+    monospace;
+
+  /* -- motion ------------------------------------------------------------ */
+  --tw-ease-wave: cubic-bezier(0.33, 1, 0.68, 1); /* fast out, long settle */
+  --tw-ease-scrub: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* -- geometry ---------------------------------------------------------- */
+  --tw-maxw: 1440px;
+  --tw-margin: clamp(16px, 4vw, 48px);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--tw-ground);
+  color: var(--tw-ink);
+  font-family: var(--tw-font-body);
+  font-size: clamp(15px, 0.4vw + 13.6px, 17px);
+  font-variation-settings: "wdth" 100, "wght" 400;
+  line-height: 1.55;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: its own families, natural breaks, no Latin tracking. */
+.typewave-root :lang(ko) {
+  font-family: var(--tw-font-ko);
+  letter-spacing: 0;
+  word-break: keep-all;
+}
+
+/* The one accent: acid-green selection, scoped to the entry root. */
+.typewave-root ::selection,
+.typewave-root::selection {
+  background: var(--tw-acid);
+  color: var(--tw-ink-on-acid);
+}
+
+/* Keyboard focus: the acid rectangle — loud, unambiguous, belongs to the art. */
+.typewave-root :focus-visible {
+  outline: 2px solid var(--tw-acid);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* The patch sheet: small, tracked, tabular machine text. */
+.typewave-mono {
+  font-family: var(--tw-font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+/* Visually hidden, still read aloud */
+.typewave-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Layout shell
+   ========================================================================== */
+
+.typewave-frame {
+  max-width: var(--tw-maxw);
+  margin-inline: auto;
+  padding-inline: var(--tw-margin);
+}
+
+.typewave-stage {
+  display: block;
+}
+
+/* Shared section-head furniture */
+.typewave-sechead {
+  margin: 0;
+  font-family: var(--tw-font-display);
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 100, "wght" 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.typewave-sechead__ko {
+  margin-left: 0.3em;
+  font-family: var(--tw-font-ko-display);
+  font-size: 0.4em;
+  font-weight: 400;
+  color: var(--tw-ink-dim);
+  letter-spacing: 0;
+  vertical-align: 0.4em;
+}
+
+.typewave-sechead__no {
+  margin: 0 0 0.6rem;
+  color: var(--tw-acid);
+}
+
+/* ==========================================================================
+   00 · Hero — the kinetic wordmark (char-split reveal + velocity stretch)
+   ========================================================================== */
+
+.typewave-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.typewave-hero__inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: clamp(20px, 4vh, 40px);
+  padding-bottom: clamp(20px, 4vh, 32px);
+}
+
+.typewave-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  margin: 0 0 auto;
+  border-bottom: 1px solid var(--tw-line);
+  padding-bottom: 12px;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-hero__kicker span:first-child {
+  color: var(--tw-ink);
+}
+
+.typewave-hero__title {
+  margin: clamp(8px, 2vh, 24px) 0 0;
+  font-family: var(--tw-font-display);
+  font-size: clamp(3.4rem, 19vw, 16rem);
+  font-weight: 900;
+  font-variation-settings: "wdth" 100, "wght" 900;
+  letter-spacing: -0.025em;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+/* Korean wordmark under the Latin — the drum */
+.typewave-hero__ko {
+  margin: clamp(6px, 1.4vh, 14px) 0 0;
+  font-family: var(--tw-font-ko-display);
+  font-size: clamp(1.6rem, 7.5vw, 5.4rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  color: var(--tw-ink);
+}
+
+/* the waveform zero-crossing line under the wordmark */
+.typewave-hero__wave {
+  position: relative;
+  margin-top: clamp(14px, 3vh, 28px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.typewave-hero__zero {
+  color: var(--tw-acid);
+  white-space: nowrap;
+}
+
+.typewave-hero__line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    var(--tw-acid) 0%,
+    var(--tw-acid-dim) 40%,
+    transparent 100%
+  );
+}
+
+.typewave-hero__foot {
+  margin-top: auto;
+  padding-top: clamp(28px, 6vh, 64px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 24px;
+}
+
+.typewave-hero__lede {
+  margin: 0;
+  max-width: 52ch;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  line-height: 1.5;
+  font-variation-settings: "wdth" 100, "wght" 420;
+}
+
+.typewave-hero__lede span[lang="ko"] {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.92em;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-hero__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-hero__meta span:first-child {
+  color: var(--tw-acid);
+}
+
+.typewave-hero__cue {
+  margin: clamp(18px, 4vh, 36px) 0 0;
+  color: var(--tw-ink-dim);
+  text-align: center;
+}
+
+/* -- char-split reveal + velocity stretch -------------------------------
+   The h1 carries the accessible name (aria-label); the .typewave-split
+   spans are aria-hidden visuals. Entrance fires only under
+   .typewave-js.is-on. The velocity stretch is written imperatively to
+   each glyph's transform by Hero.tsx — so the resting CSS transform is
+   "none" and the page reads perfectly without JS. */
+
+.typewave-split {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.typewave-split__word {
+  display: inline-block;
+}
+
+.typewave-split__ch {
+  display: inline-block;
+  transform-origin: 50% 60%;
+  will-change: transform, opacity;
+}
+
+/* entrance: glyphs rise + fade, staggered. backwards fill so the pre-state
+   is invisible ONLY while .typewave-js is live; without JS the glyphs sit
+   at the 100% keyframe (fully visible) and nothing is hidden. */
+.typewave-js .is-on .typewave-split__ch {
+  animation: typewave-char-rise 640ms var(--tw-ease-wave) backwards;
+  animation-delay: calc(var(--i) * 45ms);
+}
+
+@keyframes typewave-char-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0.32em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   01 · ScrubWordmark — the pinned scroll-scrub (signature)
+   A 320vh corridor pins a 100svh stage. The corridor exists ONLY under
+   .typewave-js; without JS (or under reduced motion) it is normal flow and
+   the wordmark rests at its parked wdth/wght.
+   ========================================================================== */
+
+.typewave-scrub {
+  position: relative;
+}
+
+/* The over-tall corridor is JS-gated: no JS → normal height, no dead scroll */
+.typewave-js .typewave-scrub {
+  height: 320vh;
+}
+
+.typewave-scrub__sticky {
+  position: relative;
+}
+
+.typewave-js .typewave-scrub__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(20px, 4vh, 40px) var(--tw-margin);
+  overflow: hidden;
+}
+
+.typewave-scrub__head {
+  max-width: var(--tw-maxw);
+  margin: 0 auto auto;
+}
+
+.typewave-scrub__slug {
+  margin: 0.6rem 0 0;
+  max-width: 56ch;
+  font-size: clamp(0.92rem, 1.3vw, 1.08rem);
+  line-height: 1.5;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-scrub__slug span[lang="ko"] {
+  display: block;
+  margin-top: 4px;
+}
+
+.typewave-scrub__stage {
+  position: relative;
+  max-width: var(--tw-maxw);
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* spectrum baseline: 8 faint acid hairlines */
+.typewave-scrub__grid {
+  position: absolute;
+  inset: 12% 0;
+  display: grid;
+  grid-template-rows: repeat(8, 1fr);
+  align-content: stretch;
+  width: 100%;
+  pointer-events: none;
+}
+
+.typewave-scrub__grid i {
+  border-top: 1px solid rgba(198, 255, 58, 0.1);
+}
+
+.typewave-scrub__grid i:first-child {
+  border-top-color: rgba(198, 255, 58, 0.18);
+}
+
+/* the timeline playhead: vertical acid rule, pulsing */
+.typewave-scrub__playhead {
+  position: absolute;
+  top: 6%;
+  bottom: 6%;
+  left: 0%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--tw-acid);
+  box-shadow: 0 0 12px 1px var(--tw-acid-dim);
+  animation: typewave-acid-pulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes typewave-acid-pulse {
+  0% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* the morphing wordmark — wdth/wght are written imperatively by JS as the
+   corridor scrubs. The CSS value below is the parked state: what the
+   wordmark shows under no-JS and reduced motion (a composed late morph).
+   Under .typewave-js without reduced motion, ScrubWordmark.tsx overwrites
+   font-variation-settings inline on mount (starting from wdth 62/wght 100)
+   and drives it with the scrub. */
+.typewave-scrub__word {
+  display: block;
+  text-align: center;
+  font-family: var(--tw-font-display);
+  font-size: clamp(2.6rem, 17vw, 15rem);
+  font-weight: 100;
+  font-variation-settings: "wdth" 118, "wght" 760;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--tw-ink);
+}
+
+.typewave-scrub__wordko {
+  display: block;
+  text-align: center;
+  margin-top: clamp(6px, 1.4vh, 16px);
+  font-family: var(--tw-font-ko-display);
+  font-size: clamp(1.2rem, 5.5vw, 3.4rem);
+  letter-spacing: 0.04em;
+  color: var(--tw-ink-dim);
+}
+
+/* patch readout */
+.typewave-scrub__hud {
+  position: relative;
+  margin: clamp(14px, 3vh, 26px) 0 0;
+  display: flex;
+  gap: clamp(20px, 5vw, 56px);
+  justify-content: center;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-scrub__hud div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+
+.typewave-scrub__hud dt {
+  color: var(--tw-ink-faint);
+}
+
+.typewave-scrub__hud dd {
+  margin: 0;
+  color: var(--tw-acid);
+}
+
+.typewave-scrub__note {
+  max-width: var(--tw-maxw);
+  margin: auto auto 0;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: var(--tw-ink-dim);
+}
+
+.typewave-scrub__note span[lang="ko"] {
+  display: block;
+  margin-top: 3px;
+}
+
+/* ==========================================================================
+   02 · MarqueeBands — crossed-speed kinetic tickers
+   ========================================================================== */
+
+.typewave-marquee {
+  position: relative;
+  background: var(--tw-panel);
+  border-block: 1px solid var(--tw-line);
+  overflow: hidden;
+}
+
+.typewave-marquee__band {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.typewave-marquee__band + .typewave-marquee__band {
+  border-top: 1px solid var(--tw-line-faint);
+}
+
+.typewave-marquee__track {
+  display: inline-flex;
+  align-items: center;
+  will-change: transform;
+}
+
+/* two copies side by side → translateX(-50%) loops seamlessly */
+.typewave-marquee__list {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.typewave-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: clamp(12px, 2.6vh, 24px) clamp(20px, 4vw, 40px);
+}
+
+.typewave-marquee__item span {
+  color: var(--tw-ink-dim);
+}
+
+.typewave-marquee__item span:first-child {
+  color: var(--tw-ink);
+}
+
+.typewave-marquee__item span[lang="ko"] {
+  color: var(--tw-ink-dim);
+}
+
+.typewave-marquee__dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--tw-acid);
+  flex: none;
+}
+
+/* the acid band: inverted — acid ground, ink text, fastest */
+.typewave-marquee__band--acid {
+  background: var(--tw-acid);
+}
+
+.typewave-marquee__band--acid .typewave-marquee__item span,
+.typewave-marquee__band--acid .typewave-marquee__item span[lang="ko"],
+.typewave-marquee__band--acid .typewave-marquee__item span:first-child {
+  color: var(--tw-ink-on-acid);
+}
+
+.typewave-marquee__band--acid .typewave-marquee__dot {
+  background: var(--tw-ink-on-acid);
+}
+
+/* The animations run ONLY while the band is onscreen (.is-running) AND only
+   under .typewave-js. They start paused; the IntersectionObserver toggles
+   running. Reduced motion cancels them entirely (block at the bottom). */
+.typewave-marquee__track--l {
+  animation: typewave-marq-l 38s linear infinite;
+  animation-play-state: paused;
+}
+
+.typewave-marquee__track--r {
+  animation: typewave-marq-r 30s linear infinite;
+  animation-play-state: paused;
+}
+
+.typewave-marquee__track--acid {
+  animation: typewave-marq-l 22s linear infinite;
+  animation-play-state: paused;
+}
+
+.typewave-js .is-running .typewave-marquee__track--l,
+.typewave-js .is-running .typewave-marquee__track--r,
+.typewave-js .is-running .typewave-marquee__track--acid {
+  animation-play-state: running;
+}
+
+@keyframes typewave-marq-l {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes typewave-marq-r {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ==========================================================================
+   03 · TrackList — the playlist
+   ========================================================================== */
+
+.typewave-tracks {
+  padding-block: clamp(64px, 11vh, 132px);
+}
+
+.typewave-tracks__head {
+  margin-bottom: clamp(28px, 5vh, 52px);
+}
+
+.typewave-tracks__title {
+  /* the velocity hook writes --tw-track to open the letter-spacing with
+     amplitude. Default is 0 → the head rests tightly kerned. */
+  letter-spacing: calc(-0.01em + var(--tw-track, 0em));
+  transition: letter-spacing 120ms linear;
+}
+
+.typewave-tracks__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--tw-line);
+}
+
+.typewave-tracks__row {
+  display: grid;
+  grid-template-columns: clamp(40px, 6vw, 64px) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: clamp(14px, 3vw, 36px);
+  padding-block: clamp(18px, 3vh, 28px);
+  border-bottom: 1px solid var(--tw-line);
+}
+
+.typewave-tracks__no {
+  color: var(--tw-acid);
+  font-size: 0.85rem;
+}
+
+.typewave-tracks__body {
+  min-width: 0;
+}
+
+.typewave-tracks__name {
+  margin: 0;
+  font-family: var(--tw-font-display);
+  font-size: clamp(1.4rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  font-variation-settings: "wdth" 100, "wght" 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.typewave-tracks__nameko {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--tw-font-ko-display);
+  font-size: 0.5em;
+  font-weight: 400;
+  color: var(--tw-ink-dim);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.typewave-tracks__note {
+  margin: 8px 0 0;
+  max-width: 60ch;
+  font-size: clamp(0.92rem, 1.2vw, 1.02rem);
+  line-height: 1.5;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-tracks__note span[lang="ko"] {
+  display: block;
+  margin-top: 3px;
+}
+
+.typewave-tracks__meta {
+  display: flex;
+  gap: clamp(16px, 3vw, 28px);
+  margin: 0;
+  text-align: right;
+  align-self: baseline;
+}
+
+.typewave-tracks__meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.typewave-tracks__meta dt {
+  color: var(--tw-ink-faint);
+}
+
+.typewave-tracks__meta dd {
+  margin: 0;
+  color: var(--tw-ink);
+}
+
+.typewave-tracks__ledger {
+  margin: clamp(28px, 5vh, 44px) 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--tw-line);
+  font-size: clamp(0.92rem, 1.3vw, 1.05rem);
+  color: var(--tw-ink-dim);
+  max-width: 64ch;
+}
+
+.typewave-tracks__ledger span[lang="ko"] {
+  display: block;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   04 · KineticFooter — the closer
+   ========================================================================== */
+
+.typewave-footer {
+  position: relative;
+  background: var(--tw-ground);
+  border-top: 1px solid var(--tw-line);
+  overflow: hidden;
+}
+
+.typewave-footer__inner {
+  padding-block: clamp(64px, 11vh, 128px) clamp(28px, 5vh, 44px);
+}
+
+.typewave-footer__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  margin: 0 0 clamp(20px, 4vh, 36px);
+  color: var(--tw-ink-dim);
+}
+
+.typewave-footer__kicker span:first-child {
+  color: var(--tw-acid);
+}
+
+.typewave-footer__word {
+  margin: 0;
+  font-family: var(--tw-font-display);
+  font-size: clamp(2.6rem, 17vw, 16rem);
+  font-weight: 900;
+  font-variation-settings: "wdth" 125, "wght" 900;
+  letter-spacing: -0.025em;
+  line-height: 0.88;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.typewave-footer__wordko {
+  margin: clamp(8px, 1.6vh, 16px) 0 0;
+  font-family: var(--tw-font-ko-display);
+  font-size: clamp(1.4rem, 6vw, 4rem);
+  text-align: center;
+  color: var(--tw-ink-dim);
+  letter-spacing: 0.04em;
+}
+
+/* the closer reveals the same way the hero did — char-split rise on enter */
+.typewave-js .is-on .typewave-footer__word .typewave-split__ch {
+  animation: typewave-char-rise 640ms var(--tw-ease-wave) backwards;
+  animation-delay: calc(var(--i) * 45ms);
+}
+
+.typewave-footer__cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 48px);
+  margin-top: clamp(48px, 9vh, 88px);
+  padding-top: 24px;
+  border-top: 1px solid var(--tw-line);
+}
+
+.typewave-footer__h {
+  margin: 0 0 10px;
+  font-family: var(--tw-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tw-acid);
+}
+
+.typewave-footer__block p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--tw-ink-dim);
+}
+
+.typewave-footer__block p span[lang="ko"] {
+  display: block;
+  margin-top: 4px;
+}
+
+.typewave-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 24px;
+  margin: clamp(40px, 7vh, 64px) 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--tw-line);
+  color: var(--tw-ink-faint);
+}
+
+.typewave-footer__legal span:first-child {
+  color: var(--tw-ink-dim);
+}
+
+/* ==========================================================================
+   Reveal gating — pre-reveal states live ONLY under .typewave-js, so the
+   no-JS page is the finished page (everything visible).
+   ========================================================================== */
+
+.typewave-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 600ms var(--tw-ease-wave), transform 600ms var(--tw-ease-wave);
+}
+
+.typewave-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Small sheets — the grid holds; the furniture stacks
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  .typewave-hero__foot {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .typewave-hero__meta {
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+  }
+
+  .typewave-tracks__row {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "no body"
+      "meta meta";
+  }
+
+  .typewave-tracks__no {
+    grid-area: no;
+  }
+
+  .typewave-tracks__body {
+    grid-area: body;
+  }
+
+  .typewave-tracks__meta {
+    grid-area: meta;
+    margin-top: 6px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .typewave-footer__cols {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  /* the morphing wordmark can be slightly less giant so it fits narrow
+     viewports without overflowing the sticky stage */
+  .typewave-scrub__word {
+    font-size: clamp(2.4rem, 22vw, 5.6rem);
+  }
+
+  .typewave-hero__title {
+    font-size: clamp(3rem, 22vw, 7rem);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the finished document, immediately
+   Every animation dies; every scrub corridor collapses; every pre-reveal
+   shows. The wordmark rests at its parked/widest state. Marquees stop and
+   sit readable.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .typewave-root *,
+  .typewave-root *::before,
+  .typewave-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* the scrub corridor is normal flow under reduced motion */
+  .typewave-scrub,
+  .typewave-scrub__sticky {
+    height: auto !important;
+    position: relative !important;
+  }
+
+  .typewave-scrub__sticky {
+    min-height: auto;
+    padding-block: clamp(48px, 9vh, 96px);
+  }
+
+  /* marquees stop and sit readable */
+  .typewave-marquee__track {
+    transform: none !important;
+  }
+
+  /* nothing hidden */
+  .typewave-js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* the morphing wordmark parked at a composed late-morph state */
+  .typewave-scrub__word {
+    font-variation-settings: "wdth" 118, "wght" 760 !important;
+  }
+
+  .typewave-scrub__playhead {
+    left: 80% !important;
+  }
+}

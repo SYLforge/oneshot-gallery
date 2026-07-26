@@ -1,0 +1,291 @@
+# 피다 BLOOM — breakdown
+
+## The hook
+
+There is a perfume house in Seogwipo that does not sell you a bottle. It
+sells you *the act of opening* — the half-hour during which a scent
+unfolds from its bright top through its floral heart to its root base.
+The page is that half-hour, rehearsed. You arrive at a warm-cream sheet
+of paper, and an ink-line botanical draws itself stem-first as you
+settle, the way a perfumer's plate would fill in a 19th-century scent
+journal. A blush of watercolor blooms outward behind the lines and finds
+its edge — *ink on wet paper*, the namesake behavior — and then one
+pinned flower opens petal-by-petal with your scroll, the house scent
+literally unfurling.
+
+The design bet: on a light page where the only imagery is hand-drawn
+SVG, *a pigment spreading and settling* can carry more atmosphere than
+any photograph — because a photograph of a bloom is a record of a thing
+that already happened, and this page is a thing happening.
+
+## Art direction — and the load-bearing distinction from SAKURA
+
+This is the second of three `ink-bloom` entries, and the family thesis
+(*ink → bloom*) is honored by both — but with deliberately different
+instruments, so a grayscale screenshot of each is unmistakable. SAKURA
+(the first) is a dark canvas scattered with cherry-blossom particles:
+night, falling petals, pink on black. BLOOM is a warm-cream sheet where
+SVG line-art draws itself and watercolor blooms behind it: daylight, a
+perfumer's plate, green and blush on paper. Where SAKURA's bloom is a
+*thing moving* (petals drift and fall), BLOOM's bloom is a *behavior on
+paper* (pigment spreads and settles). Same family; opposite time of day,
+different medium.
+
+The palette enforces it. The ground is warm cream `#faf3e8` (paper, never
+white), the voice is ink `#2a2620` (12.4:1, the color of the drawing pen
+itself), and there is exactly one accent — botanical green `#3d6b3a`
+(6.9:1) — which appears wherever a line asks for attention: the
+wordmark, the section numerals, the CTA, the focus ring, the deepest
+stems. Sage `#8aa67a` and blush `#d98a9e` are the two prettiest colors
+on the page and they both fail AA (2.4:1 and 1.9:1), so they are
+pigment, never a voice: leaf fills and the single petal wash. Secondary
+text is a derived token instead, `bark #5c554a` (5.7:1).
+
+Two typefaces, two hands. Cormorant Garamond is the perfumer's Latin
+hand — the wordmark, the section titles, every italic aside (the lines
+written in the margin of the formula). Noto Serif KR is the ground: all
+Hangul, the first-class script of the page. The display stack `Cormorant
+Garamond, Noto Serif KR, serif` means the giant 피다 falls through the
+Latin face into Noto Serif KR with no markup — the title's Hangul weight
+is a font-stack accident made load-bearing, exactly as sup does with
+Gowun Dodum but to the opposite effect (a serif brush, not a round sans).
+
+## Technique 1 — a botanical that draws itself (svg-line-draw)
+
+The hero plant is a hand-authored SVG plate — a flowering stem with two
+branches, four leaves, a calyx, and a five-petal bud. Unlike sup (which
+grows a procedural L-system), bloom's line-art is literal path data,
+authored once at module load and identical on server and client —
+hydration diffs are structurally impossible.
+
+The interesting part is the drawing clock. Every stroke carries its own
+window `[d0, d1]` on a shared 0→1 clock, recording *when on the
+narrative it is drawn*: the stem is `0.00–0.18`, the branches
+`0.18–0.34`, the leaves `0.30–0.58`, the bud-and-flower `0.58–1.00`.
+Every path gets `pathLength={1}` so dash math ignores real length, and
+then one CSS variable draws the whole plate:
+
+```css
+/* styles.css — one variable, ~40 private stroke timelines */
+.bloom-draw__stroke {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: clamp(
+    0,
+    calc((var(--d1, 1) - var(--bloom-draw, 1)) /
+         (var(--d1, 1) - var(--d0, 0))),
+    1.02
+  );
+}
+```
+
+When `--bloom-draw` is 0, every offset is `(d1 − 0)/(d1 − d0)` — a big
+positive number, clamped to 1.02, meaning the dash is fully offset and
+the stroke is invisible. As the clock climbs, each stroke's offset
+crosses zero in its own window and the stroke appears to *draw* from
+its start point. A rAF hook (`useLineDraw`) eases the variable to 0.7
+over ~2.4s and lets scroll raise the last 30%:
+
+```ts
+// useLineDraw.ts — intro + scroll, lerped so it never snaps
+const intro = easeOut(Math.min((now - born) / INTRO_MS, 1)) * INTRO_REACH;
+const scroll = Math.min(window.scrollY / (window.innerHeight * SCROLL_SPAN), 1);
+const target = Math.min(1, intro + (1 - INTRO_REACH) * scroll);
+const next = value + (target - value) * DRAW_LERP * (dt / 16.7);
+```
+
+Three details carry the a11y story. First, the fallback is
+`var(--bloom-draw, 1)`, so no-JS and reduced-motion visitors see a
+finished plate, never a bare stem. Second, the hidden-state offset clamps
+at 1.02, not 1.0, so round line-caps can't leave a phantom dot at the
+stroke base. Third, the same hook instance is reused per-card in the
+scent-notes section — each plate draws independently as you scroll into
+it, like three separate illustrations in a journal rather than one
+synchronized animation.
+
+## Technique 2 — ink finding its edge (feturbulence-texture)
+
+This is the page's namesake behavior and the one that distinguishes
+BLOOM's *bloom* from SAKURA's. SAKURA blooms by *scattering particles* —
+a thing moving. BLOOM blooms by *spreading pigment* — a behavior on
+paper. The mechanism is an SVG `feTurbulence + feDisplacementMap` filter
+on each watercolor wash shape, whose `scale` attribute animates from
+~62 down to 0 as the wash enters view:
+
+```ts
+// useWashSettle.ts — the wash begins "still wet" and settles
+const settle = (svg) => {
+  const fe = maps.get(svg);
+  const t0 = performance.now();
+  const tick = (now) => {
+    const p = Math.min((now - t0) / SETTLE_MS, 1);
+    const ease = 1 - (1 - p) ** 3;        // cubic out — a slow bloom
+    fe.setAttribute("scale", String(WET_SCALE * (1 - ease)));
+    if (p < 1) rafs.add(requestAnimationFrame(tick));
+  };
+  rafs.add(requestAnimationFrame(tick));
+};
+```
+
+At `scale=62`, the fractal noise displaces each pixel of the wash by up
+to 62 units in a direction determined by the noise's R/G channels — the
+color is smeared into the noise field, its edge dissolved, reading as
+*still wet, still moving*. As the scale eases to 0, the displacement
+collapses and the wash settles into its final crisp-ish edge — *the ink
+found its boundary*. Crucially, only the `scale` animates; the
+turbulence `baseFrequency` and `seed` never change, so the noise texture
+is computed once by the browser and each frame pays only the
+displacement pass. A separate rAF runs per wash, all IntersectionObserver
+-gated, so offscreen cost is zero.
+
+The central craft decision lives next to this filter: the botanical
+**line-art** (stems, leaves, petals) is plain SVG strokes with *no*
+displacement filter. Only the wash beneath the lines bleeds; the drawn
+line stays crisp. That contrast — crisp line, blurred wash — *is* the
+medium of watercolor, reproduced with two SVG features and one rAF loop.
+
+A second, *static* `feTurbulence` (baseFrequency 0.9, seed 7) sits fixed
+over the whole page at ~4% cream-on-cream via `mix-blend-mode: multiply`
+— the paper fiber. It never animates; it just keeps the cream from
+reading as flat `#fff`. Distinguish from kemuri's washi grain (ink-dark
+noise over a warm sheet): BLOOM's fiber is cream-on-cream, lighter, a
+paper not a fabric.
+
+## Technique 3 — the flower that opens with you (scroll-scrub-pinned)
+
+The signature moment. A `position: sticky` section 260vh tall holds a
+single inner viewport pinned while your scroll progress through the
+section drives `--bloom-open` from 0 to 1. One large flower — 8 outer
+petals, 5 inner, a gold disc, six anther dots — stays fixed in frame
+while a rAF hook (`useScrollProgress`) lerps the variable toward the
+scroll target:
+
+```ts
+// useScrollProgress.ts — the pinned section's scroll maps to one variable
+const computeTarget = () => {
+  const rect = el.getBoundingClientRect();
+  const total = rect.height - window.innerHeight;
+  if (total <= 0) { target = 1; return; }
+  const traveled = Math.min(Math.max(-rect.top, 0), total);
+  target = traveled / total;
+};
+```
+
+Then CSS converts that one variable into every petal's transform. The
+outer ring opens first, the inner ring opens later, so the flower reads
+as unfurling outward-in — the way a real peony opens:
+
+```css
+/* styles.css — outer ring opens across 0.0–0.8 of the clock */
+.bloom-sig-ring--outer .bloom-sig-petal {
+  --bloom-local: clamp(0,
+    calc((var(--bloom-open, 1) - var(--bloom-pstart) * 0.5) / 0.8), 1);
+  transform-origin: 300px 300px;
+  transform: rotate(calc(-8deg * (1 - var(--bloom-local))))
+             scale(calc(0.42 + 0.58 * var(--bloom-local)));
+  opacity: calc(0.4 + 0.6 * var(--bloom-local));
+}
+/* inner ring opens across 0.35–0.95 — later */
+.bloom-sig-ring--inner .bloom-sig-petal {
+  --bloom-late: clamp(0,
+    calc((var(--bloom-open, 1) - 0.35 - var(--bloom-pstart) * 0.04) / 0.6), 1);
+  transform: rotate(calc(-10deg * (1 - var(--bloom-late))))
+             scale(calc(0.36 + 0.64 * var(--bloom-late)));
+}
+```
+
+The line-art here is *fully pre-drawn* — this section is about OPENING,
+not drawing (that was the hero's job). Every petal path exists in the DOM
+from first paint; only its `transform` and `opacity` change, all
+composite-level, no layout. The lerp (0.14/frame, half-life ~5 frames)
+makes it scrubbable without jitter: scroll fast, it opens fast; scroll
+slow, it opens slow; scroll back up and it closes again. A blush wash
+disc behind fills (opacity) as it opens, and a hairline progress bar at
+the foot of the pinned view tracks `--bloom-open` literally.
+
+The a11y contract: the copy beside the flower ("Scroll, and the house
+scent opens — petal by petal") is plain always-visible text, so the
+meaning never depends on the motion. The fallback `var(--bloom-open, 1)`
+means no-JS visitors see a fully open flower; under reduced motion the
+whole section collapses to `height: auto; position: relative` so nothing
+is gated behind scroll.
+
+## Motion math
+
+- **Draw lerp 0.12/frame** (60fps-normalized): half-life ≈ 5.4 frames
+  ≈ 90ms. Responsive enough that scroll feels like drawing, not
+  scrubbing; slow enough that the stem doesn't snap into existence.
+- **Open lerp 0.14/frame**: half-life ≈ 4.6 frames ≈ 77ms. A touch
+  quicker than the draw, because opening a flower should feel a shade
+  more eager than drawing a stem.
+- **Wash settle 1700ms cubic-out**: the displacement collapses along a
+  `1 − (1−p)³` curve, so most of the bloom happens in the first 600ms
+  and the last 1100ms is the edge finding itself — the slow tail reads
+  as *drying*, not *stopping*.
+- **Ambient periods 11s / 19s** (line-art sway / sun-breathe) share no
+  common divisor — the page never visibly loops, which is most of what
+  "alive, not busy" means.
+- The reveal ease `cubic-bezier(0.25, 0.8, 0.3, 1)` covers ~65% of its
+  travel in the first third of its 900ms duration; with an 18px
+  translate the tail settles sub-pixel, so slow reads as calm.
+
+## Performance notes
+
+- One `setProperty` per frame drives ~40 SVG strokes in the hero and ~10
+  per scent-note card; the browser batches the style recalc and
+  `stroke-dashoffset`/`opacity`/`transform` are all paint/composite
+  level — no layout ever runs during drawing.
+- `useWashSettle` animates only the `scale` *attribute* of one
+  `feDisplacementMap` per wash; the turbulence field is computed once
+  by the browser, so each frame is one displacement pass per active
+  wash — cheap even at DPR 2.
+- The pinned flower is pure CSS transform math on 13 `<g>` elements
+  driven by one variable — no rAF per petal, one rAF for the whole
+  section, and that loop pauses offscreen (IO) and on hidden tabs.
+- All three hook families (draw, wash, open) stop themselves offscreen
+  and clean up their observers and listeners on unmount.
+- The botanical paths are authored once at module load (no runtime
+  cost) and shared by server and client — hydration diffs are
+  structurally impossible.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) disables all three motion hook families; CSS
+  fallbacks land everything on a composed still — every line fully
+  drawn (`--bloom-draw: 1`), every wash settled (displacement markup
+  `scale="0"`), the pinned flower fully open (`--bloom-open: 1`) and the
+  pinned section collapsed to auto height so nothing is gated behind
+  scroll.
+- **No-JS:** the pre-reveal hidden state exists only under `.bloom-js`,
+  and every animated value has a finished-state fallback. View-source
+  shows a complete, fully-drawn, fully-open page — the SSR frame IS the
+  completed page.
+- **Semantics:** the botanical SVGs are `aria-hidden` (the titles carry
+  the meaning); the pinned section's `<dl>` of scent notes and all copy
+  are real semantic content; the CTA and footer links are native
+  anchors with a botanical-green `:focus-visible` ring and soft halo.
+- **Contrast:** ink 12.4:1, botanical 6.9:1, bark 5.7:1 on cream; sage
+  (2.4:1), blush (1.9:1) and gold never label anything — they are
+  pigment.
+- **Keyboard:** CTA → footer links, in order, each with the focus ring.
+
+## Remix ideas
+
+1. **Tea house.** Swap the perfume premise for a Korean tea house: the
+   botanical becomes a tea leaf (camellia), the three scent notes become
+   three brews (first/second/third infusion), and the pinned flower
+   becomes a single leaf unfurling in hot water — the same scroll-scrub
+   but on a vertical leaf-shape rather than a radial flower. Palette:
+   cream → hanji, botanical → deeper tea-green.
+2. **Ink calligraphy studio.** Drop the watercolor entirely; keep only
+   the line-draw and let each stroke carry a calligraphic weight
+   variation (variable `stroke-width` along the path via
+   `stroke-linecap` and multiple overlaid paths). The pinned moment
+   becomes a single 한자 drawing itself stroke-by-stroke in the
+   canonical order. Palette: monochrome ink on cream, one seal-red.
+3. **Botanical journal (dark).** Invert to a deep botanical-green ground
+   (`#1a2418`) with cream line-art — the night-blooming cousin. The
+   watercolor washes become bioluminescent (opacity up, displacement
+   persistent rather than settling), and the pinned flower becomes a
+   moonflower opening only after dark. Distinct from SAKURA by staying
+   green-and-cream even inverted, never pink.

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "sticker",
+  "no": 23,
+  "title": {
+    "en": "STICKER — Studio of Bouncy Things",
+    "ko": "스티커 — 튀어오르는 스튜디오"
+  },
+  "description": {
+    "en": "A playful design studio whose entire website is built from draggable, springy stickers — grab any sticker on the page, fling it, and watch it settle back with a bouncy spring or pile up against its neighbors. Bright tangerine ground, chunky outlines, and a service marquee that scrolls like a fridge full of magnets.",
+    "ko": "페이지 전체가 끌고 던질 수 있는 쫀득한 스티커로 지어진 장난스러운 디자인 스튜디오 — 아무 스티커나 잡아서 훅 던져 보세요. 통통 튀는 스프링으로 제자리로 돌아오거나 이웃 스티커에 쌓입니다. 발그레한 귤빛 바탕, 통통한 외곽선, 냉장고 자석처럼 굴러가는 서비스 마퀴."
+  },
+  "aesthetic": "playful-pop",
+  "techniques": ["drag-physics", "pointer-parallax", "marquee"],
+  "industry": ["atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#ff7a45",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

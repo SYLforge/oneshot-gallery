@@ -1,0 +1,1037 @@
+/* ==========================================================================
+   RAVE — after-dark festival, Itaewon
+   neo-brutalist · black ground / white blocks / one strobing electric-blue
+   Scoped by convention to .rave-root; classes prefixed rave-.
+   The sibling BLUNT is paper, ink, riso misregistration, daylight.
+   This is the dark room: the texture is light, not paper.
+   ========================================================================== */
+
+.rave-root {
+  /* -- palette: four chips, one of them the strobe --------------- */
+  --rave-ground: #000000;   /* the night — pure black */
+  --rave-block: #ffffff;    /* white panels carrying black type — 21:1 */
+  --rave-strobe: #0066ff;   /* electric blue — the ONE accent.
+                               large/display on black: 4.35:1 (AA 3:1 large)
+                               carries black type: 4.35:1 large
+                               white on it: 4.83:1 (AA body) */
+  --rave-ash: #8a8a8a;      /* secondary metadata on black — 4.6:1 (AA body) */
+
+  /* -- type: three voices ---------------------------------------- */
+  /* Hangul first: Black Han Sans is a single 400 weight that reads as a
+     solid block — the brutalist Korean face. Latin stacks fall through to
+     Archivo Black so the two scripts sit at the same visual weight. */
+  --rave-font-display: var(--font-rave-arch), var(--font-rave-han), "Arial Black", sans-serif;
+  --rave-font-ko: var(--font-rave-han), "Black Han Sans", sans-serif;
+  /* Mono carries Hangul through Black Han Sans too — BPM and timestamps in
+     Korean use the same heavy block, not a fallback sans. */
+  --rave-font-mono: var(--font-rave-mono), var(--font-rave-han), "Courier New", monospace;
+
+  /* -- motion: anti-easing, same doctrine as blunt at a harder 8px ---- */
+  --rave-press-in: 0ms;
+  --rave-press-out: 110ms;
+  --rave-shadow: 8px 8px 0 0 var(--rave-block);
+  --rave-shadow-blue: 8px 8px 0 0 var(--rave-strobe);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--rave-ground);
+  color: var(--rave-block);
+  font-family: var(--rave-font-mono);
+  font-size: clamp(14px, 0.9vw + 10px, 17px);
+  line-height: 1.5;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: every Hangul glyph on the page is Black Han Sans. */
+.rave-root :lang(ko) {
+  font-family: var(--rave-font-ko);
+  letter-spacing: 0;
+}
+
+/* Electric-blue selection, scoped to the entry root */
+.rave-root ::selection {
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+}
+
+/* Keyboard focus: 3px block ring on black ground, strobe-blue on white
+   blocks (the footer) so it stays visible against both. */
+.rave-root :focus-visible {
+  outline: 3px solid var(--rave-strobe);
+  outline-offset: 3px;
+}
+
+.rave-footer :focus-visible {
+  outline-color: var(--rave-strobe);
+}
+
+/* Visually hidden, still spoken */
+.rave-vh {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Press feedback — "spring-press", minus the spring (same doctrine as blunt,
+   but the offset shadow is 8px and white, on black ground; on the blue CTA
+   the shadow is blue-on-black). :active snaps IN with 0ms transition
+   (no easing at all); release snaps back in 110ms linear.
+   ========================================================================== */
+
+.rave-btn {
+  display: inline-block;
+  padding: 0.8em 1.4em;
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  border: 3px solid var(--rave-block);
+  font-family: var(--rave-font-mono);
+  font-weight: 700;
+  font-size: 1em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rave-btn:hover {
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+  border-color: var(--rave-block);
+}
+
+.rave-press {
+  box-shadow: var(--rave-shadow);
+  transition:
+    transform var(--rave-press-out) linear,
+    box-shadow var(--rave-press-out) linear,
+    background-color var(--rave-press-out) linear,
+    color var(--rave-press-out) linear;
+}
+
+.rave-press:active {
+  transition-duration: var(--rave-press-in);
+  transform: translate(8px, 8px);
+  box-shadow: 0 0 0 0 var(--rave-block);
+}
+
+/* ==========================================================================
+   01 · Hero — the strobing wordmark + CRT scanlines
+   ========================================================================== */
+
+.rave-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: clamp(20px, 5vw, 72px);
+  isolation: isolate;
+}
+
+/* CRT scanline overlay — hero-only, decorative, pointer-transparent.
+   A 3px-pitch grid of 1px white lines at 5% alpha, drifting one line per
+   8s loop. Gated to .rave-hero--strobe (set by JS when motion is on). */
+.rave-hero__scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 3px
+  );
+  opacity: 0;
+  transition: opacity 200ms linear;
+}
+
+.rave-hero--strobe .rave-hero__scanlines {
+  opacity: 1;
+  animation: rave-scanline-drift 8s linear infinite;
+}
+
+@keyframes rave-scanline-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 3px;
+  }
+}
+
+.rave-hero > *:not(.rave-hero__scanlines) {
+  position: relative;
+  z-index: 1;
+}
+
+.rave-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4em 2em;
+  margin: 0 0 clamp(20px, 4vh, 48px);
+  padding-bottom: 0.7em;
+  border-bottom: 3px solid var(--rave-block);
+  font-weight: 700;
+  font-size: clamp(0.7rem, 1.6vw, 0.95rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rave-ash);
+}
+
+.rave-hero__kicker span:last-child {
+  color: var(--rave-block);
+}
+
+.rave-wordmark {
+  margin: 0;
+  font-family: var(--rave-font-display);
+  font-weight: 400;
+  font-size: clamp(4.6rem, 24vw, 18rem);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.rave-word {
+  position: relative;
+  display: block;
+  width: fit-content;
+  color: var(--rave-block);
+}
+
+.rave-word--deck {
+  font-size: 0.3em;
+  letter-spacing: 0.01em;
+  margin-top: 0.2em;
+  color: var(--rave-strobe);
+}
+
+/* The strobing electric-blue under-plate. `content: attr() / ""` keeps it
+   silent to screen readers (plain attr() fallback first for older engines). */
+.rave-word::before {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  color: var(--rave-strobe);
+  transform: translate(0.04em, 0.05em);
+  mix-blend-mode: screen;
+}
+
+.rave-word__ink {
+  position: relative;
+  z-index: 1;
+}
+
+/* The strobe: the blue plate breathes 1.0 → 0.55 on a 2.6s loop. JS-gated
+   (via .rave-js on the root + .rave-hero--strobe on the header); dead under
+   reduced motion. The deck word (already blue) does not strobe. */
+.rave-js.rave-root .rave-hero--strobe .rave-word:not(.rave-word--deck)::before {
+  animation: rave-strobe 2.6s ease-in-out infinite;
+}
+
+@keyframes rave-strobe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.rave-hero__ko {
+  margin: 0.5em 0 0;
+  font-size: clamp(1.6rem, 6vw, 3.8rem);
+  line-height: 1.1;
+  color: var(--rave-strobe);
+}
+
+.rave-hero__stack {
+  margin-top: clamp(28px, 6vh, 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9em;
+}
+
+.rave-hero__shout {
+  margin: 0;
+  font-family: var(--rave-font-display);
+  font-size: clamp(1.25rem, 3.6vw, 2.4rem);
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.rave-hl {
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+  padding: 0.04em 0.18em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.rave-hero__sub {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.9vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--rave-ash);
+}
+
+.rave-hero__sub :lang(ko) {
+  color: var(--rave-block);
+}
+
+.rave-hero__stack .rave-btn {
+  margin-top: 0.6em;
+}
+
+/* ==========================================================================
+   02 · Marquee band — three strobing tickers, different speeds
+   ========================================================================== */
+
+.rave-marquee {
+  position: relative;
+  border-top: 3px solid var(--rave-block);
+  border-bottom: 3px solid var(--rave-block);
+  background: var(--rave-ground);
+}
+
+.rave-marquee__row {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-block: 0.55em;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-top: 3px solid var(--rave-block);
+}
+
+.rave-marquee__row:first-child {
+  border-top: 0;
+}
+
+.rave-marquee__row--a {
+  /* headliner — fastest, biggest */
+  font-family: var(--rave-font-display);
+  font-size: clamp(1.3rem, 3.4vw, 2.1rem);
+  background: var(--rave-block);
+  color: var(--rave-ground);
+}
+
+.rave-marquee__row--b {
+  /* opener — mid, on electric blue, strobes with the hero */
+  font-size: clamp(1rem, 2.6vw, 1.5rem);
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+}
+
+.rave-marquee__row--c {
+  /* genre — slowest, smallest, on black */
+  font-size: clamp(0.85rem, 2vw, 1.15rem);
+  color: var(--rave-ash);
+}
+
+.rave-marquee__track {
+  display: inline-flex;
+  will-change: transform;
+}
+
+.rave-marquee__group {
+  display: inline-flex;
+  flex: none;
+}
+
+.rave-marquee__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  padding-right: 1.4em;
+}
+
+.rave-marquee__tag {
+  font-family: var(--rave-font-mono);
+  font-size: 0.6em;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+.rave-marquee__sep {
+  color: var(--rave-strobe);
+}
+
+.rave-marquee__row--b .rave-marquee__sep {
+  color: var(--rave-ground);
+}
+
+/* Row B breathes with the hero — the strobe is one rhythm across the page. */
+.rave-js.rave-root .rave-hero--strobe ~ main .rave-marquee__row--b {
+  animation: rave-strobe 2.6s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Section chrome
+   ========================================================================== */
+
+.rave-section {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding: clamp(56px, 9vh, 120px) clamp(16px, 5vw, 72px);
+}
+
+.rave-sechead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6em 1em;
+  margin-bottom: clamp(20px, 4vh, 40px);
+  padding-bottom: 0.6em;
+  border-bottom: 3px solid var(--rave-block);
+}
+
+.rave-sechead__no {
+  padding: 0.12em 0.45em;
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  font-weight: 700;
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+}
+
+.rave-sechead__title {
+  margin: 0;
+  font-family: var(--rave-font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 5vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.rave-sechead__note {
+  margin: 0 0 0 auto;
+  font-weight: 700;
+  font-size: clamp(0.72rem, 1.5vw, 0.95rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rave-ash);
+}
+
+/* ==========================================================================
+   Clip-path reveal — direction-aware geometric wipes
+   (the brutalist equivalent of a fade). Pre-reveal hidden state is gated
+   behind .rave-js so the SSR / no-JS page is the completed flyer.
+   ========================================================================== */
+
+.rave-js.rave-root .rave-reveal {
+  --rave-reveal-inset: inset(0 0 0 0);
+  clip-path: var(--rave-reveal-inset);
+  transition: clip-path 620ms steps(8, end);
+}
+
+.rave-js.rave-root .rave-reveal--l {
+  --rave-reveal-inset: inset(0 100% 0 0);
+}
+.rave-js.rave-root .rave-reveal--r {
+  --rave-reveal-inset: inset(0 0 0 100%);
+}
+.rave-js.rave-root .rave-reveal--t {
+  --rave-reveal-inset: inset(0 0 100% 0);
+}
+.rave-js.rave-root .rave-reveal--b {
+  --rave-reveal-inset: inset(100% 0 0 0);
+}
+.rave-js.rave-root .rave-reveal--tl {
+  --rave-reveal-inset: polygon(0 0, 0 0, 0 0, 0 0);
+}
+.rave-js.rave-root .rave-reveal--br {
+  --rave-reveal-inset: polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%);
+}
+
+.rave-js.rave-root .rave-reveal.is-revealed {
+  --rave-reveal-inset: inset(0 0 0 0);
+}
+
+.rave-js.rave-root .rave-reveal--tl.is-revealed {
+  --rave-reveal-inset: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.rave-js.rave-root .rave-reveal--br.is-revealed {
+  --rave-reveal-inset: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ==========================================================================
+   03 · Schedule + ticket ledger
+   ========================================================================== */
+
+.rave-tickets__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+
+.rave-block {
+  background: var(--rave-block);
+  color: var(--rave-ground);
+}
+
+.rave-schedule {
+  border: 3px solid var(--rave-block);
+}
+
+.rave-tabs {
+  display: flex;
+  border-bottom: 3px solid var(--rave-ground);
+}
+
+.rave-tab {
+  flex: 1;
+  padding: 0.7em 1em;
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  border: 0;
+  border-right: 3px solid var(--rave-ground);
+  font-family: var(--rave-font-mono);
+  font-weight: 700;
+  font-size: clamp(0.78rem, 1.6vw, 1rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.rave-tab:last-child {
+  border-right: 0;
+}
+
+.rave-tab:hover {
+  background: var(--rave-ground);
+  color: var(--rave-block);
+}
+
+.rave-tab.is-on {
+  background: var(--rave-ground);
+  color: var(--rave-strobe);
+}
+
+/* The list cross-fades + nudges on room swap. key={room} in the component
+   remounts the <ul>, so this is a clean enter animation, not a layout flip. */
+.rave-schedule__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: rave-tab-swap 160ms linear;
+}
+
+@keyframes rave-tab-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.rave-schedule__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 0.8em;
+  padding: 0.6em 1em;
+  border-bottom: 3px solid var(--rave-ground);
+  font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+}
+
+.rave-schedule__row:last-child {
+  border-bottom: 0;
+}
+
+.rave-schedule__time {
+  font-family: var(--rave-font-mono);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.rave-schedule__act {
+  font-family: var(--rave-font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.rave-schedule__act :lang(ko) {
+  font-family: var(--rave-font-ko);
+}
+
+.rave-schedule__actko {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.rave-schedule__room {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9em;
+  height: 1.9em;
+  border: 3px solid var(--rave-ground);
+  font-family: var(--rave-font-mono);
+  font-weight: 700;
+  font-size: 0.85em;
+}
+
+.rave-schedule__room.is-a {
+  background: var(--rave-ground);
+  color: var(--rave-block);
+}
+
+.rave-schedule__room.is-b {
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+  border-color: var(--rave-ground);
+}
+
+/* -- ticket tiers -------------------------------------------------------- */
+
+.rave-tiers {
+  display: grid;
+  gap: clamp(12px, 2vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rave-tier {
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  border: 3px solid var(--rave-block);
+  box-shadow: var(--rave-shadow);
+}
+
+.rave-tier--hl {
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+  border-color: var(--rave-strobe);
+  box-shadow: var(--rave-shadow-blue);
+}
+
+.rave-tier--dead {
+  background: transparent;
+  color: var(--rave-ash);
+  border-color: var(--rave-ash);
+  box-shadow: 8px 8px 0 0 var(--rave-ash);
+}
+
+.rave-tier__body {
+  padding: 1em 1.2em;
+}
+
+.rave-tier__name {
+  margin: 0;
+  font-family: var(--rave-font-display);
+  font-weight: 400;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.rave-tier__price {
+  margin: 0.2em 0 0.5em;
+  font-family: var(--rave-font-mono);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3.4vw, 2rem);
+}
+
+.rave-tier__perk {
+  margin: 0 0 0.8em;
+  font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.rave-tier--dead .rave-tier__perk {
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+}
+
+.rave-tier__dead {
+  display: inline-block;
+  margin: 0;
+  padding: 0.3em 0.7em;
+  border: 3px solid var(--rave-ash);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+}
+
+.rave-tier__cta {
+  margin-top: 0.2em;
+}
+
+.rave-tier--hl .rave-btn {
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  border-color: var(--rave-block);
+  box-shadow: var(--rave-shadow-blue);
+}
+
+.rave-tier--hl .rave-btn:hover {
+  background: var(--rave-ground);
+  color: var(--rave-block);
+}
+
+.rave-tickets__fine {
+  margin: 1.2em 0 0;
+  font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rave-ash);
+}
+
+.rave-tickets__fine :lang(ko) {
+  color: var(--rave-block);
+}
+
+/* ==========================================================================
+   04 · Venue — brutalist site map (no image)
+   ========================================================================== */
+
+.rave-map {
+  padding: clamp(16px, 2.5vw, 28px);
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.rave-map__stage {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 3px;
+  background: var(--rave-ground);
+  border: 3px solid var(--rave-ground);
+}
+
+.rave-map__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: clamp(14px, 2vw, 24px);
+  min-height: clamp(90px, 16vh, 140px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.rave-map__door {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  align-items: center;
+  justify-content: center;
+}
+
+.rave-map__main {
+  grid-column: 2;
+  grid-row: 1;
+  background: var(--rave-block);
+  color: var(--rave-ground);
+}
+
+.rave-map__bar {
+  grid-column: 3;
+  grid-row: 1;
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.rave-map__base {
+  grid-column: 2 / span 2;
+  grid-row: 2;
+  background: var(--rave-ground);
+  color: var(--rave-block);
+  border: 3px solid var(--rave-block);
+}
+
+.rave-map__exit {
+  grid-column: 4;
+  grid-row: 1 / span 2;
+  background: var(--rave-block);
+  color: var(--rave-ground);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  align-items: center;
+  justify-content: center;
+}
+
+.rave-map__name {
+  font-family: var(--rave-font-display);
+  font-weight: 400;
+  font-size: clamp(1rem, 2.2vw, 1.4rem);
+}
+
+.rave-map__ko {
+  font-family: var(--rave-font-ko);
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  opacity: 0.8;
+  margin-top: 0.2em;
+}
+
+/* -- venue ledger -------------------------------------------------------- */
+
+.rave-venue__ledger {
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+
+.rave-venue__row {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.32fr) 1fr;
+  gap: 1em;
+  align-items: baseline;
+  padding: 0.7em 0;
+  border-top: 3px solid var(--rave-block);
+}
+
+.rave-venue__row:last-child {
+  border-bottom: 3px solid var(--rave-block);
+}
+
+.rave-venue__k {
+  margin: 0;
+  color: var(--rave-strobe);
+  font-weight: 700;
+  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.rave-venue__v {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.7vw, 1.02rem);
+  line-height: 1.55;
+}
+
+/* ==========================================================================
+   05 · Footer — printed in reverse (white block, black type)
+   ========================================================================== */
+
+.rave-footer {
+  display: block;
+  border-top: 3px solid var(--rave-block);
+  background: var(--rave-block);
+  color: var(--rave-ground);
+}
+
+.rave-footer ::selection {
+  background: var(--rave-ground);
+  color: var(--rave-block);
+}
+
+.rave-footer__giant {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(48px, 9vh, 110px) clamp(16px, 5vw, 72px) 0;
+  font-family: var(--rave-font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 9vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.rave-footer__hl {
+  background: var(--rave-ground);
+  color: var(--rave-strobe);
+  padding: 0 0.1em;
+}
+
+.rave-footer__ko {
+  display: block;
+  margin-top: 0.2em;
+  font-size: 0.42em;
+  color: var(--rave-ground);
+}
+
+.rave-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(16px, 3vw, 40px);
+  max-width: 1320px;
+  margin: clamp(28px, 6vh, 64px) auto 0;
+  padding: 0 clamp(16px, 5vw, 72px);
+}
+
+.rave-footer__cell {
+  border-top: 3px solid var(--rave-ground);
+  padding-top: 0.8em;
+}
+
+.rave-footer__k {
+  margin: 0 0 0.4em;
+  color: var(--rave-ground);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.rave-footer__v {
+  margin: 0;
+  font-size: clamp(0.82rem, 1.7vw, 1rem);
+  line-height: 1.6;
+}
+
+.rave-footer__cta {
+  margin-top: 0.2em;
+  background: var(--rave-ground);
+  color: var(--rave-block);
+  border-color: var(--rave-ground);
+  box-shadow: var(--rave-shadow-blue);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.rave-footer__cta:hover {
+  background: var(--rave-strobe);
+  color: var(--rave-block);
+  border-color: var(--rave-ground);
+}
+
+.rave-footer__legal {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(32px, 6vh, 72px) clamp(16px, 5vw, 72px) clamp(24px, 4vh, 48px);
+  font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Responsive composition
+   ========================================================================== */
+
+@media (max-width: 880px) {
+  .rave-tickets__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .rave-sechead__note {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+
+  /* venue map reflows: door/exit become full-width bars top & bottom */
+  .rave-map__stage {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .rave-map__door,
+  .rave-map__exit {
+    grid-column: 1 / span 2;
+    grid-row: auto;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
+    min-height: 0;
+    padding-block: 0.6em;
+  }
+
+  .rave-map__door {
+    grid-row: 1;
+  }
+
+  .rave-map__main {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .rave-map__bar {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .rave-map__base {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+  }
+
+  .rave-map__exit {
+    grid-row: 4;
+  }
+}
+
+@media (max-width: 560px) {
+  .rave-schedule__row {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .rave-schedule__time {
+    grid-row: 1 / span 2;
+  }
+
+  .rave-schedule__room {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the strobe stops, the lights stay on
+   (JS also gates the marquee loop via usePrefersReducedMotion; this block
+   covers everything CSS-driven.)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .rave-js.rave-root .rave-hero--strobe .rave-word:not(.rave-word--deck)::before,
+  .rave-js.rave-root .rave-hero--strobe .rave-hero__scanlines,
+  .rave-js.rave-root .rave-hero--strobe ~ main .rave-marquee__row--b {
+    animation: none;
+  }
+
+  .rave-hero__scanlines {
+    opacity: 0;
+  }
+
+  .rave-js.rave-root .rave-reveal {
+    clip-path: none;
+    transition: none;
+  }
+
+  .rave-schedule__list,
+  .rave-root .rave-press {
+    animation: none;
+    transition: none;
+  }
+}

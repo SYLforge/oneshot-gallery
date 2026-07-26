@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "rave",
+  "no": 24,
+  "title": {
+    "en": "RAVE — After-Dark Festival",
+    "ko": "레이브 — 심야 페스티벌"
+  },
+  "description": {
+    "en": "An underground electronic-music festival site for a one-night rave in an abandoned Itaewon printworks — strobing electric-blue wordmark, three line-up tickers at different speeds, a ticket ledger that counts down to doors, and a brutalist flyer-collage layout on pure black.",
+    "ko": "이태원 폐인쇄공장에서 열리는 원나잇 레이브의 페이지 — 스트로브 전기파랑 워드마크, 속도가 제각각인 라인업 티커 셋, 문 여는 시각까지 도-인 카운트다운되는 티켓 장부, 순흑 바탕의 브루탈리스트 전단 콜라주."
+  },
+  "aesthetic": "neo-brutalist",
+  "techniques": ["marquee", "clip-path-reveal", "crt-scanline"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#0066ff",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

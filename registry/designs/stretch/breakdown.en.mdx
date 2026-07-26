@@ -1,0 +1,201 @@
+# 늘어남 STRETCH — breakdown
+
+## The hook
+
+A yoga studio in Seongsu-dong makes its website do what it teaches: the
+headlines stretch. The hero wordmark reaches on mount; the pinned
+pose-sequence elongates each asana's name vertically as you hold the scroll
+— the type lengthening the way a body lengthens through a held pose; three
+translucent circles breathe behind it all. The page never explains itself.
+It behaves like a long exhale, and the studio's premise (lengthening,
+breath, calm) is the page's own motion vocabulary.
+
+The design bet: a wellness entry in the kinetic-typography family — where
+the 1st entry (TYPEWAVE) is dark, energetic, and strobing — is built to be
+its photographic negative. Warm off-white where the other is night; vertical
+reach where the other is horizontal jitter; a 12-second breath where the
+other is a beat. The two entries share a family and share nothing else, and
+that is the point of the third slot.
+
+## Art direction
+
+Everything happens against warm paper (`#f7f3ec`). Ink (`#2f2a24`, 12.85:1)
+does the speaking; the bright clay (`#c97b5a`, 2.94:1) is display-only —
+the giant STRETCH wordmark fill, the breath ring strokes, the long pose
+rail — and any clay that must be *read* uses `clay-deep` (`#a85e3f`, 4.38:1)
+for kickers, ordinals, link underlines, and the focus ring. Sage
+(`#8a9a7b`, 2.72:1) draws rules only; readable sage (`#5f6f50`, 4.90:1)
+labels the breath. Secondary text (EN transcreations, captions, the count)
+uses ink at 70% alpha, about `#6b6660`, 5.14:1.
+
+Two serifs, two roles, both chosen for *vertical metrics*. Noto Serif KR
+carries every Hangul glyph — the wordmark 늘어, the pose names 산·하늘·나무·
+숨 — at weight 700 with `word-break: keep-all` and line-height 2.0.
+Cormorant Garamond answers in Latin: STRETCH, the transcreations in italic,
+the captions. Both faces were picked because they elongate gracefully under
+`transform: scaleY()` — long ascenders, deliberate vertical drawing — so
+when the type stretches it reads as a body reaching, not as a font being
+distorted.
+
+## Technique — the type that reaches (char-split-reveal)
+
+The hero wordmark and every pose name are split into per-glyph `aria-hidden`
+spans behind an `aria-label`, so the staggered motion is per-glyph while
+assistive tech reads one word:
+
+```tsx
+<h1 className="stretch-wordmark" aria-label="STRETCH · 늘어">
+  <span className="stretch-wordmark__latin" aria-hidden="true">
+    {WORD.map((ch, i) => (
+      <span className="stretch-wordmark__ch" style={{ "--st-gi": i }}>{ch}</span>
+    ))}
+  </span>
+  …
+</h1>
+```
+
+The hero settles once, on mount: each glyph rises through `scaleY 0.78 →
+1.06 → 1` (a 12% reach past taut, then settle) staggered 90ms, gated
+behind `.stretch-js` so the server-rendered cover is already complete. The
+pose names stretch *continuously*, driven by scroll — and that is where
+char-split becomes kinetic.
+
+## Technique — the pinned sequence (scroll-scrub-pinned)
+
+The signature. A tall spacer (~300vh) pins a scene for its whole length;
+the scene stacks all four poses, and `--st-scrub` (0→1, from
+`useStretchScroll`) decides everything. Each pose owns a 0.25-wide band;
+the active pose is the one whose band-center is nearest the scrub:
+
+```css
+/* visibility: triangle falloff, 1 at band center, fading 0.16 either side.
+   Written as min() of two clamps — identical to 1 - |s-c|/h, but using only
+   min()/clamp() (supported since 2020), never abs() (too new). */
+.stretch-pose {
+  opacity: clamp(0,
+    min(
+      calc((var(--st-scrub) - (var(--st-p0) - 0.035)) * 6.25),
+      calc((var(--st-p0) + 0.285 - var(--st-scrub)) * 6.25)
+    ), 1);
+}
+/* stretch: local scrub = clamp((s - p0)/0.25, 0, 1); scaleY = 1 + local·1.8 → up to 2.8 */
+.stretch-glyph {
+  transform: scaleY(calc(1 + clamp(0, calc((var(--st-scrub) - var(--st-p0)) * 4), 1) * 1.8));
+}
+```
+
+The geometry is in CSS `calc()`, not JS — the per-pose bands are declared
+as `--st-p0`/`--st-p1`, and the global scrub is the only thing the rAF
+loop writes. So the motion is inspectable in the stylesheet, and the math
+(local scrub, scaleY ceiling, visibility falloff) is plain. The scrub
+itself is a slow lerp — half-life ≈ 5.4 frames — so lengthening reads as a
+held breath rather than a snap:
+
+```ts
+// useStretchScroll.ts — one read, one slow lerp, one write
+const span = Math.max(rect.height - vh * 0.64, 1);
+const raw = (vh * 0.18 - rect.top) / span;
+const target = Math.min(1, Math.max(0, raw));
+value += (target - value) * (1 - Math.pow(0.88, dt / 16.7));
+el.style.setProperty("--st-scrub", value.toFixed(4));
+```
+
+An IntersectionObserver starts/stops the loop, and a `visibilitychange`
+listener pauses it when the tab is hidden — an offscreen sequence costs
+zero frames. The pin is native `position: sticky`, never scripted layout.
+
+Under `prefers-reduced-motion`, and in the no-JS / SSR state, the sequence
+flattens: the spacer loses its height, the scene becomes `position:
+static`, and every pose sits at full stretch (scaleY 2.8), fully written,
+stacked in flow with air between — a calm static document of four held
+poses. The scrub defaults to 1, so the fallback is not a degraded version
+that hides things; it is the finished poster.
+
+## Technique — the breathing background (pointer-parallax)
+
+Three concentric translucent circles (paper-warm at 92% α, clay at 7% α,
+sage at 6% α) breathe on a 12s alternate cycle (scale 1 → 1.06) and drift
+with the pointer. One rAF loop writes two custom properties onto the stack:
+
+```ts
+// BreathCircle.tsx — one loop, one pointer listener, two writes
+const onPointer = (e: PointerEvent) => {
+  tx = ((e.clientX / window.innerWidth) - 0.5) * 2;
+  ty = ((e.clientY / window.innerHeight) - 0.5) * 2;
+};
+const frame = () => {
+  cx += (tx - cx) * 0.06;
+  cy += (ty - cy) * 0.06;
+  el.style.setProperty("--st-px", (cx * 12).toFixed(3));
+  el.style.setProperty("--st-py", (cy * 12).toFixed(3));
+};
+```
+
+Each layer consumes the offset weighted by its own `--st-depth` (0.4 / 0.7
+/ 1.0), so the farthest circle drifts least — real layered depth from one
+shared loop, not three. The parallax never engages on coarse pointers (the
+matchMedia gate), and the whole thing is `aria-hidden` with a bilingual
+`role="img"` label; it is decoration, and it says so.
+
+Under reduced motion the 12s keyframe is removed and the parallax hook
+never starts — the circles sit still, present, calm. There is no hover
+dependency anywhere; touch users get the breathing background and nothing
+is lost.
+
+## The discipline of the breath
+
+The quiet work is the pacing. Reveals are 760ms (slower than the default),
+staggered 90ms per batch. The scrub lerp is 0.88 (slower than the gallery
+default of 0.86). The wordmark's one overshoot is 12% and happens exactly
+once, on mount — never a recurring bounce, because recurring motion on a
+wellness page would read as anxiety. The whole page breathes once every
+twelve seconds, and between interactions it is perfectly still. Every
+easing curve is a variant of a slow inhale and a longer exhale
+(`ease-breathe`); the only exception is `ease-stretch`, which keeps
+reaching past the midpoint — the held pose.
+
+## Accessibility notes
+
+- **Reduced motion:** wordmark fully risen and filled, cover rule grown,
+  reveals present without motion, breath circles still (no cycle, no
+  parallax), and the pinned sequence flattened into a static document of
+  four fully-held poses. One finished poster, no animation.
+- **No-JS:** every pre-reveal and pre-stretch state is gated behind
+  `.stretch-js`, added on mount. With JavaScript off the page is a
+  complete studio site — wordmark stretched, poses at full reach, names
+  written, footer present.
+- **Semantics:** the split wordmark and pose names hide their spans behind
+  an `aria-label`; the breath background is `role="img"` with a bilingual
+  description; pose cards carry `aria-label`s; focus is a 2px clay-deep
+  `:focus-visible` ring.
+- **Contrast:** ink 12.85:1, clay-deep 4.38:1, ink-soft 5.14:1, sage-deep
+  4.90:1 — all AA or better; bright clay (2.94:1) and sage (2.72:1) never
+  carry text.
+
+## Performance notes
+
+- Two rAF loops exist (the stretch scrub, and the breath parallax), each
+  alive only while its target intersects a generous observer margin; each
+  frame is one `getBoundingClientRect` and one (or two) custom-property
+  writes. Both pause on hidden tabs.
+- Everything animated is `transform` or `opacity`; the pin is native
+  sticky, not scripted layout; the breath keyframe is transform-only.
+- Reveals write `class` + `transitionDelay` imperatively from one
+  IntersectionObserver — no React re-renders on scroll anywhere.
+- Zero images, zero dependencies; the heaviest assets are two font
+  families, and Hangul subsetting is left to next/font. Media budget: 0.
+
+## Remix ideas
+
+1. **A tea ceremony school.** Keep the pinned stretch; replace poses with
+   the four beats of a ceremony (웨다·시키·사베·다이). Each beat's name
+   elongates as you hold the scroll; the clay becomes matcha green; the
+   breath circles become steam.
+2. **A long-form reading app.** The pinned sequence becomes a poem whose
+   lines stretch as you hold each stanza — the type physically lengthening
+   to slow your reading. The rail grows to mark your place through the
+   piece.
+3. **A physiotherapy clinic.** Same bones, clinical palette (paper stays,
+   clay becomes a calm medical teal). Each "pose" is a rehabilitation
+   stretch with a duration counter; the scrub lets patients rehearse the
+   lengthening before they do it.

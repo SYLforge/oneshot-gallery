@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "typewave",
+  "no": 26,
+  "title": {
+    "en": "TYPEWAVE — Type That Plays Like a Track",
+    "ko": "타입웨이브 — 연주되는 타이포그래피"
+  },
+  "description": {
+    "en": "A fictional electronic artist's landing where typography is the instrument: a wordmark that stretches and splits on scroll velocity, a pinned section that scrubs the letterforms across their full width/weight range like an audio timeline, and lyric ticker bands scrolling at crossed speeds. Pure black ground, one acid-green accent, Korean-first copy — the whole page reads like a visualizer for a track you cannot hear.",
+    "ko": "타이포그래피가 악기가 되는, 가상의 전자음악 아티스트 랜딩. 스크롤 속도에 따라 늘어나고 쪼개지는 워드마크, 오디오 타임라인처럼 글자의 폭·굵기 전 범위를 스크럽하는 고정 섹션, 엇갈리는 속도로 흐르는 가사 티커. 완전한 검정 바탕, 산성 초록 액센트 하나, 한국어 우선 카피 — 듣지 못하는 트랙의 비주얼라이저로 읽히는 페이지."
+  },
+  "aesthetic": "kinetic-typography",
+  "techniques": ["char-split-reveal", "scroll-scrub-pinned", "marquee"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#c6ff3a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

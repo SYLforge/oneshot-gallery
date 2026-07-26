@@ -1,0 +1,274 @@
+# NIGHT-SNACK — breakdown
+
+## The hook
+
+There is a tent in a back-alley off Jongno that opens at 9 PM and closes at 4
+AM, and for those seven hours the alley is the warmest, loudest place in the
+city. The page does not sell you food. It is *one chapter of a webtoon* about
+the 1 AM hour at that tent. You scroll the way you scroll a Naver Webtoon:
+an establishing shot of the tent lit against the alley, the grill you cook by
+scrolling, the soju glasses you clink, the neon signs flickering, the
+tonight's menu, and a colophon that tells you where to find the tent tonight.
+The hour is a character — everything happens inside it.
+
+The design bet has two halves. First, a webtoon entry can be **pure code** —
+no generated imagery, unlike PPANG! and MOONLIT. Everything on screen is
+CSS/SVG: flat shapes, halftone dots, speech-bubble SFX, neon glow via
+text-shadow stacks. Second, the third twin earns its slot by being
+*unmistakably distinct*: where the first two webtoons are solitary (one baker,
+one rider), this one is social — three neons instead of one, an interactive
+table, ASCII signs you read as pictures. A third generated-panel set would
+have read as the third version of the same idea; a code-drawn, interactive,
+tri-color tent reads as a different idea.
+
+## Art direction
+
+Webtoon lives on commitment. The ground is deep plum-black `#14101c` — a
+warm-dark, the color of a tent's shadow, not pure black — and the page holds
+three neons that never compete because each owns a zone: amber `#ffb347` the
+grill and primary signage, hot pink `#ff5e8a` the cold-drinks sign and soju
+highlight, soju-green `#7ad67a` the bottle and the clink spark. Steam whites
+(`#fbf3df`, the lit-paper-lantern white) carry the text.
+
+The decision that does the hard work: **amber is dark enough on the night
+ground (9.4:1, AAA) to carry functional text**, unlike PPANG!'s apricot
+(3.0:1, decorative-only) and MOONLIT's neon-blue. So amber is *both* the page
+accent *and* the working text color for prices, eyebrows, the focus ring, and
+the `::selection` ground — no "banked" variant is needed. Pink (5.0:1, AA)
+and green (8.1:1, AAA) stay decorative/large/accent: the three neons are three
+separate signs, three separate circuits, never a gradient.
+
+The texture is the other separator. PPANG! is feTurbulence paper grain;
+MOONLIT is desaturated screen noise; NIGHT-SNACK is a **halftone-dot field** —
+a fixed `radial-gradient` tiled into a 14px grid at ~7% lantern opacity,
+`mix-blend-mode: screen`. This is the printed-webtoon Ben-Day dot, and it is
+what makes the page read as ink on newsprint instead of a screen. The cooking
+panel reuses the same dot field at a denser size per frame — so the texture
+*is* the sprite.
+
+The type refuses the obvious pairing. Black Han Sans is the Korean display
+voice — the wordmark 야식!, panel titles, SFX lettering. It is the *same face*
+PPANG! uses for 빵!, deliberately — the gallery's house webtoon display — but
+the treatment is opposite: PPANG! sets it in brown ink on cream (printed,
+quiet); NIGHT-SNACK sets it in lantern-white with a triple-layer neon halo
+over night (lit, loud). Gaegu is the handwriting voice — speech bubbles, the
+menu note, the footer koan — so the tent reads as someone talking across the
+counter, never as a label. Noto Sans KR holds every other Korean body line;
+Space Mono is the machine and, crucially, the ASCII sign grid.
+
+## Technique 1 — the grill that cooks by scroll (sprite-scrub)
+
+The naive way to show food cooking is a video or a GIF. Both are heavy and
+both loop meaninglessly. A webtoon panel doesn't loop — it *scrubs*, the way
+your thumb drags across a panel border. So the cooking scene is a stack of
+six frames, and your scroll picks which one is showing:
+
+```ts
+// useSpriteScrub.ts — one number, written once per rAF
+const traveled = vh - rect.top;          // how far the stage has risen
+const p = traveled / (vh + rect.height); // into view
+el.style.setProperty("--ns-steam", clamp(p, 0, 1).toFixed(4));
+```
+
+Each frame is a pure CSS drawing — a steam plume (radial-gradient, different
+scale/opacity per frame) layered over a halftone-dot heat field (denser dots
+= hotter grill). The frames are *code-drawn sprites*, not an image strip,
+because this is a `media.source: "code"` entry — zero raster payload. The
+`sprite-scrub` tag's definition is "image-sequence strips scrubbed by scroll
+— the no-video video"; the *sequence* is the unit, the *scrub* is the
+mechanism, and the frames being CSS instead of PNGs is a source-format choice
+the tag does not forbid.
+
+The crossfade is the elegant part. Rather than flip between frames (which
+would pop), each frame owns a *triangular window* of the scrub — it is fully
+visible at its center `c_i` and fades out over a half-window `h` on either
+side, so only ~3 frames are ever meaningfully on screen. The opacity is pure
+CSS math, no per-frame JS:
+
+```css
+/* styles.css — opacity = 1 - clamp(|steam - c| / h, 0, 1).
+   Built from max() to avoid abs() (newer, uneven support). */
+.ns-cook__frame {
+  opacity: calc(
+    1 - clamp(
+      max(var(--ns-steam) - var(--ns-c), var(--ns-c) - var(--ns-steam))
+        / var(--ns-h),
+      0, 1)
+  );
+}
+```
+
+The SFX (치치칵! at the searing frame, 냠냠! at the plated frame) and the
+phase labels (01 · 생고기 → 06 · 한 접시) use the *same* opacity expression,
+so a label and its frame brighten together. A vertical scrub rail on the
+right of the stage is the page's honesty: this is scrubbed by your scroll,
+not by a timer. Under reduced motion, `--ns-steam` is pinned at 1 (the food
+is cooked, the steam has risen); without JS it stays at its declared 0 (raw
+food on a lit grill), which is also a complete, readable frame.
+
+## Technique 2 — the glasses you clink (drag-physics)
+
+A webtoon is usually something you scroll *at*. This panel asks you to reach
+*in*. Four draggable bodies share a dark wood table — three soju glasses
+(each a CSS drawing: a green bottle peeking up behind a clear trapezoid glass
+with a soju-green tint) and a skewer (a stick with food chunks). One rAF loop
+runs the whole stage:
+
+```ts
+// useClinkPhysics.ts — pointer grab, velocity sample, spring home
+onDown:  body.dragging = true; stage.setPointerCapture(e.pointerId);
+onMove:  body.vx = (body.vx + (p.x - ptr.px)) * 0.5; body.x = p.x;
+onUp:    body.dragging = false; // coast, then spring
+// per frame:
+b.vx *= 0.86;                       // velocity decay (coast dies in ~0.5s)
+b.vx = (b.vx + (restX - b.x)*0.18)*0.78 + (restX - b.x)*0.18; // spring home
+b.x += b.vx;
+```
+
+When two bodies' circles overlap, a *clink* fires: a pink/amber radial-
+gradient spark SFX pops at the midpoint and auto-clears (React state, rare —
+a few clinks per session), and both bodies take a small knockback impulse so
+the clink feels physical instead of pass-through. The clink is the social
+interaction the tent exists for — the page's one moment of *someone else is
+here too*.
+
+Two honest calls. First, the drag is **fine-pointer only**: a multi-body drag
+with overlap detection is poor on touch (no hover hit-testing, fat-finger
+ambiguity), and faking it would be worse than a clean static fallback. On
+touch the table is a calm still life and the menu, signs, and cooking are
+fully usable — nothing essential lives behind the drag, so the G2 touch gate
+holds. Second, each body is `tabindex="0"` with a visible amber focus halo,
+so keyboard users reach the same table; the drag is an enhancement, not a
+gate. The rAF parks itself when every body is at rest and un-dragged, so an
+idle table costs zero frames, and pauses on `visibilitychange`.
+
+## Technique 3 — the signs drawn in characters (ascii-render)
+
+The third neon vocabulary on the page is the weirdest: the signs are pictures
+made of *text*. Each is an ASCII-art character field — a hand-written string
+whose glyph density forms a picture (a soju bottle, a fish/can, a steaming
+bowl). Each sign is a `<pre>` in Space Mono, and every non-space glyph is its
+own cell:
+
+```tsx
+// NeonSigns.tsx — one <span> per glyph so the flicker hook can address it
+{cellsFor(line).map((c) => (
+  <span className={`ns-ascii__c${c.space ? " is-space" : ""}`}>
+    {c.space ? "\u00A0" : c.char}
+  </span>
+))}
+```
+
+Each cell carries a neon `text-shadow` glow; one sign is amber, one pink, one
+green. The monospace grid is the whole trick — it is what makes the characters
+read as a picture instead of as text (a proportional font would collapse the
+shape). Then `useNeonFlicker` makes it read as *neon*: every 220ms it dims a
+random ~8% of cells (`.is-dim`, opacity 0.28, no glow), so the sign looks
+like a bank of dying bulbs, not a printed string:
+
+```css
+.ns-ascii__c {
+  color: var(--ns-ascii-color);
+  text-shadow: 0 0 4px var(--ns-ascii-glow), 0 0 10px var(--ns-ascii-glow);
+  transition: opacity 90ms linear;
+}
+.ns-ascii__c.is-dim { opacity: 0.28; text-shadow: none; }
+```
+
+The hook pauses when the sign is offscreen (IntersectionObserver) and on
+hidden tabs. Under reduced motion it never attaches — styles.css holds every
+sign at full, steady brightness. The `<pre>` is `aria-hidden` because the
+grid would read as nonsense to a screen reader; the bilingual caption beside
+each sign carries the meaning for AT, and the ASCII itself is plain copy-
+pasteable text for sighted users.
+
+## The tent, drawn in CSS
+
+The hero commits to the pure-code premise in its first frame. The whole
+pojangmacha is CSS: an orange tarp roof (`clip-path: polygon`) with a neon-
+amber ridge (a glowing `box-shadow` strip); a red/cream striped awning (a
+`repeating-linear-gradient` clipped into a scallop); five paper-lantern discs
+(`radial-gradient` + glow) swaying ±0.6° on mutually-prime 5.3 / 5.7 / 5.9 /
+6.3 / 6.7s cycles; a counter with a grill-ember band that breathes 0.72 → 1.0
+on a 3.1s cycle; three rising steam plumes. The five sway periods and the
+grill breath share no common divisor, so the idle hero never visibly loops.
+None of this is JS-driven — it is all CSS ambient animation, dead under
+reduced motion.
+
+## Motion math
+
+- **Steam scrub, six frames.** Windows of ~0.15–0.18 around centers at
+  0.0 / 0.2 / 0.4 / 0.6 / 0.8 / 1.0. The triangular crossfade means only ~3
+  frames are ever meaningfully visible — a dissolve, not a flip.
+- **Clink spring: stiffness 0.18, damping 0.78, coast decay 0.86/frame.** A
+  released glass coasts for about half a second on its captured velocity,
+  then springs home with one visible settle. The clink knockback is a fixed
+  6 px/frame impulse along the contact normal, so a hard drag-in clinks
+  harder than a graze.
+- **ASCII flicker: 220ms roll, ~8% of cells dimmed.** Fast enough to read as
+  a flicker, slow enough that the eye can latch a sign and read it. The
+  randomness means the three signs never sync.
+- **Ambient: lantern sway 5.3–6.7s, grill breath 3.1s** — mutually prime,
+  so the idle hero never visibly loops.
+
+## Performance notes
+
+- The only per-frame writes on the whole page are: `--ns-steam` (one number
+  on the cooking stage), the per-glass `transform` (only while the table is
+  active), and the per-cell `.is-dim` class (only while a sign is on screen).
+  All transform/opacity/filter-derived — zero layout-property animation.
+- `useSpriteScrub` runs a single rAF, coalesces scroll events, clamps `dt` to
+  48ms, and pauses on `visibilitychange`. `useClinkPhysics` parks its rAF
+  when every body is at rest and un-dragged. `useNeonFlicker` uses a cheap
+  `setInterval` and an IO gate per sign.
+- All IntersectionObservers clean up on unmount. The reveal observer is one
+  for the whole page, threshold 0.16.
+- **Zero images, zero dependencies.** The heaviest assets are four font
+  families, Latin subsetting left to next/font. Total media payload: 0 KB.
+
+## Accessibility notes
+
+- **Reduced motion:** `--ns-steam` pinned at 1 (food cooked), all ambient
+  animation dead (lanterns still, grill steady, steam off), ASCII signs at
+  full steady brightness, clink stage a calm still life, every `[data-reveal]`
+  at its final state. The page reads as a finished chapter.
+- **No-JS:** every pre-reveal style is gated behind `.ns-js`, added on mount.
+  The SSR page is the completed chapter — every panel visible, every menu
+  line complete, every neon sign lit, the cooking stage at its first frame.
+- **Contrast:** lantern-white 14.6:1 (AAA), lantern-dim 8.0:1 (AAA),
+  neon-amber 9.4:1 (AAA on normal text — the working accent), soju-green
+  8.1:1 (AAA), steel 6.0:1 (AA), neon-pink 5.0:1 (AA, used as accent/large).
+- **Keyboard & touch:** the footer links and the draggable bodies are real
+  focusable elements with a haloed amber `:focus-visible` ring. The clink
+  drag self-disables on coarse pointers; nothing meaningful lives behind it.
+- **Semantics:** the ASCII `<pre>` is `aria-hidden` (the caption carries the
+  meaning); the hero diorama is `aria-hidden` (the h1 carries the name); the
+  menu is a real `<ol>`; decorative ambient elements are `aria-hidden`.
+
+## Distinction from the other webtoon twins
+
+- **PPANG!** — warm / dawn / bakery / cream paper / one apricot /
+  feTurbulence grain / clip-path-reveal + char-split-reveal + pointer-parallax
+  / **generated art**.
+- **MOONLIT** — cold / night / delivery / indigo / one neon-blue / screen
+  noise / typewriter + svg-line-draw + marquee / **generated art**.
+- **NIGHT-SNACK** — warm+cold / night / street-food-tent / plum-black /
+  **tri-color neon** / **halftone dots** / sprite-scrub + drag-physics +
+  ascii-render / **pure code, no images**.
+
+A grayscale screenshot of each is immediately identifiable: PPANG! is light
+cream, MOONLIT is near-black with a single blue, NIGHT-SNACK is mid-dark with
+three distinct mid-grey values dancing (amber, pink, and green desaturate to
+three different greys).
+
+## Remix ideas
+
+1. **The order ticket.** Keep the clink table, add a paper-order-ticket
+   interaction — write your order on a slip and drag it to the boss, who
+   shouts it back as a neon SFX. The drag-physics vocabulary, repurposed.
+2. **The seasons.** The tent's menu shifts through the year (odeng in winter,
+   naengmyeon in summer) — the palette stays, the sprite-scrub frames swap
+   their food, and one neon sign changes color per season.
+3. **The regular's table.** A persistent "your usual" the tent remembers
+   across visits (`localStorage`) — on arrival the boss tops up your glass,
+   and the clink spark greets you by name.

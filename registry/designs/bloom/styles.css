@@ -1,0 +1,943 @@
+/* ==========================================================================
+   피다 BLOOM — botanical perfume house
+   ink-bloom · warm cream paper, botanical greens, one blush bloom · light
+   Scoped by convention to .bloom-root; classes prefixed bloom-.
+   The medium is SVG line-draw + watercolor wash on a cream ground —
+   the second of three ink-bloom entries, deliberately distinct from the
+   canvas-particle/dark-pink of SAKURA.
+   ========================================================================== */
+
+.bloom-root {
+  /* -- palette ------------------------------------------------------------ */
+  --bloom-cream: #faf3e8;        /* background — warm cream paper */
+  --bloom-ink: #2a2620;          /* primary text + SVG line-art strokes (12.4:1) */
+  --bloom-botanical: #3d6b3a;    /* accent: wordmark, numerals, CTA, focus ring (6.9:1) */
+  --bloom-sage: #8aa67a;         /* decorative: leaf fills, far strokes (2.4:1 — never text) */
+  --bloom-blush: #d98a9e;        /* the single bloom accent: petal wash (1.9:1 — decorative) */
+  --bloom-bark: #5c554a;         /* secondary text (5.7:1): glosses, captions */
+  --bloom-wash-green: #6f8f5e;   /* decorative: peony leaf watercolor mid-tone */
+  --bloom-wash-blush: #e8b8c4;   /* decorative: outer edge of the blush bloom */
+  --bloom-gold: #b8924a;         /* decorative: anthers, date folio */
+  --bloom-hairline: #cdbfa8;     /* decorative: paper rules at full strength */
+
+  /* -- SVG stroke colors (read by the line-art via these classes) ---------- */
+  --bloom-c-stem: #4a6b3f;       /* the deepest stems — near botanical */
+  --bloom-c-branch: #5f7d4f;     /* lighter branches */
+  --bloom-c-leaf: #3d6b3a;       /* leaf outlines — the botanical accent */
+  --bloom-c-vein: #6f8f5e;       /* veins — a softer green */
+  --bloom-c-petal: #2a2620;      /* petal outlines — drawn in ink, not green */
+  --bloom-c-calyx: #4a6b3f;      /* the calyx (bud base) */
+
+  /* -- type ---------------------------------------------------------------- */
+  --bloom-font-display: var(--font-cormorant), "Cormorant Garamond", "Noto Serif KR", serif;
+  --bloom-font-body: var(--font-kr), "Noto Serif KR", "Apple SD Gothic Neo", serif;
+
+  /* -- motion ---------------------------------------------------------------
+     ease-bloom: quick to open, very long to settle — a petal, not a snap. */
+  --bloom-ease: cubic-bezier(0.25, 0.8, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bloom-cream);
+  color: var(--bloom-ink);
+  font-family: var(--bloom-font-body);
+  font-size: clamp(16px, 0.4vw + 14px, 18px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.bloom-root,
+.bloom-root *,
+.bloom-root *::before,
+.bloom-root *::after {
+  box-sizing: border-box;
+}
+
+.bloom-root h1,
+.bloom-root h2,
+.bloom-root h3,
+.bloom-root p,
+.bloom-root ul,
+.bloom-root dl,
+.bloom-root dd {
+  margin: 0;
+}
+
+.bloom-root ul,
+.bloom-root dl {
+  padding: 0;
+}
+.bloom-root dd {
+  margin-inline: 0;
+}
+
+/* Korean is first-class: Noto Serif KR, its own rhythm, no orphan-broken words.
+   The serif (not sans) is deliberate — this house writes with a brush. */
+.bloom-root :lang(ko) {
+  font-family: var(--bloom-font-body);
+  word-break: keep-all;
+  line-height: 1.78;
+}
+
+/* The perfumer's italic asides speak Cormorant */
+.bloom-root em {
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+  letter-spacing: 0.005em;
+}
+
+/* Blush-tinted selection on the cream paper, scoped to the entry root */
+.bloom-root ::selection {
+  background: var(--bloom-blush);
+  color: var(--bloom-ink);
+}
+
+/* Keyboard focus: a botanical-green ring with a soft petal halo */
+.bloom-root :focus-visible {
+  outline: 2px solid var(--bloom-botanical);
+  outline-offset: 3px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 6px rgba(61, 107, 58, 0.16);
+}
+
+.bloom-link {
+  color: var(--bloom-botanical);
+  text-decoration: underline;
+  text-decoration-color: var(--bloom-hairline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.bloom-link:hover {
+  text-decoration-color: var(--bloom-botanical);
+}
+
+/* The static cream paper fiber overlay — never animates, low alpha */
+.bloom-paper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+
+.bloom-sheet {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   The drawing clock — one variable, many private stroke timelines.
+   --bloom-draw (0 → 1, fallback 1 = fully drawn) is converted per stroke
+   into a stroke-dashoffset window [d0, d1]. Without JS or under reduced
+   motion the fallback keeps every offset at 0 = fully drawn. pathLength=1
+   on every path so dash math ignores real length.
+   ========================================================================== */
+
+.bloom-draw path,
+.bloom-draw__stroke {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pathLength: 1;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: clamp(
+    0,
+    calc((var(--d1, 1) - var(--bloom-draw, 1)) /
+         (var(--d1, 1) - var(--d0, 0))),
+    1.02
+  );
+}
+
+/* stroke color tiers */
+.bloom-stem {
+  stroke: var(--bloom-c-stem);
+}
+.bloom-branch {
+  stroke: var(--bloom-c-branch);
+}
+.bloom-leaf-line {
+  stroke: var(--bloom-c-leaf);
+}
+.bloom-vein {
+  stroke: var(--bloom-c-vein);
+}
+.bloom-petal-line {
+  stroke: var(--bloom-c-petal);
+}
+.bloom-calyx {
+  stroke: var(--bloom-c-calyx);
+}
+
+/* watercolor wash fills */
+.bloom-wash-green {
+  fill: var(--bloom-wash-green);
+  opacity: 0.32;
+}
+.bloom-wash-sage {
+  fill: var(--bloom-sage);
+  opacity: 0.3;
+}
+.bloom-wash-blush {
+  fill: var(--bloom-blush);
+  opacity: 0.34;
+}
+
+/* ==========================================================================
+   Scroll reveals — pre-reveal state exists only when JS is alive
+   ========================================================================== */
+
+.bloom-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.bloom-js [data-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 900ms var(--bloom-ease),
+    transform 900ms var(--bloom-ease);
+}
+
+/* ==========================================================================
+   Section heads — a Korean numeral, a title, a long hairline
+   ========================================================================== */
+
+.bloom-sechead {
+  max-width: 40rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.8rem);
+}
+
+.bloom-eyebrow {
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  color: var(--bloom-botanical);
+  margin-bottom: 0.7rem;
+}
+
+.bloom-sechead__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  flex-wrap: wrap;
+  font-family: var(--bloom-font-display);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.8vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: 0.005em;
+  color: var(--bloom-ink);
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--bloom-hairline);
+}
+
+.bloom-sechead__title :lang(ko) {
+  letter-spacing: -0.01em;
+}
+
+.bloom-sechead__en,
+.bloom-sechead__ja {
+  font-size: 0.5em;
+  font-style: italic;
+  color: var(--bloom-bark);
+  letter-spacing: 0.02em;
+}
+
+.bloom-sechead__line {
+  margin-top: 0.9rem;
+  font-size: 0.96rem;
+  color: var(--bloom-bark);
+}
+.bloom-sechead__line em {
+  display: block;
+  font-size: 1.06rem;
+  color: var(--bloom-ink);
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   Hero — the arrival; a botanical draws itself in
+   ========================================================================== */
+
+.bloom-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(24px, 6vw, 72px);
+}
+
+/* warm light from the upper right (jeju afternoon); breathes slowly */
+.bloom-hero__sun {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 80% at 84% 8%,
+    rgba(217, 138, 158, 0.16),
+    rgba(184, 146, 74, 0.1) 42%,
+    transparent 72%
+  );
+}
+
+.bloom-js .bloom-hero__sun {
+  animation: bloom-sunbreathe 19s ease-in-out infinite alternate;
+}
+
+@keyframes bloom-sunbreathe {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.bloom-hero__stage {
+  position: absolute;
+  right: clamp(-40px, 1vw, 48px);
+  bottom: 0;
+  width: clamp(300px, 40vw, 560px);
+  height: min(94%, 90vh);
+  pointer-events: none;
+}
+
+.bloom-hero__washes,
+.bloom-hero__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bloom-hero__washes {
+  z-index: 1;
+}
+.bloom-hero__lines {
+  z-index: 2;
+}
+
+/* idle sway on the line-art — prime with the sun-breathe (19s) */
+.bloom-js .bloom-hero__lines .bloom-draw {
+  transform-box: view-box;
+  transform-origin: 50% 100%;
+  animation: bloom-sway 11s ease-in-out infinite alternate;
+}
+
+@keyframes bloom-sway {
+  from {
+    transform: rotate(-0.4deg);
+  }
+  to {
+    transform: rotate(0.4deg);
+  }
+}
+
+.bloom-hero__copy {
+  position: relative;
+  max-width: 34rem;
+}
+
+.bloom-hero__kicker {
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+  font-size: 0.86rem;
+  letter-spacing: 0.22em;
+  color: var(--bloom-botanical);
+  margin-bottom: clamp(1rem, 3vh, 1.9rem);
+}
+.bloom-hero__kicker :lang(ko) {
+  font-style: normal;
+  letter-spacing: 0.08em;
+}
+
+.bloom-hero__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.22em;
+  font-weight: 400;
+  line-height: 0.92;
+  margin-bottom: clamp(1.2rem, 3.5vh, 2.2rem);
+}
+
+.bloom-hero__hangul {
+  font-family: var(--bloom-font-body);
+  font-size: clamp(6.4rem, 21vw, 13.5rem);
+  color: var(--bloom-ink);
+  letter-spacing: -0.02em;
+}
+
+.bloom-hero__latin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  font-family: var(--bloom-font-display);
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  color: var(--bloom-botanical);
+  letter-spacing: 0.18em;
+}
+
+.bloom-hero__latin-sub {
+  font-style: italic;
+  font-size: 0.42em;
+  letter-spacing: 0.04em;
+  color: var(--bloom-bark);
+}
+
+.bloom-hero__lede {
+  max-width: 26rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
+}
+.bloom-hero__lede em {
+  display: block;
+  font-size: 1.22rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+.bloom-hero__lede span {
+  display: block;
+  color: var(--bloom-bark);
+  font-size: 0.96rem;
+}
+
+.bloom-hero__cta {
+  display: inline-block;
+  padding: 0.72em 1.6em;
+  border: 1px solid var(--bloom-botanical);
+  border-radius: 999px;
+  color: var(--bloom-botanical);
+  text-decoration: none;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  background: transparent;
+  transition: background 120ms linear, color 120ms linear;
+}
+.bloom-hero__cta:hover {
+  background: var(--bloom-botanical);
+  color: var(--bloom-cream);
+}
+
+.bloom-hero__hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(14px, 3vh, 30px);
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--bloom-bark);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ==========================================================================
+   둘 · Scent notes — three botanical plates
+   ========================================================================== */
+
+.bloom-notes {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 56px) 0;
+}
+
+.bloom-notes__row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.4rem, 3vw, 2.6rem);
+}
+
+.bloom-note {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.bloom-note__art {
+  position: relative;
+  aspect-ratio: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 243, 232, 0) 0%,
+    rgba(207, 191, 168, 0.08) 100%
+  );
+  border: 1px solid var(--bloom-hairline);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bloom-note__drawwrap {
+  position: absolute;
+  inset: 0;
+}
+
+.bloom-note__washwrap,
+.bloom-note__lines,
+.bloom-note__wash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.bloom-note__washwrap {
+  z-index: 1;
+}
+.bloom-note__lines {
+  z-index: 2;
+}
+
+.bloom-note__label {
+  padding-inline: 0.2rem;
+}
+
+.bloom-note__family {
+  font-family: var(--bloom-font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: var(--bloom-botanical);
+  margin-bottom: 0.5rem;
+}
+
+.bloom-note__name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  flex-wrap: wrap;
+  font-family: var(--bloom-font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: var(--bloom-ink);
+  margin-bottom: 0.2rem;
+}
+.bloom-note__name :lang(ko) {
+  font-family: var(--bloom-font-body);
+  font-size: 1.18rem;
+}
+.bloom-note__en {
+  font-style: italic;
+  color: var(--bloom-bark);
+  font-size: 0.92em;
+}
+
+.bloom-note__latin {
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--bloom-bark);
+  margin-bottom: 0.8rem;
+}
+
+.bloom-note__sense em {
+  display: block;
+  font-size: 1rem;
+  color: var(--bloom-ink);
+  margin-bottom: 0.2rem;
+}
+.bloom-note__sense span {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--bloom-bark);
+}
+
+/* ==========================================================================
+   셋 · The bloom — pinned, scroll-scrubbed, the flower opens
+   ========================================================================== */
+
+.bloom-thebloom {
+  position: relative;
+  /* tall on purpose: the pinned inner is sticky and this height provides
+     the scroll span that maps to --bloom-open 0 → 1 */
+  height: 260vh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+.bloom-thebloom__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bloom-thebloom__inner {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  max-width: 1160px;
+  width: 100%;
+  margin-inline: auto;
+  padding-block: clamp(40px, 8vh, 80px);
+}
+
+.bloom-thebloom__art {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.bloom-thebloom__flower {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the blush wash fill — opacity tracks the open progress */
+.bloom-sig-wash-fill {
+  opacity: calc(0.12 + 0.32 * var(--bloom-open, 1));
+  transition: none;
+}
+
+/* ---- the petals: each opens with --bloom-open -----------------------------
+   scale 0.42 → 1, rotation -8° → 0°, opacity 0.5 → 1. The outer ring opens
+   a touch earlier than the inner so it reads as the flower unfurling
+   outward-in. --pi (per-petal index) staggers the start within each ring. */
+
+.bloom-sig-ring--outer {
+  transform-origin: 300px 300px;
+}
+.bloom-sig-ring--inner {
+  transform-origin: 300px 300px;
+}
+
+.bloom-sig-petal {
+  /* per-petal stagger within the ring (0..7 outer, 8..12 inner) */
+  --bloom-pstart: calc(0.02 * var(--pi));
+  --bloom-local: clamp(
+    0,
+    calc((var(--bloom-open, 1) - var(--bloom-pstart)) / (1 - 0.16)),
+    1
+  );
+  transform-box: view-box;
+}
+.bloom-sig-ring--outer .bloom-sig-petal {
+  /* outer ring opens first: starts at ~0.0 of the clock */
+  --bloom-local: clamp(
+    0,
+    calc((var(--bloom-open, 1) - var(--bloom-pstart) * 0.5) / 0.8),
+    1
+  );
+  transform-origin: 300px 300px;
+  transform: rotate(calc(-8deg * (1 - var(--bloom-local))))
+             scale(calc(0.42 + 0.58 * var(--bloom-local)));
+  opacity: calc(0.4 + 0.6 * var(--bloom-local));
+}
+.bloom-sig-ring--inner .bloom-sig-petal {
+  /* inner ring opens later: starts at ~0.35 of the clock */
+  --bloom-late: clamp(
+    0,
+    calc((var(--bloom-open, 1) - 0.35 - var(--bloom-pstart) * 0.04) / 0.6),
+    1
+  );
+  transform-origin: 300px 300px;
+  transform: rotate(calc(-10deg * (1 - var(--bloom-late))))
+             scale(calc(0.36 + 0.64 * var(--bloom-late)));
+  opacity: calc(0.3 + 0.7 * var(--bloom-late));
+}
+
+.bloom-sig-petal-line {
+  stroke: var(--bloom-c-petal);
+}
+.bloom-sig-petal-vein {
+  stroke: var(--bloom-wash-blush);
+  opacity: 0.7;
+}
+
+/* the center disc + anthers scale slightly and warm as it opens */
+.bloom-sig-center {
+  transform-box: view-box;
+  transform-origin: 300px 300px;
+  transform: scale(calc(0.7 + 0.3 * var(--bloom-open, 1)));
+}
+.bloom-sig-disc {
+  fill: var(--bloom-gold);
+  opacity: 0.85;
+}
+.bloom-sig-anther {
+  fill: var(--bloom-ink);
+  opacity: calc(0.5 + 0.5 * var(--bloom-open, 1));
+}
+
+/* the copy column */
+.bloom-thebloom__copy {
+  position: relative;
+}
+
+.bloom-thebloom__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  flex-wrap: wrap;
+  font-family: var(--bloom-font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  line-height: 1.1;
+  color: var(--bloom-ink);
+  margin-block: 0.6rem 1.2rem;
+}
+.bloom-thebloom__title :lang(ko) {
+  font-family: var(--bloom-font-body);
+  font-size: 0.86em;
+}
+.bloom-thebloom__title-en {
+  font-style: italic;
+  color: var(--bloom-botanical);
+  font-size: 0.52em;
+}
+
+.bloom-thebloom__lede em {
+  display: block;
+  font-size: 1.18rem;
+  line-height: 1.5;
+  color: var(--bloom-ink);
+  margin-bottom: 0.4rem;
+}
+.bloom-thebloom__lede span {
+  display: block;
+  color: var(--bloom-bark);
+  font-size: 0.94rem;
+  margin-bottom: 1.6rem;
+}
+
+.bloom-thebloom__notes {
+  display: grid;
+  gap: 0.7rem;
+  border-top: 1px solid var(--bloom-hairline);
+  padding-top: 1.2rem;
+}
+.bloom-thebloom__notes div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 0.35rem;
+  border-bottom: 1px solid var(--bloom-hairline);
+}
+.bloom-thebloom__notes dt {
+  font-size: 1rem;
+  color: var(--bloom-ink);
+}
+.bloom-thebloom__notes dd {
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--bloom-bark);
+  text-align: right;
+}
+
+/* the progress hairline at the foot of the pinned view */
+.bloom-thebloom__progress {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  background: var(--bloom-hairline);
+  margin-bottom: clamp(18px, 4vh, 36px);
+}
+.bloom-thebloom__progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--bloom-open, 1) * 100%);
+  background: var(--bloom-botanical);
+  height: 1px;
+}
+.bloom-thebloom__progress-label {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--bloom-bark);
+  letter-spacing: 0.04em;
+}
+.bloom-thebloom__progress-label :lang(ko) {
+  font-style: normal;
+  font-family: var(--bloom-font-body);
+}
+
+/* ==========================================================================
+   Footer — the house at the end
+   ========================================================================== */
+
+.bloom-footer {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 140px) clamp(20px, 5vw, 56px) clamp(48px, 8vh, 80px);
+  text-align: center;
+  border-top: 1px solid var(--bloom-hairline);
+}
+
+.bloom-footer__mark {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+  color: var(--bloom-botanical);
+}
+.bloom-footer__marksvg {
+  width: 40px;
+  height: 40px;
+}
+
+.bloom-footer__call {
+  font-family: var(--bloom-font-display);
+  font-size: clamp(1.7rem, 4.2vw, 2.6rem);
+  letter-spacing: 0.02em;
+  color: var(--bloom-ink);
+  margin-bottom: clamp(1.4rem, 4vh, 2.2rem);
+}
+.bloom-footer__call :lang(ko) {
+  font-family: var(--bloom-font-body);
+  letter-spacing: -0.01em;
+}
+.bloom-footer__call-en {
+  font-style: italic;
+  font-size: 0.5em;
+  color: var(--bloom-bark);
+}
+
+.bloom-footer__where {
+  margin-bottom: 2rem;
+  color: var(--bloom-bark);
+  font-size: 0.95rem;
+}
+.bloom-footer__where-en {
+  display: block;
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+}
+.bloom-footer__coords {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: var(--bloom-sage);
+}
+
+.bloom-footer__contact {
+  display: flex;
+  justify-content: center;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.6rem;
+  font-size: 0.92rem;
+}
+
+.bloom-footer__legal {
+  font-size: 0.85rem;
+  color: var(--bloom-bark);
+}
+.bloom-footer__legal-en {
+  font-family: var(--bloom-font-display);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Composition — small clearings
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .bloom-hero__stage {
+    right: -16%;
+    width: clamp(300px, 70vw, 440px);
+    opacity: 0.5;
+  }
+
+  .bloom-hero__copy {
+    max-width: 30rem;
+  }
+
+  .bloom-notes__row {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  .bloom-thebloom {
+    height: 220vh;
+  }
+
+  .bloom-thebloom__inner {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    align-content: center;
+    padding-block: clamp(24px, 5vh, 48px);
+  }
+
+  .bloom-thebloom__art {
+    max-width: 340px;
+    order: 2;
+  }
+
+  .bloom-thebloom__copy {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .bloom-hero__hint {
+    font-size: 0.72rem;
+  }
+
+  .bloom-footer__contact {
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .bloom-thebloom__notes div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  .bloom-thebloom__notes dd {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the house, already still and fully open.
+   Every line stands fully drawn (the --bloom-draw fallback is 1 and the
+   hooks never run), every watercolor wash rests settled (the displacement
+   markup default is scale=0 and useWashSettle no-ops), and the signature
+   flower stands fully open (the --bloom-open fallback is 1 and
+   useScrollProgress no-ops). The page is a complete, composed plate.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom-js .bloom-hero__sun,
+  .bloom-js .bloom-hero__lines .bloom-draw {
+    animation: none;
+  }
+
+  .bloom-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* under reduced motion, the pinned section collapses to one screen so
+     the flower is simply open and readable, not gated behind scroll */
+  .bloom-thebloom {
+    height: auto;
+  }
+  .bloom-thebloom__pin {
+    position: relative;
+    top: auto;
+    height: auto;
+  }
+}

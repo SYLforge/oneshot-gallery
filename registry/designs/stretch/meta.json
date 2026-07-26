@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "stretch",
+  "no": 4,
+  "title": {
+    "en": "STRETCH — A Studio That Breathes",
+    "ko": "늘어나다 — 숨 쉬는 스튜디오"
+  },
+  "description": {
+    "en": "A calm, airy bilingual studio site where the headlines themselves stretch — elongating vertically on scroll the way a body extends through a pose. Slow kinetic type, breathing-circle backgrounds, a pinned sequence where each asana writes itself. The product of the studio is the motion of the page.",
+    "ko": "제목 그 자체가 늘어나는 — 스크롤을 따라 자세 속 몸처럼 세로로 길어지는, 차분하고 숨결 있는 이중언어 스튜디오 사이트. 느린 키네틱 타이포, 숨결 원형 배경, 동작 하나가 스스로 써지는 고정 시퀀스. 스튜디오가 파는 것이 곧 페이지의 움직임이다."
+  },
+  "aesthetic": "kinetic-typography",
+  "techniques": ["char-split-reveal", "scroll-scrub-pinned", "pointer-parallax"],
+  "industry": ["wellness"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#c97b5a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

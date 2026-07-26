@@ -1,0 +1,712 @@
+/* ==========================================================================
+   BOUNCE — 통통, a story studio for small humans
+   playful-pop · soft pastel · rounded everything · the page is rubber
+   Scoped by convention to .bounce-root; classes prefixed bounce-.
+   ========================================================================== */
+
+.bounce-root {
+  /* -- palette: pastels that carry dark text ---------------------------- */
+  --bounce-butter: #fdf2c9;  /* page — the warm book page; ink 11.6:1 */
+  --bounce-cream: #fff8e6;   /* lightest wash — hero sky, card fills; ink 12.3:1 */
+  --bounce-sky: #bfe3ff;     /* card surface A; ink 9.7:1 */
+  --bounce-peach: #ffd0b0;   /* card surface B; ink 9.2:1 */
+  --bounce-grape: #d9c2ff;   /* card surface C; ink 8.1:1, plum large-only 3.6:1 */
+  --bounce-cloud: #ffffff;   /* cloud fill */
+  --bounce-ink: #3a2a4d;     /* primary text + outlines — 8.1–13.0:1 everywhere */
+  --bounce-ink-soft: #5b4a6e;/* secondary text — 4.95:1 minimum (AA) */
+  --bounce-plum: #7a4fb8;    /* accent text, links, wordmark fill — 4.10–5.77:1 */
+  --bounce-accent: #ff8a5c;  /* CTA surface + spring blush — ink on it 5.6:1, never text */
+
+  /* soft offset shadow stack — a rubber object resting on the page.
+     No blur fog: two layered ink-alpha steps that read as a soft block. */
+  --bounce-shadow-sm: 0 2px 0 rgba(58, 42, 77, 0.08), 0 6px 14px rgba(58, 42, 77, 0.12);
+  --bounce-shadow-md: 0 3px 0 rgba(58, 42, 77, 0.10), 0 10px 22px rgba(58, 42, 77, 0.14);
+  --bounce-shadow-lg: 0 4px 0 rgba(58, 42, 77, 0.12), 0 16px 32px rgba(58, 42, 77, 0.16);
+
+  /* -- type: two round voices -------------------------------------------- */
+  --bounce-font-display: var(--font-fredoka), var(--font-gaegu), "Fredoka", sans-serif;
+  --bounce-font-ko: var(--font-gaegu), "Gaegu", "Apple SD Gothic Neo", sans-serif;
+  --bounce-font-body: var(--font-fredoka), var(--font-gaegu), "Fredoka", sans-serif;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bounce-butter);
+  color: var(--bounce-ink);
+  font-family: var(--bounce-font-body);
+  font-size: clamp(15px, 0.5vw + 13px, 18px);
+  line-height: 1.65;
+  font-weight: 500;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.bounce-root,
+.bounce-root *,
+.bounce-root *::before,
+.bounce-root *::after {
+  box-sizing: border-box;
+}
+
+.bounce-root h1,
+.bounce-root h2,
+.bounce-root h3,
+.bounce-root p,
+.bounce-root ul,
+.bounce-root dl,
+.bounce-root dd {
+  margin: 0;
+}
+
+.bounce-root ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Korean is first-class: Gaegu, its own rhythm, words kept whole */
+.bounce-root :lang(ko) {
+  font-family: var(--bounce-font-ko);
+  word-break: keep-all;
+  line-height: 1.7;
+  font-weight: 700;
+}
+
+/* Plum-on-butter selection, scoped to the entry root */
+.bounce-root ::selection {
+  background: var(--bounce-plum);
+  color: var(--bounce-cream);
+}
+
+/* Keyboard focus: a plum ring with a soft halo — the same plum that
+   outlines pressable things at rest. */
+.bounce-root :focus-visible {
+  outline: 3px solid var(--bounce-plum);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.bounce-foot :focus-visible {
+  outline-color: var(--bounce-cream);
+}
+
+/* Visually hidden, still spoken */
+.bounce-vh {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Floating shapes — pointer parallax + idle bob
+   The field is decorative: aria-hidden, pointer-events none. Each layer
+   multiplies --bounce-px/py (−1…1, set by usePointerParallax) by a depth
+   factor so nearer shapes drift more. Idle bob is mutually-prime per
+   shape so the field is never still when a pointer is absent.
+   ========================================================================== */
+
+.bounce-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bounce-field__layer {
+  position: absolute;
+  inset: -8%;
+}
+
+.bounce-field__layer--far {
+  transform: translate3d(
+    calc(var(--bounce-px, 0) * 8px),
+    calc(var(--bounce-py, 0) * 5px),
+    0
+  );
+  opacity: 0.5;
+}
+.bounce-field__layer--mid {
+  transform: translate3d(
+    calc(var(--bounce-px, 0) * 18px),
+    calc(var(--bounce-py, 0) * 12px),
+    0
+  );
+  opacity: 0.75;
+}
+.bounce-field__layer--near {
+  transform: translate3d(
+    calc(var(--bounce-px, 0) * 30px),
+    calc(var(--bounce-py, 0) * 20px),
+    0
+  );
+  opacity: 0.9;
+}
+
+.bounce-shape {
+  position: absolute;
+  display: block;
+  will-change: transform;
+  /* idle bob — small, mutually-prime periods */
+  animation: bounce-bob 6.4s ease-in-out infinite alternate;
+}
+.bounce-shape--cloud1 { top: 8%;  left: 4%;  animation-duration: 9.1s; }
+.bounce-shape--cloud2 { top: 14%; right: 8%; animation-duration: 7.7s; }
+.bounce-shape--star1 { top: 22%; left: 18%; animation-duration: 5.3s; }
+.bounce-shape--blob1 { top: 6%;  right: 14%; animation-duration: 8.2s; }
+.bounce-shape--blob2 { top: 30%; left: 6%;  animation-duration: 7.1s; }
+.bounce-shape--star2 { top: 40%; right: 6%; animation-duration: 6.8s; }
+.bounce-shape--blob3 { bottom: 18%; left: 12%; animation-duration: 9.8s; }
+.bounce-shape--star3 { top: 52%; right: 16%; animation-duration: 5.9s; }
+.bounce-shape--blob4 { bottom: 10%; right: 10%; animation-duration: 7.4s; }
+.bounce-shape--dot1 { top: 60%; left: 22%; animation-duration: 4.6s; }
+.bounce-shape--dot2 { bottom: 30%; left: 40%; animation-duration: 5.5s; }
+
+@keyframes bounce-bob {
+  from { translate: 0 -6px; }
+  to   { translate: 0 6px; }
+}
+
+/* ==========================================================================
+   Stage — sits above the floating field
+   ========================================================================== */
+
+.bounce-stage {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Spring buttons — squash on press, overshoot on release.
+   .bounce-btn--spring gets the JS spring via useSpringPress (writes inline
+   transform). A CSS :active fallback covers keyboard activation and the
+   reduced-motion path: a small static press-down, no oscillation.
+   ========================================================================== */
+
+.bounce-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.85em 1.6em;
+  border-radius: 999px;
+  border: 3px solid var(--bounce-ink);
+  background: var(--bounce-accent);
+  color: var(--bounce-ink);
+  font-family: var(--bounce-font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: var(--bounce-shadow-md);
+  cursor: pointer;
+  transform-origin: center;
+  will-change: transform;
+  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bounce-btn:hover {
+  background: #ff9a6c;
+}
+
+/* CSS fallback squash for keyboard :active and reduced motion (when JS
+   spring is disabled). useSpringPress overrides this transform inline for
+   pointer presses when motion is allowed. */
+.bounce-btn--spring:active {
+  transform: scale(1.08, 0.86);
+}
+
+.bounce-btn--ghost {
+  background: var(--bounce-cream);
+  color: var(--bounce-ink);
+}
+
+.bounce-btn--ghost:hover {
+  background: var(--bounce-butter);
+}
+
+.bounce-btn--onplum {
+  background: var(--bounce-cream);
+  border-color: var(--bounce-cream);
+  color: var(--bounce-plum);
+}
+.bounce-btn--onplum:hover {
+  background: #ffffff;
+}
+
+.bounce-btn__sep {
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   Section heads
+   ========================================================================== */
+
+.bounce-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin-bottom: clamp(1rem, 3vh, 1.8rem);
+}
+
+.bounce-sec__no {
+  flex: none;
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--bounce-plum);
+  background: var(--bounce-cream);
+  border: 2px solid var(--bounce-plum);
+  border-radius: 999px;
+  padding: 0.2em 0.8em;
+  letter-spacing: 0.02em;
+}
+
+.bounce-sec__title {
+  font-family: var(--bounce-font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4.4vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--bounce-ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.bounce-sec__title-en {
+  font-family: var(--bounce-font-display);
+  font-weight: 500;
+  font-size: 0.5em;
+  color: var(--bounce-ink-soft);
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   01 · Hero — the bouncing wordmark
+   ========================================================================== */
+
+.bounce-hero {
+  position: relative;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(28px, 7vw, 80px) clamp(18px, 5vw, 56px) clamp(40px, 8vh, 90px);
+  min-height: 90vh;
+  min-height: 90svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bounce-hero__kicker {
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  color: var(--bounce-plum);
+  letter-spacing: 0.04em;
+  margin-bottom: clamp(0.8rem, 2vh, 1.4rem);
+}
+
+.bounce-hero__kicker-sep {
+  color: var(--bounce-ink-soft);
+  opacity: 0.6;
+}
+
+.bounce-wordmark {
+  font-family: var(--bounce-font-display);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  margin-bottom: clamp(1.2rem, 3vh, 2rem);
+}
+
+.bounce-word {
+  display: block;
+}
+
+.bounce-word--ko {
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: clamp(3.4rem, 16vw, 9rem);
+  color: var(--bounce-plum);
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+
+.bounce-word--en {
+  font-family: var(--bounce-font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 15vw, 8.5rem);
+  color: var(--bounce-ink);
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  margin-top: 0.1em;
+}
+
+/* per-glyph spans created by useBounceReveal's splitText: they are inline-
+   block so transform applies per glyph. At rest (no JS / reduced motion)
+   they simply render in place. Pre-reveal (JS alive, not yet triggered),
+   hide them so they don't flash at rest before the bounce; the hook adds
+   .bounce-glyph--in the instant a glyph's cue arrives, flipping it visible
+   at its start position and springing it up. */
+.bounce-glyph {
+  display: inline-block;
+  will-change: transform;
+}
+
+.bounce-js [data-bounce-text] .bounce-glyph {
+  opacity: 0;
+}
+
+.bounce-js [data-bounce-text] .bounce-glyph--in {
+  opacity: 1;
+}
+
+/* hero lede */
+.bounce-hero__lede {
+  max-width: 40rem;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  color: var(--bounce-ink);
+  margin-bottom: clamp(1.4rem, 4vh, 2.4rem);
+}
+.bounce-hero__lede > span {
+  display: block;
+}
+.bounce-hero__lede :lang(ko) {
+  margin-bottom: 0.5rem;
+}
+.bounce-hero__lede-en {
+  color: var(--bounce-ink-soft);
+  font-size: 0.92em;
+}
+
+.bounce-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-bottom: clamp(1.2rem, 3vh, 2rem);
+}
+
+.bounce-hero__hint {
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--bounce-plum);
+  display: flex;
+  gap: 0.5em;
+  align-items: baseline;
+}
+.bounce-js .bounce-hero__hint {
+  animation: bounce-bob 3.6s ease-in-out infinite alternate;
+}
+.bounce-hero__hint-en {
+  font-family: var(--bounce-font-display);
+  font-weight: 500;
+  color: var(--bounce-ink-soft);
+}
+
+/* ==========================================================================
+   02 · The shelf — bounce-in book cards
+   ========================================================================== */
+
+.bounce-shelf {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(40px, 7vh, 80px) clamp(18px, 5vw, 56px);
+}
+
+.bounce-shelf__lede {
+  max-width: 40rem;
+  font-size: 1.05rem;
+  color: var(--bounce-ink);
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
+}
+.bounce-shelf__lede > span {
+  display: block;
+}
+.bounce-shelf__lede :lang(ko) {
+  margin-bottom: 0.3rem;
+}
+.bounce-shelf__lede-en {
+  color: var(--bounce-ink-soft);
+  font-size: 0.92em;
+}
+
+.bounce-shelf__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.8rem);
+}
+
+/* pre-reveal: cards wait just below + slightly small; gated behind JS so
+   no-JS sees them at rest. */
+.bounce-js .bounce-book {
+  opacity: 0;
+}
+.bounce-js .bounce-book.is-in {
+  opacity: 1;
+}
+
+.bounce-book {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: clamp(1.2rem, 2.5vw, 1.8rem);
+  border-radius: 28px;
+  border: 3px solid var(--bounce-ink);
+  background: var(--bounce-sky);
+  box-shadow: var(--bounce-shadow-md);
+  cursor: pointer;
+  transform-origin: center;
+  will-change: transform;
+  transition: background 160ms ease;
+}
+
+.bounce-book:hover {
+  background: #d2ecff;
+}
+
+.bounce-book:focus-visible {
+  /* keep the plum ring visible above the shadow */
+  outline-offset: 4px;
+}
+
+.bounce-book--peach { background: var(--bounce-peach); }
+.bounce-book--peach:hover { background: #ffdcc4; }
+.bounce-book--grape { background: var(--bounce-grape); }
+.bounce-book--grape:hover { background: #e2cfff; }
+.bounce-book--butter { background: var(--bounce-butter); }
+.bounce-book--butter:hover { background: #fef6d9; }
+
+/* keyboard/reduced-motion press fallback (JS overrides on pointer) */
+.bounce-js .bounce-book:active {
+  transform: scale(1.06, 0.9);
+}
+
+.bounce-book__art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(80px, 14vw, 110px);
+  margin-bottom: 0.2rem;
+}
+
+.bounce-book__age {
+  align-self: flex-start;
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--bounce-ink);
+  background: var(--bounce-cream);
+  border: 2px solid var(--bounce-ink);
+  border-radius: 999px;
+  padding: 0.15em 0.7em;
+}
+
+.bounce-book__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  line-height: 1.05;
+}
+.bounce-book__ko {
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  color: var(--bounce-ink);
+}
+.bounce-book__en {
+  font-family: var(--bounce-font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--bounce-ink-soft);
+  letter-spacing: 0.01em;
+}
+
+.bounce-book__blurb {
+  font-size: 0.95rem;
+  color: var(--bounce-ink);
+}
+.bounce-book__blurb > span {
+  display: block;
+}
+.bounce-book__blurb :lang(ko) {
+  margin-bottom: 0.25rem;
+}
+.bounce-book__blurb-en {
+  color: var(--bounce-ink-soft);
+  font-size: 0.92em;
+}
+
+/* ==========================================================================
+   Footer — the plum night-side
+   ========================================================================== */
+
+.bounce-foot {
+  position: relative;
+  margin-top: clamp(40px, 8vh, 90px);
+  background: var(--bounce-plum);
+  color: var(--bounce-cream);
+  border-top: 3px solid var(--bounce-ink);
+  padding: clamp(48px, 9vh, 96px) clamp(18px, 5vw, 56px) clamp(32px, 6vh, 56px);
+  overflow: hidden;
+}
+
+.bounce-foot ::selection {
+  background: var(--bounce-accent);
+  color: var(--bounce-ink);
+}
+
+.bounce-foot__bye {
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 12vw, 7rem);
+  line-height: 0.95;
+  color: var(--bounce-cream);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+.bounce-foot__bye .bounce-glyph {
+  /* keep glyphs visible inside the plum block at rest */
+  color: var(--bounce-cream);
+}
+
+.bounce-foot__bye-en {
+  text-align: center;
+  font-family: var(--bounce-font-display);
+  font-weight: 500;
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  color: rgba(255, 248, 230, 0.8);
+  letter-spacing: 0.08em;
+  margin-top: 0.6rem;
+  margin-bottom: clamp(2rem, 5vh, 3.2rem);
+}
+
+.bounce-foot__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.bounce-foot__cell {
+  border-top: 2px solid rgba(255, 248, 230, 0.3);
+  padding-top: 0.9em;
+}
+
+.bounce-foot__k {
+  font-family: var(--bounce-font-ko);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--bounce-butter);
+  margin-bottom: 0.4em;
+  display: flex;
+  gap: 0.5em;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.bounce-foot__k-en {
+  font-family: var(--bounce-font-display);
+  font-weight: 500;
+  color: rgba(255, 248, 230, 0.7);
+  font-size: 0.85em;
+}
+
+.bounce-foot__v {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.bounce-foot__v > span {
+  display: block;
+}
+.bounce-foot__v :lang(ko) {
+  margin-bottom: 0.2rem;
+}
+.bounce-foot__v-en {
+  font-family: var(--bounce-font-display);
+  font-weight: 400;
+  color: rgba(255, 248, 230, 0.78);
+}
+
+.bounce-foot__legal {
+  max-width: 1000px;
+  margin: clamp(2rem, 5vh, 3.2rem) auto 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 248, 230, 0.7);
+}
+
+/* ==========================================================================
+   Responsive composition
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .bounce-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .bounce-btn {
+    width: 100%;
+  }
+  .bounce-shelf__grid {
+    grid-template-columns: 1fr;
+  }
+  .bounce-book__art {
+    height: 90px;
+  }
+}
+
+@media (max-width: 420px) {
+  .bounce-sec__title {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+  .bounce-word--ko {
+    font-size: clamp(2.8rem, 18vw, 5rem);
+  }
+  .bounce-word--en {
+    font-size: clamp(2.5rem, 16vw, 4.5rem);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the page sits still.
+   Glyphs render at rest, cards rest in place, shapes stop drifting and
+   bobbing, buttons keep a tiny static press-down only. Everything is fully
+   readable; nothing is hidden.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .bounce-root .bounce-shape,
+  .bounce-js .bounce-hero__hint {
+    animation: none;
+  }
+
+  .bounce-field__layer--far,
+  .bounce-field__layer--mid,
+  .bounce-field__layer--near {
+    transform: none;
+  }
+
+  /* glyphs visible at rest, cards visible at rest */
+  .bounce-js [data-bounce-text] .bounce-glyph {
+    opacity: 1;
+    transform: none;
+  }
+  .bounce-js .bounce-book {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* keep only a small static press-down; no oscillation */
+  .bounce-btn,
+  .bounce-btn--spring,
+  .bounce-book {
+    transition: transform 60ms linear;
+  }
+}

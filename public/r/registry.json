@@ -4,6 +4,106 @@
   "homepage": "https://oneshot.gallery",
   "items": [
     {
+      "name": "bloom",
+      "type": "registry:block",
+      "title": "BLOOM — A Perfume That Opens",
+      "description": "A botanical perfume house where the signature scent draws itself in — ink-line leaves and peonies grow stroke-by-stroke as you scroll, watercolor washes bloom outward through feTurbulence displacement, and one pinned flower opens petal-by-petal with your scroll progress.",
+      "dependencies": [],
+      "categories": [
+        "ink-bloom",
+        "svg-line-draw",
+        "feturbulence-texture",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/bloom/components/BloomFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bloom/components/BloomFooter.tsx"
+        },
+        {
+          "path": "registry/designs/bloom/components/botanical.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/bloom/components/botanical.ts"
+        },
+        {
+          "path": "registry/designs/bloom/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bloom/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/bloom/components/ScentNotes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bloom/components/ScentNotes.tsx"
+        },
+        {
+          "path": "registry/designs/bloom/components/TheBloom.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bloom/components/TheBloom.tsx"
+        },
+        {
+          "path": "registry/designs/bloom/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/bloom/fonts.ts"
+        },
+        {
+          "path": "registry/designs/bloom/hooks/useLineDraw.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bloom/hooks/useLineDraw.ts"
+        },
+        {
+          "path": "registry/designs/bloom/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bloom/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/bloom/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bloom/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/bloom/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bloom/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/bloom/hooks/useWashSettle.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bloom/hooks/useWashSettle.ts"
+        },
+        {
+          "path": "registry/designs/bloom/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/bloom/page.tsx"
+        },
+        {
+          "path": "registry/designs/bloom/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/bloom/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/bloom/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/bloom/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"BLOOM — A Perfume That Opens\" installs into app/oneshot/bloom/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 28,
+        "accent": "#3d6b3a",
+        "theme": "light",
+        "prompt": {
+          "model": "zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM 5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "blunt",
       "type": "registry:block",
       "title": "BLUNT — Riso Print Works",
@@ -83,6 +183,96 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "bounce",
+      "type": "registry:block",
+      "title": "BOUNCE — Kids' World",
+      "description": "A children's-book brand site where every element is made of rubber — buttons squash-and-stretch on press, headlines bounce in letter by letter, and soft pastel shapes drift toward your pointer. Reactive springs, not draggable stickers.",
+      "dependencies": [],
+      "categories": [
+        "playful-pop",
+        "spring-press",
+        "char-split-reveal",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/bounce/components/FloatingShapes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bounce/components/FloatingShapes.tsx"
+        },
+        {
+          "path": "registry/designs/bounce/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bounce/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/bounce/components/KidsFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bounce/components/KidsFooter.tsx"
+        },
+        {
+          "path": "registry/designs/bounce/components/SpringCards.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/bounce/components/SpringCards.tsx"
+        },
+        {
+          "path": "registry/designs/bounce/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/bounce/fonts.ts"
+        },
+        {
+          "path": "registry/designs/bounce/hooks/useBounceReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bounce/hooks/useBounceReveal.ts"
+        },
+        {
+          "path": "registry/designs/bounce/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bounce/hooks/usePointerParallax.ts"
+        },
+        {
+          "path": "registry/designs/bounce/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bounce/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/bounce/hooks/useSpring.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bounce/hooks/useSpring.ts"
+        },
+        {
+          "path": "registry/designs/bounce/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/bounce/page.tsx"
+        },
+        {
+          "path": "registry/designs/bounce/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/bounce/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/bounce/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/bounce/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"BOUNCE — Kids' World\" installs into app/oneshot/bounce/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 27,
+        "accent": "#ff8a5c",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
           "oneshot": false,
           "followUps": 0
         },
@@ -1086,6 +1276,116 @@
       }
     },
     {
+      "name": "night-snack",
+      "type": "registry:block",
+      "title": "NIGHT-SNACK — 1 AM Street-Food Tent",
+      "description": "A late-night pojangmacha street-food tent told as a crowded, steamy webtoon chapter — the third webtoon twin. Where PPANG! is a cozy dawn bakery and MOONLIT is a lonely delivery ride, NIGHT-SNACK is the loud, neon-lit, soju-clinking chaos of the tent at 1 AM: skewers on the grill, steam off the odeng, halftone-dot SFX, ASCII neon signs that flicker, and glasses you can drag and clink. Pure code — no generated imagery, just CSS/SVG webtoon shapes.",
+      "dependencies": [],
+      "categories": [
+        "webtoon",
+        "sprite-scrub",
+        "drag-physics",
+        "ascii-render"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/night-snack/components/ClinkDrag.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/night-snack/components/ClinkDrag.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/night-snack/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/components/MenuBoard.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/night-snack/components/MenuBoard.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/components/NeonSigns.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/night-snack/components/NeonSigns.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/components/NightFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/night-snack/components/NightFooter.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/components/SteamScrub.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/night-snack/components/SteamScrub.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/night-snack/fonts.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/hooks/useClinkPhysics.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/night-snack/hooks/useClinkPhysics.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/hooks/useInView.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/night-snack/hooks/useInView.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/hooks/useNeonFlicker.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/night-snack/hooks/useNeonFlicker.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/night-snack/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/night-snack/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/hooks/useSpriteScrub.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/night-snack/hooks/useSpriteScrub.ts"
+        },
+        {
+          "path": "registry/designs/night-snack/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/night-snack/page.tsx"
+        },
+        {
+          "path": "registry/designs/night-snack/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/night-snack/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/night-snack/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/night-snack/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"NIGHT-SNACK — 1 AM Street-Food Tent\" installs into app/oneshot/night-snack/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 22,
+        "accent": "#ffb347",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "ondo",
       "type": "registry:block",
       "title": "ONDO — Perfume Atelier, Seoul",
@@ -1466,6 +1766,196 @@
       }
     },
     {
+      "name": "rave",
+      "type": "registry:block",
+      "title": "RAVE — After-Dark Festival",
+      "description": "An underground electronic-music festival site for a one-night rave in an abandoned Itaewon printworks — strobing electric-blue wordmark, three line-up tickers at different speeds, a ticket ledger that counts down to doors, and a brutalist flyer-collage layout on pure black.",
+      "dependencies": [],
+      "categories": [
+        "neo-brutalist",
+        "marquee",
+        "clip-path-reveal",
+        "crt-scanline"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/rave/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/rave/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/rave/components/LineupMarquee.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/rave/components/LineupMarquee.tsx"
+        },
+        {
+          "path": "registry/designs/rave/components/RaveFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/rave/components/RaveFooter.tsx"
+        },
+        {
+          "path": "registry/designs/rave/components/TicketBlock.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/rave/components/TicketBlock.tsx"
+        },
+        {
+          "path": "registry/designs/rave/components/VenueMap.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/rave/components/VenueMap.tsx"
+        },
+        {
+          "path": "registry/designs/rave/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/rave/fonts.ts"
+        },
+        {
+          "path": "registry/designs/rave/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/rave/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/rave/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/rave/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/rave/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/rave/page.tsx"
+        },
+        {
+          "path": "registry/designs/rave/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/rave/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/rave/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/rave/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"RAVE — After-Dark Festival\" installs into app/oneshot/rave/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 24,
+        "accent": "#0066ff",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "sakura",
+      "type": "registry:block",
+      "title": "SAKURA — Ink & Bloom",
+      "description": "A generative ink garden where black drops fall from a deep night sky, strike an invisible waterline, and bloom into cherry petals that drift on a curl-noise wind. Four verses of mono no aware — the gentle sorrow of transient beauty — scrub by as petals accumulate and clear with the scroll. The gallery's direct answer to oneshot-sakura: ink that blooms, written entirely in code.",
+      "dependencies": [],
+      "categories": [
+        "ink-bloom",
+        "canvas-particles",
+        "pointer-parallax",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/sakura/components/BloomCanvas.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sakura/components/BloomCanvas.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sakura/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/components/Loader.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sakura/components/Loader.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/components/PetalField.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sakura/components/PetalField.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/components/SakuraFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sakura/components/SakuraFooter.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/components/VerseScrub.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sakura/components/VerseScrub.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/sakura/fonts.ts"
+        },
+        {
+          "path": "registry/designs/sakura/hooks/useBloomCanvas.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sakura/hooks/useBloomCanvas.ts"
+        },
+        {
+          "path": "registry/designs/sakura/hooks/usePointerInk.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sakura/hooks/usePointerInk.ts"
+        },
+        {
+          "path": "registry/designs/sakura/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sakura/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/sakura/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sakura/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/sakura/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sakura/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/sakura/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/sakura/page.tsx"
+        },
+        {
+          "path": "registry/designs/sakura/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/sakura/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/sakura/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/sakura/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"SAKURA — Ink & Bloom\" installs into app/oneshot/sakura/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 21,
+        "accent": "#e8869e",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2-coding-plan",
+          "modelLabel": "GLM 5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "shan-shui",
       "type": "registry:block",
       "title": "SHAN-SHUI — Mountain & Water",
@@ -1576,6 +2066,186 @@
       }
     },
     {
+      "name": "sticker",
+      "type": "registry:block",
+      "title": "STICKER — Studio of Bouncy Things",
+      "description": "A playful design studio whose entire website is built from draggable, springy stickers — grab any sticker on the page, fling it, and watch it settle back with a bouncy spring or pile up against its neighbors. Bright tangerine ground, chunky outlines, and a service marquee that scrolls like a fridge full of magnets.",
+      "dependencies": [],
+      "categories": [
+        "playful-pop",
+        "drag-physics",
+        "pointer-parallax",
+        "marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/sticker/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sticker/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/sticker/components/ServiceMarquee.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sticker/components/ServiceMarquee.tsx"
+        },
+        {
+          "path": "registry/designs/sticker/components/StickerBoard.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sticker/components/StickerBoard.tsx"
+        },
+        {
+          "path": "registry/designs/sticker/components/StudioFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sticker/components/StudioFooter.tsx"
+        },
+        {
+          "path": "registry/designs/sticker/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/sticker/fonts.ts"
+        },
+        {
+          "path": "registry/designs/sticker/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sticker/hooks/usePointerParallax.ts"
+        },
+        {
+          "path": "registry/designs/sticker/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sticker/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/sticker/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sticker/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/sticker/hooks/useStickerPhysics.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/sticker/hooks/useStickerPhysics.ts"
+        },
+        {
+          "path": "registry/designs/sticker/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/sticker/page.tsx"
+        },
+        {
+          "path": "registry/designs/sticker/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/sticker/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/sticker/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/sticker/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"STICKER — Studio of Bouncy Things\" installs into app/oneshot/sticker/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 23,
+        "accent": "#ff7a45",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "stretch",
+      "type": "registry:block",
+      "title": "STRETCH — A Studio That Breathes",
+      "description": "A calm, airy bilingual studio site where the headlines themselves stretch — elongating vertically on scroll the way a body extends through a pose. Slow kinetic type, breathing-circle backgrounds, a pinned sequence where each asana writes itself. The product of the studio is the motion of the page.",
+      "dependencies": [],
+      "categories": [
+        "kinetic-typography",
+        "char-split-reveal",
+        "scroll-scrub-pinned",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/stretch/components/BreathCircle.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/stretch/components/BreathCircle.tsx"
+        },
+        {
+          "path": "registry/designs/stretch/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/stretch/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/stretch/components/PoseSequence.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/stretch/components/PoseSequence.tsx"
+        },
+        {
+          "path": "registry/designs/stretch/components/StudioFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/stretch/components/StudioFooter.tsx"
+        },
+        {
+          "path": "registry/designs/stretch/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/stretch/fonts.ts"
+        },
+        {
+          "path": "registry/designs/stretch/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/stretch/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/stretch/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/stretch/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/stretch/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/stretch/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/stretch/hooks/useStretchScroll.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/stretch/hooks/useStretchScroll.ts"
+        },
+        {
+          "path": "registry/designs/stretch/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/stretch/page.tsx"
+        },
+        {
+          "path": "registry/designs/stretch/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/stretch/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/stretch/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/stretch/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"STRETCH — A Studio That Breathes\" installs into app/oneshot/stretch/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 4,
+        "accent": "#c97b5a",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "sup",
       "type": "registry:block",
       "title": "SUP — Forest Bathing Retreats",
@@ -1669,6 +2339,106 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "typewave",
+      "type": "registry:block",
+      "title": "TYPEWAVE — Type That Plays Like a Track",
+      "description": "A fictional electronic artist's landing where typography is the instrument: a wordmark that stretches and splits on scroll velocity, a pinned section that scrubs the letterforms across their full width/weight range like an audio timeline, and lyric ticker bands scrolling at crossed speeds. Pure black ground, one acid-green accent, Korean-first copy — the whole page reads like a visualizer for a track you cannot hear.",
+      "dependencies": [],
+      "categories": [
+        "kinetic-typography",
+        "char-split-reveal",
+        "scroll-scrub-pinned",
+        "marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/typewave/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/typewave/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/components/KineticFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/typewave/components/KineticFooter.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/components/MarqueeBands.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/typewave/components/MarqueeBands.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/components/ScrubWordmark.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/typewave/components/ScrubWordmark.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/components/SplitText.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/typewave/components/SplitText.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/components/TrackList.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/typewave/components/TrackList.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/typewave/fonts.ts"
+        },
+        {
+          "path": "registry/designs/typewave/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/typewave/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/typewave/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/typewave/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/typewave/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/typewave/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/typewave/hooks/useScrollVelocity.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/typewave/hooks/useScrollVelocity.ts"
+        },
+        {
+          "path": "registry/designs/typewave/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/typewave/page.tsx"
+        },
+        {
+          "path": "registry/designs/typewave/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/typewave/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/typewave/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/typewave/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"TYPEWAVE — Type That Plays Like a Track\" installs into app/oneshot/typewave/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 26,
+        "accent": "#c6ff3a",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
           "oneshot": false,
           "followUps": 0
         },

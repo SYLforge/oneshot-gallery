@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "sakura",
+  "no": 21,
+  "title": {
+    "en": "SAKURA — Ink & Bloom",
+    "ko": "벚꽃 — 잉크와 개화"
+  },
+  "description": {
+    "en": "A generative ink garden where black drops fall from a deep night sky, strike an invisible waterline, and bloom into cherry petals that drift on a curl-noise wind. Four verses of mono no aware — the gentle sorrow of transient beauty — scrub by as petals accumulate and clear with the scroll. The gallery's direct answer to oneshot-sakura: ink that blooms, written entirely in code.",
+    "ko": "깊은 밤하늘에서 떨어지는 검은 먹방울이 보이지 않는 수면에 닿아, 컬 노이즈 바람에 흩날리는 벚꽃잎으로 피어나는 생성적 잉크 정원. 덧없는 아름다움에 대한 네 편의 시 — 것의 아와레 — 가 스크롤을 따라 꽃잎이 쌓이고 지우지며 흘러간다. oneshot-sakura에 대한 이 갤러리의 직접적인 답: 온전히 코드로 쓴, 피어나는 잉크."
+  },
+  "aesthetic": "ink-bloom",
+  "techniques": ["canvas-particles", "pointer-parallax", "scroll-scrub-pinned"],
+  "industry": ["culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2-coding-plan",
+    "modelLabel": "GLM 5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#e8869e",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": true
+}

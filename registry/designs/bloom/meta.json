@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "bloom",
+  "no": 28,
+  "title": {
+    "en": "BLOOM — A Perfume That Opens",
+    "ko": "피다 — 피어나는 향"
+  },
+  "description": {
+    "en": "A botanical perfume house where the signature scent draws itself in — ink-line leaves and peonies grow stroke-by-stroke as you scroll, watercolor washes bloom outward through feTurbulence displacement, and one pinned flower opens petal-by-petal with your scroll progress.",
+    "ko": "잉크 선으로 그려지는 식물 향수 하우스 — 스크롤할수록 줄기가 자라고 잎과 작약이 한 획씩 그려지며, 수채 물감이 feTurbulence 변위로 바깥으로 번지고, 고정된 한 송이 꽃이 스크롤 진행도에 따라 꽃잎을 하나씩 연다."
+  },
+  "aesthetic": "ink-bloom",
+  "techniques": ["svg-line-draw", "feturbulence-texture", "scroll-scrub-pinned"],
+  "industry": ["fashion-beauty"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM 5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#3d6b3a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

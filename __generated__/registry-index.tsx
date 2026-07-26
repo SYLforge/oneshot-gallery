@@ -2,10 +2,12 @@
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
-export const demoSlugs = ["blunt","chado","giwa","gradient-plaza","halflight","hanji-slate","hanok","kemuri","lumen-nord","minhwa","moonlit","ondo","pale-signal","ppang","raster","shan-shui","sup","yeobaek"] as const;
+export const demoSlugs = ["bloom","blunt","bounce","chado","giwa","gradient-plaza","halflight","hanji-slate","hanok","kemuri","lumen-nord","minhwa","moonlit","night-snack","ondo","pale-signal","ppang","raster","rave","sakura","shan-shui","sticker","stretch","sup","typewave","yeobaek"] as const;
 
 export const demoIndex: Record<string, ComponentType> = {
+  "bloom": dynamic(() => import("@/registry/designs/bloom/page")),
   "blunt": dynamic(() => import("@/registry/designs/blunt/page")),
+  "bounce": dynamic(() => import("@/registry/designs/bounce/page")),
   "chado": dynamic(() => import("@/registry/designs/chado/page")),
   "giwa": dynamic(() => import("@/registry/designs/giwa/page")),
   "gradient-plaza": dynamic(() => import("@/registry/designs/gradient-plaza/page")),
@@ -16,11 +18,17 @@ export const demoIndex: Record<string, ComponentType> = {
   "lumen-nord": dynamic(() => import("@/registry/designs/lumen-nord/page")),
   "minhwa": dynamic(() => import("@/registry/designs/minhwa/page")),
   "moonlit": dynamic(() => import("@/registry/designs/moonlit/page")),
+  "night-snack": dynamic(() => import("@/registry/designs/night-snack/page")),
   "ondo": dynamic(() => import("@/registry/designs/ondo/page")),
   "pale-signal": dynamic(() => import("@/registry/designs/pale-signal/page")),
   "ppang": dynamic(() => import("@/registry/designs/ppang/page")),
   "raster": dynamic(() => import("@/registry/designs/raster/page")),
+  "rave": dynamic(() => import("@/registry/designs/rave/page")),
+  "sakura": dynamic(() => import("@/registry/designs/sakura/page")),
   "shan-shui": dynamic(() => import("@/registry/designs/shan-shui/page")),
+  "sticker": dynamic(() => import("@/registry/designs/sticker/page")),
+  "stretch": dynamic(() => import("@/registry/designs/stretch/page")),
   "sup": dynamic(() => import("@/registry/designs/sup/page")),
+  "typewave": dynamic(() => import("@/registry/designs/typewave/page")),
   "yeobaek": dynamic(() => import("@/registry/designs/yeobaek/page")),
 };

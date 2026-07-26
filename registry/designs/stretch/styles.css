@@ -1,0 +1,988 @@
+/* ==========================================================================
+   늘어남 STRETCH — A Studio That Breathes · No. 01
+   kinetic-typography · light/calm/breathful · type that reaches on scroll
+   Scoped by convention to .stretch-root; classes prefixed stretch-.
+   Distinct from TYPEWAVE: where the 1st entry of this family is dark /
+   energetic / waveform-driven, STRETCH is warm off-white, slow, and
+   stretches type *vertically* — the lengthening the studio teaches.
+   ========================================================================== */
+
+.stretch-root {
+  /* -- palette ------------------------------------------------------------ */
+  --st-paper: #f7f3ec;             /* the warm off-white page — calm lives here */
+  --st-paper-warm: #fbf8f2;        /* breath-circle fills, plate panels */
+  --st-ink: #2f2a24;               /* text ink — 12.85:1 on paper (AAA) */
+  --st-ink-soft: rgba(47, 42, 36, 0.7); /* ≈ #6b6660 — 5.14:1, secondary text */
+  --st-clay: #c97b5a;              /* display/large only — 2.94:1; the wordmark fill, rings */
+  --st-clay-deep: #a85e3f;         /* readable clay — 4.38:1; kickers, ordinals, links, focus */
+  --st-sage: #8a9a7b;              /* rules ONLY — 2.72:1; never text */
+  --st-sage-deep: #5f6f50;         /* readable sage — 4.90:1; the breath cue */
+  --st-rule: rgba(138, 154, 123, 0.5);        /* derived: standard sage hairline */
+  --st-rule-faint: rgba(138, 154, 123, 0.28); /* derived: faint dividers */
+  --st-shadow: rgba(47, 42, 36, 0.10);        /* derived: soft panel shadow */
+
+  /* -- type ---------------------------------------------------------------- */
+  --st-font-latin: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --st-font-kr: var(--font-noto-kr), "Noto Serif KR", serif;
+  /* Cormorant first: Latin resolves there, Hangul falls through into Noto Serif KR */
+  --st-font-stack: var(--font-cormorant), var(--font-noto-kr), Georgia, serif;
+
+  /* -- motion -------------------------------------------------------------- */
+  --st-ease-breathe: cubic-bezier(0.45, 0, 0.2, 1);  /* slow inhale, longer exhale */
+  --st-ease-stretch: cubic-bezier(0.22, 1, 0.36, 1); /* long reach past midpoint */
+  --st-ease-recoil: cubic-bezier(0.34, 1.24, 0.4, 1);/* ~12% overshoot: wordmark settle only */
+  --st-reveal-ms: 760ms;
+
+  /* Scrub defaults: 1 = every pose at full reach, every name written.
+     JS lowers these per-section; reduced-motion and no-JS never touch them. */
+  --st-scrub: 1;
+  --st-progress: 1;
+
+  /* Pointer-parallax offset, set by BreathCircle's rAF (clamped in layers). */
+  --st-px: 0;
+  --st-py: 0;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--st-paper);
+  color: var(--st-ink);
+  font-family: var(--st-font-stack);
+  font-size: clamp(16px, 0.45vw + 14px, 19px);
+  line-height: 1.8;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is the first language of this studio: Noto Serif KR, keep-all line
+   breaking, a touch of negative tracking, looser leading. */
+.stretch-root :lang(ko) {
+  font-family: var(--st-font-kr);
+  letter-spacing: -0.005em;
+  word-break: keep-all;
+  line-height: 2.0;
+}
+
+/* Clay selection, scoped to the entry root: clay bg, ink text (4.38:1, AA) */
+.stretch-root ::selection {
+  background: var(--st-clay-deep);
+  color: var(--st-paper);
+}
+
+/* Keyboard focus: a clay-deep ring, offset like a held edge */
+.stretch-root :focus-visible {
+  outline: 2px solid var(--st-clay-deep);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.stretch-issue {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Links — the soft clay underline that reaches from the left
+   A static sage hairline is always present (touch users never lose the
+   affordance); a clay-deep underline grows in (scaleX 0 → 1, from the
+   left) on hover/focus through the breathe ease. Pure CSS: no JS.
+   ========================================================================== */
+
+.stretch-link {
+  position: relative;
+  display: inline-block;
+  color: var(--st-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--st-rule);
+  padding-bottom: 2px;
+  transition: color 300ms var(--st-ease-breathe);
+}
+
+.stretch-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.6px;
+  background: var(--st-clay-deep);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms var(--st-ease-breathe);
+}
+
+.stretch-link:hover,
+.stretch-link:focus-visible {
+  color: var(--st-clay-deep);
+}
+
+.stretch-link:hover::after,
+.stretch-link:focus-visible::after {
+  transform: scaleX(1);
+  transition: transform 520ms var(--st-ease-breathe);
+}
+
+/* The cover CTA: a larger, more inviting reach */
+.stretch-cover__cta {
+  position: relative;
+  display: inline-block;
+  color: var(--st-ink);
+  text-decoration: none;
+  font-family: var(--st-font-latin);
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--st-rule);
+  transition: color 300ms var(--st-ease-breathe);
+}
+
+.stretch-cover__cta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--st-clay-deep);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms var(--st-ease-breathe);
+}
+
+.stretch-cover__cta:hover,
+.stretch-cover__cta:focus-visible {
+  color: var(--st-clay-deep);
+}
+
+.stretch-cover__cta:hover::after,
+.stretch-cover__cta:focus-visible::after {
+  transform: scaleX(1);
+  transition: transform 640ms var(--st-ease-stretch);
+}
+
+/* ==========================================================================
+   Breath circles — the breathing background (pointer-parallax + 12s cycle)
+   Three translucent layers, paper-warm at falling alpha, breathing on a
+   slow alternate cycle and drifting with the pointer. Purely decorative.
+   ========================================================================== */
+
+.stretch-breath {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stretch-breath__layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  /* pointer drift: translate is clamped via the calc, depth via --st-depth */
+  transform: translate(
+    calc(-50% + (var(--st-px) * var(--st-depth, 0)) * 1px),
+    calc(-50% + (var(--st-py) * var(--st-depth, 0)) * 1px)
+  ) scale(var(--st-scale, 1));
+  animation: st-breath 12s var(--st-ease-breathe) infinite alternate;
+  will-change: transform;
+}
+
+.stretch-breath__layer--1 {
+  width: min(140vw, 140vh);
+  height: min(140vw, 140vh);
+  background: rgba(251, 248, 242, 0.92);
+  --st-depth: 0.4;
+  --st-scale: 1;
+}
+
+.stretch-breath__layer--2 {
+  width: min(92vw, 92vh);
+  height: min(92vw, 92vh);
+  background: rgba(201, 123, 90, 0.07);
+  --st-depth: 0.7;
+  --st-scale: 1;
+  animation-delay: -2s;
+}
+
+.stretch-breath__layer--3 {
+  width: min(52vw, 52vh);
+  height: min(52vw, 52vh);
+  background: rgba(138, 154, 123, 0.06);
+  --st-depth: 1;
+  --st-scale: 1;
+  animation-delay: -4s;
+}
+
+@keyframes st-breath {
+  from {
+    transform: translate(
+      calc(-50% + (var(--st-px) * var(--st-depth, 0)) * 1px),
+      calc(-50% + (var(--st-py) * var(--st-depth, 0)) * 1px)
+    ) scale(calc(var(--st-scale, 1) * 1));
+  }
+  to {
+    transform: translate(
+      calc(-50% + (var(--st-px) * var(--st-depth, 0)) * 1px),
+      calc(-50% + (var(--st-py) * var(--st-depth, 0)) * 1px)
+    ) scale(calc(var(--st-scale, 1) * 1.06));
+  }
+}
+
+/* ==========================================================================
+   Kicker — the recurring ornament: a small-tracked bilingual label with a
+   clay-deep en-dash lead
+   ========================================================================== */
+
+.stretch-kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--st-font-latin);
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--st-clay-deep);
+}
+
+.stretch-kicker::before {
+  content: "—";
+  display: inline-block;
+  margin-right: 0.6em;
+  color: var(--st-clay);
+}
+
+/* ==========================================================================
+   Cover / Hero — the wordmark that reaches
+   STRETCH split into per-glyph spans (aria-hidden behind the h1 label),
+   each rising on mount and gently overshooting (scaleY 0.78 → 1.06 → 1).
+   The clay fill writes in after the rise. 한국어 늘어 sits in dialogue,
+   set half a step quieter. All choreography gated behind .stretch-js.
+   ========================================================================== */
+
+.stretch-cover {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(2rem, 5vh, 3.5rem) clamp(1.25rem, 5vw, 5rem)
+    clamp(2.5rem, 6vh, 4rem);
+}
+
+.stretch-cover__folio {
+  margin: 0;
+  font-family: var(--st-font-latin);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--st-ink-soft);
+}
+
+.stretch-cover__id {
+  margin: auto 0;
+}
+
+/* The wordmark: latin row, then korean row beneath, both stretching. */
+.stretch-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1.5vh, 1rem);
+  margin: 0 0 clamp(1.5rem, 3vh, 2.5rem);
+  font-weight: 500;
+  line-height: 0.92;
+}
+
+.stretch-wordmark__latin {
+  display: flex;
+  font-family: var(--st-font-latin);
+  font-size: clamp(4.5rem, 19vw, 16rem);
+  letter-spacing: 0.01em;
+  color: var(--st-ink);
+}
+
+.stretch-wordmark__ko {
+  display: flex;
+  font-family: var(--st-font-kr);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 8.5vw, 6.5rem);
+  letter-spacing: -0.01em;
+  color: var(--st-clay);
+}
+
+.stretch-wordmark__ch {
+  display: inline-block;
+  transform-origin: 50% 78%;
+  /* fill is a clip reveal from the baseline; gated behind .stretch-js */
+}
+
+/* The clay fill writes in across the whole wordmark on mount. */
+.stretch-wordmark__ko::after {
+  content: "";
+}
+
+/* Reach + settle keyframe: per-glyph stagger by --st-gi. */
+@keyframes st-reach {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.78) translateY(0.12em);
+  }
+  60% {
+    opacity: 1;
+    transform: scaleY(1.06) translateY(-0.02em);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+.stretch-cover__deck {
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 1.2rem;
+  font-family: var(--st-font-latin);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  color: var(--st-ink-soft);
+}
+
+.stretch-cover__rule {
+  height: 1px;
+  width: 100%;
+  max-width: 22rem;
+  background: var(--st-rule);
+  transform-origin: left center;
+  margin: 0 0 1.4rem;
+}
+
+.stretch-cover__issue {
+  margin: 0;
+  font-family: var(--st-font-kr);
+  font-size: clamp(0.85rem, 1.1vw, 0.98rem);
+  letter-spacing: 0.01em;
+  color: var(--st-ink-soft);
+  max-width: 38rem;
+}
+
+.stretch-cover__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.stretch-cover__begin {
+  margin: 0;
+}
+
+.stretch-cover__epigraph {
+  margin: 0;
+  font-family: var(--st-font-latin);
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  color: var(--st-ink-soft);
+  max-width: 34rem;
+}
+
+.stretch-cover__epigraph em {
+  font-style: italic;
+}
+
+/* JS-gated cover choreography: rise + reach per glyph, rule grow. */
+.stretch-js .stretch-wordmark__ch {
+  opacity: 0;
+  animation: st-reach 1400ms var(--st-ease-breathe) forwards;
+  animation-delay: calc(120ms + var(--st-gi) * 90ms);
+}
+
+.stretch-js .stretch-cover__rule {
+  transform: scaleX(0);
+  animation: st-rule-grow 900ms var(--st-ease-stretch) forwards;
+  animation-delay: 780ms;
+}
+
+@keyframes st-rule-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ==========================================================================
+   Pose sequence — the kinetic-typography signature (scroll-scrub-pinned)
+   A tall spacer pins a scene; --st-scrub (0→1, from useStretchScroll)
+   drives everything. Four poses each own a 0.25-wide band; the active
+   pose's name writes itself and its glyphs elongate vertically
+   (scaleY 1 → 2.8) — the type reaching like a body in a held pose.
+   All geometry in calc() off the per-pose --st-p0/--st-p1 and the global
+   --st-scrub. transform/opacity only; pin is position: sticky.
+   ========================================================================== */
+
+.stretch-sequence {
+  position: relative;
+  padding: clamp(5rem, 14vh, 9rem) clamp(1.25rem, 5vw, 5rem)
+    clamp(4rem, 10vh, 7rem);
+}
+
+.stretch-sequence__head {
+  max-width: 44rem;
+  margin: 0 0 clamp(3rem, 8vh, 6rem);
+}
+
+.stretch-sequence__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--st-font-kr);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  line-height: 1.1;
+  color: var(--st-ink);
+}
+
+.stretch-sequence__sub {
+  margin: 0;
+  font-family: var(--st-font-latin);
+  font-style: italic;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: var(--st-ink-soft);
+}
+
+/* The tall spacer: defines how long the sequence is pinned. ~2.6 viewports
+   per pose × 4 ≈ tall; calm, not greedy. */
+.stretch-sequence__spacer {
+  position: relative;
+  height: clamp(220vh, 320vh, 360vh);
+}
+
+.stretch-sequence__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  padding: clamp(2rem, 5vh, 3.5rem) 0;
+}
+
+/* The long clay rail that grows across the whole sequence. */
+.stretch-sequence__rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: clamp(1.5rem, 4vh, 2.5rem);
+  height: 2px;
+  background: var(--st-rule-faint);
+}
+
+.stretch-sequence__rail-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--st-clay);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.stretch-sequence__spacer .stretch-sequence__rail-fill {
+  transform: scaleX(var(--st-scrub, 1));
+}
+
+.stretch-sequence__rail-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stretch-sequence__tick {
+  position: relative;
+  width: 1px;
+  height: 8px;
+  margin-top: -3px;
+  background: var(--st-sage);
+}
+
+.stretch-sequence__tick:nth-child(1) {
+  margin-left: 0;
+}
+
+.stretch-sequence__tick-label {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  transform: translateX(-50%);
+  font-family: var(--st-font-latin);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--st-ink-soft);
+  white-space: nowrap;
+}
+
+.stretch-sequence__tick:last-child .stretch-sequence__tick-label {
+  transform: translateX(-50%);
+}
+
+/* The scene holds all four poses, absolutely stacked; visibility by scrub. */
+.stretch-sequence__scene {
+  position: relative;
+  max-width: 46rem;
+  margin: clamp(2rem, 6vh, 4rem) auto 0;
+  min-height: clamp(18rem, 48vh, 26rem);
+}
+
+/* The breath count, pinned to the corner. */
+.stretch-sequence__count {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0;
+  font-family: var(--st-font-latin);
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  letter-spacing: 0.18em;
+  color: var(--st-ink-soft);
+}
+
+.stretch-sequence__count-n {
+  color: var(--st-clay-deep);
+  font-weight: 600;
+}
+
+/* Each pose card is stacked; opacity & a small translate track the band. */
+.stretch-pose {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.8rem, 2vh, 1.4rem);
+  /* visibility computed from the global scrub and this pose's band.
+     center c = p0 + 0.125; half-window h = 0.16. The triangle falloff
+     1 - |s - c|/h is written as min((s-(c-h))/h, (c+h-s)/h) so it uses
+     only min()/clamp() — widely supported since 2020 — and never abs(),
+     which is too new to rely on. Verified identical to the abs() form. */
+  opacity: clamp(
+    0,
+    min(
+      calc((var(--st-scrub, 1) - (var(--st-p0) - 0.035)) * 6.25),
+      calc((var(--st-p0) + 0.285 - var(--st-scrub, 1)) * 6.25)
+    ),
+    1
+  );
+  /* a small vertical drift so inactive poses recede gently: how far the
+     scrub sits above this pose's center, mapped to a small translate. */
+  transform: translateY(
+    calc(
+      clamp(
+        0,
+        calc((var(--st-p0) + 0.125 - var(--st-scrub, 1)) * 2),
+        1
+      ) * -0.6em
+    )
+  );
+  transition: none;
+}
+
+/* no-JS / SSR fallback: when .stretch-js is absent the scrub defaults to 1,
+   which would leave only the final pose visible. So in the no-JS state we
+   flatten the sequence into a static list — every pose fully written, fully
+   stretched, stacked in flow with air between (see the rules below). */
+.stretch-pose__ordinal {
+  margin: 0;
+  font-family: var(--st-font-latin);
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--st-clay-deep);
+}
+
+/* The pose name: korean (big, stretching) then latin (tall, stretching). */
+.stretch-pose__name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+  line-height: 0.96;
+}
+
+.stretch-pose__name-ko {
+  display: flex;
+  font-family: var(--st-font-kr);
+  font-weight: 700;
+  font-size: clamp(3.5rem, 13vw, 9rem);
+  color: var(--st-ink);
+}
+
+.stretch-pose__name-latin {
+  display: flex;
+  font-family: var(--st-font-latin);
+  font-weight: 500;
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  letter-spacing: 0.06em;
+  color: var(--st-clay-deep);
+}
+
+/* Per-glyph stretch: scaleY grows with the pose's local scrub.
+   local scrub ls = clamp((s - p0)/0.25, 0, 1). scaleY = 1 + ls*1.8. */
+.stretch-glyph {
+  display: inline-block;
+  transform-origin: 50% 82%;
+  /* CSS cannot clamp a division cleanly without abs; we compute the local
+     scrub directly: (s - p0)/(p1 - p0), clamped to [0,1]. p1-p0 = 0.25,
+     so divide by 0.25 = multiply by 4. */
+  transform: scaleY(
+    calc(
+      1 +
+      clamp(0, calc((var(--st-scrub, 1) - var(--st-p0)) * 4), 1) * 1.8
+    )
+  );
+}
+
+/* Per-glyph write-in: opacity follows the local scrub with a small stagger
+   so the name appears to write itself left-to-right as you hold the scroll. */
+.stretch-pose__name-ko .stretch-glyph,
+.stretch-pose__name-latin .stretch-glyph {
+  opacity: clamp(
+    0,
+    calc((var(--st-scrub, 1) - var(--st-p0) - var(--st-gi) * 0.04) * 8),
+    1
+  );
+}
+
+.stretch-pose__body {
+  max-width: 34rem;
+}
+
+.stretch-pose__gloss {
+  margin: 0 0 1rem;
+  font-family: var(--st-font-latin);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  color: var(--st-clay-deep);
+}
+
+.stretch-pose__p {
+  margin: 0 0 0.9rem;
+}
+
+.stretch-pose__p--en {
+  font-family: var(--st-font-latin);
+  color: var(--st-ink-soft);
+  font-size: 0.96em;
+}
+
+.stretch-pose__breath {
+  margin: 0.4rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--st-rule-faint);
+  font-size: 0.92rem;
+  color: var(--st-ink-soft);
+}
+
+.stretch-pose__breath-cue {
+  display: inline-block;
+  margin-right: 0.5em;
+  padding: 0.05em 0.5em;
+  border: 1px solid var(--st-sage-deep);
+  border-radius: 999px;
+  font-family: var(--st-font-kr);
+  font-weight: 500;
+  font-size: 0.78em;
+  color: var(--st-sage-deep);
+}
+
+.stretch-sequence__after {
+  margin: clamp(3rem, 8vh, 6rem) auto 0;
+  max-width: 40rem;
+  font-family: var(--st-font-kr);
+  font-weight: 500;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  line-height: 1.4;
+  color: var(--st-ink);
+  text-align: center;
+}
+
+/* No-JS / SSR fallback: when .stretch-js is absent (or reduced motion),
+   flatten the pinned sequence into a calm static list — every pose fully
+   written, fully stretched, stacked with generous air between. The scrub
+   defaults to 1, which already gives full stretch; we additionally break
+   the absolute stacking so the four poses flow as a document. */
+.stretch-root:not(.stretch-js) .stretch-sequence__spacer,
+.stretch-sequence__spacer {
+  /* sticky still applies in the no-JS case but the spacer height is what
+     pins; that's fine — readers just scroll a long, calm section. */
+}
+
+.stretch-root:not(.stretch-js) .stretch-sequence__scene {
+  position: static;
+  min-height: 0;
+}
+
+.stretch-root:not(.stretch-js) .stretch-pose {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  transform: none;
+  padding: clamp(2.5rem, 7vh, 4.5rem) 0;
+  border-bottom: 1px solid var(--st-rule-faint);
+}
+
+.stretch-root:not(.stretch-js) .stretch-pose:last-child {
+  border-bottom: 0;
+}
+
+.stretch-root:not(.stretch-js) .stretch-sequence__count {
+  display: none;
+}
+
+/* ==========================================================================
+   Studio footer — the back page
+   The studio note (coda), a practical ledger, and the two working links.
+   ========================================================================== */
+
+.stretch-studio {
+  position: relative;
+  padding: clamp(5rem, 14vh, 9rem) clamp(1.25rem, 5vw, 5rem)
+    clamp(3rem, 8vh, 5rem);
+  border-top: 1px solid var(--st-rule-faint);
+}
+
+.stretch-studio__head {
+  max-width: 44rem;
+  margin: 0 0 clamp(2.5rem, 6vh, 4rem);
+}
+
+.stretch-studio__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--st-font-kr);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 4.5vw, 3.2rem);
+  line-height: 1.18;
+  color: var(--st-ink);
+}
+
+.stretch-studio__sub {
+  margin: 0;
+  font-family: var(--st-font-latin);
+  font-style: italic;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: var(--st-ink-soft);
+}
+
+.stretch-studio__note {
+  max-width: 40rem;
+  margin: 0 0 clamp(2.5rem, 6vh, 4rem);
+}
+
+.stretch-studio__p {
+  margin: 0 0 1.1rem;
+}
+
+.stretch-studio__p--en {
+  font-family: var(--st-font-latin);
+  color: var(--st-ink-soft);
+  font-size: 0.96em;
+}
+
+.stretch-studio__ledger {
+  display: grid;
+  gap: clamp(1.2rem, 3vh, 2rem);
+  max-width: 44rem;
+  margin: 0 0 clamp(2.5rem, 6vh, 4rem);
+}
+
+@media (min-width: 720px) {
+  .stretch-studio__ledger {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.stretch-studio__ledger div {
+  border-top: 1px solid var(--st-rule-faint);
+  padding-top: 1rem;
+}
+
+.stretch-studio__ledger dt {
+  margin: 0 0 0.4rem;
+  font-family: var(--st-font-latin);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--st-clay-deep);
+}
+
+.stretch-studio__ledger dd {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--st-ink);
+}
+
+.stretch-studio__end {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  justify-content: space-between;
+  align-items: baseline;
+  max-width: 44rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--st-rule-faint);
+}
+
+.stretch-studio__legal {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--st-ink-soft);
+}
+
+.stretch-studio__top {
+  margin: 0;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.stretch-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--st-reveal-ms) var(--st-ease-breathe),
+    transform var(--st-reveal-ms) var(--st-ease-breathe);
+  will-change: opacity, transform;
+}
+
+.stretch-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Reduced motion — one calm, fully-stretched static page
+   - cover: wordmark fully risen and filled, rule grown, no choreography
+   - reveals: present, no motion
+   - sequence: every pose at full reach, fully written, stacked in flow
+     (the no-JS flattening styles above also apply, so the sequence reads
+     as a finished poster rather than a pinned animation)
+   - breath circles: still, present (no breathing cycle, no parallax)
+   - underlines: simply present, no reach
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .stretch-breath__layer {
+    animation: none !important;
+  }
+
+  .stretch-js .stretch-wordmark__ch {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .stretch-js .stretch-cover__rule {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  .stretch-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* When motion is reduced, also flatten the pinned sequence — the JS
+     hook still writes --st-scrub but we override the stacking so the page
+     reads as a calm document of four fully-held poses. */
+  .stretch-js .stretch-sequence__spacer {
+    height: auto;
+  }
+
+  .stretch-js .stretch-sequence__pin {
+    position: relative;
+    top: auto;
+    height: auto;
+  }
+
+  .stretch-js .stretch-sequence__scene {
+    position: static;
+    min-height: 0;
+  }
+
+  .stretch-js .stretch-pose {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    transform: none;
+    padding: clamp(2.5rem, 7vh, 4.5rem) 0;
+    border-bottom: 1px solid var(--st-rule-faint);
+  }
+
+  .stretch-js .stretch-pose:last-child {
+    border-bottom: 0;
+  }
+
+  .stretch-js .stretch-sequence__count {
+    display: none;
+  }
+
+  .stretch-js .stretch-sequence__rail {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  /* Glyphs at full stretch, fully opaque (local scrub clamps to 1). */
+  .stretch-js .stretch-glyph {
+    transform: scaleY(2.8) !important;
+    opacity: 1 !important;
+  }
+
+  .stretch-link::after,
+  .stretch-cover__cta::after {
+    transform: scaleX(1);
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Small-viewport adjustments — composed at 360px, honest in between
+   ========================================================================== */
+
+@media (max-width: 560px) {
+  .stretch-cover {
+    padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.1rem, 4vw, 1.5rem);
+  }
+
+  .stretch-cover__folio {
+    font-size: 0.62rem;
+  }
+
+  /* The latin wordmark is allowed to scale down hard on phones; the
+     korean 늘어 stays the warmer anchor. */
+  .stretch-wordmark__latin {
+    font-size: clamp(3.4rem, 22vw, 6rem);
+  }
+
+  .stretch-wordmark__ko {
+    font-size: clamp(2rem, 11vw, 3.4rem);
+  }
+
+  .stretch-sequence {
+    padding-left: clamp(1.1rem, 4vw, 1.5rem);
+    padding-right: clamp(1.1rem, 4vw, 1.5rem);
+  }
+
+  /* On small screens the tick labels crowd; keep the ticks, drop labels. */
+  .stretch-sequence__tick-label {
+    display: none;
+  }
+
+  .stretch-pose__name-ko {
+    font-size: clamp(3rem, 16vw, 5rem);
+  }
+
+  .stretch-pose__name-latin {
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+  }
+
+  .stretch-studio__end {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

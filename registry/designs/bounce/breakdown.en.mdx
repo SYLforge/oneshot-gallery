@@ -1,0 +1,246 @@
+# BOUNCE — breakdown
+
+## The hook
+
+There is a round door on the second floor of a building in Mapo, and
+behind it a studio that makes stories for people who are still learning
+to tie their shoes. The studio is called 통통 (tong-tong), which is the
+sound a rubber ball makes in Korean, and the page is built to make that
+sound visible. Everything on it is made of rubber. You do not pick
+anything up — you press a button and it squashes wide and short and
+springs back with a little overshoot, like it enjoyed being poked.
+Headline letters bounce up one at a time. Picture-book cards pop in to
+greet you when you scroll down to them. Soft balloons drift toward your
+finger. It is a page that likes being touched, and says so by bouncing.
+
+The design bet: a kids' page that is soft without being saccharine, and
+springy in a way you can feel through the glass. The bar for "playful" is
+that it could so easily be annoying; the way out is to make the physics
+real — a spring that overshoots exactly once and settles, the way an
+actual rubber stamp would. One boing, not a wobble.
+
+## Art direction
+
+The palette is a box of pastel crayons — butter, cream, sky, peach, grape
+— and one deep ink to write with. The rule that keeps it legible is
+arithmetic, not taste: every pastel carries the ink at AAA contrast
+(8.1:1 to 13.0:1), so a butter button and a grape card and a peach chip
+are equally readable. The one color that fails as text — accent orange
+`#ff8a5c`, 1.45–2.32:1 on every pastel — was demoted to surface-only:
+it is the CTA fill (ink type on it holds 5.59:1) and the spring's blush.
+When an accent *word* is needed, plum `#7a4fb8` does it instead
+(4.10–5.77:1, AA).
+
+Softness is the texture, full stop. No grain, no scanline, no gradient.
+Two things carry the depth instead: rounded everything (radius scales
+12px → 28px → 999px), and a soft offset shadow built from two layered
+ink-alpha steps (`0 3px 0 rgba(.10)`, `0 10px 22px rgba(.14)`) — a crisp
+rubber contact line plus a soft cast, never a blur filter. A 3px ink
+outline on every pressable surface gives the squash-and-stretch an edge
+to deform against.
+
+Two faces, both round: Fredoka for every Latin glyph, Gaegu for every
+Hangul. The display stack is `Fredoka, Gaegu, sans`, so a Korean glyph
+inside an English headline falls through into Gaegu with no markup; the
+`:lang(ko)` rule pins it, sets weight 700 (Gaegu's hand-drawn strokes
+need the bold to read at display size), keeps words whole, and gives
+hangul its own line rhythm. The wordmark is 통통 in Gaegu/plum above BOUNCE
+in Fredoka/ink — the Korean is the loud line, the English the caption,
+the opposite of most bilingual sites, on purpose.
+
+## Technique 1 — spring-press: the rubber snap
+
+Every pressable thing on the page — the two hero buttons, every book
+card, the footer mailto — has the same gesture. On press it SQUASHES:
+wide and short, `scale(1.12, 0.82)`, in about one frame. On release a
+critically-underdamped spring snaps it back through 1 with a small
+overshoot, and that single overshoot is the boing.
+
+The spring is integrated with semi-implicit Euler, which is stable where
+explicit Euler would explode for a stiff spring:
+
+```ts
+// useSpringPress — one axis of the press spring
+const a = (-k * (pos - goal) - c * vel) / m;  // Hooke − damping
+const nv = vel + a * f;                        // update velocity FIRST
+const nx = pos + nv * f;                       // then position
+```
+
+The press config (stiffness 380, damping 14, mass 1) is deliberately a
+hair under critical damping — critical would settle dead, overdamped
+would crawl. Under-damped by just enough to overshoot ~6% once and land.
+The press sets `sx=1.12, sy=0.82` (squash wide/short, like a rubber stamp
+being pushed), the release sets `sx=1, sy=1`, and the same spring carries
+it home, naturally overshooting on the way. `dt` is clamped to 48ms so a
+background tab resuming never slingshots the button across the page.
+
+Two structural decisions matter. First, the hook writes only
+`style.transform` (scale + a small translateY to nest a press-down), so
+no layout ever happens in the hot path — a full mashing of the button is
+zero re-renders. Second, there is a CSS fallback for the paths the JS
+spring does not cover: keyboard `:active` (the spring is pointer-driven)
+and the entire reduced-motion path both get a static `scale(1.08, 0.86)`
+press-down with no oscillation, defined in `styles.css`. Keyboard users
+get a defined instant response; reduced-motion users get a page that
+never moves on its own.
+
+This is the explicit, documented opposite of BLUNT's `spring-press`
+honoring. There, the tag is served with anti-easing — `0ms` in, `90ms
+linear` out — because a brutalist rubber stamp hits at full speed and
+lifts almost as fast. Here the tag is served with a real spring, because
+the whole premise of BOUNCE is that things are rubber and rubber
+overshoots. Same taxonomy tag, opposite gesture, both honest.
+
+## Technique 2 — char-split-reveal: letters that boing in
+
+The hero wordmark and the footer sign-off split into per-glyph spans
+that spring up from below, one at a time, each with its own overshoot.
+The split is accessible: the container carries `aria-label` with the
+full string, the animated spans are `aria-hidden`, so the headline is
+announced once, cleanly.
+
+```ts
+// useBounceReveal — per-glyph underdamped spring, staggered 55ms
+spans.forEach((span, idx) => {
+  g.triggered = true;
+  g.startAt = now + idx * STAGGER_MS;   // each glyph waits its turn
+});
+// in tick: spring translateY(34 → 0) + scale(0.5 → 1) per glyph
+```
+
+The glyph config (320 / 12 / 1) is snappier and more underdamped than
+the button press — headlines should land loud. Each glyph starts at
+`translateY(34px) scale(0.5)` (just below its slot, half size) and
+springs to rest. Visibility is gated by a class the hook adds the
+instant a glyph's cue arrives (`bounce-glyph--in`), so a glyph never
+flashes at rest before its bounce — it flips visible already in its
+start position, then springs up. The pre-reveal hidden state itself is
+gated behind `.bounce-js`, so without JavaScript the headline is simply
+there, complete.
+
+The same hook drives the book cards with a softer preset (220 / 18 / 1):
+each card springs `translateY(30px) + scale(0.92)` to rest, and cards
+arriving in the same observer batch fan out 90ms apart via a shared
+counter. One IntersectionObserver handles both text and cards; the rAF
+loop self-terminates when every target has settled.
+
+## Technique 3 — pointer-parallax: balloons on a string
+
+A field of pastel SVG shapes — blobs, chunky stars, clouds, dots — sits
+behind the content in three depth layers and drifts toward the pointer.
+The hook drives `--bounce-px` / `--bounce-py` (each −1…1) on the field
+root; CSS multiplies them by a per-layer depth factor (0.04 far, 0.18
+near) so nearer shapes follow more and far ones barely.
+
+```ts
+// usePointerParallax — lerp the pointer offset, normalized to 60fps
+const k = DRIFT_LERP * (dt / 16.7);     // 0.06/frame
+x += (tx - x) * k;  y += (ty - y) * k;
+el.style.setProperty("--bounce-px", x.toFixed(4));
+```
+
+The lerp is gentle on purpose — the shapes feel like they are catching
+up, not tracking. The whole field is `aria-hidden` and
+`pointer-events: none`; it is decoration that responds. Two guards keep
+it correct on other devices: it runs only when
+`(hover: hover) and (pointer: fine)` matches, so on touch the shapes
+simply bob; and the rAF loop pauses offscreen (IntersectionObserver) and
+when the tab is hidden. Under reduced motion the hook never starts and a
+CSS block pins every layer's transform to `none`.
+
+Even without a pointer the field is alive: every shape bobs ±6px on a
+mutually-prime period (4.6s to 9.8s), so the periods never sync into a
+visible loop. That idle bob is the only ambient motion on the page aside
+from the pointer drift — and it dies under reduced motion too.
+
+## The distinction from STICKER (family cap)
+
+STICKER, the 1st playful-pop entry, is **grabbable**: you seize an
+object and fling it, with inertia, torque, and restitution off the
+edges. The interaction is *you act on the world*. BOUNCE is **reactive**:
+you never drag a thing. You press a button and it springs back at you.
+You scroll to a card and it bounces in to say hi. You move your finger
+and the background drifts toward it. The three techniques here
+(`spring-press`, `char-split-reveal`, `pointer-parallax`) are all
+reactions — none of them capture a pointer, none move an object you are
+holding. Same family (soft, playful, springy motion, Korean-first),
+opposite posture: STICKER is a hand grabbing; BOUNCE is a rubber world
+bouncing back at you.
+
+## Motion math
+
+- **Press spring 380 / 14 / 1.** Natural frequency ω₀ = √(k/m) ≈ 19.5
+  rad/s; damping ratio ζ = c/(2√(km)) ≈ 0.72 — under critical (1.0) so it
+  overshoots once, well over 0.0 so it does not oscillate. Settles to
+  within 1% in ~520ms. The boing, not the wobble.
+- **Char spring 320 / 12 / 1.** ζ ≈ 0.54 — more underdamped, lands louder,
+  ~18% overshoot, settles ~480ms. Snappier stiffness so glyphs arrive
+  with the snare-drum feel of a kid's storybook.
+- **Card spring 220 / 18 / 1.** ζ ≈ 0.92 — just under critical, barely
+  overshoots, the softest of the three. Cards settle gently; the bounce
+  is in the entrance, not the landing.
+- **Parallax lerp 0.06/frame.** Half-life ~11 frames (~185ms) — the
+  shapes trail the pointer by a beat, which reads as weight rather than
+  stickiness.
+- **Bob ±6px on mutually-prime 4.6–9.8s.** The least common multiple of
+  the periods is huge, so the field never visibly repeats.
+
+## Performance notes
+
+- Two rAF loops total (parallax drift, bounce-reveal), both
+  self-terminating: parallax stops via IntersectionObserver + visibility,
+  the reveal loop stops when every glyph and card has settled. Idle page
+  = zero frames.
+- Everything animated is `transform` (scale, translate) plus `opacity`
+  for the reveal gate; no layout or paint properties move. The shadow
+  stack, outlines, and pastel fills are rasterized once.
+- The reveal hook renders the headline shells once and splits text
+  imperatively into the existing DOM — a 14-glyph headline causes zero
+  re-renders after the split.
+- `dt` is clamped to 48ms in every loop, so a background tab resuming
+  never teleports a glyph or slingshots a button.
+- No canvas, no images, no dependencies; the heaviest assets are two
+  Google font families.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) disables the parallax entirely, and a CSS block pins
+  every shape layer to `transform: none`, kills the idle bob, shows every
+  glyph and card at rest, and reduces button/card presses to a 60ms linear
+  nudge with no oscillation. The page loses only the boing; nothing is
+  hidden.
+- **No-JS:** pre-reveal hidden states (glyphs, cards waiting below) are
+  gated behind `.bounce-js`; without it, the headline is intact, the
+  cards are at rest, the buttons still work as plain links. The no-JS
+  page is a finished picture book.
+- **Keyboard:** every button is a real link/button; cards are focusable
+  `<li>` with `tabindex="0"`. A 3px plum focus ring (cream on the plum
+  footer) is the art-directed `:focus-visible`. The CSS `:active` rule
+  gives keyboard activation the same static press-down.
+- **Split text without double-speak:** the bouncing glyphs are
+  `aria-hidden` spans; the container's `aria-label` carries the full
+  headline, so the screen reader announces "통통 튀는 이야기" once, not
+  glyph by glyph.
+- **Contrast:** ink 8.1–13.0:1 on every pastel (AAA body), ink-soft
+  4.95:1+ (AA body), plum 4.10–5.77:1 (AA body except 3.60:1 large-only
+  on grape), white on the plum footer 5.77:1 (AA body). Accent orange
+  exists only as surfaces and shapes, never text.
+- **Touch:** pointer-parallax is fine-pointer only; touch devices get
+  the idle bob and the springs, never a broken parallax. Nothing
+  essential lives behind hover.
+
+## Remix ideas
+
+1. **A kids' recipe site.** Same springs, swap the cards for snacks
+   (호떡, 붕어빵, 꿀떡) that bounce in, and the CTA becomes "한 입 먹어보기
+   · take a bite" — pressing it squashes the snack and releases a crumb
+   burst (SVG, sprung).
+2. **A kindergarten enrollment page.** The footer sign-off becomes
+   "함께 뛸까요? · shall we jump together?" and the book grid becomes the
+   teachers, each card bouncing in to introduce itself. The plum footer
+   holds the session times.
+3. **A lullaby player.** Drop the shelf, keep the field and the springs;
+   each track is a pill button that squashes on press and the floating
+   shapes drift to the music's tempo. Reduced motion freezes the field
+   into a composed mobile.

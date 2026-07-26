@@ -1,0 +1,272 @@
+# RAVE — breakdown
+
+## The hook
+
+It is the small hours in an abandoned Itaewon printworks and the page is
+the flyer still taped by the blue door. RAVE 2099 is a one-night
+underground electronic-music festival: two rooms, ten acts, doors at
+22:00, lights at 06:00. The site never explains the music. It assumes you
+arrived already knowing what 130 BPM at 02:00 feels like, and the only
+question left is which room you walk into first. The whole page is a
+black wall with white blocks collaged onto it and one electric-blue
+strobe ticking over the top — a flyer, not a website.
+
+The design bet is the same as BLUNT's, played in reverse. Brutalism reads
+as commitment, not laziness, when every rough edge is repeated until it
+becomes a rule — but where BLUNT commits in daylight (paper, ink, riso
+misregistration, a sticker table you fling), RAVE commits after dark
+(black ground, white blocks, one strobing accent, three line-up tickers
+running on tempo). Same doctrine, opposite half of the day. A grayscale
+screenshot is the proof: BLUNT is light-on-dark, RAVE is dark-on-light,
+and neither could be mistaken for the other.
+
+## Art direction
+
+The palette is four chips and one of them is the strobe. Ground `#000000`
+is the night; block `#ffffff` is every panel that carries type; ash
+`#8a8a8a` is the secondary metadata that sits below a headline; and
+electric blue `#0066ff` is the single accent, and it appears in exactly
+six named places — the wordmark under-plate, the section Korean sublines,
+the highlighted ticket tier, marquee row B, the venue map door, and the
+footer's 22:00 numeral chip. Scarcity is what lets it strobe: a blue that
+was everywhere would be a brand color, not a strobe.
+
+The honesty rule is a contrast measurement. Electric blue on black is
+~4.35:1 — above the AA 3:1 threshold for large text, below the 4.5:1 for
+body. So blue is reserved for display/large use only, and every body
+string on the page is white (21:1 on black). White *on* blue reaches
+4.83:1, which is why the blue surfaces (the highlighted tier, marquee row
+B) carry white type comfortably. The one place ash appears at body size
+(the schedule fine print, the venue ledger notes) it clears 4.6:1.
+
+Three faces, three jobs, Korean first. Black Han Sans is a single 400
+weight that reads as a solid block — the closest thing on Google Fonts to
+a Korean face with brutalist weight — and both Latin stacks begin with it
+so every Hangul glyph lands on it with no markup. Archivo Black takes the
+Latin display so the two scripts sit at the same visual weight; Space Mono
+keeps the schedule tabular without a table. One Korean face across the
+wordmark, the act names, and the ledger is the tell that the promoter
+hand-set the whole flyer in the same heavy block.
+
+## Technique 1 — the marquee that runs on tempo
+
+Three line-up tickers run at three different fixed speeds and three
+different directions: row A the headliners (fast, ~200 px/s, left, on
+white carrying black Archivo Black type), row B the openers (mid, ~120
+px/s, right, on electric blue, strobing with the hero), row C the genres
+(slow, ~70 px/s, left, on black in ash). This is the load-bearing
+distinction from BLUNT. BLUNT's two rows are coupled to scroll velocity —
+a print shop's slogans read by the eye as you walk past. RAVE's three
+bands run on their own clock at three BPMs, because nightlife runs on
+tempo, not scroll:
+
+```ts
+// LineupMarquee.tsx — three tempos, three directions, one rAF loop
+const ROWS = [
+  { id: "a", acts: HEADLINE, speed: 0.20, dir: -1 },  // fast, left
+  { id: "b", acts: OPENER,   speed: 0.12, dir:  1 },  // mid, right (strobes)
+  { id: "c", acts: GENRE,    speed: 0.07, dir: -1 },  // slow, left
+];
+// ...
+offs[i] = wrap(offs[i] + row.dir * row.speed * dt, widths[i]);
+tracks[i].style.transform = `translate3d(${offs[i].toFixed(2)}px, 0, 0)`;
+```
+
+Each row renders its act group four times so the offset can wrap at one
+group's measured width and the loop is seamless:
+
+```ts
+function wrap(v: number, w: number): number {
+  const r = v % w;
+  return r > 0 ? r - w : r;   // keep the offset in (-w, 0]
+}
+```
+
+The plumbing is the careful part. One shared rAF loop integrates all
+three rows; a `ResizeObserver` keeps each group's measured width honest
+across viewport changes; and an `IntersectionObserver` with an 80px
+rootMargin pauses the whole loop the moment the band leaves the screen —
+idle page, zero frames. `dt` is clamped to 48ms so a background tab
+resuming never teleports a ticker. The moving rows are `aria-hidden`, and
+the complete line-up is delivered exactly once in a visually hidden
+paragraph above them — headliners, openers, and genres, with their roles.
+Under reduced motion the hook returns early and every track's
+`transform` is cleared, leaving three static, readable strips.
+
+Row B breathes on the same 2.6s loop as the wordmark's strobe — a single
+selector ties them together — so the accent pulses in time from the top
+of the page to the marquee. That shared rhythm is why the strobe reads as
+the room's lighting rather than as two unrelated animations.
+
+## Technique 2 — clip-path reveal: cuts, not fades
+
+Every major block wipes in with a direction-aware clip-path cut: the
+section headers wipe from the bottom-right corner, the schedule + map
+panel from the top, and the three ticket tiers wipe from three different
+directions — left tier from the left, the highlighted middle from the
+top, the right tier from the right. The wipe is a hard geometric cut,
+never a soft fade:
+
+```css
+/* styles.css — the brutalist equivalent of a fade */
+.rave-js.rave-root .rave-reveal {
+  --rave-reveal-inset: inset(0 0 0 0);
+  clip-path: var(--rave-reveal-inset);
+  transition: clip-path 620ms steps(8, end);     /* stepped, not eased */
+}
+.rave-js.rave-root .rave-reveal--l { --rave-reveal-inset: inset(0 100% 0 0); }
+.rave-js.rave-root .rave-reveal--t { --rave-reveal-inset: inset(0 0 100% 0); }
+.rave-js.rave-root .rave-reveal--br {
+  --rave-reveal-inset: polygon(100% 100%, 100% 100%, 100% 100%, 100% 100%);
+}
+.rave-js.rave-root .rave-reveal.is-revealed { --rave-reveal-inset: inset(0 0 0 0); }
+```
+
+A single `--rave-reveal-inset` custom property carries both shapes —
+`inset()` for the four cardinal directions, `polygon()` for the two
+diagonal corners (top-left, bottom-right) — so the transition rule is
+shared. `steps(8, end)` is the key choice: the clip advances in eight
+discrete jumps instead of continuously, so the wipe reads as a mechanical
+shutter, not a dissolve. A fade would soften the brutalism; a cut honors
+it.
+
+The reveal is driven by a tiny `useReveal` hook: an
+`IntersectionObserver` with a `-8% 0px -8% 0px` rootMargin and a 0.12
+threshold adds `is-revealed` when the block enters, then unobserves — a
+section wipes exactly once, not every time it scrolls back into frame.
+Two structural decisions matter. First, the pre-reveal hidden state is
+gated behind `.rave-js .rave-reveal`, so the SSR / no-JS page ships with
+every clip already open — the flyer is complete before any JavaScript
+runs. Second, under reduced motion the hook returns early and a CSS block
+sets `clip-path: none` and `transition: none`, so the blocks simply
+appear, composed, with no movement at all.
+
+## Technique 3 — CRT scanline: light, not paper
+
+BLUNT's texture is grain on stock — a static `feTurbulence` multiplied
+over paper. RAVE's texture is light on a dark room, and it is built
+entirely in CSS, no SVG filter, no image, no canvas. Two layers:
+
+```css
+/* styles.css — the scanline grid (hero-only, decorative) */
+.rave-hero__scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.05) 0 1px,
+    transparent 1px 3px
+  );
+}
+.rave-hero--strobe .rave-hero__scanlines {
+  opacity: 1;
+  animation: rave-scanline-drift 8s linear infinite;  /* one line per cycle */
+}
+@keyframes rave-scanline-drift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 3px; }   /* exactly one line pitch */
+}
+```
+
+The grid is a 3px-pitch raster of 1px white lines at 5% alpha — sparse
+enough to read as a CRT phosphor mask over the hero, never dense enough
+to threaten the white-on-black contrast (white starts at 21:1; 5% over
+black drops the local background by a negligible amount). It drifts
+exactly one line pitch per 8s, so the raster slides rather than scrolls —
+a slow, almost subliminal motion. It is scoped to the hero only, so the
+readable sections (schedule, ledger, footer) stay clean.
+
+The second layer is the strobe itself — the wordmark's electric-blue
+under-plate breathing opacity 1 → 0.55 on a 2.6s `ease-in-out` loop. The
+plate is a CSS pseudo-element using `content: attr(data-text) / ""` (the
+alt-text syntax keeps screen readers from reading RAVE twice), offset
+under the white ink layer with `mix-blend-mode: screen` so it lightens
+the black ground the way a blue stage light would:
+
+```css
+.rave-word::before {
+  content: attr(data-text) / "";
+  position: absolute;
+  color: var(--rave-strobe);
+  transform: translate(0.04em, 0.05em);
+  mix-blend-mode: screen;
+}
+.rave-js.rave-root .rave-hero--strobe .rave-word:not(.rave-word--deck)::before {
+  animation: rave-strobe 2.6s ease-in-out infinite;
+}
+```
+
+Both layers are double-gated: they require `.rave-js` on the root (so the
+SSR page is the completed flyer with the strobe frozen on) AND
+`.rave-hero--strobe` on the header, which the Hero component toggles off
+when `usePrefersReducedMotion` returns true. A motion-sensitive reader
+gets a static wordmark on a clean black ground — the lights stay on, the
+strobe stops.
+
+## Motion math
+
+- **Three marquee tempos: 0.20 / 0.12 / 0.07 px/ms.** Headliners cross
+  the viewport roughly 3× faster than the genre list, so the eye reads
+  the headliners as the foreground band and the genres as ambient
+  texture. The opener row sits between, on blue, strobing.
+- **Strobe 2.6s ease-in-out, 1 → 0.55.** A 45% depth at 2.6s is slow
+  enough to stay below the 3 Hz photosensitive seizure threshold by a
+  wide margin (it completes ~0.38 cycles/second), and the shared loop on
+  the wordmark plate and marquee row B keeps the accent in phase.
+- **Reveal 620ms `steps(8, end)`.** Eight jumps of ~77ms each — fast
+  enough to feel like a shutter, slow enough to read the direction.
+- **Press 0ms in / 110ms linear out.** The same anti-easing doctrine as
+  BLUNT, at a harder 8px offset and a slightly longer release — nightlife
+  hits harder than a print shop.
+- **`dt` clamped to 48ms everywhere**, so a background tab resuming
+  never teleports a ticker or jumps a clip.
+
+## Performance notes
+
+- One rAF loop total (the three-row marquee), self-terminating via
+  `IntersectionObserver` when the band is off screen. The clip-path
+  reveals and the strobe are CSS-driven and need no frames.
+- Everything animated is `transform`, `opacity`, `clip-path`, or
+  `background-position` — no layout properties, no forced synchronous
+  layout. The scanline grid and the strobe are GPU-friendly.
+- The marquee writes `style.transform` directly on each track every
+  frame — no React state in the hot path; a full night of scrolling
+  causes zero re-renders.
+- No canvas, no images, no dependencies. The heaviest assets are three
+  Google font families. `media.source = "code"`; budget 0.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) stops the marquee loop (every track's transform is
+  cleared), and a CSS block sets the scanline overlay to `opacity: 0`,
+  kills the strobe and the reveal transitions, and opens every clip. The
+  page loses the strobe and the wipe; it keeps the whole flyer.
+- **No-JS:** the strobe, scanline drift, and pre-reveal clip hidden
+  state are all gated behind `.rave-js`. The SSR markup is the completed
+  page — a static, fully readable flyer with the blue plate pinned on.
+- **Keyboard:** the room toggle is a real `role="tablist"` with two
+  `role="tab"` buttons; the CTAs are links; focus is a 3px strobe-blue
+  ring (visible on both the black ground and the white footer).
+- **Strobe safety:** the wordmark pulse completes < 0.4 cycles/second,
+  far below the 3 Hz photosensitive threshold, and is removed entirely
+  under reduced motion. The scanline drift is even slower (one line per
+  8s) and hero-only.
+- **Contrast:** white on black 21:1, white on blue 4.83:1, ash on black
+  4.6:1 — every functional body pairing clears AA. Electric blue on black
+  (4.35:1) exists only at display/large sizes where AA large (3:1)
+  applies.
+- **Strobing wordmark without double-speak:** the blue under-plate is a
+  CSS pseudo-element using `content: attr(data-text) / ""` — the alt-text
+  syntax keeps screen readers from reading RAVE twice.
+
+## Remix ideas
+
+1. **All-night radio station.** Keep the three-tempo marquee, swap the
+   line-up for the overnight playlist (row A now-playing, row B
+   requester, row C decade), and the ticket block becomes a pledge drive.
+   The strobe becomes the VU meter.
+2. **Fight-night promotion.** Same black/white/blue system, the schedule
+   becomes the card (MAIN EVENT / UNDERCARD), the venue map becomes the
+   ring + seats, and the clip-path reveals cut in like round cards.
+3. **24-hour hackathon.** The countdown replaces the doors-at-22:00, the
+   three tickers run team names / tracks / sponsors at three speeds, and
+   the strobe marks the final-hour push.

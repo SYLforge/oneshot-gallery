@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "bounce",
+  "no": 27,
+  "title": {
+    "en": "BOUNCE — Kids' World",
+    "ko": "통통 — 꼬마 세상"
+  },
+  "description": {
+    "en": "A children's-book brand site where every element is made of rubber — buttons squash-and-stretch on press, headlines bounce in letter by letter, and soft pastel shapes drift toward your pointer. Reactive springs, not draggable stickers.",
+    "ko": "모든 것이 통통 — 버튼은 누르면 쪼그라들고 늘어나고, 제목 글자가 하나씩 튀어 올라오고, 파스텔 도형들이 손가락을 향해 둥둥 떠다니는 동화책 브랜드 사이트. 끄는 게 아니라 반응하는 스프링."
+  },
+  "aesthetic": "playful-pop",
+  "techniques": ["spring-press", "char-split-reveal", "pointer-parallax"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#ff8a5c",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

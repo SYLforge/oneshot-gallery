@@ -1,0 +1,263 @@
+# STICKER — breakdown
+
+## The hook
+
+A two-person design studio in Mapo, Seoul, built its whole website out of
+stickers. Not sticker *graphics* — actual draggable, springy stickers. The
+wordmark is a sticker. The section number is a sticker. The OK stamp, the
+secret tag, the five-star rating, the handwritten note taped to the desk,
+the coffee cup, the THIS-WAY arrow, the 뿅! burst — all stickers, all
+grabbable, all flung-able. The page assumes you came here because you
+already wanted to touch something, and the only question left is which
+sticker first.
+
+The design bet: playfulness reads as craft when the physics is real. A
+sticker that springs home with two visible bounces earns its fun. The
+spring is the whole personality of the page, and the page commits to it
+once and everywhere — a release, a keyboard nudge, and a button press all
+use the same integrator.
+
+## Art direction
+
+The palette is a sticker pack: warm white ground (`#fef8ee`, the desk),
+one ink (`#1a1a1a`, the chunky outline and every functional glyph), and six
+saturated fills — tangerine, sky, lime, grape, lemon, bubble. The rule that
+holds it together is an accessibility claim, not a style one: ink text
+passes AA on *every* saturated fill (5.0:1–12.6:1), so the chunky black
+outline and the label text are the same color doing the same job. White
+text fails on all of them (max 3.48:1 on grape) and stays display-only.
+The brand accent, tangerine, measures 2.5:1 on the ground — so it is never
+functional text or a focus ring on the ground; a deeper `#bf421a` (4.96:1)
+does that job. Tangerine is a sticker fill, the wordmark surface, and a
+ring color on the ink footer.
+
+Three faces, three jobs, Korean first: Black Han Sans is the loud cover
+voice (the wordmark 스티커, section titles, every sticker's big Korean
+label); Gaegu is the notebook hand (captions, the taped note, sub-labels —
+ballpoint-on-sticker, not system-default); Fredoka is the English voice
+(subtitles, marquee English, the ledger hand). Every Latin stack lists the
+Korean face first and a `:lang(ko)` rule pins it, so Hangul never falls
+through to a default sans. Korean is the page's first voice; the type
+system is the proof.
+
+## Technique 1 — drag physics: the springy sticker table
+
+The signature section is a rounded desk scattered with eleven stickers —
+all CSS and inline SVG, no images — that you can grab and fling. The
+physics is hand-rolled and, unlike its blunt cousin, it is a genuine
+spring, not a friction glide with a wall.
+
+Each sticker is a point mass with `dx, dy` (a delta from its CSS-scattered
+base, so no-JS shows the same pile, just still), `vx, vy`, and a faked
+rotation. On release it is pulled toward home `(0,0)` by an underdamped
+spring, integrated as semi-implicit Euler in **normalized-frame space**:
+
+```ts
+// useStickerPhysics.ts — velocity lives in per-frame units, not raw-dt.
+// That makes the spring unconditionally stable: a displaced sticker settles
+// in ~590ms with two visible bounces regardless of frame rate.
+const fr = dt / 16.7;
+b.vx += -SPRING_K * (b.dx - b.homeX) * fr;   // k = 0.18
+b.vy += -SPRING_K * (b.dy - b.homeY) * fr;
+const damp = Math.pow(1 - SPRING_C, fr);      // c = 0.40, underdamped
+b.vx *= damp;
+b.vy *= damp;
+b.dx += b.vx * dt;
+b.dy += b.vy * dt;
+```
+
+The constants were tuned by simulation before they were written: `k=0.18,
+c=0.40` is the sweet spot that gives 2–3 visible bounces and a 420–600ms
+settle across displacement, fling, and hard-fling scenarios. Stiffer sprang
+too fast; softer dragged. Initial release velocity decays through friction
+0.92 first, then hands off to the spring — in practice the spring is always
+on and just absorbs the momentum, which is why a hard throw still comes
+home instead of sailing off the desk.
+
+Two structural decisions matter more than the constants. First, physics
+state is a delta from CSS base, so the scatter (left/top percentages plus a
+`--sticker-rot` custom property per sticker) lives entirely in the
+stylesheet — JS only ever writes `style.transform`. Second, React renders
+the shells exactly once; every frame after is imperative. A full fling
+re-renders nothing.
+
+The pile-up is the part blunt could not do. A released sticker soft-
+collides with resting neighbors inside `1.1 ×` their combined radius,
+shoving each neighbor by `0.35` of the overlap and handing off a slice of
+its momentum:
+
+```ts
+// a moving sticker pushes a resting neighbor out of its radius — both then
+// spring home. It reads as a pile; it is not a honest collision solver.
+const overlap = min - dist;
+other.dx += nx * overlap * PILE_SHOVE;
+other.dy += ny * overlap * PILE_SHOVE;
+```
+
+Drop a sticker on another and they jostle, the spring pulls them both back,
+and you get a small overlap that looks like two real stickers pressed
+together. Momentum is not conserved and there is no resting-contact
+solver; the effect is a kindness, not a law, and it says so in PROMPT.md.
+
+Torque is the same honest lie as blunt's board — release velocity crossed
+with the grab offset (`vr += 0.5 × (vx·−gy + vy·gx)`). Grab a corner and
+yank and it spins; grab dead center and it does not. Three lines, ninety
+percent of the hand-feel. Release velocity is capped at 2.2 px/ms so the
+hardest fling still springs back inside the board. A held sticker checks
+the clock on release: if the pointer has not moved for 90ms, velocity is
+zeroed — you *placed* it. Under reduced motion every release is a placement
+and snaps home.
+
+## Technique 2 — pointer parallax: a pile with depth
+
+The hero is a miniature sticker board: the wordmark floats center, and a
+small pile of accent stickers (lime READY, sky star, bubble heart, tangerine
+뿅!) sits around it at three depths. Move the pointer and the layers drift
+at different rates — far layers barely move, near layers follow close. The
+drift is capped at ±18px and eased through an exponential lerp so it trails
+the pointer, which is the whole point: parallax reads as depth only when
+it lags.
+
+```ts
+// usePointerParallax.ts — layers chase the target with a soft lag.
+const k = 1 - Math.pow(0.82, dt / 16.7);
+curX += (targetX - curX) * k;
+for (const l of layers) {
+  l.el.style.transform = `translate3d(${(curX * l.depth).toFixed(2)}px, …)`;
+}
+```
+
+Each layer carries `data-sticker-parallax="0.04"` (far ghost outlines)
+through `0.20` (the front decals). The hook queries them once, sorts
+far-first so near layers paint on top, and the rAF loop self-terminates
+when the layers have settled onto the target — idle pointer, zero frames.
+`pointerout` returns the target to zero so the pile settles back to rest
+when the pointer leaves. Reduced motion: the hook never attaches; the pile
+sits at its CSS rest positions.
+
+The hero decals are also `.sticker-sticker` bodies, so the same
+`useStickerPhysics` engine that owns the table owns them too — the hero is
+not a separate physics island. (The wordmark itself is `pointer-events:
+none`: it floats. Making it draggable fought with the parallax transform on
+its ancestors and produced a jumpy grab, so it stays a backdrop — see
+PROMPT.md.)
+
+## Technique 3 — the marquee that reads your scroll
+
+Two service tickers run in opposite directions: row A is the disciplines
+(branding, websites, webtoons, illustration, motion) on sky; row B is the
+adjectives (playful, sticky, bouncy, memorable, colorful) on tangerine.
+The page's scroll direction reverses both — scroll down and A goes left
+while B goes right; scroll up and they swap — and scroll velocity feeds
+their speed. The reversal feels like weight because the signed speed chases
+its target through an exponential lerp:
+
+```ts
+// ServiceMarquee.tsx — a flip is a skid, not a teleport.
+const k = 1 - Math.pow(0.86, dt / 16.7);
+curA += (e.dir * -speed - curA) * k;   // rows chase opposite signs
+offA = wrap(offA + curA * dt, wA);
+```
+
+Reverse scroll and `curA` has to pass through zero before it picks up the
+other direction — the row visibly brakes, stops for a beat, and skids off.
+That deceleration is the personality of the band. The plumbing mirrors
+blunt's: each row holds four identical copies of its word group, the
+offset wraps at one group's measured width (`ResizeObserver` keeps it
+honest), and the band only spends frames while an
+`IntersectionObserver` says it is on screen. Scroll state lives in a
+mutable ref written by a passive scroll listener — no React state, no
+re-renders. The moving rows are `aria-hidden`; every word is delivered
+exactly once in a visually hidden paragraph above them.
+
+## Supporting motion — the press, the reveal, the wobble
+
+The press is the spring's little sibling. A sticker scales to 0.94 under
+`:active` and springs back over 90ms in / 120ms out with an ease-back curve
+(`cubic-bezier(0.34, 1.56, 0.64, 1)`) — a tiny overshoot, a sticker
+squished under a thumb. Buttons translate 4px and collapse their shadow.
+This is not one of the three declared techniques; it is the connective
+tissue that makes the spring feel like the page's material, not a feature.
+
+The reveal hides sections at `opacity 0 / translateY(24px)` under
+`.sticker-js` (so no-JS shows everything immediately) and grants
+`.is-revealed` on an `IntersectionObserver`, 700ms ease-back with a 90ms
+stagger — a sticker being peeled up. Under reduced motion nothing is
+hidden and nothing transitions.
+
+## Motion math
+
+- **Spring k=0.18, c=0.40.** A displacement of 300px settles in ~590ms with
+  two visible bounces; a fling (v0≈1.8) in ~420ms. Semi-implicit Euler in
+  normalized-frame space is unconditionally stable for these values, so a
+  slow frame (dt clamped to 48ms) never explodes the spring.
+- **Fling friction 0.92.** Initial momentum bleeds ~8% per normalized frame
+  before the spring absorbs it — enough that a throw travels before it
+  returns, not so much that it escapes.
+- **Torque `0.5 × (vx·−gy + vy·gx)`.** Grab a corner (gx≈±0.5) and a
+  confident drag spins the sticker ~30°/s; grab center and it does not
+  spin. Three lines, most of the hand-feel.
+- **Pile shove 0.35.** A dropped sticker transfers a third of its overlap
+  to a neighbor; both then spring home. The pile overlaps realistically
+  without a contact solver.
+- **Parallax `1−0.82^(dt/16.7)`.** Half-life of the pointer error is
+  ~3.5 frames (~58ms) — a soft, noticeable trail.
+- **Marquee approach `1−0.86^(dt/16.7)`.** Half-life ~4.5 frames (~75ms) —
+  the skid is visible but not sluggish.
+
+## Performance notes
+
+- Three rAF loops (sticker physics, parallax, marquee), all self-
+  terminating. The physics loop stops when every body sleeps (below
+  0.004 px/ms); the parallax loop stops when layers settle on the target;
+  the marquee stops via `IntersectionObserver` when off screen. All three
+  also pause on `visibilitychange`. Idle page = zero frames.
+- Everything animated is `transform` (plus box-shadow state swaps on
+  grab/press). No layout or paint properties move. The grain and dot grid
+  are static gradients/filters rasterized once.
+- Drags write `style.transform` directly on captured pointer events — no
+  React state in the hot path; a full fling causes zero re-renders.
+- `dt` is clamped to 48ms everywhere, and the spring integrates in
+  normalized-frame space, so a background tab resuming never teleports a
+  sticker or blows up the spring.
+- No canvas, no images, no dependencies; the heaviest assets are three
+  Google font families.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` statics the tickers, turns
+  sticker releases into placements that snap home, detaches the parallax,
+  and a CSS block undoes the reveal-hide so nothing is left invisible. The
+  page loses nothing but the bounce.
+- **No-JS:** the sticker scatter is CSS; the tickers are bordered strips of
+  readable services; `.sticker-js` gates grab cursors and the reveal-hide.
+  The no-JS page is a finished sticker pile.
+- **Keyboard:** every sticker is a focusable `role="button"` with an
+  `aria-roledescription` of "draggable sticker" — arrows nudge 10px (and
+  the spring pulls it home), Enter/Space lifts to the top, and a shared
+  hint element is referenced via `aria-describedby`. Focus is a 3px ink
+  ring (16.5:1 — the only ring that clears the 3:1 UI threshold on every
+  surface); tangerine on the ink footer.
+- **Contrast:** ink on every saturated sticker clears AA (5.0:1–12.6:1);
+  ink on ground 16.5:1; tangerine-deep on ground 4.96:1. White-on-saturated
+  and tangerine-on-ground are display-only and documented as such.
+- **Bilingual, Korean-first:** every sticker label, the wordmark, the
+  section titles, and the footer shout lead with Korean; the English is
+  the gloss. The marquee's moving rows are aria-hidden, with every service
+  word delivered once in a visually hidden paragraph.
+
+## Remix ideas
+
+1. **Sticker-book portfolio.** Keep the spring, swap the studio stickers
+   for project cards (each a draggable sticker with a Korean-first title —
+   브랜딩, 웹사이트, 웹툰), and let visitors physically rearrange your work.
+   The pile-up becomes a feature: drop three projects together and they
+   cluster.
+2. **Café menu wall.** The board becomes a menu of drink stickers (아메리카노,
+   라떼, 레몬에이드) you can drag into a "my order" tray; the spring pulls
+   anything you don't commit back to the wall. The 안녕! speech bubble
+   becomes today's special.
+3. **Kids' learning game.** Same physics, Hangul syllable stickers (가, 나,
+   다) that the child drags onto a word frame; the pile-up lets wrong
+   answers cluster politely and the spring returns them. The 뿅! burst fires
+   on a correct stack.
