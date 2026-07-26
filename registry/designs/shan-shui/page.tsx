@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./styles.css";
-import { cormorant, maShanZheng, notoSerifSC } from "./fonts";
+import { cormorant, maShanZheng, notoSerifKR, notoSerifSC } from "./fonts";
 import Loader from "./components/Loader";
 import Hero from "./components/Hero";
 import ScrollGuide from "./components/ScrollGuide";
@@ -46,7 +46,7 @@ export default function ShanShuiPage() {
     <div
       id="shan-top"
       ref={rootRef}
-      className={`${cormorant.variable} ${maShanZheng.variable} ${notoSerifSC.variable} shan-root`}
+      className={`${cormorant.variable} ${maShanZheng.variable} ${notoSerifKR.variable} ${notoSerifSC.variable} shan-root`}
     >
       <Loader onDone={handleEntered} />
 

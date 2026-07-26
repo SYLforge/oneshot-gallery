@@ -22,8 +22,10 @@
   /* -- type ---------------------------------------------------------------- */
   --kemuri-font-latin: var(--font-garamond), "EB Garamond", serif;
   --kemuri-font-jp: var(--font-mincho), "Zen Old Mincho", serif;
-  /* kanji and kana fall through Garamond into the mincho with no markup */
-  --kemuri-font-stack: var(--font-garamond), var(--font-mincho), serif;
+  --kemuri-font-kr: var(--font-kr), "Noto Serif KR", serif;
+  /* Each script falls through the stack into its own voice:
+     Garamond (Latin) → Noto Serif KR (Hangul) → Zen Old Mincho (kanji/kana). */
+  --kemuri-font-stack: var(--font-garamond), var(--font-kr), var(--font-mincho), serif;
 
   /* -- motion ---------------------------------------------------------------
      Two easings on the whole page: smoke (rises fast, settles long) for every
@@ -52,6 +54,13 @@
 .kemuri-root :lang(ja) {
   font-family: var(--kemuri-font-jp);
   letter-spacing: 0.06em;
+}
+
+/* Korean is the main reading voice: Noto Serif KR, matching the mincho's
+   brush-remembering restraint, with a hair of tracking so syllables breathe. */
+.kemuri-root :lang(ko) {
+  font-family: var(--kemuri-font-kr);
+  letter-spacing: 0.01em;
 }
 
 /* Ember selection, scoped to the entry root. Banked ember, so the selected

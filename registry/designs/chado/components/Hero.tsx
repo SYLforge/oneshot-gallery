@@ -25,12 +25,12 @@ export default function Hero({ cueActive }: { cueActive: boolean }) {
     <header className="chado-hero" id="chado-top">
       <p className="chado-hero__folio">
         <span lang="ja">茶道</span> · No. 20 · 2026 ·{" "}
-        <span lang="ja">京都</span>
+        <span lang="ja">京都</span> <span lang="ko">교토</span>
       </p>
 
       <div className="chado-hero__stage">
         {/* The tategaki title — the only thing that reads top-to-bottom. */}
-        <h1 className="chado-tategaki" lang="ja" aria-label="茶道（さどう）">
+        <h1 className="chado-tategaki" lang="ja" aria-label="茶道（さどう） / 다도">
           {TITLE.map((ch, i) => (
             <span
               key={i}
@@ -45,14 +45,19 @@ export default function Hero({ cueActive }: { cueActive: boolean }) {
 
         <div className="chado-hero__col">
           <p className="chado-hero__kicker">
-            <span lang="ja">一服</span> · One Bowl
+            <span lang="ko">한 잔</span> · <span lang="ja">一服</span> · One Bowl
           </p>
-          <p className="chado-hero__name">CHADŌ</p>
+          <p className="chado-hero__name">CHADŌ · <span lang="ko">다도</span></p>
           <p className="chado-hero__reading">
-            <span lang="ja">さどう</span> · sadō · the way of tea
+            <span lang="ja">さどう</span> · sadō · <span lang="ko">차의 길</span> · the way of tea
           </p>
 
           <p className="chado-hero__proposition" data-reveal>
+            <span lang="ko">
+              다도는 한 잔의 차를 온몸으로 받기 위해 있다.
+            </span>
+          </p>
+          <p className="chado-hero__proposition chado-hero__proposition--ja" data-reveal>
             <span lang="ja">
               茶道は、一服の茶を全身で受け取るためにある。
             </span>
@@ -67,7 +72,7 @@ export default function Hero({ cueActive }: { cueActive: boolean }) {
 
           <p className="chado-hero__scrollhint" aria-hidden="true">
             <span className="chado-hero__scrollline" />
-            <span lang="ja">どうぞ</span> · please, begin
+            <span lang="ko">어서</span> · <span lang="ja">どうぞ</span> · please, begin
           </p>
         </div>
       </div>

@@ -52,6 +52,7 @@ type Plate = {
     no: "壱" | "弐" | "参";
     ja: string;
     en: string;
+    ko: string;
   };
 };
 
@@ -62,9 +63,10 @@ const PLATES: readonly Plate[] = [
     stem: "plate-1-distant-mountains",
     seed: 19,
     freq: "0.011 0.017",
-    alt: "Sumi-e ink painting: three ranges of mountains dissolving into mist, a small gold sun low in the sky. 水墨画 — 霞に溶けていく三重の山なみ、低い空に小さな金の日。",
+    alt: "Sumi-e ink painting: three ranges of mountains dissolving into mist, a small gold sun low in the sky. 수묵화 — 안개에 녹아드는 세 겹의 산, 낮은 하늘의 작은 금빛 해. 水墨画 — 霞に溶けていく三重の山なみ、低い空に小さな金の日。",
     caption: {
       no: "壱",
+      ko: "원산 — 산은 가까이 오지 않는다. 그것이 산의 온화함이다.",
       ja: "遠山 — 山は近づいてこない。それが山のやさしさ。",
       en: "Distant mountains. They never come closer — that is their kindness.",
     },
@@ -75,9 +77,10 @@ const PLATES: readonly Plate[] = [
     stem: "plate-2-bare-branch",
     seed: 31,
     freq: "0.013 0.019",
-    alt: "Sumi-e ink painting: a single bare branch reaching in from the right, one ember-colored bud at its tip. 水墨画 — 右から伸びる一本の枯枝、先端にひとつの熾色の芽。",
+    alt: "Sumi-e ink painting: a single bare branch reaching in from the right, one ember-colored bud at its tip. 수묵화 — 오른쪽에서 뻗어 들어오는 앙상한 가지 한 줄기, 끝에 불빛 같은 눈 하나. 水墨画 — 右から伸びる一本の枯枝、先端にひとつの熾色の芽。",
     caption: {
       no: "弐",
+      ko: "고지 — 가지는 아무것도 가지지 않는다. 가지지 않는 일을, 잘 해낸다.",
       ja: "枯枝 — 枝は何も持たない。持たないことを、うまくやる。",
       en: "A bare branch. It holds nothing, and holds it well.",
     },
@@ -88,9 +91,10 @@ const PLATES: readonly Plate[] = [
     stem: "plate-3-censer-smoke",
     seed: 47,
     freq: "0.009 0.015",
-    alt: "Sumi-e ink painting: a censer at the foot of the paper, one stick of incense, a ribbon of smoke written upward in a single stroke. 水墨画 — 紙の裾に香炉、一本の線香、ひと筆で上へ書かれた煙。",
+    alt: "Sumi-e ink painting: a censer at the foot of the paper, one stick of incense, a ribbon of smoke written upward in a single stroke. 수묵화 — 화지의 아래쪽에 향로, 향 한 대, 한 획으로 위로 쓰인 연기. 水墨画 — 紙の裾に香炉、一本の線香、ひと筆で上へ書かれた煙。",
     caption: {
       no: "参",
+      ko: "일주 — 먹과 물과 인내. 연기도 같은 방식으로 쓰인다.",
       ja: "一炷 — 墨と水と、辛抱。煙も同じ書き方で書かれる。",
       en: "One stick. Ink, water, patience — smoke is written the same way.",
     },
@@ -160,17 +164,18 @@ export default function InkPlates() {
     <section className="kemuri-plates" aria-labelledby="kemuri-plates-title">
       <div className="kemuri-sechead" data-reveal="">
         <p className="kemuri-eyebrow" aria-hidden="true">
-          03 — 三枚の図版
+          03 — 세 폭의 그림 · 三枚の図版
         </p>
         <h2 className="kemuri-sechead__title" id="kemuri-plates-title">
-          Three plates{" "}
+          <span lang="ko">세 폭의 그림</span>{" "}
           <span lang="ja" className="kemuri-sechead__ja">
             三枚の図版
           </span>
         </h2>
         <p className="kemuri-sechead__line">
-          The plates are not photographs. They are ink that remembers being
-          water.{" "}
+          <span lang="ko">
+            이 그림들은 사진이 아니다. 물이었던 일을 기억하는 먹이다.
+          </span>{" "}
           <span lang="ja" className="kemuri-sechead__lineja">
             この図版は写真ではない。水だったことを覚えている墨だ。
           </span>
@@ -239,6 +244,9 @@ export default function InkPlates() {
             <figcaption className="kemuri-plate__caption">
               <span className="kemuri-plate__no" aria-hidden="true">
                 {plate.caption.no}
+              </span>
+              <span lang="ko" className="kemuri-plate__ko">
+                {plate.caption.ko}
               </span>
               <span lang="ja" className="kemuri-plate__ja">
                 {plate.caption.ja}

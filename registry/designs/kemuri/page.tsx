@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./styles.css";
-import { ebGaramond, zenOldMincho } from "./fonts";
+import { ebGaramond, notoSerifKR, zenOldMincho } from "./fonts";
 import Loader from "./components/Loader";
 import Hero from "./components/Hero";
 import Poem from "./components/Poem";
@@ -44,7 +44,7 @@ export default function KemuriPage() {
     <div
       id="kemuri-top"
       ref={rootRef}
-      className={`${ebGaramond.variable} ${zenOldMincho.variable} kemuri-root`}
+      className={`${ebGaramond.variable} ${notoSerifKR.variable} ${zenOldMincho.variable} kemuri-root`}
     >
       <Loader onDone={handleEntered} />
 

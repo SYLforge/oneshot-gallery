@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import "./styles.css";
-import { cormorantGaramond, shipporiMincho } from "./fonts";
+import { cormorantGaramond, notoSerifKR, shipporiMincho } from "./fonts";
 import Hero from "./components/Hero";
 import Ceremony from "./components/Ceremony";
 import ChasenDraw from "./components/ChasenDraw";
@@ -63,7 +63,7 @@ export default function ChadoPage() {
   return (
     <div
       ref={rootRef}
-      className={`${shipporiMincho.variable} ${cormorantGaramond.variable} chado-root`}
+      className={`${shipporiMincho.variable} ${notoSerifKR.variable} ${cormorantGaramond.variable} chado-root`}
     >
       <div ref={revealRef} className="chado-ceremony-doc">
         <div ref={heroRef}>
@@ -76,16 +76,21 @@ export default function ChadoPage() {
           <ChasenDraw
             notes={
               <>
-                <h3 className="chado-chashitsu__step-title" lang="ja">
-                  点前、四つの動き
+                <h3 className="chado-chashitsu__step-title">
+                  <span lang="ko">점전, 네 가지 움직임</span>{" "}
+                  <span lang="ja">点前、四つの動き</span>
                 </h3>
                 <p className="chado-chashitsu__step-sub">
+                  <span lang="ko">테마에의 네 가지 동작 — 스크롤이 차센을 그린다.</span>{" "}
                   Four motions of the temae — scroll draws the whisk.
                 </p>
 
                 <ol className="chado-chashitsu__steps">
                   <li data-reveal>
                     <span className="chado-chashitsu__step-no">i.</span>
+                    <p className="chado-beat__p chado-beat__p--ko" lang="ko">
+                      다구로 말차를 찻잔에 옮긴다. 산 하나 가득한 초록.
+                    </p>
                     <p className="chado-beat__p chado-beat__p--ja" lang="ja">
                       茶杓で抹茶を茶碗に移す。山一杯の緑。
                     </p>
@@ -96,6 +101,9 @@ export default function ChadoPage() {
                   </li>
                   <li data-reveal>
                     <span className="chado-chashitsu__step-no">ii.</span>
+                    <p className="chado-beat__p chado-beat__p--ko" lang="ko">
+                      탕을 조금만 붓는다. 처음에는, 아주 조금.
+                    </p>
                     <p className="chado-beat__p chado-beat__p--ja" lang="ja">
                       湯を少しだけ注ぐ。最初は、わずかに。
                     </p>
@@ -106,6 +114,9 @@ export default function ChadoPage() {
                   </li>
                   <li data-reveal>
                     <span className="chado-chashitsu__step-no">iii.</span>
+                    <p className="chado-beat__p chado-beat__p--ko" lang="ko">
+                      차센을 움직인다. 곧게, 빠르게, 앞뒤로.
+                    </p>
                     <p className="chado-beat__p chado-beat__p--ja" lang="ja">
                       茶筅を動かす。まっすぐに、速く、前と後ろへ。
                     </p>
@@ -116,6 +127,9 @@ export default function ChadoPage() {
                   </li>
                   <li data-reveal>
                     <span className="chado-chashitsu__step-no">iv.</span>
+                    <p className="chado-beat__p chado-beat__p--ko" lang="ko">
+                      거품이 오른다. 잔의 초록이, 눈으로 덮인다.
+                    </p>
                     <p className="chado-beat__p chado-beat__p--ja" lang="ja">
                       泡が立つ。碗の緑が、雪で覆われる。
                     </p>

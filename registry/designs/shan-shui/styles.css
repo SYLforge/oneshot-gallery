@@ -24,8 +24,9 @@
   --shan-font-latin: var(--font-cormorant), "Cormorant Garamond", serif;
   --shan-font-zh-display: var(--font-mashan), "Ma Shan Zheng", serif;
   --shan-font-zh-body: var(--font-notosc), "Noto Serif SC", serif;
-  /* CJK falls through Cormorant into the brush face with no markup */
-  --shan-font-stack: var(--font-cormorant), var(--font-mashan), var(--font-notosc), serif;
+  --shan-font-kr: var(--font-kr), "Noto Serif KR", serif;
+  /* Each script resolves into its own voice: Latin → Korean → brush/mincho */
+  --shan-font-stack: var(--font-cormorant), var(--font-kr), var(--font-mashan), var(--font-notosc), serif;
 
   /* -- motion ---------------------------------------------------------------
      Two easings: scroll (rises fast, settles long) for entrances, stone
@@ -54,6 +55,13 @@
 .shan-root :lang(zh) {
   font-family: var(--shan-font-zh-body);
   letter-spacing: 0.04em;
+}
+
+/* Korean is the gallery's main reading voice: Noto Serif KR, matching the
+   mincho's restraint, with a hair of tracking so Hangul breathes. */
+.shan-root :lang(ko) {
+  font-family: var(--shan-font-kr);
+  letter-spacing: 0.01em;
 }
 
 /* Vermillion selection, scoped to the entry root. Banked seal ground so the

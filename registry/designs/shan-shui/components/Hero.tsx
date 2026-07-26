@@ -33,13 +33,13 @@ export default function Hero({
 
       <div className="shan-hero__inner">
         <p className="shan-hero__kicker">
-          a painted hand-scroll{" "}
+          <span lang="ko">수묵 두루마리</span> · a painted hand-scroll{" "}
           <span lang="zh" className="shan-hero__kickerzh">
             水墨手卷
           </span>
         </p>
 
-        <h1 className="shan-hero__title" id="shan-title" aria-label="SHAN-SHUI">
+        <h1 className="shan-hero__title" id="shan-title" aria-label="SHAN-SHUI · 산수">
           {LETTERS.map((ch, i) => (
             <span
               key={`${ch}-${i}`}
@@ -53,26 +53,28 @@ export default function Hero({
         </h1>
 
         <p className="shan-hero__sub">
-          <Cadence text="山水 · 山與水" lang="zh" step={110} start={950} />
+          <span lang="ko">산수 · 산과 물</span>{" "}
+          <Cadence text=" · 山水 · 山與水" lang="zh" step={110} start={950} />
         </p>
 
         <div className="shan-hero__rule" aria-hidden="true" />
 
         <p className="shan-hero__line">
-          The mountains paint themselves. The scroll is the unrolling.{" "}
+          <span lang="ko">산은 스스로 그려진다. 두루마리는 펼쳐지는 것 자체다.</span>{" "}
           <span lang="zh" className="shan-hero__linezh">
             山自生，卷自展。
           </span>
         </p>
 
         <p className="shan-hero__est">
+          <span lang="ko">실시간으로 그리는 수묵 풍경 · 노이즈에서 비롯되다</span>{" "}
           an ink landscape, drawn live · est. from noise{" "}
           <span lang="zh">水墨生成 · 以噪為骨</span>
         </p>
       </div>
 
       <p className="shan-hero__hint" aria-hidden="true">
-        <span lang="zh">下展</span> the scroll opens below
+        <span lang="ko">아래로</span> <span lang="zh">下展</span> — the scroll opens below
       </p>
     </header>
   );

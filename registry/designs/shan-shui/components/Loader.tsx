@@ -98,6 +98,7 @@ export default function Loader({ onDone }: { onDone: () => void }) {
           </text>
         </svg>
         <p className="shan-loader__word">
+          <span lang="ko">두루마리를 펼치는 중</span>{" "}
           unrolling the scroll <span lang="zh">展卷</span>
         </p>
       </div>

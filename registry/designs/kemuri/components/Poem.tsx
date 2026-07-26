@@ -21,6 +21,14 @@ const EN_LINES = [
   "That is the whole hour.",
 ];
 
+const KO_LINES = [
+  "향을 한 대, 세운다.",
+  "연기가 풀려서, 오른다.",
+  "시간은 재가 되어, 내린다.",
+  "앉아서, 그것을 본다.",
+  "그것뿐인 한 시간.",
+];
+
 /** ms between columns; glyphs inside a column tick every 60ms. */
 const LINE_STAGGER = 620;
 
@@ -38,17 +46,19 @@ export default function Poem() {
     <section className="kemuri-poem" aria-labelledby="kemuri-poem-title">
       <div className="kemuri-sechead" data-reveal="">
         <p className="kemuri-eyebrow" aria-hidden="true">
-          02 — 香時計
+          02 — 향시계 · 香時計
         </p>
         <h2 className="kemuri-sechead__title" id="kemuri-poem-title">
-          The incense clock{" "}
+          <span lang="ko">향시계</span>{" "}
           <span lang="ja" className="kemuri-sechead__ja">
             香時計
           </span>
         </h2>
         <p className="kemuri-sechead__line">
-          Before clocks had hands, temples measured the afternoon in smoke.
-          One stick, one hour. We still do.{" "}
+          <span lang="ko">
+            시계에 바늘이 생기기 전, 사찰은 오후를 연기로 재었다. 한 대에 한
+            시간. 우리는 지금도 그렇게 한다.
+          </span>{" "}
           <span lang="ja" className="kemuri-sechead__lineja">
             時計に針が生まれる前、寺は午後を煙で計った。一本で、一時間。
             私たちは今もそうしている。
@@ -57,6 +67,18 @@ export default function Poem() {
       </div>
 
       <div className="kemuri-poem__stage" data-reveal="scene">
+        <div className="kemuri-poem__ko" lang="ko">
+          {KO_LINES.map((line, i) => (
+            <p
+              key={line}
+              className="kemuri-poem__koline"
+              style={{ "--kd": `${300 + i * LINE_STAGGER}ms` } as CSSProperties}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+
         <div className="kemuri-poem__en" lang="en">
           {EN_LINES.map((line, i) => (
             <p
@@ -72,7 +94,7 @@ export default function Poem() {
         <div
           className="kemuri-poem__jp"
           role="group"
-          aria-label="同じ詩の日本語原文、縦書き。 The same poem in Japanese, set vertically."
+          aria-label="같은 시의 일본어 원문, 세로쓰기. The same poem in Japanese, set vertically."
         >
           {JP_LINES.map((line, i) => (
             <div key={line} className="kemuri-poem__jpline">

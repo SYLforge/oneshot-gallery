@@ -28,15 +28,21 @@ export default function SealStamp() {
     <section className="shan-seal" aria-labelledby="shan-seal-title">
       <div className="shan-seal__inner" data-reveal="">
         <p className="shan-eyebrow" aria-hidden="true">
-          03 — 落款 · the chop
+          03 — 낙관 · 落款 · the chop
         </p>
         <h2 className="shan-seal__title" id="shan-seal-title">
+          <span lang="ko">그림은 낙관하고 나서야 끝난다.</span>{" "}
           A painting is not finished until it is signed.{" "}
           <span lang="zh" className="shan-seal__titlezh">
             畫成而後落印
           </span>
         </h2>
         <p className="shan-seal__line">
+          <span lang="ko">
+            주홍 낙관은 화가가 그림 속으로 들어가는 순간이다. 눌러 보라 — 두루마리에
+            자국을 남겨라. 인문(印文)은 <span lang="zh">心</span>, 마음: 문인 화가가
+            종이 위에 가장 남기고 싶어 하던 한 글자다.
+          </span>{" "}
           The vermillion chop is the painter entering the painting. Press it —
           leave your mark on the scroll. The seal reads{" "}
           <span lang="zh">心</span>, the heart-mind: the one character a
@@ -87,7 +93,7 @@ export default function SealStamp() {
             type="button"
             className={`shan-seal__btn ${pressed ? "is-pressing" : ""}`}
             onClick={press}
-            aria-label={`Press the seal. Impressions so far: ${count}. 印章按下。已鈐印 ${count} 次。`}
+            aria-label={`Press the seal. 도장을 누르세요. 印章按下。 Impressions so far: ${count}. 지금까지 ${count}회. 已鈐印 ${count} 次。`}
           >
             <span className="shan-seal__btnface" aria-hidden="true">
               <svg viewBox="0 0 72 72" width={56} height={56} focusable="false">
@@ -105,7 +111,7 @@ export default function SealStamp() {
               </svg>
             </span>
             <span className="shan-seal__btnlabel">
-              press to stamp{" "}
+              <span lang="ko">눌러서 찍기</span> press to stamp{" "}
               <span lang="zh" className="shan-seal__btnlabelzh">
                 鈐印
               </span>
@@ -116,11 +122,12 @@ export default function SealStamp() {
         <p className="shan-seal__count" aria-live="polite">
           {count === 0 ? (
             <>
-              no impressions yet{" "}
+              <span lang="ko">아직 찍은 자국 없음</span> no impressions yet{" "}
               <span lang="zh">尚未鈐印</span>
             </>
           ) : (
             <>
+              <span lang="ko">두루마리에 {count}회 낙인됨</span>{" "}
               {count} impression{count === 1 ? "" : "s"} on the scroll{" "}
               <span lang="zh">卷上已鈐 {count} 印</span>
             </>

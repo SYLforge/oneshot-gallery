@@ -26,7 +26,7 @@ export default function Hero({ entered }: { entered: boolean }) {
     >
       <div className="kemuri-hero__inner">
         <p className="kemuri-hero__kicker">
-          An hour of stillness{" "}
+          <span lang="ko">고요함을, 한 시간</span>{" "}
           <span lang="ja" className="kemuri-hero__kickerja">
             静けさを、一時間
           </span>
@@ -46,20 +46,22 @@ export default function Hero({ entered }: { entered: boolean }) {
         </h1>
 
         <p className="kemuri-hero__sub">
-          <Cadence text="煙 · 香の間" lang="ja" step={90} start={900} />
+          <span lang="ko">연기 · 향 사이</span>{" "}
+          <Cadence text=" · 煙 · 香の間" lang="ja" step={90} start={900} />
         </p>
 
         <div className="kemuri-hero__rule" aria-hidden="true" />
 
         <p className="kemuri-hero__line">
-          The smoke does not hurry. Neither should you.{" "}
+          <span lang="ko">연기는 서두르지 않는다. 당신도 그렇게.</span>{" "}
           <span lang="ja" className="kemuri-hero__lineja">
             煙は急がない。あなたも。
           </span>
         </p>
 
         <p className="kemuri-hero__est">
-          Incense atelier — Kyoto, est.&nbsp;1927{" "}
+          <span lang="ko">향 공방 — 교토, 1927년 창업</span>{" "}
+          <span lang="en">Incense atelier — Kyoto, est.&nbsp;1927</span>{" "}
           <span lang="ja">京都・香房 · 昭和二年創業</span>
         </p>
       </div>
@@ -115,7 +117,7 @@ export default function Hero({ entered }: { entered: boolean }) {
       </svg>
 
       <p className="kemuri-hero__hint" aria-hidden="true">
-        <span lang="ja">下へ</span> the hour begins below
+        <span lang="ko">아래로</span> <span lang="ja">下へ</span> — the hour begins below
       </p>
 
       <SmokeCanvas />

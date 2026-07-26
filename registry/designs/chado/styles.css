@@ -22,8 +22,10 @@
   /* -- type ---------------------------------------------------------------- */
   --ch-font-latin: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
   --ch-font-ja: var(--font-mincho), "Shippori Mincho", serif;
-  /* Cormorant first: Latin resolves there, CJK falls through into Shippori */
-  --ch-font-stack: var(--font-cormorant), var(--font-mincho),
+  --ch-font-kr: var(--font-kr), "Noto Serif KR", serif;
+  /* Cormorant first: Latin resolves there, Hangul falls into Noto Serif KR,
+     kanji/kana fall through into Shippori. */
+  --ch-font-stack: var(--font-cormorant), var(--font-kr), var(--font-mincho),
     Georgia, serif;
 
   /* -- motion -------------------------------------------------------------- */
@@ -59,6 +61,15 @@
   font-family: var(--ch-font-ja);
   letter-spacing: 0.02em;
   line-height: 1.9;
+}
+
+/* Korean is the gallery's main reading voice: Noto Serif KR, matching the
+   mincho's brush-remembering restraint, with a hair of tracking so Hangul
+   syllables breathe the same ma as the ceremony. */
+.chado-root :lang(ko) {
+  font-family: var(--ch-font-kr);
+  letter-spacing: 0.01em;
+  line-height: 1.85;
 }
 
 /* Matcha selection, scoped to the entry root */

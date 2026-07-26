@@ -108,7 +108,8 @@ export default function Loader({ onDone }: { onDone: () => void }) {
           </text>
         </svg>
         <p className="kemuri-loader__word">
-          an hour of stillness <span lang="ja">静けさを、一時間</span>
+          <span lang="ko">고요함을, 한 시간</span>{" "}
+          <span lang="ja">静けさを、一時間</span>
         </p>
       </div>
     </div>

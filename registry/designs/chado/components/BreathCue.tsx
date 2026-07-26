@@ -22,11 +22,11 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
  * The cue never blocks reading: it is decorative (aria-hidden) and the four
  * beats are listed in plain text beside it for assistive tech.
  */
-const PHASE_LABEL: Record<BreathPhase, { ja: string; en: string }> = {
-  0: { ja: "吸う", en: "inhale" },
-  1: { ja: "止む", en: "hold" },
-  2: { ja: "吐く", en: "exhale" },
-  3: { ja: "間", en: "ma — the pause between" },
+const PHASE_LABEL: Record<BreathPhase, { ja: string; ko: string; en: string }> = {
+  0: { ja: "吸う", ko: "들이쉬기", en: "inhale" },
+  1: { ja: "止む", ko: "참기", en: "hold" },
+  2: { ja: "吐く", ko: "내쉬기", en: "exhale" },
+  3: { ja: "間", ko: "사이", en: "ma — the pause between" },
 };
 
 export default function BreathCue({ active }: { active: boolean }) {
@@ -46,6 +46,9 @@ export default function BreathCue({ active }: { active: boolean }) {
         <span className="chado-breath__ring chado-breath__ring--2" />
       </span>
       <span className="chado-breath__label" key={phase}>
+        <span className="chado-breath__ko" lang="ko">
+          {label.ko}
+        </span>
         <span className="chado-breath__ja" lang="ja">
           {label.ja}
         </span>

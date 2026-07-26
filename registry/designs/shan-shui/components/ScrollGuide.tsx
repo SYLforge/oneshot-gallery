@@ -9,23 +9,29 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 const DISTANCES = [
   {
     zh: "高遠",
+    ko: "고원",
     py: "gāo yuǎn",
     en: "high distance",
     note: "looking up at a peak — the mountain towers over you.",
+    noteKo: "산 아래에서 산봉우리를 올려다본다 — 산세가 우뚝하다.",
     noteZh: "自山下而仰山巔 — 山勢巍然。",
   },
   {
     zh: "深遠",
+    ko: "심원",
     py: "shēn yuǎn",
     en: "deep distance",
     note: "looking past the near ridge into a hidden valley behind it.",
+    noteKo: "앞산 너머로 뒷산을 들여다본다 — 겹겹 산이 깊이 숨는다.",
     noteZh: "自山前而窺山後 — 層巒深隱。",
   },
   {
     zh: "平遠",
+    ko: "평원",
     py: "píng yuǎn",
     en: "level distance",
     note: "looking across an even expanse, ridges dissolving into haze.",
+    noteKo: "가까운 산에서 먼 산을 바라본다 — 점차 연무에 잠긴다.",
     noteZh: "自近山而望遠山 — 漸入煙嵐。",
   },
 ];
@@ -105,15 +111,20 @@ export default function ScrollGuide() {
 
         <div className="shan-guide__copy">
           <p className="shan-eyebrow" aria-hidden="true">
-            02 — 三遠 · the three distances
+            02 — 삼원 · 三遠 · the three distances
           </p>
           <h2 className="shan-guide__title" id="shan-guide-title">
+            <span lang="ko">먼 산은 눈썹의 먹빛 같다.</span>{" "}
             Distant mountains are like eyebrow pigment.{" "}
             <span lang="zh" className="shan-guide__titlezh">
               遠山如黛
             </span>
           </h2>
           <p className="shan-guide__lede">
+            <span lang="ko">
+              산수화에서 거리는 보폭으로 재지 않는다. 먹의 짙고 옅음으로 잰다 —
+              산이 멀수록 빛이 옅어져, 결국 지평선은 거의 종이 그 자체가 된다.
+            </span>{" "}
             In a Chinese landscape, distance is not measured in paces. It is
             measured in ink — the farther a ridge, the paler it washes, until
             the horizon is almost the paper itself.{" "}
@@ -132,10 +143,13 @@ export default function ScrollGuide() {
                 <span className="shan-guide__zh" lang="zh">
                   {d.zh}
                 </span>
+                <span className="shan-guide__ko" lang="ko">
+                  {d.ko}
+                </span>
                 <span className="shan-guide__py">{d.py}</span>
                 <span className="shan-guide__en">“{d.en}”</span>
                 <span className="shan-guide__note">
-                  {d.note}{" "}
+                  <span lang="ko">{d.noteKo}</span> {d.note}{" "}
                   <span lang="zh" className="shan-guide__notezh">
                     {d.noteZh}
                   </span>
@@ -151,6 +165,9 @@ export default function ScrollGuide() {
               step={140}
               start={400}
             />
+          </p>
+          <p className="shan-guide__couplet-ko" lang="ko">
+            <em>한 산, 한 물, 모두 먹에서 온다.</em>
           </p>
           <p className="shan-guide__couplet-en">
             <em>

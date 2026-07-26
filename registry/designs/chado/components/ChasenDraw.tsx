@@ -118,16 +118,17 @@ export default function ChasenDraw({ notes }: { notes: ReactNode }) {
     >
       <header className="chado-chashitsu__head" data-reveal>
         <p className="chado-kicker">
-          <span lang="ja">点前</span> · The Preparation
+          <span lang="ko">점전</span> · <span lang="ja">点前</span> · The Preparation
         </p>
         <h2
           id="chado-preparation-title"
           className="chado-section-title"
-          lang="ja"
         >
-          茶筅が描く一服
+          <span lang="ko">차센이 그리는 한 잔</span>{" "}
+          <span lang="ja">茶筅が描く一服</span>
         </h2>
         <p className="chado-section-sub">
+          <span lang="ko">거품이 그린 한 잔 — 차센, 찻잔, 숨.</span>{" "}
           A bowl drawn by the whisk — chasen, bowl, breath.
         </p>
       </header>
@@ -141,15 +142,20 @@ export default function ChasenDraw({ notes }: { notes: ReactNode }) {
             aria-labelledby="chado-chasen-label"
           >
             <title id="chado-chasen-label">
-              茶筅が茶碗の上で点てる図 — 竹の茶筅がスクロールに合わせて 그림지며,
-              한 그릇의 말차가 완성된다. The bamboo chasen whisking above the
-              chawan; its tines draw as you scroll, until one bowl of matcha
-              is complete.
+              차센이 찻잔 위에서 점도하는 그림 — 대나무 차센이 스크롤을 따라
+              그려지며, 한 그릇의 말차가 완성된다. 茶筅が茶碗の上で点てる図 —
+              竹の茶筅がスクロールに合わせて描かれ、一碗の抹茶が完成する.
+              The bamboo chasen whisking above the chawan; its tines draw as
+              you scroll, until one bowl of matcha is complete.
             </title>
             <Whisk />
             <Bowl />
           </svg>
           <figcaption className="chado-chashitsu__cap">
+            <span lang="ko">
+              도 · 차센 — 대나무를 쪼개어 구부린 일흔 줄기의 침이, 한 그릇의
+              거품을 일으킨다.
+            </span>
             <span lang="ja">
               図 · 茶筅（ちゃせん）— 竹を割って曲げた七十本の穂が、一碗の泡を立てる。
             </span>

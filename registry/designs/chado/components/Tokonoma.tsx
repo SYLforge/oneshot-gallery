@@ -28,16 +28,17 @@ export default function Tokonoma() {
     >
       <header className="chado-tokonoma__head" data-reveal>
         <p className="chado-kicker">
-          <span lang="ja">床の間</span> · The Alcove
+          <span lang="ko">도코노마</span> · <span lang="ja">床の間</span> · The Alcove
         </p>
         <h2
           id="chado-tokonoma-title"
           className="chado-section-title chado-section-title--center"
-          lang="ja"
         >
-          一柱の花、一行の詩
+          <span lang="ko">한 줄기 꽃, 한 줄 시</span>{" "}
+          <span lang="ja">一柱の花、一行の詩</span>
         </h2>
         <p className="chado-section-sub chado-section-sub--center">
+          <span lang="ko">한 줄기, 한 줄 — 방이 완성된다.</span>{" "}
           One stem, one line — the room is complete.
         </p>
       </header>
@@ -64,7 +65,7 @@ export default function Tokonoma() {
         {/* the hanging scroll — the tea poem, in tategaki */}
         <figure className="chado-scroll" role="img" aria-labelledby="chado-scroll-cap">
           <div className="chado-scroll__rod chado-scroll__rod--top" aria-hidden="true" />
-          <p className="chado-scroll__poem" lang="ja" aria-label="茶を点てば、ただ一服のために。千の作法は、ひとつの碗へ集まる。">
+          <p className="chado-scroll__poem" lang="ja" aria-label="차를 점으면, 오직 한 잔을 위해서다. 천 가지 작법은, 하나의 그릇에 모인다. 茶を点てば、ただ一服のために。千の作法は、ひとつの碗へ集まる。">
             <span aria-hidden="true">茶</span>
             <span aria-hidden="true">を</span>
             <span aria-hidden="true">点</span>
@@ -84,6 +85,10 @@ export default function Tokonoma() {
           <div className="chado-scroll__rod chado-scroll__rod--bottom" aria-hidden="true" />
           <figcaption id="chado-scroll-cap" className="chado-scroll__cap">
             <em>
+              <span lang="ko">
+                &ldquo;차를 젓으면, 그 모든 것이 한 그릇을 위한 것이다. 천 가지
+                형식이 하나의 그릇에 모인다.&rdquo;
+              </span>{" "}
               &ldquo;Whisk the tea, and it is all for a single bowl. A
               thousand forms gather into one vessel.&rdquo;
             </em>
@@ -138,7 +143,7 @@ export default function Tokonoma() {
             />
           </svg>
           <figcaption className="chado-ikebana__cap">
-            <span lang="ja">一輪生花</span> ·{" "}
+            <span lang="ko">한 줄기 생화</span> · <span lang="ja">一輪生花</span> ·{" "}
             <em>one stem, arranged</em>
           </figcaption>
         </figure>

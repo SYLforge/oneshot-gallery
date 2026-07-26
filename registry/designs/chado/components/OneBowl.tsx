@@ -27,7 +27,7 @@ export default function OneBowl() {
     >
       <div className="chado-bowlsec__inner" data-reveal>
         <p className="chado-kicker chado-kicker--center">
-          <span lang="ja">一服</span> · One Bowl
+          <span lang="ko">한 잔</span> · <span lang="ja">一服</span> · One Bowl
         </p>
 
         <svg
@@ -37,7 +37,7 @@ export default function OneBowl() {
           aria-labelledby="chado-bowl-title"
         >
           <title id="chado-bowl-title">
-            一服の茶碗 — 한 그릇의 말차. One bowl of matcha, centered on lit
+            한 그릇의 말차 — 一服の茶碗. One bowl of matcha, centered on lit
             paper, with a faint breath of steam.
           </title>
           {/* steam — three wisps, the page's only ambient loop */}
@@ -88,10 +88,15 @@ export default function OneBowl() {
         </svg>
 
         <h2 className="chado-bowlsec__title">
-          <span lang="ja">一服</span>
+          <span lang="ko">한 잔</span> <span lang="ja">一服</span>
         </h2>
-        <p className="chado-bowlsec__reading">ichifuku · one serving</p>
+        <p className="chado-bowlsec__reading">
+          일복 · ichifuku · <span lang="ko">한 차림</span> · one serving
+        </p>
 
+        <p className="chado-bowlsec__line chado-bowlsec__line--ko" lang="ko" data-reveal>
+          이것이, 모든 것을 위한 한 잔이다.
+        </p>
         <p className="chado-bowlsec__line chado-bowlsec__line--ja" lang="ja" data-reveal>
           これが、すべてのための一服。
         </p>
@@ -100,8 +105,9 @@ export default function OneBowl() {
           no next thing.
         </p>
 
-        <p className="chado-bowlsec__seal" lang="ja" data-reveal>
-          いただきます
+        <p className="chado-bowlsec__seal" data-reveal>
+          <span lang="ko">잘 먹겠습니다</span>{" "}
+          <span lang="ja">いただきます</span>
         </p>
       </div>
     </section>
