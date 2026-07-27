@@ -1,0 +1,177 @@
+/* ==========================================================================
+   WIDGET 위젯 — spatial glass dashboard · visionOS style
+   bento-product · depth gradient / glass widgets / iris accent
+   Scoped by convention to .widget-root; classes prefixed widget-.
+   ========================================================================== */
+
+.widget-root {
+  --w-depth-1: #1a1f3a;
+  --w-depth-2: #2d1f4a;
+  --w-glass: rgba(255,255,255,0.08);
+  --w-glass-border: rgba(255,255,255,0.15);
+  --w-iris: #6366f1;
+  --w-iris-soft: rgba(99,102,241,0.3);
+  --w-text: #f0f0ff;
+  --w-text-dim: #a0a0c0;
+
+  --w-font-sans: var(--font-inter), "Inter", sans-serif;
+  --w-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --w-font-stack: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+
+  --w-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--w-depth-1) 0%, var(--w-depth-2) 100%);
+  color: var(--w-text);
+  font-family: var(--w-font-stack);
+  font-weight: 400;
+  font-size: clamp(15px, 0.5vw + 13px, 17px);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.widget-root :lang(ko) { font-family: var(--w-font-kr); }
+.widget-root ::selection { background: var(--w-iris); color: #fff; }
+.widget-root :focus-visible { outline: 2px solid var(--w-iris); outline-offset: 4px; }
+
+.widget-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 800ms var(--w-ease), transform 800ms var(--w-ease);
+}
+.widget-js [data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .widget-js [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+.widget-doc { position: relative; z-index: 1; }
+
+/* Hero */
+.widget-hero {
+  padding: clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
+  text-align: center;
+}
+.widget-kicker {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--w-iris);
+  margin: 0 0 24px;
+}
+.widget-title {
+  font-weight: 700;
+  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: 1;
+  margin: 0 0 16px;
+}
+.widget-title :lang(ko) { font-size: 0.5em; color: var(--w-iris); }
+.widget-sub { color: var(--w-text-dim); margin: 0; }
+
+/* Mode toggle */
+.widget-stage-section { padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px); }
+.widget-mode-toggle {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto 48px;
+}
+.widget-mode-btn {
+  background: var(--w-glass);
+  border: 1px solid var(--w-glass-border);
+  color: var(--w-text-dim);
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-family: var(--w-font-sans);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 200ms var(--w-ease);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.widget-mode-btn.is-active {
+  background: var(--w-iris);
+  border-color: var(--w-iris);
+  color: #fff;
+}
+.widget-mode-btn:hover:not(.is-active) {
+  border-color: var(--w-iris-soft);
+  color: var(--w-text);
+}
+
+/* Stage — the floating widgets */
+.widget-stage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  perspective: 1000px;
+  --widget-px: 0;
+  --widget-py: 0;
+}
+
+.widget-card {
+  background: var(--w-glass);
+  border: 1px solid var(--w-glass-border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  transition: transform 400ms var(--w-ease);
+  transform: rotateY(calc(var(--widget-px) * 5deg)) rotateX(calc(var(--widget-py) * -5deg));
+}
+.widget-card[data-depth="3"] { transform: rotateY(calc(var(--widget-px) * 9deg)) rotateX(calc(var(--widget-py) * -9deg)) translateZ(20px); }
+.widget-card[data-depth="2"] { transform: rotateY(calc(var(--widget-px) * 6deg)) rotateX(calc(var(--widget-py) * -6deg)) translateZ(10px); }
+.widget-card[data-depth="1"] { transform: rotateY(calc(var(--widget-px) * 3deg)) rotateX(calc(var(--widget-py) * -3deg)); }
+
+.widget-card__label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--w-text-dim);
+  margin: 0 0 12px;
+}
+.widget-card__value {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--w-text);
+  margin: 0 0 6px;
+}
+.widget-card__value-small {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.widget-card__sub {
+  font-size: 0.8rem;
+  color: var(--w-text-dim);
+  margin: 0;
+}
+
+/* Chart bars */
+.widget-card__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 60px;
+  margin-top: 12px;
+}
+.widget-bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--w-iris) 0%, var(--w-iris-soft) 100%);
+  border-radius: 3px 3px 0 0;
+  min-height: 8px;
+}
+
+/* Footer */
+.widget-foot {
+  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
+  color: var(--w-text-dim);
+  font-size: 0.8rem;
+  text-align: center;
+}
+.widget-foot p { margin: 0 0 6px; }

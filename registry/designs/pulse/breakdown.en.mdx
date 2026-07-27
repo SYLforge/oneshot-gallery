@@ -1,0 +1,23 @@
+# PULSE — breakdown
+
+## The hook
+A fictional record label that drops one release into the dark at a time. The
+signature is a generative particle nebula — a few hundred 3D-projected points
+on canvas 2D that pulse to a simulated beat. Where ORBIT is a product you
+control (turntable), PULSE is generative and autonomous (breathing nebula).
+
+## Renderer
+Vanilla canvas 2D with manual 3D perspective projection (multiply points by a
+perspective matrix by hand — a few hundred points, cheap). NO three.js — the
+gallery's zero-dependency policy.
+
+## Techniques
+1. **canvas-particles** — the 3D-projected nebula pulsing to a simulated
+   ~120bpm beat (no real audio).
+2. **pointer-parallax** — the nebula's camera tilts subtly with pointer.
+3. **scroll-scrub-pinned** — a pinned tracklist where the nebula shifts
+   color/intensity per track.
+
+## Accessibility
+Reduced motion: nebula static at a composed frame. No-JS: a static nebula hero.
+AA contrast. Korean-first bilingual.

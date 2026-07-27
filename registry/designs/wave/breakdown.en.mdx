@@ -1,0 +1,19 @@
+# WAVE — breakdown
+
+## The hook
+A podcast/music-network analytics dashboard whose signature is a live ASCII
+spectrum analyzer — 48 box-character bars (▁▂▃▄▅▆▇█) driven by a simulated beat
+(no real audio). Where PALE.SIGNAL is poetry/logs and GLITCH is corruption,
+WAVE is data-visualization — a functional terminal dashboard whose centerpiece
+is a beautiful equalizer in text.
+
+## Techniques
+1. **ascii-render** — the live spectrum analyzer: 48 box-character bars whose
+   heights are driven by a simulated beat (layered sines + envelope, 60fps).
+2. **typewriter** — the tagline types itself in amber.
+3. **marquee** — a scrolling now-playing / stats ticker.
+
+## Accessibility
+Reduced motion: spectrum static at a composed frame, ticker static. No-JS:
+fully readable dashboard with all stats visible. AA contrast. Korean-first
+bilingual.

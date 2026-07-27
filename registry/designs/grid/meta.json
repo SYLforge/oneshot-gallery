@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "grid",
+  "no": 40,
+  "title": {
+    "en": "GRID — Atelier of Measured Form",
+    "ko": "그리드 — 측정된 형태의 사무소"
+  },
+  "description": {
+    "en": "A fictional architecture atelier that publishes its work as large-format typographic plates — projects FLIP-rearrange as you filter by typology, an architectural section-drawing builds itself line-by-line with scroll, and section numbers arrive as oversized thin numerals. The grid is not the subject; it is the instrument.",
+    "ko": "작품을 대형 타이포그래피 도판으로 출판하는 가상의 건축 사무소 — 유형별로 걸러면 프로젝트 도판이 FLIP으로 재배열되고, 스크롤을 따라 단면도가 줄 단위로 지어지며, 도판 번호는 대형 얇은 숫자로 도착한다. 그리드는 주제가 아니라 도구다."
+  },
+  "aesthetic": "swiss-typographic",
+  "techniques": ["flip-layout", "scroll-scrub-pinned", "char-split-reveal"],
+  "industry": ["culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM 5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#e63946",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "dream",
+  "no": 38,
+  "title": {
+    "en": "DREAM — A Sleep House",
+    "ko": "꿈 — 잠이 드는 집"
+  },
+  "description": {
+    "en": "A sleep house whose page drifts like the moment before sleep — pastel clouds float in layered depth toward your pointer, a pinned descent dissolves the sky into deep indigo as you scroll deeper, and soft feTurbulence haze breathes over everything like the veil of a closing eye.",
+    "ko": "잠이 들기 직전의 시간처럼 흐르는 수면의 집 — 파스텔 구름이 깊이별로 포인터를 따라 떠 있고, 스크롤을 내릴수록 핀된 하늘이 짙은 남색으로 녹아내리며, 부드러운 feTurbulence의 안개가 감기는 눈꺼풀처럼 모든 것 위를 호흡한다."
+  },
+  "aesthetic": "organic-nature",
+  "techniques": ["pointer-parallax", "scroll-scrub-pinned", "feturbulence-texture"],
+  "industry": ["wellness"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#a78bd9",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

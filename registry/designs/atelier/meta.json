@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "atelier",
+  "no": 39,
+  "title": {
+    "en": "ATELIER — Maison Lookbook, Séoul",
+    "ko": "아틀리에 — 메종 룩북, 서울"
+  },
+  "description": {
+    "en": "A Seoul maison's editorial lookbook for the RESERVE collection — the magazine cover as a website. Full-bleed editorial spreads, oversized Didone serif, expensive silence, and one antique-gold hairline. Five looks crossfade in a scroll-scrubbed pin like pages turning; sections wipe in on hairline cuts. Pure black, warm paper, and one rare accent — not a single raster pixel.",
+    "ko": "서울의 메종이 내놓는 RESERVE 컬렉션의 에디토리얼 룩북 — 잡지 표지를 웹사이트로. 풀블리드 에디토리얼 스프레드, 오버사이즈 디돈 세리프, 값비싼 침묵, 그리고 골동 골드 헤어라인 하나. 다섯 룩이 스크롤 스크럽 핀 안에서 페이지를 넘기듯 교차 페이드되고, 섹션은 헤어라인 컷으로 와이프된다. 순흑, 따뜻한 종이, 그리고 드문 액센트 하나 — 래스터 픽셀은 단 하나도 없다."
+  },
+  "aesthetic": "luxury-fashion",
+  "techniques": ["char-split-reveal", "scroll-scrub-pinned", "clip-path-reveal"],
+  "industry": ["fashion-beauty"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#b8945a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

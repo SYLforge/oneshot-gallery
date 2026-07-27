@@ -1,0 +1,957 @@
+/* ==========================================================================
+   REEL — analog film-leak photography
+   cinematic-dark · warm Kodak tones, light leaks, halation, contact sheet
+   Scoped by convention to .reel-root; classes prefixed reel-.
+   DISTINCT from HALFLIGHT: warm paper under a safelight + sweeping light
+   leaks + a developing contact sheet — never the cold grayscale of a
+   projection reel. The accent is amber gold, not signal red.
+   ========================================================================== */
+
+.reel-root {
+  /* -- palette ---------------------------------------------------------- */
+  --reel-black: #1a120e; /* stock-black — the darkroom at safelight */
+  --reel-negative: #100a07; /* the true-black margins, sprocket gutter */
+  --reel-paper: #f3e7d3; /* primary text — warm off-white of a print (12.6:1) */
+  --reel-paper-dim: #c8b59a; /* secondary — desaturated paper (8.4:1) */
+  --reel-amber: #d4a554; /* the accent: Kodak gold, selection, focus ring (5.9:1) */
+  --reel-red: #c44830; /* the warm alarm: leaks, the selected frame number (4.3:1, large/non-text) */
+  --reel-orange: #ff8844; /* pure light — the leak core & halation, never text */
+  --reel-sepia: #8a6a3a; /* warm metadata: frame nos, edge print (4.9:1) */
+  --reel-line: #3a2a1c; /* decorative rules & contact-sheet grid lines */
+
+  /* -- type -------------------------------------------------------------- */
+  /* Hangul falls through the Latin faces into Noto Serif KR without markup */
+  --reel-font-display: var(--font-playfair), var(--font-noto-serif-kr),
+    Georgia, serif;
+  --reel-font-body: var(--font-noto-serif-kr), var(--font-playfair), Georgia,
+    serif;
+  --reel-font-mono: var(--font-space-mono), var(--font-noto-serif-kr),
+    "Courier New", monospace;
+  --reel-font-ko: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --reel-ease: cubic-bezier(0.22, 0.61, 0.36, 1); /* develop: fast then settle */
+
+  /* -- geometry ---------------------------------------------------------- */
+  --reel-frame-w: min(1100px, 92vw, 148svh); /* the contact-sheet column */
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background:
+    /* a warm safelight wash over the base, always present even without JS */
+    radial-gradient(
+      130% 90% at 18% 0%,
+      rgba(212, 165, 84, 0.10),
+      transparent 55%
+    ),
+    radial-gradient(120% 80% at 100% 100%, rgba(196, 72, 48, 0.06), transparent 50%),
+    var(--reel-black);
+  color: var(--reel-paper);
+  font-family: var(--reel-font-body);
+  font-size: clamp(16px, 0.9vw + 11px, 19px);
+  line-height: 1.65;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: its own serif, natural breaks, its own rhythm. */
+.reel-root :lang(ko) {
+  font-family: var(--reel-font-ko);
+  word-break: keep-all;
+  letter-spacing: 0;
+}
+
+/* Amber selection, scoped to the entry root */
+.reel-root ::selection {
+  background: var(--reel-amber);
+  color: var(--reel-black);
+  text-shadow: none;
+}
+
+/* Keyboard focus: the amber grease-pencil ring */
+.reel-root :focus-visible {
+  outline: 2px solid var(--reel-amber);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+.reel-mono {
+  font-family: var(--reel-font-mono);
+}
+
+.reel-link {
+  color: var(--reel-paper);
+  text-decoration: underline;
+  text-decoration-color: rgba(243, 231, 211, 0.32);
+  text-underline-offset: 4px;
+}
+
+.reel-link:hover {
+  text-decoration-color: var(--reel-amber);
+}
+
+/* Visually hidden, still read aloud */
+.reel-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Shared section furniture
+   ========================================================================== */
+
+.reel-sechead {
+  margin: 0;
+  font-family: var(--reel-font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.reel-sechead__ko {
+  display: inline;
+  margin-left: 0.3em;
+  font-family: var(--reel-font-ko);
+  font-size: 0.46em;
+  font-weight: 600;
+  color: var(--reel-paper-dim);
+  letter-spacing: 0.02em;
+  vertical-align: 0.24em;
+}
+
+.reel-sechead__no {
+  margin: 0 0 0.6rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.26em;
+  color: var(--reel-sepia);
+}
+
+/* ==========================================================================
+   Film grain — shared across cover & footer. Decorative, stepped, JS-gated.
+   Warm-tinted feTurbulence: silver-halide stock, not white noise.
+   ========================================================================== */
+
+.reel-grain {
+  position: absolute;
+  inset: -60px;
+  z-index: 4;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.42 0.34 0.22 0 0  0.42 0.34 0.22 0 0  0.42 0.34 0.22 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+}
+
+.reel-js .reel-grain {
+  animation: reel-grain 1.3s steps(1, end) infinite;
+}
+
+/* ==========================================================================
+   FRAME 01 — the cover sheet
+   NOT a letterboxed cinema stage. Warm paper under a safelight with sweeping
+   light leaks and halation. The cover-line is a film-credit serif.
+   ========================================================================== */
+
+.reel-cover {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 38%, #241913 0%, var(--reel-black) 62%);
+}
+
+/* the diagonal light-leak sweep — screen-blended flare over the warm base */
+.reel-cover__leak {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.reel-cover__leak--sweep {
+  inset: -20% -10%;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 136, 68, 0.22) 47%,
+    rgba(255, 136, 68, 0.34) 50%,
+    rgba(196, 72, 48, 0.18) 54%,
+    transparent 64%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+.reel-js .reel-cover__leak--sweep {
+  animation: reel-leak-sweep 11.4s linear infinite;
+  will-change: transform;
+}
+
+/* a faded-red secondary leak that breathes — the chemical exhale */
+.reel-cover__leak--breath {
+  top: -10%;
+  right: -5%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(
+    50% 50% at 70% 30%,
+    rgba(196, 72, 48, 0.42),
+    rgba(196, 72, 48, 0.12) 40%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+.reel-js .reel-cover__leak--breath {
+  animation: reel-leak-breath 7.6s ease-in-out infinite;
+  will-change: opacity;
+}
+
+/* halation: a wide blurred amber bloom behind the title — overexposed film */
+.reel-cover__halation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 760px);
+  height: min(46vw, 480px);
+  transform: translate(-50%, -54%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(212, 165, 84, 0.30),
+    rgba(212, 165, 84, 0.08) 45%,
+    transparent 72%
+  );
+  filter: blur(28px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.reel-js .reel-cover__halation {
+  animation: reel-halation 4.6s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.reel-cover__inner {
+  position: relative;
+  z-index: 3;
+  max-width: 1000px;
+  padding: clamp(2rem, 6svh, 5rem) clamp(20px, 5vw, 64px);
+  text-align: center;
+}
+
+.reel-cover__kicker {
+  margin: 0 0 clamp(1.4rem, 3.6svh, 2.4rem);
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  color: var(--reel-amber);
+}
+
+.reel-cover__kicker :lang(ko) {
+  color: var(--reel-paper-dim);
+}
+
+.reel-cover__title {
+  margin: 0;
+  font-family: var(--reel-font-display);
+  font-weight: 700;
+  font-size: clamp(3.4rem, 18vw, 13.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--reel-paper);
+  text-shadow: 0 0 38px rgba(212, 165, 84, 0.22);
+}
+
+.reel-cover__title-inner {
+  display: inline-block;
+}
+
+.reel-cover__ch {
+  display: inline-block;
+}
+
+.reel-js .reel-cover__ch {
+  animation: reel-cover-rise 820ms var(--reel-ease) both;
+}
+
+.reel-cover__sub {
+  margin: clamp(1.4rem, 3.6svh, 2.4rem) 0 0;
+  font-family: var(--reel-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.2rem, 2.6vw, 1.8rem);
+  letter-spacing: 0.005em;
+  color: var(--reel-paper);
+}
+
+.reel-cover__sub :lang(ko) {
+  font-style: normal;
+  color: var(--reel-paper-dim);
+}
+
+.reel-cover__lede {
+  max-width: 36em;
+  margin: 1.1rem auto 0;
+  font-size: clamp(1.02rem, 1.8vw, 1.2rem);
+  color: var(--reel-paper);
+}
+
+.reel-cover__lede :lang(ko) {
+  color: var(--reel-paper-dim);
+}
+
+.reel-cover__hint {
+  margin: clamp(2.4rem, 6svh, 3.8rem) 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  color: var(--reel-sepia);
+}
+
+/* ==========================================================================
+   FRAME 02 — the contact sheet (SIGNATURE). Pinned stage; frames develop via
+   clip-path inset wipe, one column at a time, scrubbed by scroll.
+   Without JS (or reduced motion) the section is normal-height and every
+   still is fully developed; the tall scrub corridor is opt-in via .reel-js.
+   ========================================================================== */
+
+.reel-sheet {
+  background: var(--reel-negative);
+  border-top: 1px solid var(--reel-line);
+  border-bottom: 1px solid var(--reel-line);
+}
+
+.reel-sheet__sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(48px, 8svh, 96px) clamp(20px, 5vw, 64px);
+}
+
+.reel-js .reel-sheet {
+  height: 360vh;
+  padding: 0;
+}
+
+.reel-js .reel-sheet__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  padding: clamp(40px, 6svh, 72px) clamp(20px, 5vw, 64px);
+}
+
+/* the projector scan band — a film projector's gate, not a CRT */
+.reel-sheet__scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(243, 231, 211, 0.04) 48%,
+    rgba(243, 231, 211, 0.06) 50%,
+    rgba(243, 231, 211, 0.04) 52%,
+    transparent 100%
+  );
+  background-size: 100% 38%;
+  background-repeat: no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+
+.reel-js .reel-sheet__scan {
+  opacity: 1;
+  animation: reel-scan 8.2s linear infinite;
+  will-change: background-position;
+}
+
+.reel-sheet__head {
+  position: relative;
+  z-index: 2;
+  width: var(--reel-frame-w);
+  margin: 0 auto clamp(1.4rem, 3.2svh, 2.2rem);
+}
+
+.reel-sheet__slug {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--reel-paper-dim);
+}
+
+/* the contact-sheet grid — 3 columns of 2 frames on wide screens */
+.reel-sheet__grid {
+  position: relative;
+  z-index: 2;
+  width: var(--reel-frame-w);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1.6vw, 20px) clamp(10px, 1.6vw, 20px);
+}
+
+@media (max-width: 760px) {
+  .reel-sheet__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .reel-sheet__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* a still: a frame on the proof sheet, plus its grease-pencil caption */
+.reel-still {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reel-still__frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--reel-negative);
+  border: 1px solid var(--reel-line);
+}
+
+/* the six CSS-gradient "stocks" — warm Kodak tones, each a distinct scene.
+   These ARE the photographs: no image payload anywhere. */
+.reel-still--stock-A .reel-still__frame {
+  background:
+    radial-gradient(120% 90% at 70% 20%, rgba(255, 200, 120, 0.55), transparent 45%),
+    linear-gradient(160deg, #4a3322 0%, #2a1c12 55%, #181009 100%);
+}
+.reel-still--stock-B .reel-still__frame {
+  background:
+    radial-gradient(80% 70% at 30% 30%, rgba(243, 231, 211, 0.42), transparent 55%),
+    linear-gradient(180deg, #3d2a1c 0%, #221610 100%);
+}
+.reel-still--stock-C .reel-still__frame {
+  background:
+    radial-gradient(90% 60% at 50% 75%, rgba(212, 165, 84, 0.36), transparent 60%),
+    linear-gradient(165deg, #2e2014 0%, #1c130c 100%);
+}
+.reel-still--stock-D .reel-still__frame {
+  background:
+    radial-gradient(110% 70% at 80% 60%, rgba(255, 136, 68, 0.48), transparent 50%),
+    linear-gradient(190deg, #42271a 0%, #251610 60%, #160d08 100%);
+}
+.reel-still--stock-E .reel-still__frame {
+  background:
+    radial-gradient(70% 80% at 25% 40%, rgba(196, 72, 48, 0.30), transparent 55%),
+    linear-gradient(170deg, #241712 0%, #120b07 100%);
+}
+.reel-still--stock-F .reel-still__frame {
+  background:
+    radial-gradient(120% 80% at 60% 30%, rgba(243, 231, 211, 0.30), transparent 50%),
+    linear-gradient(150deg, #382618 0%, #1e140d 100%);
+}
+
+/* sprocket-hole gutter lines: the strip's edges, top & bottom of each frame */
+.reel-still__sprocket {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 9px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 6px,
+    var(--reel-negative) 6px,
+    var(--reel-negative) 12px
+  );
+  background-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+.reel-still__sprocket--top {
+  top: 0;
+  border-bottom: 1px solid rgba(243, 231, 211, 0.08);
+}
+
+.reel-still__sprocket--bottom {
+  bottom: 0;
+  border-top: 1px solid rgba(243, 231, 211, 0.08);
+}
+
+/* halation bloom inside each still — the highlight bleeds */
+.reel-still__halation {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    45% 35% at 60% 32%,
+    rgba(255, 200, 120, 0.30),
+    transparent 60%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* a small leak streak per still — each frame has its own flare */
+.reel-still__leak {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    transparent 60%,
+    rgba(255, 136, 68, 0.20) 70%,
+    transparent 82%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* the developing clip-path. Each still develops in its own band of the scrub
+   window (column 0 first, then 1, then 2), so the sheet comes up left to
+   right like a print leaving the tray. The CSS var --reel-shown-p (0..1) is
+   written imperatively by JS each rAF; without JS it is unset, so the still
+   shows fully (inset none). */
+.reel-still__frame {
+  --reel-still-i: 0;
+}
+
+.reel-js .reel-still__frame {
+  /* local progress for this still: stagger the six frames across the window.
+     Each frame owns ~22% of the corridor, overlapping its neighbours by 6%. */
+  --reel-start: calc(var(--reel-still-i) * 0.16);
+  --reel-span: 0.22;
+  --reel-local: clamp(
+    0,
+    (var(--reel-shown-p, 1) - var(--reel-start)) / var(--reel-span),
+    1
+  );
+  /* sprocket-hole wipe: chemistry bites in from the outer edges, the
+     sprocket gutter reveals first, then the image. ease the local progress
+     so the developing reads as chemistry, not a hard shutter. */
+  --reel-eased: calc(
+    var(--reel-local) * var(--reel-local) * (3 - 2 * var(--reel-local))
+  );
+  clip-path: inset(
+    calc((1 - var(--reel-eased)) * 48%)
+    calc((1 - var(--reel-eased)) * 4%)
+    calc((1 - var(--reel-eased)) * 48%)
+    calc((1 - var(--reel-eased)) * 4%)
+  );
+  opacity: clamp(0.001, var(--reel-eased), 1);
+  transition: none;
+}
+
+/* the grease-pencil caption block under each still */
+.reel-still__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.reel-still__id {
+  color: var(--reel-sepia);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.reel-still__caption {
+  color: var(--reel-paper-dim);
+}
+
+.reel-still__caption :lang(ko) {
+  color: var(--reel-paper-dim);
+}
+
+.reel-sheet__note {
+  position: relative;
+  z-index: 2;
+  width: var(--reel-frame-w);
+  margin: clamp(1.4rem, 3.2svh, 2.2rem) auto 0;
+  font-size: 0.98rem;
+  color: var(--reel-paper);
+}
+
+.reel-sheet__note :lang(ko) {
+  color: var(--reel-paper-dim);
+}
+
+/* ==========================================================================
+   FRAME 03 — the darkroom log. Plain DOM, scroll-revealed with a stagger.
+   One step is struck through; its amber spine is the section's only accent.
+   ========================================================================== */
+
+.reel-process {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 64px);
+}
+
+.reel-process__head {
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
+}
+
+.reel-process__slug {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--reel-paper-dim);
+}
+
+.reel-process__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--reel-line);
+}
+
+.reel-step {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 0.3rem 1.6rem;
+  padding: 1.2rem 0.4rem;
+  border-bottom: 1px solid var(--reel-line);
+}
+
+.reel-step__no {
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  color: var(--reel-sepia);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.25rem;
+}
+
+.reel-step__name {
+  margin: 0;
+  font-family: var(--reel-font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: -0.005em;
+}
+
+.reel-step__note {
+  margin: 0.25rem 0 0;
+  color: var(--reel-paper-dim);
+}
+
+/* the rejected step: an amber spine, a strike, dimmed ink */
+.reel-step--rejected {
+  border-left: 3px solid var(--reel-amber);
+  padding-left: clamp(0.8rem, 2vw, 1.2rem);
+}
+
+.reel-step--rejected s {
+  color: var(--reel-paper-dim);
+  text-decoration-color: var(--reel-amber);
+  text-decoration-thickness: 1.5px;
+}
+
+.reel-step__flag {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--reel-sepia);
+}
+
+@media (max-width: 700px) {
+  .reel-step {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .reel-step__no {
+    padding-top: 0;
+  }
+}
+
+/* ==========================================================================
+   FRAME 04 — edge print (colophon) + footer
+   ========================================================================== */
+
+.reel-colophon {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 64px)
+    clamp(40px, 6vh, 72px);
+}
+
+.reel-colophon__head {
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
+}
+
+.reel-colophon__list {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1rem, 2.4vw, 1.8rem) clamp(1.4rem, 3vw, 2.4rem);
+  border-top: 1px solid var(--reel-line);
+  padding-top: clamp(1.4rem, 3vh, 2rem);
+}
+
+@media (max-width: 620px) {
+  .reel-colophon__list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reel-edge {
+  margin: 0;
+}
+
+.reel-edge__label {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--reel-sepia);
+}
+
+.reel-edge__value {
+  margin: 0.2rem 0 0;
+  font-family: var(--reel-font-display);
+  font-weight: 700;
+  font-size: 1.06rem;
+  letter-spacing: 0.01em;
+  color: var(--reel-paper);
+}
+
+.reel-edge__valueko {
+  display: block;
+  font-family: var(--reel-font-ko);
+  font-size: 0.82em;
+  font-weight: 500;
+  color: var(--reel-paper-dim);
+}
+
+.reel-colophon__note {
+  max-width: 36em;
+  margin: clamp(2rem, 4.4vh, 3rem) 0 0;
+  font-family: var(--reel-font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  color: var(--reel-paper);
+}
+
+.reel-colophon__note :lang(ko) {
+  display: block;
+  font-style: normal;
+  font-size: 0.78em;
+  color: var(--reel-paper-dim);
+  margin-top: 0.4rem;
+}
+
+/* footer — the tail of the strip, with its own leak */
+.reel-footer {
+  position: relative;
+  padding: clamp(56px, 9vh, 110px) clamp(20px, 5vw, 64px)
+    clamp(72px, 12vh, 150px);
+  background: var(--reel-negative);
+  border-top: 1px solid var(--reel-line);
+  text-align: center;
+  overflow: hidden;
+}
+
+.reel-footer__leak {
+  position: absolute;
+  inset: -20% 0 auto 0;
+  height: 60%;
+  background: linear-gradient(
+    90deg,
+    transparent 20%,
+    rgba(255, 136, 68, 0.16) 50%,
+    transparent 80%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.reel-footer__mark {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 1.4rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.3em;
+  color: var(--reel-amber);
+}
+
+.reel-footer__mark :lang(ko) {
+  color: var(--reel-sepia);
+}
+
+.reel-footer__copy {
+  position: relative;
+  z-index: 1;
+  max-width: 36em;
+  margin: 0 auto 2rem;
+}
+
+.reel-footer__copy :lang(ko) {
+  color: var(--reel-paper-dim);
+}
+
+.reel-footer__nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem 2.4rem;
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.reel-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 640ms var(--reel-ease),
+    transform 640ms var(--reel-ease);
+  will-change: opacity, transform;
+}
+
+.reel-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / background-position only
+   ========================================================================== */
+
+/* Each glyph of the cover-line rises out of the leak */
+@keyframes reel-cover-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Grain jumps position discretely, like a new frame of stock */
+@keyframes reel-grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  17% {
+    transform: translate(-13px, 8px);
+  }
+  34% {
+    transform: translate(10px, -15px);
+  }
+  50% {
+    transform: translate(-6px, -10px);
+  }
+  67% {
+    transform: translate(15px, 6px);
+  }
+  84% {
+    transform: translate(-9px, 13px);
+  }
+}
+
+/* The light leak sweeps diagonally across the cover — a slow flare pass */
+@keyframes reel-leak-sweep {
+  0% {
+    transform: translate(-8%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(8%, 0) rotate(0deg);
+  }
+}
+
+/* The secondary leak breathes — a chemical exhale at 0.13Hz */
+@keyframes reel-leak-breath {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* Halation bloom behind the title — overexposure breathing */
+@keyframes reel-halation {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* The projector scan band drifts down the contact sheet — film projector,
+   not a CRT (no barrel distortion, no phosphor flicker). */
+@keyframes reel-scan {
+  0% {
+    background-position: 0 -120%;
+  }
+  100% {
+    background-position: 0 220%;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — a complete, calm, static page.
+   The contact sheet becomes a normal-height grid of fully-developed stills;
+   the cover-line neither rises nor leaks; grain, scan band, and the leak
+   sweeps hold still. Reveals land instantly. Every still is visible.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-js .reel-cover__ch,
+  .reel-js .reel-grain,
+  .reel-js .reel-cover__leak--sweep,
+  .reel-js .reel-cover__leak--breath,
+  .reel-js .reel-cover__halation,
+  .reel-js .reel-sheet__scan {
+    animation: none;
+  }
+
+  .reel-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .reel-js .reel-sheet {
+    height: auto;
+  }
+
+  .reel-js .reel-sheet__sticky {
+    position: static;
+    height: auto;
+    overflow: visible;
+    padding: clamp(48px, 8svh, 96px) clamp(20px, 5vw, 64px);
+  }
+
+  /* every still fully developed — the static end state of the scrub */
+  .reel-js .reel-still__frame {
+    --reel-eased: 1;
+    clip-path: none;
+    opacity: 1;
+  }
+}

@@ -1,5 +1,38 @@
 [
   {
+    "slug": "atelier",
+    "no": 39,
+    "title": {
+      "en": "ATELIER — Maison Lookbook, Séoul",
+      "ko": "아틀리에 — 메종 룩북, 서울"
+    },
+    "description": {
+      "en": "A Seoul maison's editorial lookbook for the RESERVE collection — the magazine cover as a website. Full-bleed editorial spreads, oversized Didone serif, expensive silence, and one antique-gold hairline. Five looks crossfade in a scroll-scrubbed pin like pages turning; sections wipe in on hairline cuts. Pure black, warm paper, and one rare accent — not a single raster pixel.",
+      "ko": "서울의 메종이 내놓는 RESERVE 컬렉션의 에디토리얼 룩북 — 잡지 표지를 웹사이트로. 풀블리드 에디토리얼 스프레드, 오버사이즈 디돈 세리프, 값비싼 침묵, 그리고 골동 골드 헤어라인 하나. 다섯 룩이 스크롤 스크럽 핀 안에서 페이지를 넘기듯 교차 페이드되고, 섹션은 헤어라인 컷으로 와이프된다. 순흑, 따뜻한 종이, 그리고 드문 액센트 하나 — 래스터 픽셀은 단 하나도 없다."
+    },
+    "aesthetic": "luxury-fashion",
+    "techniques": [
+      "char-split-reveal",
+      "scroll-scrub-pinned",
+      "clip-path-reveal"
+    ],
+    "industry": [
+      "fashion-beauty"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#b8945a",
+    "theme": "dark",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "aurora",
     "no": 6,
     "title": {
@@ -205,6 +238,40 @@
     "featured": false
   },
   {
+    "slug": "dream",
+    "no": 38,
+    "title": {
+      "en": "DREAM — A Sleep House",
+      "ko": "꿈 — 잠이 드는 집"
+    },
+    "description": {
+      "en": "A sleep house whose page drifts like the moment before sleep — pastel clouds float in layered depth toward your pointer, a pinned descent dissolves the sky into deep indigo as you scroll deeper, and soft feTurbulence haze breathes over everything like the veil of a closing eye.",
+      "ko": "잠이 들기 직전의 시간처럼 흐르는 수면의 집 — 파스텔 구름이 깊이별로 포인터를 따라 떠 있고, 스크롤을 내릴수록 핀된 하늘이 짙은 남색으로 녹아내리며, 부드러운 feTurbulence의 안개가 감기는 눈꺼풀처럼 모든 것 위를 호흡한다."
+    },
+    "aesthetic": "organic-nature",
+    "techniques": [
+      "pointer-parallax",
+      "scroll-scrub-pinned",
+      "feturbulence-texture"
+    ],
+    "industry": [
+      "wellness"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#a78bd9",
+    "theme": "light",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "giwa",
     "no": 8,
     "title": {
@@ -304,6 +371,40 @@
     "accent": "#ff71ce",
     "theme": "dark",
     "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "grid",
+    "no": 40,
+    "title": {
+      "en": "GRID — Atelier of Measured Form",
+      "ko": "그리드 — 측정된 형태의 사무소"
+    },
+    "description": {
+      "en": "A fictional architecture atelier that publishes its work as large-format typographic plates — projects FLIP-rearrange as you filter by typology, an architectural section-drawing builds itself line-by-line with scroll, and section numbers arrive as oversized thin numerals. The grid is not the subject; it is the instrument.",
+      "ko": "작품을 대형 타이포그래피 도판으로 출판하는 가상의 건축 사무소 — 유형별로 걸러면 프로젝트 도판이 FLIP으로 재배열되고, 스크롤을 따라 단면도가 줄 단위로 지어지며, 도판 번호는 대형 얇은 숫자로 도착한다. 그리드는 주제가 아니라 도구다."
+    },
+    "aesthetic": "swiss-typographic",
+    "techniques": [
+      "flip-layout",
+      "scroll-scrub-pinned",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#e63946",
+    "theme": "light",
+    "published": "2026-07-27",
     "featured": false
   },
   {
@@ -581,6 +682,40 @@
     "featured": false
   },
   {
+    "slug": "neon",
+    "no": 42,
+    "title": {
+      "en": "NEON — Rain-Slick Cyberpunk City",
+      "ko": "네온 — 빗 젖은 사이버펑크 도시"
+    },
+    "description": {
+      "en": "A cyberpunk street at 3 AM — rain-slick neon signs reflecting in puddles, holographic storefront marquees, and a retrowave grid horizon. Where GRADIENT-PLAZA is an open vaporwave mall under the sky, NEON is a claustrophobic vertical city in the rain. Pure code — no images.",
+      "ko": "새벽 3시의 사이버펑크 거리 — 웅덩이에 반사되는 빗 젖은 네온 사인, 홀로그래픽 상점 간판, 레트로웨이브 그리드 지평선. GRADIENT-PLAZA가 하늘 아래 열린 베이퍼웨이브 몰이라면, NEON은 빗속의 폐쇄적인 수직 도시다. 순수 코드 — 이미지 없음."
+    },
+    "aesthetic": "vaporwave",
+    "techniques": [
+      "crt-scanline",
+      "marquee",
+      "ascii-render"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff2d95",
+    "theme": "dark",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "night-snack",
     "no": 22,
     "title": {
@@ -787,6 +922,40 @@
     "featured": false
   },
   {
+    "slug": "pulse",
+    "no": 37,
+    "title": {
+      "en": "PULSE — Audio-Reactive Nebula",
+      "ko": "박동 — 오디오 리액티브 성운"
+    },
+    "description": {
+      "en": "A fictional record label that drops one release into the dark at a time. The signature is a generative particle nebula — a few hundred 3D-projected points drawn in vanilla canvas 2D, breathing to a simulated 120 BPM beat (no real audio). Where ORBIT was a product you turn, PULSE is a field you fall into: the camera tilts with your pointer, and a pinned tracklist shifts the nebula's color and intensity per track as you scroll. Zero dependencies, zero image files — every star is a number.",
+      "ko": "한 번에 한 장의 음반을 어둠 속에 내려놓는 가상의 레코드 라벨. 시그니처는 생성적 파티클 성운 — 수백 개의 3D 투영 점을 vanilla canvas 2D로 그려, 시뮬레이션된 120 BPM 비트에 맞춰 숨 쉰다(실제 오디오 없음). 오르빗이 ‘돌리는 제품’이었다면 박동은 ‘빠져드는 장’이다 — 포인터를 따라 카메라가 기울고, 스크롤하면 고정된 트랙리스트가 곡마다 성운의 색과 세기를 바꾼다. 의존성도 이미지도 없다 — 모든 별은 숫자다."
+    },
+    "aesthetic": "three-d-immersive",
+    "techniques": [
+      "canvas-particles",
+      "pointer-parallax",
+      "scroll-scrub-pinned"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff006e",
+    "theme": "dark",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "raster",
     "no": 10,
     "title": {
@@ -852,6 +1021,40 @@
     "accent": "#0066ff",
     "theme": "dark",
     "published": "2026-07-18",
+    "featured": false
+  },
+  {
+    "slug": "reel",
+    "no": 31,
+    "title": {
+      "en": "REEL — Analog Film-Leak Photography",
+      "ko": "릴 — 아날로그 필름 릭 사진"
+    },
+    "description": {
+      "en": "A wedding and film photographer's portfolio as a contact sheet come to life: warm Kodak-toned stills that develop under scroll, light leaks that sweep the strip, sprocket-hole clip-path reveals, and grain laid down like Tri-X. Every still is a CSS gradient — no photograph is shipped.",
+      "ko": "결혼·필름 사진가의 포트폴리오가 살아 움직이는 밀착 인화지 — 스크롤 아래 현상되는 따뜻한 코닥 톤의 스틸, 스트립을 쓸고 지나가는 라이트 릭, 스프로켓 구멍 클립패스 리빌, Tri-X처럼 깔리는 그레인. 모든 스틸은 CSS 그라디언트다. 사진 파일은 한 장도 싣지 않는다."
+    },
+    "aesthetic": "cinematic-dark",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "clip-path-reveal",
+      "crt-scanline"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#d4a554",
+    "theme": "dark",
+    "published": "2026-07-27",
     "featured": false
   },
   {
@@ -1093,6 +1296,74 @@
     "accent": "#c6ff3a",
     "theme": "dark",
     "published": "2026-07-18",
+    "featured": false
+  },
+  {
+    "slug": "wave",
+    "no": 44,
+    "title": {
+      "en": "WAVE — Podcast Network Listening Deck",
+      "ko": "파동 — 팟캐스트 네트워크 청취 데크"
+    },
+    "description": {
+      "en": "A music and podcast network's analytics terminal whose signature is a live audio-spectrum analyzer rendered in box-character bars — a real equalizer drawn in text. Where PALE.SIGNAL keeps a log and GLITCH corrupts one, WAVE measures sound: calm, technical, beautiful data in a green-on-black dashboard.",
+      "ko": "음악·팟캐스트 네트워크의 분석 터미널 — 상자 문자 막대로 그려내는 실시간 오디오 스펙트럼 분석기가 시그니처다. 텍스트로 그린 진짜 이퀄라이저. PALE.SIGNAL이 로그를 남기고 GLITCH가 로그를 부수면, WAVE는 소리를 잰다: 차분하고, 기술적이며, 아름다운 데이터."
+    },
+    "aesthetic": "terminal-core",
+    "techniques": [
+      "ascii-render",
+      "typewriter",
+      "marquee"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "canvas"
+      ]
+    },
+    "media": "code",
+    "accent": "#4ade80",
+    "theme": "dark",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "widget",
+    "no": 43,
+    "title": {
+      "en": "WIDGET — Spatial Glass Dashboard",
+      "ko": "위젯 — 공간 글래스 대시보드"
+    },
+    "description": {
+      "en": "A productivity-app dashboard landing in visionOS spatial-glass style — floating translucent widgets over a depth gradient, the spatial OS look. Where HANJI SLATE is a single e-ink device exploding, WIDGET is a constellation of glass dashboard widgets floating in depth.",
+      "ko": "비전OS 공간 글래스 스타일의 생산성 앱 대시보드 랜딩 — 깊이 그라데이션 위에 떠 있는 반투명 위젯, 공간 OS의 모습. 한지슬레이트가 단일 전자잉크 기기가 분해되는 것이라면, 위젯은 깊이 속에 떠 있는 글래스 대시보드 위젯의 별자리다."
+    },
+    "aesthetic": "bento-product",
+    "techniques": [
+      "pointer-parallax",
+      "flip-layout",
+      "clip-path-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#6366f1",
+    "theme": "dark",
+    "published": "2026-07-27",
     "featured": false
   },
   {

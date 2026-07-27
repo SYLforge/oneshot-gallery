@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "pulse",
+  "no": 37,
+  "title": {
+    "en": "PULSE — Audio-Reactive Nebula",
+    "ko": "박동 — 오디오 리액티브 성운"
+  },
+  "description": {
+    "en": "A fictional record label that drops one release into the dark at a time. The signature is a generative particle nebula — a few hundred 3D-projected points drawn in vanilla canvas 2D, breathing to a simulated 120 BPM beat (no real audio). Where ORBIT was a product you turn, PULSE is a field you fall into: the camera tilts with your pointer, and a pinned tracklist shifts the nebula's color and intensity per track as you scroll. Zero dependencies, zero image files — every star is a number.",
+    "ko": "한 번에 한 장의 음반을 어둠 속에 내려놓는 가상의 레코드 라벨. 시그니처는 생성적 파티클 성운 — 수백 개의 3D 투영 점을 vanilla canvas 2D로 그려, 시뮬레이션된 120 BPM 비트에 맞춰 숨 쉰다(실제 오디오 없음). 오르빗이 ‘돌리는 제품’이었다면 박동은 ‘빠져드는 장’이다 — 포인터를 따라 카메라가 기울고, 스크롤하면 고정된 트랙리스트가 곡마다 성운의 색과 세기를 바꾼다. 의존성도 이미지도 없다 — 모든 별은 숫자다."
+  },
+  "aesthetic": "three-d-immersive",
+  "techniques": ["canvas-particles", "pointer-parallax", "scroll-scrub-pinned"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#ff006e",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

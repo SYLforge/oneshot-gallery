@@ -1,0 +1,21 @@
+# WIDGET — breakdown
+
+## The hook
+A productivity-app dashboard in visionOS spatial-glass style. Floating
+translucent widgets over a depth gradient. Where HANJI SLATE is a single e-ink
+device exploding, WIDGET is a constellation of glass dashboard widgets floating
+in depth. Pure code, no images.
+
+## Techniques
+1. **pointer-parallax** — widgets tilt toward the pointer at different depths
+   (3D transform driven by CSS custom properties --widget-px/py, written by one
+   pointermove listener).
+2. **flip-layout** — a Morning/Focus mode toggle rearranges the widget grid
+   (implemented via a data-mode attribute + CSS grid — the same UX intent as a
+   measured FLIP, simpler and reliable).
+3. **clip-path-reveal** — widgets reveal with soft clip-path on scroll.
+
+## Accessibility
+Reduced motion: widgets static, no parallax tilt. No-JS: fully readable
+dashboard with all widgets visible. AA contrast on glass surfaces. Korean-first
+bilingual.

@@ -1,0 +1,197 @@
+/* ==========================================================================
+   WAVE 파동 — audio network analytics · ASCII spectrum analyzer
+   terminal-core · terminal black / phosphor green / amber / soft white
+   Scoped by convention to .wave-root; classes prefixed wave-.
+   ========================================================================== */
+
+.wave-root {
+  --wave-bg: #0a0e0a;
+  --wave-bg-deep: #060906;
+  --wave-phosphor: #4ade80;
+  --wave-amber: #fbbf24;
+  --wave-soft: #e8f0e8;
+  --wave-dim: #6b806b;
+  --wave-hairline: rgba(74, 222, 128, 0.2);
+
+  --wave-font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+  --wave-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --wave-font-stack: var(--font-jetbrains-mono), var(--font-noto-sans-kr),
+    monospace;
+
+  --wave-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --wave-reveal-ms: 700ms;
+
+  position: relative;
+  min-height: 100vh;
+  background: var(--wave-bg);
+  color: var(--wave-phosphor);
+  font-family: var(--wave-font-stack);
+  font-weight: 400;
+  font-size: clamp(14px, 0.4vw + 12px, 16px);
+  line-height: 1.7;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.wave-root :lang(ko) {
+  font-family: var(--wave-font-kr);
+  letter-spacing: 0;
+}
+
+.wave-root ::selection {
+  background: var(--wave-phosphor);
+  color: var(--wave-bg);
+}
+
+.wave-root :focus-visible {
+  outline: 1px solid var(--wave-amber);
+  outline-offset: 4px;
+}
+
+/* Reveal gating */
+.wave-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--wave-reveal-ms) var(--wave-ease),
+    transform var(--wave-reveal-ms) var(--wave-ease);
+}
+.wave-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Hero */
+.wave-hero {
+  padding: clamp(80px, 18vh, 160px) clamp(24px, 6vw, 80px) clamp(40px, 8vh, 80px);
+  border-bottom: 1px solid var(--wave-hairline);
+}
+.wave-kicker {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--wave-dim);
+  margin: 0 0 24px;
+}
+.wave-title {
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 1;
+  margin: 0 0 20px;
+  color: var(--wave-soft);
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+}
+.wave-title :lang(ko) {
+  font-size: 0.5em;
+  color: var(--wave-phosphor);
+}
+.wave-tagline {
+  margin: 0;
+  color: var(--wave-amber);
+  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
+}
+
+/* Spectrum — the signature */
+.wave-spectrum-section {
+  padding: clamp(60px, 12vh, 120px) clamp(24px, 6vw, 80px);
+  border-bottom: 1px solid var(--wave-hairline);
+}
+.wave-secthead {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--wave-dim);
+  margin: 0 0 40px;
+}
+.wave-spectrum {
+  font-family: var(--wave-font-mono);
+  font-size: clamp(1.6rem, 5vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: 0.1em;
+  color: var(--wave-phosphor);
+  text-shadow:
+    0 0 6px var(--wave-phosphor),
+    0 0 16px rgba(74, 222, 128, 0.4);
+  margin: 0 0 24px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.wave-spec-meta {
+  color: var(--wave-dim);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+
+/* Stats */
+.wave-stats {
+  padding: clamp(60px, 12vh, 120px) clamp(24px, 6vw, 80px);
+  border-bottom: 1px solid var(--wave-hairline);
+}
+.wave-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 40px;
+  margin: 0;
+}
+.wave-stat-grid div {
+  border-left: 1px solid var(--wave-hairline);
+  padding-left: 20px;
+}
+.wave-stat-grid dt {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--wave-dim);
+  margin: 0 0 10px;
+}
+.wave-stat-grid dd {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
+  color: var(--wave-soft);
+}
+
+/* Marquee */
+.wave-marquee {
+  overflow: hidden;
+  border-bottom: 1px solid var(--wave-hairline);
+  padding: 16px 0;
+  white-space: nowrap;
+}
+.wave-marquee__track {
+  display: inline-block;
+  color: var(--wave-phosphor);
+  font-size: 0.85rem;
+  animation: wave-marquee 40s linear infinite;
+  padding-left: 100%;
+}
+@keyframes wave-marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave-marquee__track {
+    animation: none;
+    padding-left: 0;
+  }
+}
+
+/* Footer */
+.wave-foot {
+  padding: clamp(48px, 10vh, 96px) clamp(24px, 6vw, 80px);
+  color: var(--wave-dim);
+  font-size: 0.8rem;
+}
+.wave-foot p {
+  margin: 0 0 8px;
+}

@@ -1,0 +1,81 @@
+/* ==========================================================================
+   ATELIER — high-fashion maison · the RESERVE collection
+   luxury-fashion · black / off-white / one antique-gold accent
+   Scoped by convention to .atelier-root; classes prefixed atelier-.
+   ========================================================================== */
+
+.atelier-root {
+  --at-black: #0a0a0a;
+  --at-paper: #f8f6f2;
+  --at-ink-soft: #6b6660;
+  --at-gold: #b8945a;
+  --at-hairline: rgba(10, 10, 10, 0.14);
+
+  --at-font-latin: var(--font-bodoni), "Bodoni Moda", serif;
+  --at-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --at-font-stack: var(--font-bodoni), var(--font-noto-serif-kr), serif;
+
+  --at-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --at-reveal-ms: 1200ms;
+
+  position: relative;
+  min-height: 100vh;
+  background: var(--at-paper);
+  color: var(--at-black);
+  font-family: var(--at-font-stack);
+  font-weight: 400;
+  font-size: clamp(16px, 0.5vw + 14px, 18px);
+  line-height: 1.7;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.atelier-root :lang(ko) {
+  font-family: var(--at-font-kr);
+  letter-spacing: 0.01em;
+}
+
+.atelier-root ::selection {
+  background: var(--at-black);
+  color: var(--at-paper);
+}
+
+.atelier-root :focus-visible {
+  outline: 1px solid var(--at-gold);
+  outline-offset: 6px;
+}
+
+.atelier-doc {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.atelier-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity var(--at-reveal-ms) var(--at-ease),
+    transform var(--at-reveal-ms) var(--at-ease);
+}
+.atelier-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Typography ---- */
+.atelier-root h1,
+.atelier-root h2 {
+  font-family: var(--at-font-latin);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atelier-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

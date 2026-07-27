@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "neon",
+  "no": 42,
+  "title": {
+    "en": "NEON — Rain-Slick Cyberpunk City",
+    "ko": "네온 — 빗 젖은 사이버펑크 도시"
+  },
+  "description": {
+    "en": "A cyberpunk street at 3 AM — rain-slick neon signs reflecting in puddles, holographic storefront marquees, and a retrowave grid horizon. Where GRADIENT-PLAZA is an open vaporwave mall under the sky, NEON is a claustrophobic vertical city in the rain. Pure code — no images.",
+    "ko": "새벽 3시의 사이버펑크 거리 — 웅덩이에 반사되는 빗 젖은 네온 사인, 홀로그래픽 상점 간판, 레트로웨이브 그리드 지평선. GRADIENT-PLAZA가 하늘 아래 열린 베이퍼웨이브 몰이라면, NEON은 빗속의 폐쇄적인 수직 도시다. 순수 코드 — 이미지 없음."
+  },
+  "aesthetic": "vaporwave",
+  "techniques": ["crt-scanline", "marquee", "ascii-render"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#ff2d95",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

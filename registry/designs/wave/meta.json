@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "wave",
+  "no": 44,
+  "title": {
+    "en": "WAVE — Podcast Network Listening Deck",
+    "ko": "파동 — 팟캐스트 네트워크 청취 데크"
+  },
+  "description": {
+    "en": "A music and podcast network's analytics terminal whose signature is a live audio-spectrum analyzer rendered in box-character bars — a real equalizer drawn in text. Where PALE.SIGNAL keeps a log and GLITCH corrupts one, WAVE measures sound: calm, technical, beautiful data in a green-on-black dashboard.",
+    "ko": "음악·팟캐스트 네트워크의 분석 터미널 — 상자 문자 막대로 그려내는 실시간 오디오 스펙트럼 분석기가 시그니처다. 텍스트로 그린 진짜 이퀄라이저. PALE.SIGNAL이 로그를 남기고 GLITCH가 로그를 부수면, WAVE는 소리를 잰다: 차분하고, 기술적이며, 아름다운 데이터."
+  },
+  "aesthetic": "terminal-core",
+  "techniques": [
+    "ascii-render",
+    "typewriter",
+    "marquee"
+  ],
+  "industry": [
+    "entertainment"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "canvas"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#4ade80",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

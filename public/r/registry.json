@@ -4,6 +4,96 @@
   "homepage": "https://oneshot.gallery",
   "items": [
     {
+      "name": "atelier",
+      "type": "registry:block",
+      "title": "ATELIER — Maison Lookbook, Séoul",
+      "description": "A Seoul maison's editorial lookbook for the RESERVE collection — the magazine cover as a website. Full-bleed editorial spreads, oversized Didone serif, expensive silence, and one antique-gold hairline. Five looks crossfade in a scroll-scrubbed pin like pages turning; sections wipe in on hairline cuts. Pure black, warm paper, and one rare accent — not a single raster pixel.",
+      "dependencies": [],
+      "categories": [
+        "luxury-fashion",
+        "char-split-reveal",
+        "scroll-scrub-pinned",
+        "clip-path-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/atelier/components/Lookbook.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/atelier/components/Lookbook.tsx"
+        },
+        {
+          "path": "registry/designs/atelier/components/looks.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/atelier/components/looks.ts"
+        },
+        {
+          "path": "registry/designs/atelier/components/Manifesto.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/atelier/components/Manifesto.tsx"
+        },
+        {
+          "path": "registry/designs/atelier/components/Masthead.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/atelier/components/Masthead.tsx"
+        },
+        {
+          "path": "registry/designs/atelier/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/atelier/fonts.ts"
+        },
+        {
+          "path": "registry/designs/atelier/hooks/useLookProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/atelier/hooks/useLookProgress.ts"
+        },
+        {
+          "path": "registry/designs/atelier/hooks/useMasthead.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/atelier/hooks/useMasthead.ts"
+        },
+        {
+          "path": "registry/designs/atelier/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/atelier/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/atelier/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/atelier/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/atelier/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/atelier/page.tsx"
+        },
+        {
+          "path": "registry/designs/atelier/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/atelier/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/atelier/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/atelier/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"ATELIER — Maison Lookbook, Séoul\" installs into app/oneshot/atelier/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 39,
+        "accent": "#b8945a",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "aurora",
       "type": "registry:block",
       "title": "AURORA — A field guide for the next thing you'll build",
@@ -575,6 +665,106 @@
       }
     },
     {
+      "name": "dream",
+      "type": "registry:block",
+      "title": "DREAM — A Sleep House",
+      "description": "A sleep house whose page drifts like the moment before sleep — pastel clouds float in layered depth toward your pointer, a pinned descent dissolves the sky into deep indigo as you scroll deeper, and soft feTurbulence haze breathes over everything like the veil of a closing eye.",
+      "dependencies": [],
+      "categories": [
+        "organic-nature",
+        "pointer-parallax",
+        "scroll-scrub-pinned",
+        "feturbulence-texture"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/dream/components/CloudParallax.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/dream/components/CloudParallax.tsx"
+        },
+        {
+          "path": "registry/designs/dream/components/cloudShapes.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/dream/components/cloudShapes.ts"
+        },
+        {
+          "path": "registry/designs/dream/components/Descent.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/dream/components/Descent.tsx"
+        },
+        {
+          "path": "registry/designs/dream/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/dream/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/dream/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/dream/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/dream/components/NightField.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/dream/components/NightField.tsx"
+        },
+        {
+          "path": "registry/designs/dream/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/dream/fonts.ts"
+        },
+        {
+          "path": "registry/designs/dream/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/dream/hooks/usePointerParallax.ts"
+        },
+        {
+          "path": "registry/designs/dream/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/dream/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/dream/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/dream/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/dream/hooks/useScrollDescent.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/dream/hooks/useScrollDescent.ts"
+        },
+        {
+          "path": "registry/designs/dream/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/dream/page.tsx"
+        },
+        {
+          "path": "registry/designs/dream/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/dream/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/dream/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/dream/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"DREAM — A Sleep House\" installs into app/oneshot/dream/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 38,
+        "accent": "#a78bd9",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "giwa",
       "type": "registry:block",
       "title": "GIWA — Under Painted Eaves",
@@ -844,6 +1034,106 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "grid",
+      "type": "registry:block",
+      "title": "GRID — Atelier of Measured Form",
+      "description": "A fictional architecture atelier that publishes its work as large-format typographic plates — projects FLIP-rearrange as you filter by typology, an architectural section-drawing builds itself line-by-line with scroll, and section numbers arrive as oversized thin numerals. The grid is not the subject; it is the instrument.",
+      "dependencies": [],
+      "categories": [
+        "swiss-typographic",
+        "flip-layout",
+        "scroll-scrub-pinned",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/grid/components/Footer.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/Footer.tsx"
+        },
+        {
+          "path": "registry/designs/grid/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/grid/components/NumeralMark.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/NumeralMark.tsx"
+        },
+        {
+          "path": "registry/designs/grid/components/PlateBoard.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/PlateBoard.tsx"
+        },
+        {
+          "path": "registry/designs/grid/components/PlateScope.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/PlateScope.tsx"
+        },
+        {
+          "path": "registry/designs/grid/components/projects.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/projects.ts"
+        },
+        {
+          "path": "registry/designs/grid/components/SectionBuild.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/grid/components/SectionBuild.tsx"
+        },
+        {
+          "path": "registry/designs/grid/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/grid/fonts.ts"
+        },
+        {
+          "path": "registry/designs/grid/hooks/useFlip.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/grid/hooks/useFlip.ts"
+        },
+        {
+          "path": "registry/designs/grid/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/grid/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/grid/hooks/useScrubProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/grid/hooks/useScrubProgress.ts"
+        },
+        {
+          "path": "registry/designs/grid/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/grid/page.tsx"
+        },
+        {
+          "path": "registry/designs/grid/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/grid/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/grid/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/grid/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"GRID — Atelier of Measured Form\" installs into app/oneshot/grid/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 40,
+        "accent": "#e63946",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM 5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
           "oneshot": false,
           "followUps": 0
         },
@@ -1656,6 +1946,66 @@
       }
     },
     {
+      "name": "neon",
+      "type": "registry:block",
+      "title": "NEON — Rain-Slick Cyberpunk City",
+      "description": "A cyberpunk street at 3 AM — rain-slick neon signs reflecting in puddles, holographic storefront marquees, and a retrowave grid horizon. Where GRADIENT-PLAZA is an open vaporwave mall under the sky, NEON is a claustrophobic vertical city in the rain. Pure code — no images.",
+      "dependencies": [],
+      "categories": [
+        "vaporwave",
+        "crt-scanline",
+        "marquee",
+        "ascii-render"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/neon/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/neon/fonts.ts"
+        },
+        {
+          "path": "registry/designs/neon/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/neon/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/neon/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/neon/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/neon/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/neon/page.tsx"
+        },
+        {
+          "path": "registry/designs/neon/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/neon/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/neon/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/neon/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"NEON — Rain-Slick Cyberpunk City\" installs into app/oneshot/neon/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 42,
+        "accent": "#ff2d95",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "night-snack",
       "type": "registry:block",
       "title": "NIGHT-SNACK — 1 AM Street-Food Tent",
@@ -2261,6 +2611,96 @@
       }
     },
     {
+      "name": "pulse",
+      "type": "registry:block",
+      "title": "PULSE — Audio-Reactive Nebula",
+      "description": "A fictional record label that drops one release into the dark at a time. The signature is a generative particle nebula — a few hundred 3D-projected points drawn in vanilla canvas 2D, breathing to a simulated 120 BPM beat (no real audio). Where ORBIT was a product you turn, PULSE is a field you fall into: the camera tilts with your pointer, and a pinned tracklist shifts the nebula's color and intensity per track as you scroll. Zero dependencies, zero image files — every star is a number.",
+      "dependencies": [],
+      "categories": [
+        "three-d-immersive",
+        "canvas-particles",
+        "pointer-parallax",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/pulse/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pulse/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/pulse/components/nebula.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/pulse/components/nebula.ts"
+        },
+        {
+          "path": "registry/designs/pulse/components/NebulaField.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pulse/components/NebulaField.tsx"
+        },
+        {
+          "path": "registry/designs/pulse/components/PulseFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pulse/components/PulseFooter.tsx"
+        },
+        {
+          "path": "registry/designs/pulse/components/Tracklist.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pulse/components/Tracklist.tsx"
+        },
+        {
+          "path": "registry/designs/pulse/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/pulse/fonts.ts"
+        },
+        {
+          "path": "registry/designs/pulse/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pulse/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/pulse/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pulse/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/pulse/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pulse/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/pulse/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/pulse/page.tsx"
+        },
+        {
+          "path": "registry/designs/pulse/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/pulse/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/pulse/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/pulse/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PULSE — Audio-Reactive Nebula\" installs into app/oneshot/pulse/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 37,
+        "accent": "#ff006e",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "raster",
       "type": "registry:block",
       "title": "RASTER — Bureau for Grid Systems",
@@ -2429,6 +2869,91 @@
           "modelLabel": "GLM-5.2",
           "tool": "zcode",
           "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "reel",
+      "type": "registry:block",
+      "title": "REEL — Analog Film-Leak Photography",
+      "description": "A wedding and film photographer's portfolio as a contact sheet come to life: warm Kodak-toned stills that develop under scroll, light leaks that sweep the strip, sprocket-hole clip-path reveals, and grain laid down like Tri-X. Every still is a CSS gradient — no photograph is shipped.",
+      "dependencies": [],
+      "categories": [
+        "cinematic-dark",
+        "scroll-scrub-pinned",
+        "clip-path-reveal",
+        "crt-scanline"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/reel/components/Colophon.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/reel/components/Colophon.tsx"
+        },
+        {
+          "path": "registry/designs/reel/components/ContactSheet.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/reel/components/ContactSheet.tsx"
+        },
+        {
+          "path": "registry/designs/reel/components/CoverSheet.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/reel/components/CoverSheet.tsx"
+        },
+        {
+          "path": "registry/designs/reel/components/ProcessNotes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/reel/components/ProcessNotes.tsx"
+        },
+        {
+          "path": "registry/designs/reel/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/reel/fonts.ts"
+        },
+        {
+          "path": "registry/designs/reel/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/reel/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/reel/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/reel/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/reel/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/reel/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/reel/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/reel/page.tsx"
+        },
+        {
+          "path": "registry/designs/reel/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/reel/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/reel/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/reel/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"REEL — Analog Film-Leak Photography\" installs into app/oneshot/reel/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 31,
+        "accent": "#d4a554",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM 5.2",
+          "tool": "zcode",
+          "date": "2026-07-27",
           "oneshot": false,
           "followUps": 0
         },
@@ -3109,6 +3634,126 @@
           "modelLabel": "GLM-5.2",
           "tool": "zcode-cli",
           "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "wave",
+      "type": "registry:block",
+      "title": "WAVE — Podcast Network Listening Deck",
+      "description": "A music and podcast network's analytics terminal whose signature is a live audio-spectrum analyzer rendered in box-character bars — a real equalizer drawn in text. Where PALE.SIGNAL keeps a log and GLITCH corrupts one, WAVE measures sound: calm, technical, beautiful data in a green-on-black dashboard.",
+      "dependencies": [],
+      "categories": [
+        "terminal-core",
+        "ascii-render",
+        "typewriter",
+        "marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/wave/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/wave/fonts.ts"
+        },
+        {
+          "path": "registry/designs/wave/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/wave/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/wave/hooks/useTypewriter.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/wave/hooks/useTypewriter.ts"
+        },
+        {
+          "path": "registry/designs/wave/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/wave/page.tsx"
+        },
+        {
+          "path": "registry/designs/wave/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/wave/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/wave/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/wave/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"WAVE — Podcast Network Listening Deck\" installs into app/oneshot/wave/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 44,
+        "accent": "#4ade80",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "widget",
+      "type": "registry:block",
+      "title": "WIDGET — Spatial Glass Dashboard",
+      "description": "A productivity-app dashboard landing in visionOS spatial-glass style — floating translucent widgets over a depth gradient, the spatial OS look. Where HANJI SLATE is a single e-ink device exploding, WIDGET is a constellation of glass dashboard widgets floating in depth.",
+      "dependencies": [],
+      "categories": [
+        "bento-product",
+        "pointer-parallax",
+        "flip-layout",
+        "clip-path-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/widget/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/widget/fonts.ts"
+        },
+        {
+          "path": "registry/designs/widget/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/widget/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/widget/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/widget/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/widget/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/widget/page.tsx"
+        },
+        {
+          "path": "registry/designs/widget/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/widget/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/widget/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/widget/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"WIDGET — Spatial Glass Dashboard\" installs into app/oneshot/widget/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 43,
+        "accent": "#6366f1",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
           "oneshot": false,
           "followUps": 0
         },

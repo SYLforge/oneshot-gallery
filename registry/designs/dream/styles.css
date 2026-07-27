@@ -1,0 +1,931 @@
+/* ==========================================================================
+   꿈 DREAM — a sleep house
+   organic-nature · pastel cloud-white by day, indigo descent by scroll
+   the dream haze is the only texture, and it is SVG noise, not an image
+   Scoped by convention to .dream-root; classes prefixed dream-.
+   ========================================================================== */
+
+.dream-root {
+  /* -- palette ------------------------------------------------------------ */
+  --drm-cloud: #f8f4ff;           /* background — the sky at rest */
+  --drm-ink: #2a2440;             /* primary text — 13.6:1 on cloud (AAA) */
+  --drm-plum: #3d3358;            /* headings, numerals — 10.7:1 on cloud */
+  --drm-dusk: #6a5f86;            /* secondary text — 5.4:1 on cloud */
+  --drm-lavender: #a78bd9;        /* accent — DECORATIVE ONLY (2.6:1 on cloud) */
+  --drm-lavender-press: #7053a8;  /* solid button fill — cloud text 5.5:1 */
+  --drm-mist: #c8b8e8;            /* decorative: lavender cloud layer */
+  --drm-peach: #ffd8c8;           /* decorative: peach cloud layer */
+  --drm-mint: #c8f0e0;            /* decorative: mint cloud layer */
+  --drm-blush: #f4e4ff;           /* decorative: lightest wash / tint */
+  --drm-indigo: #241d3f;          /* the descent — near-night sky */
+  --drm-midnight: #16122c;        /* footer night — the deepest dark */
+  --drm-star: #f8f4ff;            /* decorative: star pinpoints (low alpha) */
+  --drm-silver: #b8aed4;          /* decorative: hairlines over indigo */
+  --drm-hairline: #cdbfe6;        /* rules over the light sky (1.4:1 — never text) */
+  --drm-hairline-soft: rgba(167, 139, 217, 0.28);
+
+  /* -- type ---------------------------------------------------------------- */
+  --drm-font-display: var(--font-noto-serif), var(--font-quicksand), "Noto Serif KR", serif;
+  --drm-font-body: var(--font-quicksand), var(--font-gowun), "Apple SD Gothic Neo", sans-serif;
+  --drm-font-ko: var(--font-gowun), "Gowun Dodum", "Apple SD Gothic Neo", sans-serif;
+  --drm-font-ko-display: var(--font-noto-serif), "Noto Serif KR", serif;
+
+  /* -- motion ---------------------------------------------------------------
+     ease-drift: slow to start, slower to settle — clouds don't snap. */
+  --drm-ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--drm-cloud);
+  color: var(--drm-ink);
+  font-family: var(--drm-font-body);
+  font-size: clamp(16px, 0.4vw + 14px, 18px);
+  line-height: 1.75;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.dream-root,
+.dream-root *,
+.dream-root *::before,
+.dream-root *::after {
+  box-sizing: border-box;
+}
+
+.dream-root h1,
+.dream-root h2,
+.dream-root h3,
+.dream-root p,
+.dream-root ul {
+  margin: 0;
+}
+
+.dream-root ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Korean is first-class: its own typefaces, its own rhythm, no orphan breaks */
+.dream-root :lang(ko) {
+  font-family: var(--drm-font-ko);
+  word-break: keep-all;
+  line-height: 1.85;
+}
+
+/* Korean display (titles, the giant 꿈) uses the serif */
+.dream-root .dream-sec__title:lang(ko),
+.dream-root .dream-hero__hangul,
+.dream-root .dream-descent__stage:lang(ko) {
+  font-family: var(--drm-font-ko-display);
+}
+
+/* The italic asides speak the Latin display voice */
+.dream-root em {
+  font-family: var(--drm-font-display);
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
+/* Lavender selection, scoped to the entry root */
+.dream-root ::selection {
+  background: var(--drm-lavender);
+  color: var(--drm-cloud);
+}
+
+/* Keyboard focus: a lavender ring with a soft halo */
+.dream-root :focus-visible {
+  outline: 2px solid var(--drm-lavender-press);
+  outline-offset: 3px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 6px rgba(112, 83, 168, 0.18);
+}
+
+.dream-link {
+  color: var(--drm-lavender-press);
+  text-decoration: underline;
+  text-decoration-color: var(--drm-hairline-soft);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.dream-link:hover {
+  text-decoration-color: var(--drm-lavender-press);
+}
+
+.dream-sky {
+  position: relative;
+}
+
+/* ==========================================================================
+   Scroll reveals — pre-reveal state exists only when JS is alive
+   ========================================================================== */
+
+.dream-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.dream-js [data-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 1100ms var(--drm-ease),
+    transform 1100ms var(--drm-ease);
+}
+
+/* ==========================================================================
+   Section heads — a Korean numeral, a title, a long hairline
+   ========================================================================== */
+
+.dream-sec {
+  display: flex;
+  align-items: baseline;
+  gap: 1.1rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.8rem);
+}
+
+.dream-sec__no {
+  flex: none;
+  font-family: var(--drm-font-display);
+  font-size: 0.82rem;
+  color: var(--drm-lavender-press);
+  letter-spacing: 0.24em;
+}
+
+.dream-sec__title {
+  font-family: var(--drm-font-display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--drm-plum);
+}
+
+.dream-sec__ko {
+  font-size: 0.62em;
+  color: var(--drm-dusk);
+  margin-left: 0.35em;
+}
+
+.dream-sec::after {
+  content: "";
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  background: var(--drm-hairline-soft);
+  margin-left: 0.6rem;
+}
+
+/* ==========================================================================
+   Hero — the arrival; pastel clouds drift in layered depth
+   ========================================================================== */
+
+.dream-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(24px, 6vw, 72px);
+  overflow: hidden;
+}
+
+/* the closing-eye haze over the whole hero — decorative only, low alpha */
+.dream-hero__haze {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+}
+
+.dream-js .dream-hero__haze rect {
+  animation: dream-haze-drift 24s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes dream-haze-drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(40px, 30px);
+  }
+}
+
+/* -- cloud layers ----------------------------------------------------------
+   Three depths, each answering the same --drm-px/--drm-py but multiplied
+   at different magnitudes. Without JS or reduced motion the variables are 0
+   and the clouds rest where composed; the ambient cloud-bob still runs. */
+
+.dream-clouds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dream-clouds--far {
+  z-index: 1;
+}
+.dream-clouds--mid {
+  z-index: 2;
+}
+.dream-clouds--near {
+  z-index: 3;
+}
+
+.dream-cloud__svg {
+  position: absolute;
+  height: auto;
+}
+
+.dream-cloud__path {
+  fill: var(--drm-blush);
+}
+
+/* far layer: small, faint, high up — barely moves */
+.dream-clouds--far {
+  transform: translate3d(
+    calc(var(--drm-px, 0) * 6px),
+    calc(var(--drm-py, 0) * 4px),
+    0
+  );
+}
+.dream-clouds--far .dream-cloud__svg {
+  width: clamp(120px, 22vw, 280px);
+  opacity: 0.5;
+}
+.dream-clouds--far .dream-cloud__svg[style*="--i:0"] { top: 8%; right: 14%; }
+.dream-clouds--far .dream-cloud__svg[style*="--i:1"] { top: 4%; left: 8%; }
+
+/* mid layer: the readable drift — carries the weightless motion */
+.dream-clouds--mid {
+  transform: translate3d(
+    calc(var(--drm-px, 0) * 16px),
+    calc(var(--drm-py, 0) * 10px),
+    0
+  );
+}
+.dream-clouds--mid .dream-cloud__svg {
+  width: clamp(200px, 34vw, 440px);
+  opacity: 0.85;
+}
+.dream-clouds--mid .dream-cloud__svg[style*="--i:0"] { top: 16%; right: -4%; }
+.dream-clouds--mid .dream-cloud__svg[style*="--i:1"] { top: 12%; left: 4%; }
+.dream-clouds--mid .dream-cloud__svg[style*="--i:2"] { top: 30%; left: 38%; }
+.dream-clouds--mid .dream-cloud__svg:nth-child(odd) .dream-cloud__path {
+  fill: var(--drm-peach);
+}
+.dream-clouds--mid .dream-cloud__svg:nth-child(even) .dream-cloud__path {
+  fill: var(--drm-mist);
+}
+
+/* near layer: large, soft, arm's-length — moves most */
+.dream-clouds--near {
+  transform: translate3d(
+    calc(var(--drm-px, 0) * 30px),
+    calc(var(--drm-py, 0) * 18px),
+    0
+  );
+}
+.dream-clouds--near .dream-cloud__svg {
+  width: clamp(260px, 46vw, 600px);
+  opacity: 0.92;
+}
+.dream-clouds--near .dream-cloud__svg[style*="--i:0"] { bottom: -6%; right: -8%; }
+.dream-clouds--near .dream-cloud__svg[style*="--i:0"] .dream-cloud__path { fill: var(--drm-mint); }
+.dream-clouds--near .dream-cloud__svg[style*="--i:1"] { bottom: 8%; left: -6%; }
+.dream-clouds--near .dream-cloud__svg[style*="--i:1"] .dream-cloud__path { fill: var(--drm-blush); }
+
+/* ambient cloud-bob — mutually prime periods so the sky never loops */
+.dream-js .dream-clouds--far .dream-cloud__svg {
+  animation: dream-bob 13s ease-in-out infinite alternate;
+}
+.dream-js .dream-clouds--mid .dream-cloud__svg {
+  animation: dream-bob 17s ease-in-out infinite alternate;
+}
+.dream-js .dream-clouds--near .dream-cloud__svg {
+  animation: dream-bob 23s ease-in-out infinite alternate-reverse;
+}
+.dream-js .dream-clouds--mid .dream-cloud__svg[style*="--i:2"] {
+  animation-duration: 29s;
+}
+
+@keyframes dream-bob {
+  from {
+    transform: translateY(-6px);
+  }
+  to {
+    transform: translateY(6px);
+  }
+}
+
+.dream-hero__copy {
+  position: relative;
+  z-index: 4;
+  max-width: 34rem;
+}
+
+.dream-hero__kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
+  color: var(--drm-lavender-press);
+  margin-bottom: clamp(1rem, 3vh, 2rem);
+}
+
+.dream-hero__title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.18em;
+  font-weight: 500;
+  line-height: 0.94;
+  margin-bottom: clamp(1.2rem, 3.5vh, 2.2rem);
+}
+
+.dream-hero__hangul {
+  font-family: var(--drm-font-ko-display);
+  font-size: clamp(6.4rem, 21vw, 13.5rem);
+  color: var(--drm-ink);
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+
+.dream-hero__latin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  font-family: var(--drm-font-display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 4.6vw, 3rem);
+  color: var(--drm-plum);
+  letter-spacing: 0.22em;
+}
+
+.dream-hero__latin-sub {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.44em;
+  letter-spacing: 0.05em;
+  color: var(--drm-dusk);
+}
+
+.dream-hero__lede {
+  max-width: 26rem;
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
+}
+
+.dream-hero__lede em {
+  display: block;
+  font-size: 1.18rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.dream-hero__lede span {
+  display: block;
+  color: var(--drm-dusk);
+  font-size: 0.95rem;
+}
+
+.dream-hero__cta {
+  display: inline-block;
+  padding: 0.72em 1.6em;
+  border: 1px solid var(--drm-lavender-press);
+  border-radius: 999px;
+  color: var(--drm-lavender-press);
+  background: transparent;
+  text-decoration: none;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+}
+
+.dream-hero__cta:hover {
+  background: var(--drm-lavender-press);
+  color: var(--drm-cloud);
+}
+
+.dream-hero__hint {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(14px, 3vh, 30px);
+  transform: translateX(-50%);
+  z-index: 4;
+  font-size: 0.8rem;
+  color: var(--drm-dusk);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   하나 · Cloud parallax field — depth made legible
+   ========================================================================== */
+
+.dream-clouds-sec {
+  max-width: 1160px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 56px) 0;
+}
+
+.dream-clouds-sec__lede {
+  max-width: 36rem;
+  margin-bottom: clamp(2rem, 5vh, 3.4rem);
+}
+
+.dream-clouds-sec__lede em {
+  font-size: 1.35rem;
+  color: var(--drm-ink);
+}
+
+.dream-clouds-sec__lede span {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--drm-dusk);
+  font-size: 0.95rem;
+}
+
+.dream-clouds-sec__stage {
+  position: relative;
+  height: clamp(380px, 62vh, 560px);
+  margin-inline: calc(50% - 50vw);
+  border-top: 1px solid var(--drm-hairline-soft);
+  border-bottom: 1px solid var(--drm-hairline-soft);
+  background: linear-gradient(
+    180deg,
+    var(--drm-cloud) 0%,
+    var(--drm-blush) 50%,
+    var(--drm-cloud) 100%
+  );
+  overflow: hidden;
+}
+
+.dream-puff {
+  position: absolute;
+  height: auto;
+}
+
+.dream-puff__path {
+  fill: var(--drm-blush);
+}
+
+/* three depths, three magnitudes — the technique made visible */
+.dream-puff--d0 {
+  transform: translate3d(
+    calc(var(--drm-px, 0) * 6px),
+    calc(var(--drm-py, 0) * 4px),
+    0
+  );
+  opacity: 0.5;
+  z-index: 1;
+}
+.dream-puff--d0 .dream-puff__path { fill: var(--drm-mist); }
+
+.dream-puff--d1 {
+  transform: translate3d(
+    calc(var(--drm-px, 0) * 16px),
+    calc(var(--drm-py, 0) * 10px),
+    0
+  );
+  opacity: 0.8;
+  z-index: 2;
+}
+.dream-puff--d1 .dream-puff__path { fill: var(--drm-peach); }
+
+.dream-puff--d2 {
+  transform: translate3d(
+    calc(var(--drm-px, 0) * 30px),
+    calc(var(--drm-py, 0) * 18px),
+    0
+  );
+  opacity: 0.92;
+  z-index: 3;
+}
+.dream-puff--d2 .dream-puff__path { fill: var(--drm-mint); }
+
+/* ambient bob on the field puffs too (touch fallback carries the life) */
+.dream-js .dream-puff {
+  animation: dream-bob 19s ease-in-out infinite alternate;
+}
+.dream-js .dream-puff--d2 {
+  animation-duration: 23s;
+  animation-direction: alternate-reverse;
+}
+
+.dream-clouds-sec__caption {
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-top: 1.4rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--drm-dusk);
+}
+
+.dream-clouds-sec__caption span {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   둘 · The descent — a pinned sky that dissolves into indigo
+   ========================================================================== */
+
+.dream-descent {
+  position: relative;
+  /* tall so there is scroll-room to scrub through the pinned scene */
+  height: 220vh;
+  margin-top: clamp(72px, 12vh, 150px);
+}
+
+.dream-descent__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  /* the sky color is a 4-stop lerp driven by --drm-descent (0 = day) */
+  background: color-mix(
+    in oklab,
+    var(--drm-cloud) calc((1 - var(--drm-descent, 0)) * 100%),
+    var(--drm-indigo)
+  );
+  /* a mid-stop wash blended in for the misty middle of the descent */
+  isolation: isolate;
+}
+
+/* a layered gradient that lerps from day-sky to indigo as we descend */
+.dream-descent__sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    var(--drm-cloud) 0%,
+    var(--drm-blush) 30%,
+    var(--drm-mist) 55%,
+    var(--drm-indigo) 100%
+  );
+  opacity: calc(0.4 + 0.6 * var(--drm-descent, 0));
+}
+
+/* stars fade in as the sky darkens */
+.dream-descent__stars {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  opacity: calc(0.9 * var(--drm-descent, 0));
+  pointer-events: none;
+}
+
+.dream-descent__star {
+  fill: var(--drm-star);
+  /* each star twinkles on its own delay once visible */
+  opacity: calc(0.6 + 0.4 * var(--drm-descent, 0));
+}
+
+.dream-js .dream-descent__star {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dream-twinkle 4s ease-in-out infinite alternate;
+  animation-delay: calc(var(--delay, 0) * -4s);
+}
+
+@keyframes dream-twinkle {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+/* clouds fade out as we descend */
+.dream-descent__clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: calc(1 - 0.82 * var(--drm-descent, 0));
+  pointer-events: none;
+}
+
+.dream-descent__cloud {
+  position: absolute;
+  height: auto;
+}
+.dream-descent__cloud path {
+  fill: var(--drm-blush);
+}
+.dream-descent__cloud[style*="--i:0"] { top: 12%; left: 8%; width: clamp(200px, 34vw, 440px); }
+.dream-descent__cloud[style*="--i:1"] { top: 22%; right: 6%; width: clamp(180px, 30vw, 380px); }
+.dream-descent__cloud[style*="--i:1"] path { fill: var(--drm-peach); }
+.dream-descent__cloud[style*="--i:2"] { top: 6%; left: 44%; width: clamp(140px, 24vw, 300px); }
+.dream-descent__cloud[style*="--i:2"] path { fill: var(--drm-mist); }
+
+.dream-js .dream-descent__cloud {
+  animation: dream-bob 21s ease-in-out infinite alternate;
+}
+
+/* the copy stays readable across the whole descent: it darkens toward cloud
+   text color as the sky goes indigo, so contrast holds AA at both ends */
+.dream-descent__copy {
+  position: relative;
+  z-index: 3;
+  max-width: 1160px;
+  height: 100%;
+  margin-inline: auto;
+  padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 56px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* text color lerps from ink (day) to cloud (night) */
+  color: color-mix(
+    in oklab,
+    var(--drm-ink) calc((1 - var(--drm-descent, 0)) * 100%),
+    var(--drm-cloud)
+  );
+}
+
+.dream-descent__head {
+  margin-bottom: clamp(1.4rem, 4vh, 2.4rem);
+}
+
+.dream-descent__head .dream-sec__no,
+.dream-descent__head .dream-sec__title,
+.dream-descent__head .dream-sec__ko {
+  color: inherit;
+}
+
+.dream-descent__head::after {
+  background: color-mix(in oklab, currentColor 28%, transparent);
+}
+
+.dream-descent__lede {
+  max-width: 30rem;
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.dream-descent__lede em {
+  display: block;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.dream-descent__lede span {
+  display: block;
+  color: inherit;
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.dream-descent__stages {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 2vh, 1.2rem);
+  max-width: 30rem;
+}
+
+.dream-descent__stages li {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  align-items: baseline;
+  gap: 0.4rem 0.9rem;
+  padding-block: 0.3rem;
+}
+
+.dream-descent__stage-no {
+  font-family: var(--drm-font-display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  grid-row: span 2;
+}
+
+.dream-descent__stage-en {
+  font-family: var(--drm-font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   셋 · The haze — feTurbulence texture, legible
+   ========================================================================== */
+
+.dream-night {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 150px) clamp(20px, 5vw, 56px);
+}
+
+.dream-night__lede {
+  max-width: 34rem;
+  margin-bottom: clamp(2rem, 5vh, 3.4rem);
+}
+
+.dream-night__lede em {
+  font-size: 1.3rem;
+  color: var(--drm-ink);
+}
+
+.dream-night__lede span {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--drm-dusk);
+  font-size: 0.95rem;
+}
+
+.dream-night__stage {
+  position: relative;
+  height: clamp(320px, 50vh, 460px);
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--drm-indigo) 0%, var(--drm-midnight) 100%);
+}
+
+.dream-night__cloud {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(280px, 56%, 560px);
+  height: auto;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 18px 40px rgba(36, 29, 63, 0.45));
+}
+
+.dream-js .dream-night__cloud {
+  animation: dream-float 13s ease-in-out infinite alternate;
+}
+
+@keyframes dream-float {
+  from { transform: translate(-50%, -54%); }
+  to { transform: translate(-50%, -46%); }
+}
+
+.dream-night__haze {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.dream-js .dream-night__haze rect {
+  animation: dream-haze-drift 24s ease-in-out infinite alternate;
+}
+
+.dream-night__caption {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--drm-dusk);
+}
+
+.dream-night__caption span {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ==========================================================================
+   Footer — the deepest dark, with the haze lingering
+   ========================================================================== */
+
+.dream-footer {
+  position: relative;
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 140px) clamp(20px, 5vw, 56px) clamp(48px, 8vh, 80px);
+  text-align: center;
+  border-top: 1px solid var(--drm-hairline-soft);
+  background: linear-gradient(180deg, var(--drm-cloud) 0%, var(--drm-blush) 100%);
+}
+
+.dream-footer__call {
+  font-family: var(--drm-font-display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 4.4vw, 2.7rem);
+  letter-spacing: 0.14em;
+  color: var(--drm-plum);
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
+}
+
+.dream-footer__call :lang(ko) {
+  font-family: var(--drm-font-ko-display);
+  letter-spacing: 0.08em;
+}
+
+.dream-footer__dot {
+  color: var(--drm-lavender-press);
+}
+
+.dream-footer__where {
+  margin-bottom: 2rem;
+  color: var(--drm-dusk);
+  font-size: 0.95rem;
+}
+
+.dream-footer__where-en {
+  display: block;
+  font-family: var(--drm-font-display);
+  font-style: italic;
+}
+
+.dream-footer__coords {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: var(--drm-lavender);
+}
+
+.dream-footer__contact {
+  display: flex;
+  justify-content: center;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.6rem;
+  font-size: 0.92rem;
+}
+
+.dream-footer__legal {
+  font-size: 0.85rem;
+  color: var(--drm-dusk);
+}
+
+/* ==========================================================================
+   Composition — small drifts
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .dream-clouds--near .dream-cloud__svg {
+    opacity: 0.55;
+  }
+
+  .dream-hero__copy {
+    max-width: 30rem;
+  }
+
+  .dream-descent {
+    height: 200vh;
+  }
+
+  .dream-descent__stages li {
+    grid-template-columns: 2rem 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .dream-sec {
+    gap: 0.7rem;
+  }
+
+  .dream-hero__hint {
+    font-size: 0.72rem;
+  }
+
+  .dream-footer__contact {
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: center;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the sky, already still.
+   The clouds rest where composed (the --drm-px/--drm-py fallback is 0 and the
+   hooks never run), the descent shows its day composition (--drm-descent
+   fallback is 0), the haze holds one frame, the stars do not twinkle, and
+   the written copy carries the whole descent.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .dream-js .dream-hero__haze rect,
+  .dream-js .dream-clouds--far .dream-cloud__svg,
+  .dream-js .dream-clouds--mid .dream-cloud__svg,
+  .dream-js .dream-clouds--near .dream-cloud__svg,
+  .dream-js .dream-puff,
+  .dream-js .dream-descent__cloud,
+  .dream-js .dream-descent__star,
+  .dream-js .dream-night__cloud,
+  .dream-js .dream-night__haze rect {
+    animation: none;
+  }
+
+  .dream-clouds--far,
+  .dream-clouds--mid,
+  .dream-clouds--near,
+  .dream-puff--d0,
+  .dream-puff--d1,
+  .dream-puff--d2 {
+    transform: none;
+  }
+
+  .dream-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

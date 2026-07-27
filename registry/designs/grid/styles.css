@@ -1,0 +1,1032 @@
+/* ==========================================================================
+   GRID — atelier of measured form
+   swiss-typographic · paper, ink, one signal red · the grid is the instrument
+   Scoped by convention to .grid-root; classes prefixed grid-.
+   ========================================================================== */
+
+.grid-root {
+  /* -- palette: paper, ink, one red ------------------------------------- */
+  --grid-paper: #fafaf8;    /* the warm drawing sheet */
+  --grid-plate: #ffffff;    /* pure white plate surface */
+  --grid-ink: #111111;      /* text, drawing lines, rules — 18.1:1 on paper */
+  --grid-red: #e63946;      /* the one accent — 4.17:1: marks, large numerals, one line */
+  --grid-ink-faint: rgba(17, 17, 17, 0.16);  /* derived: overlay hairlines, resting */
+  --grid-ink-fainter: rgba(17, 17, 17, 0.07); /* derived: baseline grid, plate baselines */
+  --grid-tint: rgba(17, 17, 17, 0.018);      /* derived: column tint */
+  --grid-rule-soft: rgba(17, 17, 17, 0.22);  /* derived: row hairlines, 1px rules */
+  --grid-ink-dim: rgba(17, 17, 17, 0.62);    /* ≈ #656564 — 5.4:1, annotations */
+  --grid-red-soft: rgba(230, 57, 70, 0.85);  /* red on white at AA-large for the cut line */
+
+  /* -- type -------------------------------------------------------------- */
+  --grid-font-sans: var(--font-sans), "Inter", "Helvetica Neue", Arial, sans-serif;
+  --grid-font-ko: var(--font-kr), "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  /* Hangul falls through Inter into Noto Sans KR even without :lang */
+  --grid-font-stack: var(--font-sans), var(--font-kr), "Helvetica Neue", Arial, sans-serif;
+  --grid-font-mono: var(--font-mono), var(--font-kr), "Courier New", monospace;
+
+  /* -- the measured construction ----------------------------------------- */
+  --grid-maxw: 1440px;
+  --grid-margin: clamp(16px, 4vw, 48px);
+  --grid-gutter: clamp(10px, 1.8vw, 28px);
+  --grid-baseline: 8px;
+
+  /* -- motion: smooth deceleration, no overshoot — drawings settle -------- */
+  --grid-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --grid-flip-ms: 600ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--grid-paper);
+  color: var(--grid-ink);
+  font-family: var(--grid-font-stack);
+  font-size: clamp(15px, 0.4vw + 13.6px, 17px);
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0.004em;
+  overflow-x: hidden;
+  overflow-x: clip;
+  /* The scrub variable defaults to 1 (fully built) so the no-JS / reduced
+     motion state is the finished drawing. The hook writes the live value. */
+  --grid-scrub: 1;
+}
+
+/* Korean is first-class: its own family, set in the same thin register. */
+.grid-root :lang(ko) {
+  font-family: var(--grid-font-ko);
+  letter-spacing: 0;
+  font-weight: 400;
+  word-break: keep-all;
+}
+
+/* Signal-red selection, scoped to the entry root. */
+.grid-root ::selection,
+.grid-root::selection {
+  background: var(--grid-red);
+  color: #ffffff;
+}
+
+/* Keyboard focus: the signal red, hairline, unambiguous. */
+.grid-root :focus-visible {
+  outline: 2px solid var(--grid-red);
+  outline-offset: 3px;
+}
+
+/* The architect's pencil: plate numbers, coordinates, dimensions. */
+.grid-mono {
+  font-family: var(--grid-font-mono);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Master frame + grid — the 12-column field the work moves across
+   ========================================================================== */
+
+.grid-scope {
+  /* one grid, always on — the instrument stays put while the work moves */
+}
+
+.grid-frame {
+  max-width: var(--grid-maxw);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+.grid-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gutter);
+}
+
+/* FLIP: useFlip.ts inverts with an inline transform and releases; this
+   transition plays every plate home. JS-gated — no JS, no morphs. */
+.grid-js [data-flip] {
+  transition: transform var(--grid-flip-ms) var(--grid-ease);
+}
+
+/* ==========================================================================
+   Exposed construction — the fixed column overlay (12, always on)
+   ========================================================================== */
+
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.grid-overlay__layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  gap: var(--grid-gutter);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  max-width: var(--grid-maxw);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+.grid-overlay__layer > span {
+  background: var(--grid-tint);
+  border-inline: 1px solid var(--grid-ink-fainter);
+}
+
+/* ==========================================================================
+   Section furniture
+   ========================================================================== */
+
+.grid-section {
+  padding-block: clamp(64px, 11vh, 132px);
+}
+
+.grid-sechead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 20px;
+  border-top: 2px solid var(--grid-ink);
+  padding-top: 12px;
+  margin: 0 0 clamp(28px, 5vh, 52px);
+}
+
+.grid-sechead__no {
+  font-family: var(--grid-font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.grid-sechead__no::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 10px;
+  background: var(--grid-red);
+}
+
+.grid-sechead__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+  font-weight: 300;
+  letter-spacing: -0.005em;
+  line-height: 1.15;
+}
+
+.grid-sechead__ko {
+  margin-left: 8px;
+  font-size: 0.6em;
+  font-weight: 400;
+  color: var(--grid-ink-dim);
+}
+
+/* ==========================================================================
+   00 · Hero — the cover plate
+   ========================================================================== */
+
+.grid-hero {
+  position: relative;
+  overflow: hidden;
+  /* the visible baseline grid: one faint hairline every 8px */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--grid-ink-fainter) 0 1px,
+    transparent 1px var(--grid-baseline)
+  );
+}
+
+.grid-hero__inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: clamp(16px, 3vh, 32px);
+  padding-bottom: clamp(16px, 3vh, 28px);
+}
+
+.grid-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  margin: 0;
+  border-bottom: 1px solid var(--grid-ink);
+  padding-bottom: 10px;
+}
+
+.grid-hero__titlewrap {
+  margin: auto 0 0;
+}
+
+.grid-hero__title {
+  margin: 0;
+  font-size: clamp(4.4rem, 20vw, 16rem);
+  font-weight: 200;
+  letter-spacing: -0.03em;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.grid-hero__ko {
+  margin: clamp(12px, 2vw, 24px) 0 0;
+  font-family: var(--grid-font-ko);
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  font-weight: 300;
+  letter-spacing: 0.36em;
+  color: var(--grid-ink-dim);
+}
+
+.grid-hero__foot {
+  margin-top: auto;
+  padding-top: clamp(28px, 6vh, 64px);
+  align-items: end;
+}
+
+.grid-hero__spec {
+  grid-column: 1 / span 7;
+  border-top: 1px solid var(--grid-ink);
+  padding-top: 14px;
+}
+
+.grid-hero__spec p {
+  margin: 0 0 10px;
+  font-size: clamp(0.98rem, 1.5vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.45;
+  max-width: 46ch;
+}
+
+.grid-hero__spec p:last-child {
+  margin-bottom: 0;
+}
+
+.grid-hero__spec p span[lang="ko"] {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.9em;
+  color: var(--grid-ink-dim);
+}
+
+/* the title block — an architectural drawing's stamp */
+.grid-hero__titleblock {
+  grid-column: 9 / span 4;
+  align-self: end;
+  margin: 0;
+  border: 1px solid var(--grid-ink);
+  background: var(--grid-plate);
+  padding: 14px 16px;
+  display: grid;
+  gap: 12px 20px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.grid-hero__titleblock div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.grid-hero__titleblock dt {
+  color: var(--grid-ink-dim);
+}
+
+.grid-hero__titleblock dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.grid-hero__cue {
+  margin: clamp(20px, 4vh, 40px) 0 0;
+}
+
+/* -- the wordmark, split per glyph (char-split-reveal) -------------------- */
+
+.grid-nummark__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.grid-nummark__ch {
+  display: inline-block;
+  /* entrance: each glyph rises and fades in, staggered. The 100% keyframe
+     equals the resting style, so nothing jumps when the animation ends. */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.grid-js .is-on .grid-nummark__ch {
+  animation: grid-numeral-in 720ms var(--grid-ease) backwards;
+  animation-delay: calc(var(--i) * 40ms);
+}
+
+@keyframes grid-numeral-in {
+  0% {
+    opacity: 0;
+    transform: translateY(0.5em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   01 · Plate index — the FLIP repack by typology
+   ========================================================================== */
+
+.grid-index__lead {
+  margin-bottom: clamp(28px, 5vh, 48px);
+  align-items: start;
+}
+
+.grid-index__spec {
+  grid-column: 1 / span 7;
+}
+
+.grid-index__spec p {
+  margin: 0 0 8px;
+  font-size: clamp(0.98rem, 1.4vw, 1.15rem);
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+.grid-index__spec p[lang="ko"] {
+  font-size: clamp(0.9rem, 1.3vw, 1.02rem);
+  color: var(--grid-ink-dim);
+}
+
+.grid-filter {
+  grid-column: 9 / span 4;
+  justify-self: stretch;
+  border: 1px solid var(--grid-ink);
+  padding: 14px 16px;
+  background: var(--grid-plate);
+}
+
+.grid-filter__label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.grid-filter__btns {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--grid-ink);
+}
+
+.grid-filter__btn {
+  flex: 1 1 0;
+  min-height: 56px;
+  padding: 8px 6px;
+  background: var(--grid-plate);
+  color: var(--grid-ink);
+  border: 0;
+  font-family: var(--grid-font-sans);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.grid-filter__btn + .grid-filter__btn {
+  border-left: 1px solid var(--grid-ink);
+}
+
+.grid-filter__count {
+  font-size: 0.62rem;
+  color: var(--grid-ink-dim);
+}
+
+.grid-filter__en {
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.grid-filter__ko {
+  font-size: 0.7rem;
+  color: var(--grid-ink-dim);
+}
+
+.grid-filter__btn[aria-pressed="true"] {
+  background: var(--grid-ink);
+  color: var(--grid-paper);
+}
+
+.grid-filter__btn[aria-pressed="true"] .grid-filter__count,
+.grid-filter__btn[aria-pressed="true"] .grid-filter__ko {
+  color: rgba(250, 250, 248, 0.7);
+}
+
+.grid-filter__btn[aria-pressed="true"]::after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 2px;
+  margin-top: 4px;
+  background: var(--grid-red);
+}
+
+.grid-filter__btn:focus-visible {
+  outline-offset: -4px;
+}
+
+.grid-filter__state {
+  margin: 12px 0 0;
+  font-size: 0.86rem;
+  font-weight: 300;
+}
+
+.grid-filter__state span:first-child {
+  color: var(--grid-red);
+  font-weight: 500;
+  margin-right: 6px;
+}
+
+.grid-filter__state span[lang="ko"] {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.82em;
+  color: var(--grid-ink-dim);
+}
+
+/* -- the plate board ------------------------------------------------------ */
+
+.grid-index__board {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: start;
+}
+
+.grid-plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--grid-plate);
+  border: 1px solid var(--grid-ink);
+  overflow: hidden;
+}
+
+/* entrance: plates fade-rise in, staggered. JS-gated so no-JS shows them
+   statically. Runs once on first paint of the board. */
+.grid-js .grid-index__board .grid-plate {
+  animation: grid-plate-in 520ms var(--grid-ease) backwards;
+}
+
+.grid-js .grid-index__board .grid-plate:nth-child(1) { animation-delay: 0ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(2) { animation-delay: 60ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(3) { animation-delay: 120ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(4) { animation-delay: 180ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(5) { animation-delay: 240ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(6) { animation-delay: 300ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(7) { animation-delay: 360ms; }
+.grid-js .grid-index__board .grid-plate:nth-child(8) { animation-delay: 420ms; }
+
+@keyframes grid-plate-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* plate corner id */
+.grid-plate__corner {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  z-index: 2;
+  background: var(--grid-plate);
+  padding: 2px 6px;
+  color: var(--grid-red);
+  font-weight: 500;
+}
+
+/* the drawing area — the plate's internal grid + diagram */
+.grid-plate__drawing {
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid var(--grid-rule-soft);
+  background:
+    /* corner registration crosses */
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) top left / 8px 1px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) top left / 1px 8px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) top right / 8px 1px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) top right / 1px 8px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) bottom left / 8px 1px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) bottom left / 1px 8px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) bottom right / 8px 1px no-repeat,
+    linear-gradient(var(--grid-ink-faint), var(--grid-ink-faint)) bottom right / 1px 8px no-repeat,
+    var(--grid-plate);
+  display: grid;
+  place-items: center;
+  padding: 28px 24px;
+}
+
+.grid-plate--tall .grid-plate__drawing { aspect-ratio: 4 / 3; }
+.grid-plate--mid .grid-plate__drawing { aspect-ratio: 16 / 10; }
+.grid-plate--low .grid-plate__drawing { aspect-ratio: 16 / 6; }
+
+/* baseline hairlines inside the drawing */
+.grid-plate__baselines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--grid-ink-fainter) 0 1px,
+    transparent 1px 16px
+  );
+  pointer-events: none;
+}
+
+.grid-plate__diagram {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
+
+.grid-plate__diagram .grid-draw {
+  fill: none;
+  stroke: var(--grid-ink);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+}
+
+.grid-plate__diagram .grid-draw--red {
+  stroke: var(--grid-red);
+  stroke-width: 2;
+}
+
+.grid-plate__dim {
+  position: absolute;
+  bottom: 6px;
+  right: 10px;
+  color: var(--grid-ink-dim);
+  background: var(--grid-plate);
+  padding: 1px 4px;
+}
+
+/* plate body */
+.grid-plate__body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grid-plate__name {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 300;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+
+.grid-plate__name-ko {
+  display: block;
+  font-size: 0.72em;
+  font-weight: 400;
+  color: var(--grid-ink-dim);
+  margin-top: 2px;
+}
+
+.grid-plate__line {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--grid-ink-dim);
+  max-width: 40ch;
+}
+
+.grid-plate__line span[lang="ko"] {
+  display: block;
+  margin-top: 2px;
+}
+
+.grid-plate__meta {
+  margin: 4px 0 0;
+  display: grid;
+  gap: 8px 18px;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--grid-rule-soft);
+  padding-top: 10px;
+}
+
+.grid-plate__meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.grid-plate__meta dt {
+  color: var(--grid-ink-dim);
+}
+
+.grid-plate__meta dd {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 400;
+}
+
+.grid-plate__meta dd span[lang="ko"] {
+  display: block;
+  font-size: 0.92em;
+  color: var(--grid-ink-dim);
+}
+
+/* status marks: red geometry; the meaning is always in the ink text */
+.grid-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+
+.grid-status i {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--grid-red);
+}
+
+.grid-status--competition i {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--grid-red);
+}
+
+.grid-status--study i {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--grid-ink);
+}
+
+/* plate column spans */
+.grid-plate--span-4 { grid-column: span 4; }
+.grid-plate--span-6 { grid-column: span 6; }
+.grid-plate--span-8 { grid-column: span 8; }
+
+.grid-index__note {
+  margin: 18px 0 0;
+  color: var(--grid-ink-dim);
+}
+
+/* ==========================================================================
+   02 · Section drawing — scroll-scrubbed, pinned
+   ========================================================================== */
+
+.grid-section__lead {
+  margin-bottom: clamp(28px, 5vh, 48px);
+  align-items: start;
+}
+
+.grid-section__spec {
+  grid-column: 1 / span 8;
+}
+
+.grid-section__spec p {
+  margin: 0 0 8px;
+  font-size: clamp(0.98rem, 1.4vw, 1.15rem);
+  line-height: 1.5;
+  max-width: 56ch;
+}
+
+.grid-section__spec p[lang="ko"] {
+  font-size: clamp(0.9rem, 1.3vw, 1.02rem);
+  color: var(--grid-ink-dim);
+}
+
+.grid-section__read {
+  grid-column: 10 / span 3;
+  align-self: end;
+  text-align: right;
+  color: var(--grid-red);
+}
+
+/* the pinned stage: parent carries extra height (travel), child is sticky */
+.grid-section__stage-wrap {
+  position: relative;
+  /* two viewports of travel to scrub the build across */
+  height: 260vh;
+}
+
+.grid-section__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+}
+
+.grid-section__plate {
+  position: relative;
+  width: 100%;
+  background: var(--grid-plate);
+  border: 1px solid var(--grid-ink);
+  padding: clamp(20px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vw, 20px);
+  min-height: 60vh;
+}
+
+.grid-section__plate-id {
+  color: var(--grid-ink-dim);
+}
+
+.grid-section__baselines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--grid-ink-fainter) 0 1px,
+    transparent 1px var(--grid-baseline)
+  );
+  pointer-events: none;
+}
+
+.grid-section__drawing {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-height: 56vh;
+}
+
+/* the strokes: each interpolates dashoffset 1 → 0 across its window of
+   scrub progress. The window is [start, start + 0.18] — short so each
+   group completes before the next begins, matching inking order.
+   The math: visible = clamp01((scrub - start) / 0.18); offset = 1 - visible. */
+.grid-build__ln {
+  fill: none;
+  stroke: var(--grid-ink);
+  stroke-width: 1.6;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+  /* CSS custom prop with calc() reads the --grid-scrub the hook writes. */
+  --start: 0;
+  --win: 0.18;
+  --frac: clamp(0, (var(--grid-scrub) - var(--start)) / var(--win), 1);
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--frac));
+}
+
+.grid-build[data-start="0.00"] .grid-build__ln { --start: 0.00; }
+.grid-build[data-start="0.18"] .grid-build__ln { --start: 0.18; }
+.grid-build[data-start="0.40"] .grid-build__ln { --start: 0.40; }
+.grid-build[data-start="0.62"] .grid-build__ln { --start: 0.62; }
+.grid-build[data-start="0.80"] .grid-build__ln { --start: 0.80; }
+
+.grid-build__ln--red {
+  stroke: var(--grid-red-soft);
+  stroke-width: 2.2;
+}
+
+.grid-build__txt {
+  fill: var(--grid-ink-dim);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-anchor: middle;
+  /* fade the label in across the same window as its line */
+  --start: 0;
+  --win: 0.18;
+  --frac: clamp(0, (var(--grid-scrub) - var(--start)) / var(--win), 1);
+  opacity: var(--frac);
+}
+
+.grid-build__txt[data-start="0.00"] { --start: 0.00; }
+.grid-build__txt[data-start="0.62"] { --start: 0.62; }
+.grid-build__txt[data-start="0.80"] { --start: 0.80; }
+
+.grid-build__txt--red {
+  fill: var(--grid-red);
+}
+
+/* dimension group fades in as a whole (its lines still draw individually) */
+.grid-build--dims {
+  --frac: clamp(0, (var(--grid-scrub) - 0.80) / 0.18, 1);
+  opacity: var(--frac);
+}
+
+/* legend */
+.grid-section__legend {
+  margin: 0;
+  display: grid;
+  gap: 6px 24px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  border-top: 1px solid var(--grid-rule-soft);
+  padding-top: 14px;
+}
+
+.grid-section__legend div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.grid-section__legend dt {
+  color: var(--grid-red);
+  font-weight: 500;
+}
+
+.grid-section__legend dd {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-section__frac {
+  font-size: 0.7rem;
+  color: var(--grid-ink-dim);
+  margin-top: 1px;
+}
+
+/* ==========================================================================
+   03 · Footer — colophon
+   ========================================================================== */
+
+.grid-footer {
+  padding-block: clamp(64px, 10vh, 120px) 28px;
+}
+
+.grid-footer__statement {
+  margin: clamp(20px, 4vh, 44px) 0 16px;
+  font-size: clamp(2.4rem, 9.5vw, 9.8rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.grid-footer__statement-red {
+  color: var(--grid-red);
+}
+
+.grid-cert {
+  display: block;
+  width: 100%;
+  height: 2px;
+}
+
+.grid-cert__line {
+  fill: none;
+  stroke: var(--grid-red);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.grid-js .is-on .grid-cert__line {
+  animation: grid-draw 1100ms var(--grid-ease) 480ms forwards;
+}
+
+@keyframes grid-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.grid-footer__attest {
+  margin: 18px 0 0;
+  font-size: clamp(0.98rem, 1.4vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 58ch;
+}
+
+.grid-footer__attest span[lang="ko"] {
+  display: block;
+  margin-top: 2px;
+  color: var(--grid-ink-dim);
+}
+
+.grid-footer__cols {
+  margin-top: clamp(40px, 7vh, 72px);
+}
+
+.grid-footer__block {
+  grid-column: span 4;
+  border-top: 1px solid var(--grid-ink);
+  padding-top: 12px;
+}
+
+.grid-footer__h {
+  margin: 0 0 10px;
+  font-weight: 500;
+}
+
+.grid-footer__block p {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.grid-footer__legal {
+  margin: clamp(48px, 8vh, 80px) 0 0;
+  border-top: 1px solid var(--grid-rule-soft);
+  padding-top: 14px;
+}
+
+/* ==========================================================================
+   Small sheets — the grid holds; the furniture stacks
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  .grid-hero__spec,
+  .grid-hero__titleblock,
+  .grid-index__spec,
+  .grid-filter,
+  .grid-section__spec,
+  .grid-section__read,
+  .grid-footer__block {
+    grid-column: 1 / -1;
+  }
+
+  .grid-hero__titleblock {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-section__read {
+    text-align: left;
+  }
+
+  /* plates go full-width on small sheets — the board keeps its grid logic
+     but stacks into a single column, like plates pinned one above another */
+  .grid-plate--span-4,
+  .grid-plate--span-6,
+  .grid-plate--span-8 {
+    grid-column: 1 / -1;
+  }
+
+  .grid-plate__meta {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-hero__titleblock {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-plate__meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the finished document, immediately
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-root *,
+  .grid-root *::before,
+  .grid-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* scrub must read as fully built: force the scrub variable to 1 so every
+     dashoffset/opacity formula resolves to "complete" */
+  .grid-root {
+    --grid-scrub: 1;
+  }
+
+  /* line-draw strokes must render complete, not frozen at zero */
+  .grid-root .grid-cert__line {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  /* the section drawing strokes: force fully drawn regardless of scrub */
+  .grid-root .grid-build__ln,
+  .grid-root .grid-build--dims,
+  .grid-root .grid-build__txt {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+  }
+
+  /* the stage stops pinning — content reads top to bottom */
+  .grid-root .grid-section__stage-wrap {
+    height: auto;
+  }
+
+  .grid-root .grid-section__stage {
+    position: static;
+    height: auto;
+  }
+}

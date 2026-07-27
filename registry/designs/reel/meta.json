@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "reel",
+  "no": 31,
+  "title": {
+    "en": "REEL — Analog Film-Leak Photography",
+    "ko": "릴 — 아날로그 필름 릭 사진"
+  },
+  "description": {
+    "en": "A wedding and film photographer's portfolio as a contact sheet come to life: warm Kodak-toned stills that develop under scroll, light leaks that sweep the strip, sprocket-hole clip-path reveals, and grain laid down like Tri-X. Every still is a CSS gradient — no photograph is shipped.",
+    "ko": "결혼·필름 사진가의 포트폴리오가 살아 움직이는 밀착 인화지 — 스크롤 아래 현상되는 따뜻한 코닥 톤의 스틸, 스트립을 쓸고 지나가는 라이트 릭, 스프로켓 구멍 클립패스 리빌, Tri-X처럼 깔리는 그레인. 모든 스틸은 CSS 그라디언트다. 사진 파일은 한 장도 싣지 않는다."
+  },
+  "aesthetic": "cinematic-dark",
+  "techniques": ["scroll-scrub-pinned", "clip-path-reveal", "crt-scanline"],
+  "industry": ["culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM 5.2",
+    "tool": "zcode",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#d4a554",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}
