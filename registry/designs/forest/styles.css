@@ -1,0 +1,35 @@
+/* forest — gallery entry 50-roster */
+.forest-root {
+  --forest-bg: #f0fdf4;
+  --forest-ink: #0a1f0a;
+  --forest-accent: #15803d;
+  position: relative;
+  min-height: 100vh;
+  background: var(--forest-bg);
+  color: var(--forest-ink);
+  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  font-size: clamp(15px, 0.5vw + 13px, 17px);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+.forest-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
+.forest-root ::selection { background: var(--forest-accent); color: var(--forest-bg); }
+.forest-root :focus-visible { outline: 2px solid var(--forest-accent); outline-offset: 4px; }
+.forest-js [data-reveal] {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 800ms cubic-bezier(0.16,1,0.3,1), transform 800ms cubic-bezier(0.16,1,0.3,1);
+}
+.forest-js [data-reveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .forest-js [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+.forest-doc { position: relative; z-index: 1; }
+.forest-hero { padding: clamp(80px,16vh,140px) clamp(20px,5vw,60px) clamp(40px,8vh,60px); }
+.forest-kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--forest-accent); margin: 0 0 24px; }
+.forest-title { font-weight: 700; font-size: clamp(3rem,10vw,6rem); line-height: 1; margin: 0 0 16px; }
+.forest-title :lang(ko) { font-size: 0.5em; opacity: 0.7; }
+.forest-sub { opacity: 0.6; margin: 0; }
+.forest-body { padding: clamp(40px,8vh,80px) clamp(20px,5vw,60px); max-width: 680px; }
+.forest-body__text { margin: 0; }
+.forest-foot { padding: clamp(48px,10vh,80px) clamp(20px,5vw,60px); opacity: 0.5; font-size: 0.8rem; }
+.forest-foot p { margin: 0 0 6px; }

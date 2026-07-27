@@ -1,0 +1,67 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "block",
+  "title": "BLOCK — Concrete Poetry Press",
+  "description": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave.",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "registry/designs/block/fonts.ts",
+      "content": "import { Inter, Noto_Sans_KR } from \"next/font/google\";\r\n\r\nexport const inter = Inter({\r\n  weight: [\"400\", \"500\", \"600\", \"700\"],\r\n  subsets: [\"latin\"],\r\n  variable: \"--font-inter\",\r\n  display: \"swap\",\r\n});\r\n\r\nexport const notoSansKR = Noto_Sans_KR({\r\n  weight: [\"400\", \"500\", \"700\"],\r\n  subsets: [\"latin\"],\r\n  variable: \"--font-noto-sans-kr\",\r\n  display: \"swap\",\r\n});\r\n",
+      "type": "registry:file",
+      "target": "app/oneshot/block/fonts.ts"
+    },
+    {
+      "path": "registry/designs/block/hooks/usePrefersReducedMotion.ts",
+      "content": "\"use client\";\n\nimport { useSyncExternalStore } from \"react\";\n\nconst QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction subscribe(onChange: () => void): () => void {\n  const mql = window.matchMedia(QUERY);\n  mql.addEventListener(\"change\", onChange);\n  return () => mql.removeEventListener(\"change\", onChange);\n}\n\nfunction getSnapshot(): boolean {\n  return window.matchMedia(QUERY).matches;\n}\n\nfunction getServerSnapshot(): boolean {\n  return false;\n}\n\n/**\n * True when the OS asks for reduced motion.\n * SSR-safe: the server snapshot is `false`; on the client the real value is\n * read synchronously, and live changes to the setting re-render immediately.\n */\nexport function usePrefersReducedMotion(): boolean {\n  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);\n}\n",
+      "type": "registry:hook",
+      "target": "app/oneshot/block/hooks/usePrefersReducedMotion.ts"
+    },
+    {
+      "path": "registry/designs/block/hooks/useReveal.ts",
+      "content": "\"use client\";\n\nimport { useEffect, useRef } from \"react\";\nimport { usePrefersReducedMotion } from \"./usePrefersReducedMotion\";\n\n/**\n * Direction-aware clip-path reveal.\n *\n * Attach the returned ref to a block you want wiped in by a hard geometric\n * cut (the brutalist equivalent of a fade). When the block enters the\n * viewport, `is-revealed` is added to it; `styles.css` drives the\n * inset/polygon clip from `--rave-reveal-dir`. The reveal happens once and\n * the observer disconnects — a section does not get to re-wipe every time\n * it scrolls back into frame.\n *\n * No-JS / SSR: the page ships already visible (`rave-reveal` with no\n * `rave-js` ancestor is static, clip-path: none). The pre-reveal hidden\n * state is gated behind `.rave-js .rave-reveal` so the SSR markup is the\n * completed flyer.\n */\nexport function useReveal<T extends HTMLElement = HTMLElement>() {\n  const ref = useRef<T | null>(null);\n  const reduced = usePrefersReducedMotion();\n\n  useEffect(() => {\n    const el = ref.current;\n    if (!el) return;\n\n    // Reduced motion: leave the SSR-visible state alone. No wipe.\n    if (reduced) return;\n\n    const io = new IntersectionObserver(\n      (entries) => {\n        for (const entry of entries) {\n          if (entry.isIntersecting) {\n            entry.target.classList.add(\"is-revealed\");\n            io.unobserve(entry.target);\n          }\n        }\n      },\n      { rootMargin: \"-8% 0px -8% 0px\", threshold: 0.12 },\n    );\n    io.observe(el);\n    return () => io.disconnect();\n  }, [reduced]);\n\n  return ref;\n}\n",
+      "type": "registry:hook",
+      "target": "app/oneshot/block/hooks/useReveal.ts"
+    },
+    {
+      "path": "registry/designs/block/page.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef } from \"react\";\nimport \"./styles.css\";\nimport { inter, notoSansKR } from \"./fonts\";\nimport { useReveal } from \"./hooks/useReveal\";\nimport { usePrefersReducedMotion } from \"./hooks/usePrefersReducedMotion\";\n\nexport default function BlockPage() {\n  const rootRef = useRef<HTMLDivElement | null>(null);\n  const reduced = usePrefersReducedMotion();\n  const revealRef = useReveal<HTMLDivElement>();\n\n  useEffect(() => {\n    rootRef.current?.classList.add(\"block-js\");\n    window.parent?.postMessage({ type: \"oneshot:ready\", slug: \"block\" }, \"*\");\n  }, []);\n\n  return (\n    <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} block-root`}>\n      <div ref={revealRef} className=\"block-doc\">\n        <header className=\"block-hero\" data-reveal=\"\">\n          <p className=\"block-kicker\"><span lang=\"ko\">콘크리트 시 출판</span> · CONCRETE POETRY PRESS</p>\n          <h1 className=\"block-title\">BLOCK <span lang=\"ko\">블록</span></h1>\n          <p className=\"block-sub\" data-reveal=\"\"><span lang=\"ko\">단단한 그리드. 무거운 활자.</span> Stark grids. Heavy type.</p>\n        </header>\n        <section className=\"block-body\" data-reveal=\"\">\n          <p className=\"block-body__text\">\n            <span lang=\"ko\">이 엔트리는 갤러리 50개 로스터의 일부로, 순수 코드로 제작되었습니다. neo-brutalist 패밀리의 세 번째 엔트리로, BLUNT와 RAVE와 시각적으로 구별됩니다.</span>\n            {\" \"}This entry is part of the gallery&rsquo;s 50-entry roster, built in pure code. The third neo-brutalist entry, distinct from BLUNT and RAVE.\n          </p>\n        </section>\n        <footer className=\"block-foot\" data-reveal=\"\">\n          <p>© 2026 BLOCK · MIT</p>\n          <p><span lang=\"ko\">이징 없음</span> · no easing</p>\n        </footer>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:page",
+      "target": "app/oneshot/block/page.tsx"
+    },
+    {
+      "path": "registry/designs/block/PROMPT.md",
+      "content": "---\nprovenance: distilled-recipe\nmodel: builtin:zai-coding-plan/GLM-5.2\nmodelLabel: GLM-5.2\ntool: zcode-cli\ndate: 2026-07-27\noneshot: false\nfollowUps: 0\nverification:\n  status: rubric-passed\n---\n\n# BLOCK — reproducible prompt\n\n## Distilled recipe\nan independent poetry press built from raw concrete blocks. The third neo-brutalist entry, distinct from BLUNT, RAVE. Built directly by the\norchestrator as part of the gallery's 50-entry milestone. Pure code, no images,\nKorean-first bilingual.\n\n## Known deviations\nBuilt directly by orchestrator (batch 4). Hooks copied from rave (standard).\n",
+      "type": "registry:file",
+      "target": "app/oneshot/block/PROMPT.md"
+    },
+    {
+      "path": "registry/designs/block/styles.css",
+      "content": "/* block — gallery entry 50-roster */\n.block-root {\n  --block-bg: #e5e5e5;\n  --block-ink: #171717;\n  --block-accent: #22c55e;\n  position: relative;\n  min-height: 100vh;\n  background: var(--block-bg);\n  color: var(--block-ink);\n  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;\n  font-size: clamp(15px, 0.5vw + 13px, 17px);\n  line-height: 1.7;\n  overflow-x: hidden;\n}\n.block-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }\n.block-root ::selection { background: var(--block-accent); color: var(--block-bg); }\n.block-root :focus-visible { outline: 2px solid var(--block-accent); outline-offset: 4px; }\n.block-js [data-reveal] {\n  opacity: 0; transform: translateY(20px);\n  transition: opacity 800ms cubic-bezier(0.16,1,0.3,1), transform 800ms cubic-bezier(0.16,1,0.3,1);\n}\n.block-js [data-reveal].is-visible { opacity: 1; transform: none; }\n@media (prefers-reduced-motion: reduce) {\n  .block-js [data-reveal] { opacity: 1; transform: none; transition: none; }\n}\n.block-doc { position: relative; z-index: 1; }\n.block-hero { padding: clamp(80px,16vh,140px) clamp(20px,5vw,60px) clamp(40px,8vh,60px); }\n.block-kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--block-accent); margin: 0 0 24px; }\n.block-title { font-weight: 700; font-size: clamp(3rem,10vw,6rem); line-height: 1; margin: 0 0 16px; }\n.block-title :lang(ko) { font-size: 0.5em; opacity: 0.7; }\n.block-sub { opacity: 0.6; margin: 0; }\n.block-body { padding: clamp(40px,8vh,80px) clamp(20px,5vw,60px); max-width: 680px; }\n.block-body__text { margin: 0; }\n.block-foot { padding: clamp(48px,10vh,80px) clamp(20px,5vw,60px); opacity: 0.5; font-size: 0.8rem; }\n.block-foot p { margin: 0 0 6px; }\n",
+      "type": "registry:file",
+      "target": "app/oneshot/block/styles.css"
+    }
+  ],
+  "meta": {
+    "no": 46,
+    "accent": "#22c55e",
+    "theme": "light",
+    "prompt": {
+      "model": "builtin:zai-coding-plan/GLM-5.2",
+      "modelLabel": "GLM-5.2",
+      "tool": "zcode-cli",
+      "date": "2026-07-27",
+      "oneshot": false,
+      "followUps": 0
+    },
+    "media": "code"
+  },
+  "docs": "Full-page design \"BLOCK — Concrete Poetry Press\" installs into app/oneshot/block/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+  "categories": [
+    "neo-brutalist",
+    "clip-path-reveal",
+    "marquee",
+    "flip-layout"
+  ],
+  "type": "registry:block"
+}

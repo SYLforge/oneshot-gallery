@@ -66,6 +66,40 @@
     "featured": false
   },
   {
+    "slug": "block",
+    "no": 46,
+    "title": {
+      "en": "BLOCK — Concrete Poetry Press",
+      "ko": "블록 — 콘크리트 시 출판"
+    },
+    "description": {
+      "en": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave.",
+      "ko": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave."
+    },
+    "aesthetic": "neo-brutalist",
+    "techniques": [
+      "clip-path-reveal",
+      "marquee",
+      "flip-layout"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#22c55e",
+    "theme": "light",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "bloom",
     "no": 28,
     "title": {
@@ -204,6 +238,40 @@
     "featured": false
   },
   {
+    "slug": "chapter",
+    "no": 48,
+    "title": {
+      "en": "CHAPTER — The Book of Hours",
+      "ko": "챕터 — 시간의 책"
+    },
+    "description": {
+      "en": "A digital book publisher where each section is a chapter with drop caps, marginalia, and sticky footnotes. The third editorial-serif, distinct from yeobaek and zine.",
+      "ko": "A digital book publisher where each section is a chapter with drop caps, marginalia, and sticky footnotes. The third editorial-serif, distinct from yeobaek and zine."
+    },
+    "aesthetic": "editorial-serif",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "char-split-reveal",
+      "clip-path-reveal"
+    ],
+    "industry": [
+      "publishing"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#dc2626",
+    "theme": "light",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "chrome",
     "no": 25,
     "title": {
@@ -267,6 +335,74 @@
     },
     "media": "code",
     "accent": "#a78bd9",
+    "theme": "light",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "flow",
+    "no": 45,
+    "title": {
+      "en": "FLOW — River of Words",
+      "ko": "흐름 — 글자의 강"
+    },
+    "description": {
+      "en": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream.",
+      "ko": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream."
+    },
+    "aesthetic": "kinetic-typography",
+    "techniques": [
+      "char-split-reveal",
+      "scroll-scrub-pinned",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "wellness"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#0ea5e9",
+    "theme": "light",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "forest",
+    "no": 49,
+    "title": {
+      "en": "FOREST — Deep Canopy Retreat",
+      "ko": "숲 — 깊은 수관의 은신처"
+    },
+    "description": {
+      "en": "A forest retreat where the page grows overhead — canopy layers darken as you scroll deeper, dappled light filters through. The third organic-nature, distinct from sup and dream.",
+      "ko": "A forest retreat where the page grows overhead — canopy layers darken as you scroll deeper, dappled light filters through. The third organic-nature, distinct from sup and dream."
+    },
+    "aesthetic": "organic-nature",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "feturbulence-texture",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "wellness"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#15803d",
     "theme": "light",
     "published": "2026-07-27",
     "featured": false
@@ -750,6 +886,40 @@
     "featured": false
   },
   {
+    "slug": "noir",
+    "no": 50,
+    "title": {
+      "en": "NOIR — Black and White Cinema",
+      "ko": "느와르 — 흑백 영화"
+    },
+    "description": {
+      "en": "A film-noir cinema site in pure black and white — venetian-blind shadows, cigarette smoke, hard-boiled typography. The third cinematic-dark, distinct from halflight and reel.",
+      "ko": "A film-noir cinema site in pure black and white — venetian-blind shadows, cigarette smoke, hard-boiled typography. The third cinematic-dark, distinct from halflight and reel."
+    },
+    "aesthetic": "cinematic-dark",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "clip-path-reveal",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#e5e5e5",
+    "theme": "dark",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "ondo",
     "no": 9,
     "title": {
@@ -888,6 +1058,41 @@
     "featured": false
   },
   {
+    "slug": "pop",
+    "no": 51,
+    "title": {
+      "en": "POP — Bubble Comic Store",
+      "ko": "팝 — 풍선 만화 가게"
+    },
+    "description": {
+      "en": "A comic-book store where every element is a bubble that pops on click — cheerful, saturated, cartoon outlines. The third playful-pop.",
+      "ko": "A comic-book store where every element is a bubble that pops on click — cheerful, saturated, cartoon outlines. The third playful-pop."
+    },
+    "aesthetic": "playful-pop",
+    "techniques": [
+      "spring-press",
+      "char-split-reveal",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg",
+        "canvas"
+      ]
+    },
+    "media": "code",
+    "accent": "#f472b6",
+    "theme": "light",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
     "slug": "ppang",
     "no": 15,
     "title": {
@@ -919,6 +1124,40 @@
     "accent": "#e89b4c",
     "theme": "light",
     "published": "2026-07-17",
+    "featured": false
+  },
+  {
+    "slug": "prism",
+    "no": 47,
+    "title": {
+      "en": "PRISM — Light Refraction Studio",
+      "ko": "프리즘 — 빛의 굴절 스튜디오"
+    },
+    "description": {
+      "en": "A lighting-design studio where glass panels refract a beam of light into a spectrum. The third glass-futurism, distinct from lumen-nord and aurora.",
+      "ko": "A lighting-design studio where glass panels refract a beam of light into a spectrum. The third glass-futurism, distinct from lumen-nord and aurora."
+    },
+    "aesthetic": "glass-futurism",
+    "techniques": [
+      "pointer-parallax",
+      "svg-line-draw",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#06b6d4",
+    "theme": "light",
+    "published": "2026-07-27",
     "featured": false
   },
   {
@@ -1054,6 +1293,41 @@
     "media": "code",
     "accent": "#d4a554",
     "theme": "dark",
+    "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "rip",
+    "no": 52,
+    "title": {
+      "en": "RIP — Ink Ripple Pond",
+      "ko": "물방울 — 잉크 물방울 연못"
+    },
+    "description": {
+      "en": "An art-gallery site where ink ripples expand from pointer touches on a still pond surface — concentric generative rings. The third ink-bloom.",
+      "ko": "An art-gallery site where ink ripples expand from pointer touches on a still pond surface — concentric generative rings. The third ink-bloom."
+    },
+    "aesthetic": "ink-bloom",
+    "techniques": [
+      "canvas-particles",
+      "pointer-parallax",
+      "scroll-scrub-pinned"
+    ],
+    "industry": [
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg",
+        "canvas"
+      ]
+    },
+    "media": "code",
+    "accent": "#7c3aed",
+    "theme": "light",
     "published": "2026-07-27",
     "featured": false
   },

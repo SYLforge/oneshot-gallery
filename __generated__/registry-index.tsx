@@ -2,17 +2,21 @@
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
 
-export const demoSlugs = ["atelier","aurora","bloom","blunt","bounce","chado","chrome","dream","giwa","glitch","gradient-plaza","grid","halflight","hanji-slate","hanok","kemuri","lumen-nord","memphis","minhwa","moonlit","neon","night-snack","ondo","orbit","pale-signal","pixel","ppang","pulse","raster","rave","reel","riso","sakura","shan-shui","sticker","stretch","sup","typewave","wave","widget","yeobaek","zine"] as const;
+export const demoSlugs = ["atelier","aurora","block","bloom","blunt","bounce","chado","chapter","chrome","dream","flow","forest","giwa","glitch","gradient-plaza","grid","halflight","hanji-slate","hanok","kemuri","lumen-nord","memphis","minhwa","moonlit","neon","night-snack","noir","ondo","orbit","pale-signal","pixel","pop","ppang","prism","pulse","raster","rave","reel","rip","riso","sakura","shan-shui","sticker","stretch","sup","typewave","wave","widget","yeobaek","zine"] as const;
 
 export const demoIndex: Record<string, ComponentType> = {
   "atelier": dynamic(() => import("@/registry/designs/atelier/page")),
   "aurora": dynamic(() => import("@/registry/designs/aurora/page")),
+  "block": dynamic(() => import("@/registry/designs/block/page")),
   "bloom": dynamic(() => import("@/registry/designs/bloom/page")),
   "blunt": dynamic(() => import("@/registry/designs/blunt/page")),
   "bounce": dynamic(() => import("@/registry/designs/bounce/page")),
   "chado": dynamic(() => import("@/registry/designs/chado/page")),
+  "chapter": dynamic(() => import("@/registry/designs/chapter/page")),
   "chrome": dynamic(() => import("@/registry/designs/chrome/page")),
   "dream": dynamic(() => import("@/registry/designs/dream/page")),
+  "flow": dynamic(() => import("@/registry/designs/flow/page")),
+  "forest": dynamic(() => import("@/registry/designs/forest/page")),
   "giwa": dynamic(() => import("@/registry/designs/giwa/page")),
   "glitch": dynamic(() => import("@/registry/designs/glitch/page")),
   "gradient-plaza": dynamic(() => import("@/registry/designs/gradient-plaza/page")),
@@ -27,15 +31,19 @@ export const demoIndex: Record<string, ComponentType> = {
   "moonlit": dynamic(() => import("@/registry/designs/moonlit/page")),
   "neon": dynamic(() => import("@/registry/designs/neon/page")),
   "night-snack": dynamic(() => import("@/registry/designs/night-snack/page")),
+  "noir": dynamic(() => import("@/registry/designs/noir/page")),
   "ondo": dynamic(() => import("@/registry/designs/ondo/page")),
   "orbit": dynamic(() => import("@/registry/designs/orbit/page")),
   "pale-signal": dynamic(() => import("@/registry/designs/pale-signal/page")),
   "pixel": dynamic(() => import("@/registry/designs/pixel/page")),
+  "pop": dynamic(() => import("@/registry/designs/pop/page")),
   "ppang": dynamic(() => import("@/registry/designs/ppang/page")),
+  "prism": dynamic(() => import("@/registry/designs/prism/page")),
   "pulse": dynamic(() => import("@/registry/designs/pulse/page")),
   "raster": dynamic(() => import("@/registry/designs/raster/page")),
   "rave": dynamic(() => import("@/registry/designs/rave/page")),
   "reel": dynamic(() => import("@/registry/designs/reel/page")),
+  "rip": dynamic(() => import("@/registry/designs/rip/page")),
   "riso": dynamic(() => import("@/registry/designs/riso/page")),
   "sakura": dynamic(() => import("@/registry/designs/sakura/page")),
   "shan-shui": dynamic(() => import("@/registry/designs/shan-shui/page")),

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "block",
+  "no": 46,
+  "title": {
+    "en": "BLOCK — Concrete Poetry Press",
+    "ko": "블록 — 콘크리트 시 출판"
+  },
+  "description": {
+    "en": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave.",
+    "ko": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave."
+  },
+  "aesthetic": "neo-brutalist",
+  "techniques": [
+    "clip-path-reveal",
+    "marquee",
+    "flip-layout"
+  ],
+  "industry": [
+    "culture"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#22c55e",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

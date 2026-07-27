@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "forest",
+  "no": 49,
+  "title": {
+    "en": "FOREST — Deep Canopy Retreat",
+    "ko": "숲 — 깊은 수관의 은신처"
+  },
+  "description": {
+    "en": "A forest retreat where the page grows overhead — canopy layers darken as you scroll deeper, dappled light filters through. The third organic-nature, distinct from sup and dream.",
+    "ko": "A forest retreat where the page grows overhead — canopy layers darken as you scroll deeper, dappled light filters through. The third organic-nature, distinct from sup and dream."
+  },
+  "aesthetic": "organic-nature",
+  "techniques": [
+    "scroll-scrub-pinned",
+    "feturbulence-texture",
+    "pointer-parallax"
+  ],
+  "industry": [
+    "wellness"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#15803d",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

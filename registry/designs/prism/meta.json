@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "prism",
+  "no": 47,
+  "title": {
+    "en": "PRISM — Light Refraction Studio",
+    "ko": "프리즘 — 빛의 굴절 스튜디오"
+  },
+  "description": {
+    "en": "A lighting-design studio where glass panels refract a beam of light into a spectrum. The third glass-futurism, distinct from lumen-nord and aurora.",
+    "ko": "A lighting-design studio where glass panels refract a beam of light into a spectrum. The third glass-futurism, distinct from lumen-nord and aurora."
+  },
+  "aesthetic": "glass-futurism",
+  "techniques": [
+    "pointer-parallax",
+    "svg-line-draw",
+    "char-split-reveal"
+  ],
+  "industry": [
+    "product"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#06b6d4",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

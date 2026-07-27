@@ -1,0 +1,50 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "rip",
+  "no": 52,
+  "title": {
+    "en": "RIP — Ink Ripple Pond",
+    "ko": "물방울 — 잉크 물방울 연못"
+  },
+  "description": {
+    "en": "An art-gallery site where ink ripples expand from pointer touches on a still pond surface — concentric generative rings. The third ink-bloom.",
+    "ko": "An art-gallery site where ink ripples expand from pointer touches on a still pond surface — concentric generative rings. The third ink-bloom."
+  },
+  "aesthetic": "ink-bloom",
+  "techniques": [
+    "canvas-particles",
+    "pointer-parallax",
+    "scroll-scrub-pinned"
+  ],
+  "industry": [
+    "culture"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg",
+      "canvas"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#7c3aed",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

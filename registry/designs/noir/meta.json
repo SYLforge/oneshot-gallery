@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "noir",
+  "no": 50,
+  "title": {
+    "en": "NOIR — Black and White Cinema",
+    "ko": "느와르 — 흑백 영화"
+  },
+  "description": {
+    "en": "A film-noir cinema site in pure black and white — venetian-blind shadows, cigarette smoke, hard-boiled typography. The third cinematic-dark, distinct from halflight and reel.",
+    "ko": "A film-noir cinema site in pure black and white — venetian-blind shadows, cigarette smoke, hard-boiled typography. The third cinematic-dark, distinct from halflight and reel."
+  },
+  "aesthetic": "cinematic-dark",
+  "techniques": [
+    "scroll-scrub-pinned",
+    "clip-path-reveal",
+    "char-split-reveal"
+  ],
+  "industry": [
+    "entertainment"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#e5e5e5",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

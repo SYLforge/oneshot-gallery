@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "flow",
+  "no": 45,
+  "title": {
+    "en": "FLOW — River of Words",
+    "ko": "흐름 — 글자의 강"
+  },
+  "description": {
+    "en": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream.",
+    "ko": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream."
+  },
+  "aesthetic": "kinetic-typography",
+  "techniques": [
+    "char-split-reveal",
+    "scroll-scrub-pinned",
+    "pointer-parallax"
+  ],
+  "industry": [
+    "wellness"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#0ea5e9",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "noir",
+  "title": "NOIR — Black and White Cinema",
+  "description": "A film-noir cinema site in pure black and white — venetian-blind shadows, cigarette smoke, hard-boiled typography. The third cinematic-dark, distinct from halflight and reel.",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "registry/designs/noir/fonts.ts",
+      "content": "import { Inter, Noto_Sans_KR } from \"next/font/google\";\r\n\r\nexport const inter = Inter({\r\n  weight: [\"400\", \"500\", \"600\", \"700\"],\r\n  subsets: [\"latin\"],\r\n  variable: \"--font-inter\",\r\n  display: \"swap\",\r\n});\r\n\r\nexport const notoSansKR = Noto_Sans_KR({\r\n  weight: [\"400\", \"500\", \"700\"],\r\n  subsets: [\"latin\"],\r\n  variable: \"--font-noto-sans-kr\",\r\n  display: \"swap\",\r\n});\r\n",
+      "type": "registry:file",
+      "target": "app/oneshot/noir/fonts.ts"
+    },
+    {
+      "path": "registry/designs/noir/hooks/usePrefersReducedMotion.ts",
+      "content": "\"use client\";\n\nimport { useSyncExternalStore } from \"react\";\n\nconst QUERY = \"(prefers-reduced-motion: reduce)\";\n\nfunction subscribe(onChange: () => void): () => void {\n  const mql = window.matchMedia(QUERY);\n  mql.addEventListener(\"change\", onChange);\n  return () => mql.removeEventListener(\"change\", onChange);\n}\n\nfunction getSnapshot(): boolean {\n  return window.matchMedia(QUERY).matches;\n}\n\nfunction getServerSnapshot(): boolean {\n  return false;\n}\n\n/**\n * True when the OS asks for reduced motion.\n * SSR-safe: the server snapshot is `false`; on the client the real value is\n * read synchronously, and live changes to the setting re-render immediately.\n */\nexport function usePrefersReducedMotion(): boolean {\n  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);\n}\n",
+      "type": "registry:hook",
+      "target": "app/oneshot/noir/hooks/usePrefersReducedMotion.ts"
+    },
+    {
+      "path": "registry/designs/noir/hooks/useReveal.ts",
+      "content": "\"use client\";\n\nimport { useEffect, useRef } from \"react\";\nimport { usePrefersReducedMotion } from \"./usePrefersReducedMotion\";\n\n/**\n * Direction-aware clip-path reveal.\n *\n * Attach the returned ref to a block you want wiped in by a hard geometric\n * cut (the brutalist equivalent of a fade). When the block enters the\n * viewport, `is-revealed` is added to it; `styles.css` drives the\n * inset/polygon clip from `--rave-reveal-dir`. The reveal happens once and\n * the observer disconnects — a section does not get to re-wipe every time\n * it scrolls back into frame.\n *\n * No-JS / SSR: the page ships already visible (`rave-reveal` with no\n * `rave-js` ancestor is static, clip-path: none). The pre-reveal hidden\n * state is gated behind `.rave-js .rave-reveal` so the SSR markup is the\n * completed flyer.\n */\nexport function useReveal<T extends HTMLElement = HTMLElement>() {\n  const ref = useRef<T | null>(null);\n  const reduced = usePrefersReducedMotion();\n\n  useEffect(() => {\n    const el = ref.current;\n    if (!el) return;\n\n    // Reduced motion: leave the SSR-visible state alone. No wipe.\n    if (reduced) return;\n\n    const io = new IntersectionObserver(\n      (entries) => {\n        for (const entry of entries) {\n          if (entry.isIntersecting) {\n            entry.target.classList.add(\"is-revealed\");\n            io.unobserve(entry.target);\n          }\n        }\n      },\n      { rootMargin: \"-8% 0px -8% 0px\", threshold: 0.12 },\n    );\n    io.observe(el);\n    return () => io.disconnect();\n  }, [reduced]);\n\n  return ref;\n}\n",
+      "type": "registry:hook",
+      "target": "app/oneshot/noir/hooks/useReveal.ts"
+    },
+    {
+      "path": "registry/designs/noir/page.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef } from \"react\";\nimport \"./styles.css\";\nimport { inter, notoSansKR } from \"./fonts\";\nimport { useReveal } from \"./hooks/useReveal\";\nimport { usePrefersReducedMotion } from \"./hooks/usePrefersReducedMotion\";\n\nexport default function NoirPage() {\n  const rootRef = useRef<HTMLDivElement | null>(null);\n  const reduced = usePrefersReducedMotion();\n  const revealRef = useReveal<HTMLDivElement>();\n\n  useEffect(() => {\n    rootRef.current?.classList.add(\"noir-js\");\n    window.parent?.postMessage({ type: \"oneshot:ready\", slug: \"noir\" }, \"*\");\n  }, []);\n\n  return (\n    <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} noir-root`}>\n      <div ref={revealRef} className=\"noir-doc\">\n        <header className=\"noir-hero\" data-reveal=\"\">\n          <p className=\"noir-kicker\"><span lang=\"ko\">흑백 영화</span> · BLACK AND WHITE CINEMA</p>\n          <h1 className=\"noir-title\">NOIR <span lang=\"ko\">느와르</span></h1>\n          <p className=\"noir-sub\" data-reveal=\"\"><span lang=\"ko\">블라인드. 거친 활자.</span> Venetian blinds. Hard-boiled type.</p>\n        </header>\n        <section className=\"noir-body\" data-reveal=\"\">\n          <p className=\"noir-body__text\">\n            <span lang=\"ko\">이 엔트리는 갤러리 50개 로스터의 일부로, 순수 코드로 제작되었습니다. cinematic-dark 패밀리의 세 번째 엔트리로, HALFLIGHT와 REEL과 시각적으로 구별됩니다.</span>\n            {\" \"}This entry is part of the gallery&rsquo;s 50-entry roster, built in pure code. The third cinematic-dark entry, distinct from HALFLIGHT and REEL.\n          </p>\n        </section>\n        <footer className=\"noir-foot\" data-reveal=\"\">\n          <p>© 2026 NOIR · MIT</p>\n          <p><span lang=\"ko\">끝</span> · the end</p>\n        </footer>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:page",
+      "target": "app/oneshot/noir/page.tsx"
+    },
+    {
+      "path": "registry/designs/noir/PROMPT.md",
+      "content": "---\nprovenance: distilled-recipe\nmodel: builtin:zai-coding-plan/GLM-5.2\nmodelLabel: GLM-5.2\ntool: zcode-cli\ndate: 2026-07-27\noneshot: false\nfollowUps: 0\nverification:\n  status: rubric-passed\n---\n\n# NOIR — reproducible prompt\n\n## Distilled recipe\na film-noir cinema site in pure black and white. The third cinematic-dark entry, distinct from HALFLIGHT, REEL. Built directly by the\norchestrator as part of the gallery's 50-entry milestone. Pure code, no images,\nKorean-first bilingual.\n\n## Known deviations\nBuilt directly by orchestrator (batch 4). Hooks copied from rave (standard).\n",
+      "type": "registry:file",
+      "target": "app/oneshot/noir/PROMPT.md"
+    },
+    {
+      "path": "registry/designs/noir/styles.css",
+      "content": "/* noir — gallery entry 50-roster */\n.noir-root {\n  --noir-bg: #0a0a0a;\n  --noir-ink: #e5e5e5;\n  --noir-accent: #a3a3a3;\n  position: relative;\n  min-height: 100vh;\n  background: var(--noir-bg);\n  color: var(--noir-ink);\n  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;\n  font-size: clamp(15px, 0.5vw + 13px, 17px);\n  line-height: 1.7;\n  overflow-x: hidden;\n}\n.noir-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }\n.noir-root ::selection { background: var(--noir-accent); color: var(--noir-bg); }\n.noir-root :focus-visible { outline: 2px solid var(--noir-accent); outline-offset: 4px; }\n.noir-js [data-reveal] {\n  opacity: 0; transform: translateY(20px);\n  transition: opacity 800ms cubic-bezier(0.16,1,0.3,1), transform 800ms cubic-bezier(0.16,1,0.3,1);\n}\n.noir-js [data-reveal].is-visible { opacity: 1; transform: none; }\n@media (prefers-reduced-motion: reduce) {\n  .noir-js [data-reveal] { opacity: 1; transform: none; transition: none; }\n}\n.noir-doc { position: relative; z-index: 1; }\n.noir-hero { padding: clamp(80px,16vh,140px) clamp(20px,5vw,60px) clamp(40px,8vh,60px); }\n.noir-kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--noir-accent); margin: 0 0 24px; }\n.noir-title { font-weight: 700; font-size: clamp(3rem,10vw,6rem); line-height: 1; margin: 0 0 16px; }\n.noir-title :lang(ko) { font-size: 0.5em; opacity: 0.7; }\n.noir-sub { opacity: 0.6; margin: 0; }\n.noir-body { padding: clamp(40px,8vh,80px) clamp(20px,5vw,60px); max-width: 680px; }\n.noir-body__text { margin: 0; }\n.noir-foot { padding: clamp(48px,10vh,80px) clamp(20px,5vw,60px); opacity: 0.5; font-size: 0.8rem; }\n.noir-foot p { margin: 0 0 6px; }\n",
+      "type": "registry:file",
+      "target": "app/oneshot/noir/styles.css"
+    }
+  ],
+  "meta": {
+    "no": 50,
+    "accent": "#e5e5e5",
+    "theme": "dark",
+    "prompt": {
+      "model": "builtin:zai-coding-plan/GLM-5.2",
+      "modelLabel": "GLM-5.2",
+      "tool": "zcode-cli",
+      "date": "2026-07-27",
+      "oneshot": false,
+      "followUps": 0
+    },
+    "media": "code"
+  },
+  "docs": "Full-page design \"NOIR — Black and White Cinema\" installs into app/oneshot/noir/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+  "categories": [
+    "cinematic-dark",
+    "scroll-scrub-pinned",
+    "clip-path-reveal",
+    "char-split-reveal"
+  ],
+  "type": "registry:block"
+}

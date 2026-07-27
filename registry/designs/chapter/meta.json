@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "chapter",
+  "no": 48,
+  "title": {
+    "en": "CHAPTER — The Book of Hours",
+    "ko": "챕터 — 시간의 책"
+  },
+  "description": {
+    "en": "A digital book publisher where each section is a chapter with drop caps, marginalia, and sticky footnotes. The third editorial-serif, distinct from yeobaek and zine.",
+    "ko": "A digital book publisher where each section is a chapter with drop caps, marginalia, and sticky footnotes. The third editorial-serif, distinct from yeobaek and zine."
+  },
+  "aesthetic": "editorial-serif",
+  "techniques": [
+    "scroll-scrub-pinned",
+    "char-split-reveal",
+    "clip-path-reveal"
+  ],
+  "industry": [
+    "publishing"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#dc2626",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "pop",
+  "no": 51,
+  "title": {
+    "en": "POP — Bubble Comic Store",
+    "ko": "팝 — 풍선 만화 가게"
+  },
+  "description": {
+    "en": "A comic-book store where every element is a bubble that pops on click — cheerful, saturated, cartoon outlines. The third playful-pop.",
+    "ko": "A comic-book store where every element is a bubble that pops on click — cheerful, saturated, cartoon outlines. The third playful-pop."
+  },
+  "aesthetic": "playful-pop",
+  "techniques": [
+    "spring-press",
+    "char-split-reveal",
+    "pointer-parallax"
+  ],
+  "industry": [
+    "entertainment"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "svg",
+      "canvas"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-27",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#f472b6",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-27",
+  "featured": false
+}

@@ -184,6 +184,66 @@
       }
     },
     {
+      "name": "block",
+      "type": "registry:block",
+      "title": "BLOCK — Concrete Poetry Press",
+      "description": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave.",
+      "dependencies": [],
+      "categories": [
+        "neo-brutalist",
+        "clip-path-reveal",
+        "marquee",
+        "flip-layout"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/block/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/block/fonts.ts"
+        },
+        {
+          "path": "registry/designs/block/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/block/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/block/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/block/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/block/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/block/page.tsx"
+        },
+        {
+          "path": "registry/designs/block/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/block/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/block/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/block/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"BLOCK — Concrete Poetry Press\" installs into app/oneshot/block/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 46,
+        "accent": "#22c55e",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "bloom",
       "type": "registry:block",
       "title": "BLOOM — A Perfume That Opens",
@@ -565,6 +625,66 @@
       }
     },
     {
+      "name": "chapter",
+      "type": "registry:block",
+      "title": "CHAPTER — The Book of Hours",
+      "description": "A digital book publisher where each section is a chapter with drop caps, marginalia, and sticky footnotes. The third editorial-serif, distinct from yeobaek and zine.",
+      "dependencies": [],
+      "categories": [
+        "editorial-serif",
+        "scroll-scrub-pinned",
+        "char-split-reveal",
+        "clip-path-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/chapter/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/chapter/fonts.ts"
+        },
+        {
+          "path": "registry/designs/chapter/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chapter/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/chapter/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chapter/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/chapter/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/chapter/page.tsx"
+        },
+        {
+          "path": "registry/designs/chapter/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/chapter/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/chapter/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/chapter/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"CHAPTER — The Book of Hours\" installs into app/oneshot/chapter/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 48,
+        "accent": "#dc2626",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "chrome",
       "type": "registry:block",
       "title": "CHROME — Liquid Metal Beauty, Seoul",
@@ -752,6 +872,126 @@
       "meta": {
         "no": 38,
         "accent": "#a78bd9",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "flow",
+      "type": "registry:block",
+      "title": "FLOW — River of Words",
+      "description": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream.",
+      "dependencies": [],
+      "categories": [
+        "kinetic-typography",
+        "char-split-reveal",
+        "scroll-scrub-pinned",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/flow/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/flow/fonts.ts"
+        },
+        {
+          "path": "registry/designs/flow/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/flow/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/flow/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/flow/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/flow/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/flow/page.tsx"
+        },
+        {
+          "path": "registry/designs/flow/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/flow/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/flow/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/flow/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"FLOW — River of Words\" installs into app/oneshot/flow/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 45,
+        "accent": "#0ea5e9",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "forest",
+      "type": "registry:block",
+      "title": "FOREST — Deep Canopy Retreat",
+      "description": "A forest retreat where the page grows overhead — canopy layers darken as you scroll deeper, dappled light filters through. The third organic-nature, distinct from sup and dream.",
+      "dependencies": [],
+      "categories": [
+        "organic-nature",
+        "scroll-scrub-pinned",
+        "feturbulence-texture",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/forest/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/forest/fonts.ts"
+        },
+        {
+          "path": "registry/designs/forest/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/forest/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/forest/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/forest/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/forest/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/forest/page.tsx"
+        },
+        {
+          "path": "registry/designs/forest/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/forest/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/forest/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/forest/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"FOREST — Deep Canopy Retreat\" installs into app/oneshot/forest/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 49,
+        "accent": "#15803d",
         "theme": "light",
         "prompt": {
           "model": "builtin:zai-coding-plan/GLM-5.2",
@@ -2116,6 +2356,66 @@
       }
     },
     {
+      "name": "noir",
+      "type": "registry:block",
+      "title": "NOIR — Black and White Cinema",
+      "description": "A film-noir cinema site in pure black and white — venetian-blind shadows, cigarette smoke, hard-boiled typography. The third cinematic-dark, distinct from halflight and reel.",
+      "dependencies": [],
+      "categories": [
+        "cinematic-dark",
+        "scroll-scrub-pinned",
+        "clip-path-reveal",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/noir/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/noir/fonts.ts"
+        },
+        {
+          "path": "registry/designs/noir/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/noir/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/noir/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/noir/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/noir/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/noir/page.tsx"
+        },
+        {
+          "path": "registry/designs/noir/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/noir/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/noir/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/noir/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"NOIR — Black and White Cinema\" installs into app/oneshot/noir/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 50,
+        "accent": "#e5e5e5",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "ondo",
       "type": "registry:block",
       "title": "ONDO — Perfume Atelier, Seoul",
@@ -2501,6 +2801,66 @@
       }
     },
     {
+      "name": "pop",
+      "type": "registry:block",
+      "title": "POP — Bubble Comic Store",
+      "description": "A comic-book store where every element is a bubble that pops on click — cheerful, saturated, cartoon outlines. The third playful-pop.",
+      "dependencies": [],
+      "categories": [
+        "playful-pop",
+        "spring-press",
+        "char-split-reveal",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/pop/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/pop/fonts.ts"
+        },
+        {
+          "path": "registry/designs/pop/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pop/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/pop/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pop/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/pop/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/pop/page.tsx"
+        },
+        {
+          "path": "registry/designs/pop/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/pop/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/pop/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/pop/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"POP — Bubble Comic Store\" installs into app/oneshot/pop/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 51,
+        "accent": "#f472b6",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "ppang",
       "type": "registry:block",
       "title": "PPANG! — Dawn Bakery",
@@ -2608,6 +2968,66 @@
           "followUps": 0
         },
         "media": "comfyui"
+      }
+    },
+    {
+      "name": "prism",
+      "type": "registry:block",
+      "title": "PRISM — Light Refraction Studio",
+      "description": "A lighting-design studio where glass panels refract a beam of light into a spectrum. The third glass-futurism, distinct from lumen-nord and aurora.",
+      "dependencies": [],
+      "categories": [
+        "glass-futurism",
+        "pointer-parallax",
+        "svg-line-draw",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/prism/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/prism/fonts.ts"
+        },
+        {
+          "path": "registry/designs/prism/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/prism/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/prism/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/prism/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/prism/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/prism/page.tsx"
+        },
+        {
+          "path": "registry/designs/prism/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/prism/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/prism/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/prism/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PRISM — Light Refraction Studio\" installs into app/oneshot/prism/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 47,
+        "accent": "#06b6d4",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
       }
     },
     {
@@ -2953,6 +3373,66 @@
           "model": "glm-5.2",
           "modelLabel": "GLM 5.2",
           "tool": "zcode",
+          "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "rip",
+      "type": "registry:block",
+      "title": "RIP — Ink Ripple Pond",
+      "description": "An art-gallery site where ink ripples expand from pointer touches on a still pond surface — concentric generative rings. The third ink-bloom.",
+      "dependencies": [],
+      "categories": [
+        "ink-bloom",
+        "canvas-particles",
+        "pointer-parallax",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/rip/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/rip/fonts.ts"
+        },
+        {
+          "path": "registry/designs/rip/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/rip/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/rip/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/rip/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/rip/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/rip/page.tsx"
+        },
+        {
+          "path": "registry/designs/rip/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/rip/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/rip/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/rip/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"RIP — Ink Ripple Pond\" installs into app/oneshot/rip/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 52,
+        "accent": "#7c3aed",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
           "date": "2026-07-27",
           "oneshot": false,
           "followUps": 0
