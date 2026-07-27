@@ -202,6 +202,11 @@
           "target": "app/oneshot/block/fonts.ts"
         },
         {
+          "path": "registry/designs/block/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/block/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/block/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/block/hooks/usePrefersReducedMotion.ts"
@@ -643,6 +648,11 @@
           "target": "app/oneshot/chapter/fonts.ts"
         },
         {
+          "path": "registry/designs/chapter/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chapter/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/chapter/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/chapter/hooks/usePrefersReducedMotion.ts"
@@ -651,6 +661,11 @@
           "path": "registry/designs/chapter/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/chapter/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/chapter/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chapter/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/chapter/page.tsx",
@@ -903,6 +918,11 @@
           "target": "app/oneshot/flow/fonts.ts"
         },
         {
+          "path": "registry/designs/flow/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/flow/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/flow/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/flow/hooks/usePrefersReducedMotion.ts"
@@ -911,6 +931,11 @@
           "path": "registry/designs/flow/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/flow/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/flow/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/flow/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/flow/page.tsx",
@@ -963,6 +988,11 @@
           "target": "app/oneshot/forest/fonts.ts"
         },
         {
+          "path": "registry/designs/forest/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/forest/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/forest/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/forest/hooks/usePrefersReducedMotion.ts"
@@ -971,6 +1001,11 @@
           "path": "registry/designs/forest/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/forest/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/forest/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/forest/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/forest/page.tsx",
@@ -2374,6 +2409,11 @@
           "target": "app/oneshot/noir/fonts.ts"
         },
         {
+          "path": "registry/designs/noir/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/noir/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/noir/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/noir/hooks/usePrefersReducedMotion.ts"
@@ -2382,6 +2422,11 @@
           "path": "registry/designs/noir/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/noir/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/noir/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/noir/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/noir/page.tsx",
@@ -2819,6 +2864,11 @@
           "target": "app/oneshot/pop/fonts.ts"
         },
         {
+          "path": "registry/designs/pop/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pop/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/pop/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/pop/hooks/usePrefersReducedMotion.ts"
@@ -2989,6 +3039,11 @@
           "target": "app/oneshot/prism/fonts.ts"
         },
         {
+          "path": "registry/designs/prism/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/prism/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/prism/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/prism/hooks/usePrefersReducedMotion.ts"
@@ -2997,6 +3052,11 @@
           "path": "registry/designs/prism/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/prism/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/prism/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/prism/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/prism/page.tsx",
@@ -3399,6 +3459,11 @@
           "target": "app/oneshot/rip/fonts.ts"
         },
         {
+          "path": "registry/designs/rip/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/rip/hooks/usePointerParallax.ts"
+        },
+        {
           "path": "registry/designs/rip/hooks/usePrefersReducedMotion.ts",
           "type": "registry:hook",
           "target": "app/oneshot/rip/hooks/usePrefersReducedMotion.ts"
@@ -3407,6 +3472,11 @@
           "path": "registry/designs/rip/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/rip/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/rip/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/rip/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/rip/page.tsx",

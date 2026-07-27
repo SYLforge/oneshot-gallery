@@ -1,35 +1,153 @@
-/* forest — gallery entry 50-roster */
+/* FOREST 숲 — deep canopy retreat · organic-nature
+   canopy-dark / green / dapple · scroll-darkens, leaves filter light */
+
 .forest-root {
-  --forest-bg: #f0fdf4;
-  --forest-ink: #0a1f0a;
-  --forest-accent: #15803d;
+  --forest-light: #f0fdf4;
+  --forest-mid: #15803d;
+  --forest-deep: #0a1f0a;
+  --forest-dapple: #86efac;
+  --forest-ink: #052e16;
+
   position: relative;
   min-height: 100vh;
-  background: var(--forest-bg);
+  background: var(--forest-light);
   color: var(--forest-ink);
   font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
-  line-height: 1.7;
+  line-height: 1.8;
   overflow-x: hidden;
+  overflow-x: clip;
 }
+
 .forest-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
-.forest-root ::selection { background: var(--forest-accent); color: var(--forest-bg); }
-.forest-root :focus-visible { outline: 2px solid var(--forest-accent); outline-offset: 4px; }
+.forest-root ::selection { background: var(--forest-mid); color: #fff; }
+.forest-root :focus-visible { outline: 2px solid var(--forest-mid); outline-offset: 4px; }
+
 .forest-js [data-reveal] {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 800ms cubic-bezier(0.16,1,0.3,1), transform 800ms cubic-bezier(0.16,1,0.3,1);
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 900ms cubic-bezier(0.16,1,0.3,1), transform 900ms cubic-bezier(0.16,1,0.3,1);
 }
 .forest-js [data-reveal].is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .forest-js [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
+
 .forest-doc { position: relative; z-index: 1; }
-.forest-hero { padding: clamp(80px,16vh,140px) clamp(20px,5vw,60px) clamp(40px,8vh,60px); }
-.forest-kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--forest-accent); margin: 0 0 24px; }
-.forest-title { font-weight: 700; font-size: clamp(3rem,10vw,6rem); line-height: 1; margin: 0 0 16px; }
-.forest-title :lang(ko) { font-size: 0.5em; opacity: 0.7; }
-.forest-sub { opacity: 0.6; margin: 0; }
-.forest-body { padding: clamp(40px,8vh,80px) clamp(20px,5vw,60px); max-width: 680px; }
-.forest-body__text { margin: 0; }
-.forest-foot { padding: clamp(48px,10vh,80px) clamp(20px,5vw,60px); opacity: 0.5; font-size: 0.8rem; }
+
+/* pointer-parallax canopy layers — SVG leaf shapes at different depths */
+.forest-canopy {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: transform 800ms cubic-bezier(0.16,1,0.3,1);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .forest-canopy { transform: none !important; transition: none; }
+}
+.forest-canopy__layer {
+  position: absolute;
+  inset: -10%;
+  background-repeat: repeat;
+  opacity: 0.15;
+}
+.forest-canopy__layer--far {
+  background: radial-gradient(ellipse 80px 40px at 20% 20%, var(--forest-mid) 30%, transparent 70%),
+              radial-gradient(ellipse 60px 30px at 70% 40%, var(--forest-mid) 30%, transparent 70%);
+  background-size: 200px 150px;
+  opacity: 0.08;
+}
+.forest-canopy__layer--mid {
+  background: radial-gradient(ellipse 120px 60px at 30% 10%, var(--forest-mid) 35%, transparent 65%),
+              radial-gradient(ellipse 100px 50px at 80% 30%, var(--forest-mid) 35%, transparent 65%);
+  background-size: 300px 200px;
+  opacity: 0.12;
+}
+.forest-canopy__layer--near {
+  background: radial-gradient(ellipse 200px 100px at 50% 0%, var(--forest-ink) 40%, transparent 60%);
+  opacity: 0.18;
+}
+
+/* Hero */
+.forest-hero {
+  position: relative;
+  z-index: 2;
+  padding: clamp(80px, 18vh, 160px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 80px);
+  text-align: center;
+}
+.forest-kicker {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--forest-mid);
+  margin: 0 0 30px;
+}
+.forest-title {
+  font-weight: 700;
+  font-size: clamp(3.5rem, 12vw, 8rem);
+  line-height: 0.9;
+  margin: 0 0 20px;
+}
+.forest-title :lang(ko) { font-size: 0.4em; color: var(--forest-mid); display: block; margin-top: 8px; }
+.forest-sub { color: var(--forest-ink); opacity: 0.7; margin: 0; }
+
+/* scroll-scrub-pinned: the descent — darkens with --forest-scrub */
+.forest-descent {
+  position: relative;
+  z-index: 2;
+  min-height: 200vh;
+  background: var(--forest-light);
+}
+.forest-descent__inner {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
+  /* darken with scroll progress */
+  background: color-mix(in srgb, var(--forest-deep) calc(var(--forest-scrub, 0) * 80%), transparent);
+  color: color-mix(in srgb, var(--forest-light) calc(var(--forest-scrub, 0) * 100%), var(--forest-ink));
+  transition: background 200ms, color 200ms;
+}
+.forest-descent__word {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 600;
+  margin: 0 0 20px;
+  opacity: calc(0.4 + var(--forest-scrub, 0) * 0.6);
+}
+.forest-descent__en {
+  font-size: 0.95rem;
+  opacity: 0.5;
+  margin: 16px 0 0;
+}
+.forest-descent__en em { font-style: italic; }
+
+/* feturbulence-texture: dappled leaf overlay */
+.forest-dapple {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+/* Footer */
+.forest-foot {
+  position: relative;
+  z-index: 2;
+  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
+  text-align: center;
+  background: var(--forest-deep);
+  color: var(--forest-light);
+  font-size: 0.82rem;
+}
 .forest-foot p { margin: 0 0 6px; }

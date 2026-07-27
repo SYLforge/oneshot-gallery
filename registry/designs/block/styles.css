@@ -1,35 +1,229 @@
-/* block — gallery entry 50-roster */
+/* BLOCK 블록 — concrete poetry press · neo-brutalist
+   concrete grey / green ink / hard shadows / zero easing */
+
 .block-root {
   --block-bg: #e5e5e5;
+  --block-concrete: #d4d4d4;
   --block-ink: #171717;
-  --block-accent: #22c55e;
+  --block-ink-soft: #404040;
+  --block-green: #22c55e;
+  --block-green-deep: #16a34a;
+  --block-rule: #404040;
+
   position: relative;
   min-height: 100vh;
   background: var(--block-bg);
   color: var(--block-ink);
   font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  font-weight: 500;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
-  line-height: 1.7;
+  line-height: 1.6;
   overflow-x: hidden;
+  overflow-x: clip;
 }
+
 .block-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
-.block-root ::selection { background: var(--block-accent); color: var(--block-bg); }
-.block-root :focus-visible { outline: 2px solid var(--block-accent); outline-offset: 4px; }
+.block-root ::selection { background: var(--block-green); color: #fff; }
+.block-root :focus-visible { outline: 3px solid var(--block-ink); outline-offset: 4px; }
+
+/* Reveal — brutalist: clip-path hard cuts, no soft fades */
 .block-js [data-reveal] {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 800ms cubic-bezier(0.16,1,0.3,1), transform 800ms cubic-bezier(0.16,1,0.3,1);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 500ms steps(8);
 }
-.block-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.block-js [data-reveal].is-visible { clip-path: inset(0 0% 0 0); }
 @media (prefers-reduced-motion: reduce) {
-  .block-js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .block-js [data-reveal] { clip-path: none; transition: none; }
 }
-.block-doc { position: relative; z-index: 1; }
-.block-hero { padding: clamp(80px,16vh,140px) clamp(20px,5vw,60px) clamp(40px,8vh,60px); }
-.block-kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--block-accent); margin: 0 0 24px; }
-.block-title { font-weight: 700; font-size: clamp(3rem,10vw,6rem); line-height: 1; margin: 0 0 16px; }
-.block-title :lang(ko) { font-size: 0.5em; opacity: 0.7; }
-.block-sub { opacity: 0.6; margin: 0; }
-.block-body { padding: clamp(40px,8vh,80px) clamp(20px,5vw,60px); max-width: 680px; }
-.block-body__text { margin: 0; }
-.block-foot { padding: clamp(48px,10vh,80px) clamp(20px,5vw,60px); opacity: 0.5; font-size: 0.8rem; }
+
+.block-doc { position: relative; }
+
+/* Hero */
+.block-hero {
+  padding: clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
+  border-bottom: 4px solid var(--block-ink);
+}
+.block-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--block-green-deep);
+  margin: 0 0 30px;
+  display: inline-block;
+  background: var(--block-ink);
+  color: var(--block-green);
+  padding: 6px 14px;
+}
+.block-title {
+  font-weight: 900;
+  font-size: clamp(4rem, 16vw, 12rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  margin: 0 0 20px;
+  text-shadow: 8px 8px 0 var(--block-green);
+}
+.block-title__ko {
+  display: block;
+  font-size: 0.28em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-top: 16px;
+  text-shadow: none;
+  color: var(--block-ink-soft);
+}
+.block-sub {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 700;
+  margin: 0;
+  border-left: 6px solid var(--block-green);
+  padding-left: 16px;
+}
+
+/* Marquee */
+.block-marquee {
+  overflow: hidden;
+  background: var(--block-ink);
+  color: var(--block-green);
+  padding: 14px 0;
+  white-space: nowrap;
+  border-bottom: 4px solid var(--block-green);
+}
+.block-marquee__track {
+  display: inline-block;
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  animation: block-marquee 28s linear infinite;
+  padding-left: 100%;
+}
+@keyframes block-marquee { to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .block-marquee__track { animation: none; padding-left: 0; }
+}
+
+/* Poems + flip-layout mode toggle */
+.block-poems {
+  padding: clamp(60px, 12vh, 100px) clamp(20px, 5vw, 60px);
+  max-width: 900px;
+  margin: 0 auto;
+}
+.block-poems__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.block-secthead {
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+.block-mode-toggle {
+  display: flex;
+  gap: 0;
+  border: 3px solid var(--block-ink);
+}
+.block-mode-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 18px;
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--block-ink);
+  transition: none;
+}
+.block-mode-btn.is-active {
+  background: var(--block-ink);
+  color: var(--block-green);
+}
+
+/* flip-layout: KO mode shows Korean first, EN mode shows English first */
+.block-poem-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0;
+}
+.block-poem {
+  display: flex;
+  gap: 24px;
+  align-items: baseline;
+  padding: 28px 0;
+  border-top: 2px solid var(--block-rule);
+  transition: none;
+}
+.block-poem:last-child { border-bottom: 2px solid var(--block-rule); }
+.block-poem__no {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  color: var(--block-green);
+  min-width: 2.5ch;
+}
+.block-poem__body { flex: 1; }
+.block-poem__ko {
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 700;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+.block-poem__en {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--block-ink-soft);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+/* In EN mode, English becomes primary (larger) and Korean secondary */
+.block-root[data-mode="en"] .block-poem__en {
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--block-ink);
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 6px;
+}
+.block-root[data-mode="en"] .block-poem__ko {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--block-ink-soft);
+}
+
+/* Manifesto */
+.block-manifesto {
+  background: var(--block-ink);
+  color: #fff;
+  padding: clamp(60px, 12vh, 100px) clamp(20px, 5vw, 60px);
+  text-align: center;
+}
+.block-manifesto__text {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
+  margin: 0 0 16px;
+  line-height: 1.3;
+}
+.block-manifesto__text--en {
+  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+  font-weight: 500;
+  color: var(--block-green);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Footer */
+.block-foot {
+  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
+  border-top: 4px solid var(--block-ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
 .block-foot p { margin: 0 0 6px; }

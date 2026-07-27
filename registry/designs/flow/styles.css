@@ -1,35 +1,183 @@
-/* flow — gallery entry 50-roster */
+/* FLOW 흐름 — river of words · kinetic-typography
+   sky / paper / drift · letters flow like water */
+
 .flow-root {
   --flow-bg: #f0f9ff;
+  --flow-bg-deep: #e0f2fe;
   --flow-ink: #0c4a6e;
+  --flow-ink-soft: #0369a1;
   --flow-accent: #0ea5e9;
+  --flow-accent-soft: rgba(14, 165, 233, 0.15);
+  --flow-font: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+
   position: relative;
   min-height: 100vh;
-  background: var(--flow-bg);
+  background: linear-gradient(180deg, var(--flow-bg) 0%, var(--flow-bg-deep) 100%);
   color: var(--flow-ink);
-  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  font-family: var(--flow-font);
   font-size: clamp(15px, 0.5vw + 13px, 17px);
-  line-height: 1.7;
+  line-height: 1.75;
   overflow-x: hidden;
+  overflow-x: clip;
 }
+
 .flow-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
-.flow-root ::selection { background: var(--flow-accent); color: var(--flow-bg); }
+.flow-root ::selection { background: var(--flow-accent); color: #fff; }
 .flow-root :focus-visible { outline: 2px solid var(--flow-accent); outline-offset: 4px; }
+
+/* Reveal gating */
 .flow-js [data-reveal] {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 800ms cubic-bezier(0.16,1,0.3,1), transform 800ms cubic-bezier(0.16,1,0.3,1);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 900ms cubic-bezier(0.16,1,0.3,1), transform 900ms cubic-bezier(0.16,1,0.3,1);
 }
 .flow-js [data-reveal].is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .flow-js [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
-.flow-doc { position: relative; z-index: 1; }
-.flow-hero { padding: clamp(80px,16vh,140px) clamp(20px,5vw,60px) clamp(40px,8vh,60px); }
-.flow-kicker { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--flow-accent); margin: 0 0 24px; }
-.flow-title { font-weight: 700; font-size: clamp(3rem,10vw,6rem); line-height: 1; margin: 0 0 16px; }
-.flow-title :lang(ko) { font-size: 0.5em; opacity: 0.7; }
-.flow-sub { opacity: 0.6; margin: 0; }
-.flow-body { padding: clamp(40px,8vh,80px) clamp(20px,5vw,60px); max-width: 680px; }
-.flow-body__text { margin: 0; }
-.flow-foot { padding: clamp(48px,10vh,80px) clamp(20px,5vw,60px); opacity: 0.5; font-size: 0.8rem; }
+
+/* pointer-parallax layer */
+.flow-parallax {
+  transition: transform 600ms cubic-bezier(0.16,1,0.3,1);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-parallax { transform: none !important; transition: none; }
+}
+
+/* Hero */
+.flow-hero {
+  padding: clamp(80px, 18vh, 160px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 80px);
+  text-align: center;
+}
+.flow-kicker {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--flow-accent);
+  margin: 0 0 30px;
+}
+.flow-title {
+  font-weight: 700;
+  font-size: clamp(4rem, 14vw, 10rem);
+  line-height: 0.9;
+  margin: 0 0 24px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.02em;
+}
+/* char-split-reveal: each glyph drifts in from the side, staggered */
+.flow-glyph {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-40px) skewX(-8deg);
+}
+.flow-js .flow-glyph {
+  animation: flow-glyph-in 1100ms cubic-bezier(0.16,1,0.3,1) both;
+  animation-delay: calc(var(--flow-i, 0) * 140ms + 200ms);
+}
+@keyframes flow-glyph-in {
+  to { opacity: 1; transform: translateX(0) skewX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-glyph { opacity: 1; transform: none; animation: none; }
+}
+.flow-title__ko {
+  display: block;
+  width: 100%;
+  font-size: 0.32em;
+  color: var(--flow-ink-soft);
+  margin-top: 8px;
+  font-weight: 500;
+}
+.flow-sub {
+  max-width: 540px;
+  margin: 0 auto;
+  color: var(--flow-ink-soft);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.7;
+}
+
+/* scroll-scrub-pinned: the verse section */
+.flow-verse {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
+  background: var(--flow-bg-deep);
+  border-top: 1px solid var(--flow-accent-soft);
+  border-bottom: 1px solid var(--flow-accent-soft);
+}
+.flow-verse__inner {
+  max-width: 680px;
+  text-align: center;
+}
+.flow-verse__title {
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 48px;
+  color: var(--flow-ink);
+}
+/* The stream of words flows horizontally, driven by --flow-scrub */
+.flow-verse__stream {
+  display: flex;
+  gap: clamp(16px, 3vw, 32px);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.flow-verse__word {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 500;
+  color: var(--flow-accent);
+  margin: 0;
+  opacity: calc(0.3 + var(--flow-scrub, 0.5) * 0.7);
+  transform: translateY(calc((1 - var(--flow-scrub, 0.5)) * 20px));
+  transition: opacity 200ms, transform 200ms;
+}
+.flow-verse__en {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  color: var(--flow-ink-soft);
+  margin: 0;
+  line-height: 1.6;
+}
+.flow-verse__en em { font-style: italic; }
+
+/* Features */
+.flow-features {
+  padding: clamp(60px, 12vh, 120px) clamp(20px, 5vw, 60px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(32px, 5vw, 60px);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.flow-feature__h {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--flow-ink);
+}
+.flow-feature__h :lang(ko) { color: var(--flow-accent); }
+.flow-feature__p {
+  margin: 0;
+  color: var(--flow-ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Footer */
+.flow-foot {
+  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
+  text-align: center;
+  border-top: 1px solid var(--flow-accent-soft);
+  color: var(--flow-ink-soft);
+  font-size: 0.82rem;
+}
 .flow-foot p { margin: 0 0 6px; }
