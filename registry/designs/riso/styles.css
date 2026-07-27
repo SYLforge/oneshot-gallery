@@ -1,0 +1,1043 @@
+/* ==========================================================================
+   RISO — independent press & art-house cinema
+   tactile-craft · risograph print · three fluorescent drums overprint on
+   uncoated paper. Scoped by convention to .riso-root; classes prefixed riso-.
+   ========================================================================== */
+
+.riso-root {
+  /* -- palette: paper + ink + three drums -------------------------------- */
+  --riso-paper: #f0ebe0;     /* uncoated riso stock — the page is a sheet */
+  --riso-ink: #1a1410;       /* warm near-black ink — 15.3:1 on paper */
+  --riso-pink: #ff3d7f;      /* fluorescent pink drum 1 — ink-on-it 5.4:1 (AA) */
+  --riso-blue: #2d5fbb;      /* riso blue drum 2 — paper-on-it 5.1:1 (AA) */
+  --riso-yellow: #ffd23f;    /* riso yellow drum 3 — ink-on-it 12.6:1 (AAA) */
+  --riso-violet: #2d175d;    /* pink×blue multiply overlap — decorative */
+
+  /* -- type: a literary serif first -------------------------------------- */
+  --riso-font-ko: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --riso-font-serif: var(--font-lora), var(--font-noto-serif-kr), Georgia, serif;
+  /* Hangul falls through Lora into Noto Serif KR even without :lang */
+  --riso-font-mono: var(--font-space-mono), var(--font-noto-serif-kr), "Courier New", monospace;
+
+  /* -- motion ------------------------------------------------------------- */
+  --riso-reveal-out: 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  --riso-press-out: 120ms ease-out;
+
+  /* scroll-driven press build; CSS fallback = fully printed */
+  --riso-press: 1;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--riso-paper);
+  color: var(--riso-ink);
+  font-family: var(--riso-font-serif);
+  font-size: clamp(15px, 0.7vw + 12px, 18px);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: every Hangul glyph is Noto Serif KR. */
+.riso-root :lang(ko) {
+  font-family: var(--riso-font-ko);
+  letter-spacing: 0;
+}
+
+/* Yellow selection, scoped to the entry root */
+.riso-root ::selection {
+  background: var(--riso-yellow);
+  color: var(--riso-ink);
+}
+
+/* Keyboard focus: 2px ink ring, offset; yellow on blue surfaces. */
+.riso-root :focus-visible {
+  outline: 2px solid var(--riso-ink);
+  outline-offset: 3px;
+}
+
+.riso-footer :focus-visible {
+  outline-color: var(--riso-yellow);
+}
+
+/* Visually hidden, still spoken */
+.riso-vh {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Registration marks — fixed at the bleed corners of the sheet
+   ========================================================================== */
+
+.riso-regmarks {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.riso-regmark {
+  position: absolute;
+  width: clamp(26px, 2.6vw, 38px);
+  height: auto;
+  opacity: 0.5;
+}
+
+.riso-regmark--tl { top: clamp(10px, 2vh, 22px); left: clamp(10px, 2vw, 22px); }
+.riso-regmark--tr { top: clamp(10px, 2vh, 22px); right: clamp(10px, 2vw, 22px); }
+.riso-regmark--bl { bottom: clamp(10px, 2vh, 22px); left: clamp(10px, 2vw, 22px); }
+.riso-regmark--br { bottom: clamp(10px, 2vh, 22px); right: clamp(10px, 2vw, 22px); }
+
+/* Color bar — bottom center, the three drums. */
+.riso-colorbar {
+  position: absolute;
+  bottom: clamp(10px, 2vh, 22px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.32em 0.7em;
+  background: var(--riso-paper);
+  border: 1px solid var(--riso-ink);
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.riso-colorbar__chips {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.riso-colorbar__chip {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  mix-blend-mode: multiply;
+}
+
+.riso-colorbar__chip--pink { background: var(--riso-pink); }
+.riso-colorbar__chip--blue { background: var(--riso-blue); }
+.riso-colorbar__chip--yellow { background: var(--riso-yellow); }
+
+/* ==========================================================================
+   01 · Hero — the overprinted wordmark + clip-path poster
+   ========================================================================== */
+
+.riso-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 5vh, 56px);
+  align-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: clamp(64px, 12vh, 130px) clamp(20px, 5vw, 72px) clamp(40px, 8vh, 80px);
+}
+
+.riso-hero__masthead {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.2vh, 24px);
+}
+
+.riso-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4em 2em;
+  margin: 0;
+  padding-bottom: 0.7em;
+  border-bottom: 1px solid var(--riso-ink);
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.66rem, 1.1vw, 0.82rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* The three-plate wordmark. */
+.riso-wordmark {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(4.6rem, 19vw, 15rem);
+  line-height: 0.86;
+  letter-spacing: -0.015em;
+}
+
+.riso-word {
+  position: relative;
+  display: inline-block;
+  color: var(--riso-ink);
+}
+
+/* The two off-register colored plates. `content: attr() / ""` keeps them
+   silent to screen readers. Both multiply so the overlap darkens. */
+.riso-word::before,
+.riso-word::after {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+
+.riso-word::before {
+  color: var(--riso-pink);
+  transform: translate(-0.018em, 0.014em);
+}
+
+.riso-word::after {
+  color: var(--riso-blue);
+  transform: translate(0.022em, -0.016em);
+}
+
+.riso-word__ink {
+  position: relative;
+  z-index: 1;
+  /* the ink layer also carries a faint yellow plate behind via a shadow,
+     so all three drums are present on the wordmark */
+  text-shadow: 0.012em 0.01em 0 var(--riso-yellow);
+}
+
+.riso-hero__ko {
+  margin: 0;
+  font-family: var(--riso-font-ko);
+  font-weight: 500;
+  font-size: clamp(1.4rem, 4.2vw, 2.6rem);
+  line-height: 1.25;
+}
+
+.riso-hero__lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  line-height: 1.55;
+}
+
+.riso-hero__lede :lang(ko) {
+  display: block;
+  font-weight: 500;
+  color: var(--riso-blue);
+  margin-bottom: 0.3em;
+}
+
+.riso-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8em 1.6em;
+  margin-top: clamp(6px, 1vh, 14px);
+}
+
+.riso-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1em;
+  padding: 0.7em 1.3em;
+  background: var(--riso-pink);
+  color: var(--riso-ink);
+  border: 1px solid var(--riso-ink);
+  font-family: var(--riso-font-serif);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 0 var(--riso-blue);
+  transition:
+    transform var(--riso-press-out),
+    box-shadow var(--riso-press-out);
+}
+
+.riso-btn :lang(ko) {
+  font-size: 0.74em;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.riso-btn:hover {
+  background: var(--riso-yellow);
+}
+
+.riso-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--riso-blue);
+}
+
+.riso-link {
+  color: var(--riso-blue);
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.78rem, 1.2vw, 0.92rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
+  transition: transform var(--riso-press-out);
+}
+
+.riso-link :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.riso-link:hover {
+  transform: translateY(-1px);
+}
+
+.riso-link--footer {
+  color: var(--riso-yellow);
+}
+
+/* The "now printing" poster — clip-path reveal. */
+.riso-poster {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  align-items: flex-start;
+}
+
+.riso-poster__sheet {
+  position: relative;
+  display: inline-block;
+  width: clamp(240px, 26vw, 320px);
+  aspect-ratio: 320 / 420;
+  background: var(--riso-paper);
+  border: 1px solid var(--riso-ink);
+  /* hidden until JS reveals; no-JS sees it printed */
+  clip-path: inset(50% 50% 50% 50%);
+}
+
+.riso-js .riso-poster__sheet {
+  animation: riso-press-open var(--riso-reveal-out) 120ms both;
+}
+
+@keyframes riso-press-open {
+  from { clip-path: inset(50% 50% 50% 50%); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* the reveal is a JS-driven class on the covers; the poster uses the
+   keyframe above. For covers we toggle .is-revealed (see BookGrid). */
+
+.riso-poster__halftone {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+
+.riso-poster__halftone--pink {
+  background-image: radial-gradient(var(--riso-pink) 38%, transparent 42%);
+  background-size: 11px 11px;
+  transform: translate(-2px, -1px);
+}
+
+.riso-poster__halftone--blue {
+  background-image: radial-gradient(var(--riso-blue) 38%, transparent 42%);
+  background-size: 11px 11px;
+  transform: translate(2px, 1px);
+}
+
+.riso-poster__art {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.riso-poster__marquee {
+  font-family: var(--riso-font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  fill: var(--riso-paper);
+}
+
+.riso-poster__folio {
+  position: absolute;
+  bottom: 0.7em;
+  left: 0.8em;
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.55rem, 0.9vw, 0.68rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.riso-poster__cap {
+  margin: 0;
+  max-width: 38ch;
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.66rem, 1.05vw, 0.78rem);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.riso-poster__cap :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   02 · The press — pinned scroll-scrub overprint builder
+   A tall section with a sticky inner; --riso-press (0→1) drives three drum
+   phases. CSS fallback var(--riso-press, 1) = fully printed.
+   ========================================================================== */
+
+.riso-press {
+  position: relative;
+  /* extra scroll length so the build is scrubbable across screens */
+  height: 320vh;
+  background: var(--riso-paper);
+  border-top: 1px solid var(--riso-ink);
+  border-bottom: 1px solid var(--riso-ink);
+}
+
+.riso-press__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: clamp(32px, 6vh, 64px) clamp(20px, 5vw, 72px);
+}
+
+.riso-press__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em 1.2em;
+  margin-bottom: clamp(16px, 3vh, 32px);
+}
+
+.riso-secnum {
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 0.1em 0.45em;
+  background: var(--riso-ink);
+  color: var(--riso-paper);
+}
+
+.riso-secnum__title {
+  margin: 0;
+  font-family: var(--riso-font-serif);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.riso-secnum__title :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  font-weight: 700;
+  color: var(--riso-blue);
+}
+
+.riso-press__instr {
+  margin: 0 0 0 auto;
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.66rem, 1vw, 0.78rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.riso-press__instr :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.riso-press__stage {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* the sheet itself */
+.riso-sheet {
+  position: relative;
+  width: min(440px, 78vw);
+  aspect-ratio: 4 / 3;
+  background: var(--riso-paper);
+  border: 1px solid var(--riso-ink);
+  box-shadow: 6px 6px 0 0 rgba(26, 20, 16, 0.12);
+  overflow: hidden;
+}
+
+.riso-sheet__ink {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* center register crosshair */
+.riso-sheet__reg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.riso-sheet__reg::before,
+.riso-sheet__reg::after {
+  content: "";
+  position: absolute;
+  background: var(--riso-ink);
+}
+
+.riso-sheet__reg::before {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.riso-sheet__reg::after {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+/* the three drum plates. Each opacity is a phase of --riso-press. */
+.riso-plate {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  transition: opacity 60ms linear;
+}
+
+.riso-plate__dots {
+  position: absolute;
+  inset: 0;
+  background-size: 11px 11px;
+}
+
+.riso-plate__dots--pink {
+  background-image: radial-gradient(var(--riso-pink) 40%, transparent 44%);
+  /* pink plate sits a little off-register */
+  transform: translate(-3px, -2px);
+}
+
+.riso-plate__dots--blue {
+  background-image: radial-gradient(var(--riso-blue) 40%, transparent 44%);
+  transform: translate(3px, 2px);
+}
+
+.riso-plate__dots--yellow {
+  background-image: radial-gradient(var(--riso-yellow) 40%, transparent 44%);
+  transform: translate(-1px, 3px);
+}
+
+/*
+   Phase math, expressed in clamp() over --riso-press:
+     pink   opacity = clamp(0, (p - 0.02) / 0.30, 1)
+     blue   opacity = clamp(0, (p - 0.35) / 0.30, 1)
+     yellow opacity = clamp(0, (p - 0.68) / 0.30, 1)
+   0.02/0.35/0.68 are the phase starts; /0.30 is the rise width.
+*/
+.riso-plate--pink {
+  opacity: clamp(0, (var(--riso-press) - 0.02) * 3.33, 1);
+}
+.riso-plate--blue {
+  opacity: clamp(0, (var(--riso-press) - 0.35) * 3.03, 1);
+}
+.riso-plate--yellow {
+  opacity: clamp(0, (var(--riso-press) - 0.68) * 3.13, 1);
+}
+
+/* drum legend */
+.riso-press__drums {
+  position: absolute;
+  top: 0;
+  right: clamp(-160px, -14vw, -110px);
+  /* on narrow screens this reflows below via media query */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.62rem, 1vw, 0.74rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.riso-press__drum {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.4em 0.6em;
+  border: 1px solid var(--riso-ink);
+  background: var(--riso-paper);
+  opacity: 0.35;
+  transition: opacity 200ms ease-out;
+}
+
+.riso-press__drum-name :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.riso-press__drum-no {
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+.riso-press__swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  mix-blend-mode: multiply;
+}
+
+.riso-press__swatch--pink { background: var(--riso-pink); }
+.riso-press__swatch--blue { background: var(--riso-blue); }
+.riso-press__swatch--yellow { background: var(--riso-yellow); }
+
+/* a drum lights up once its phase has started */
+.riso-press__drum--pink { opacity: clamp(0.35, (var(--riso-press) - 0.02) * 3.33 + 0.35, 1); }
+.riso-press__drum--blue { opacity: clamp(0.35, (var(--riso-press) - 0.35) * 3.03 + 0.35, 1); }
+.riso-press__drum--yellow { opacity: clamp(0.35, (var(--riso-press) - 0.68) * 3.13 + 0.35, 1); }
+
+.riso-sheet__folio {
+  position: absolute;
+  bottom: 0.6em;
+  left: 0.7em;
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.55rem, 0.85vw, 0.66rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   03 · The catalogue — clip-path reveal covers
+   ========================================================================== */
+
+.riso-section {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding: clamp(56px, 10vh, 120px) clamp(20px, 5vw, 72px);
+}
+
+.riso-secnum__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em 1.2em;
+  margin-bottom: clamp(24px, 4vh, 44px);
+  padding-bottom: 0.7em;
+  border-bottom: 1px solid var(--riso-ink);
+}
+
+.riso-secnum__note {
+  margin: 0 0 0 auto;
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.66rem, 1vw, 0.78rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.riso-secnum__note :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.riso-books__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: clamp(20px, 3vw, 36px);
+}
+
+/* a cover, hidden until revealed by IO under .riso-js */
+.riso-cover {
+  /* default (no-JS / reduced): fully revealed */
+  clip-path: inset(0 0 0 0);
+}
+
+.riso-js .riso-cover {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path var(--riso-reveal-out);
+}
+
+.riso-js .riso-cover.is-revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+.riso-cover__face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  aspect-ratio: 3 / 4;
+  padding: 1.1em 1.1em 0.9em;
+  background: var(--riso-paper);
+  border: 1px solid var(--riso-ink);
+  box-shadow: 4px 4px 0 0 rgba(26, 20, 16, 0.1);
+  overflow: hidden;
+}
+
+.riso-cover__halftone {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+.riso-cover--pink .riso-cover__halftone {
+  background-image: radial-gradient(var(--riso-pink) 38%, transparent 42%);
+  background-size: 10px 10px;
+}
+
+.riso-cover--blue .riso-cover__halftone {
+  background-image: radial-gradient(var(--riso-blue) 38%, transparent 42%);
+  background-size: 10px 10px;
+}
+
+.riso-cover--yellow .riso-cover__halftone {
+  background-image: radial-gradient(var(--riso-yellow) 38%, transparent 42%);
+  background-size: 10px 10px;
+}
+
+.riso-cover__mark {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  width: 38%;
+  height: auto;
+  margin-top: 0.4em;
+  opacity: 0.85;
+}
+
+.riso-cover__imprint {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--riso-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.riso-cover__title {
+  position: relative;
+  z-index: 1;
+  margin: auto 0 0;
+  font-family: var(--font-noto-serif-kr), serif;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  line-height: 1.2;
+}
+
+.riso-cover__title-en {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--riso-font-serif);
+  font-style: italic;
+  font-size: 0.86rem;
+  opacity: 0.75;
+}
+
+.riso-cover__author {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--riso-font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
+
+.riso-cover__foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  margin-top: 0.4em;
+  padding-top: 0.5em;
+  border-top: 1px solid var(--riso-ink);
+}
+
+.riso-cover__spec {
+  font-family: var(--riso-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.riso-cover__plates {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.riso-cover__plate {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  mix-blend-mode: multiply;
+}
+
+.riso-cover__plate--pink { background: var(--riso-pink); }
+.riso-cover__plate--blue { background: var(--riso-blue); }
+.riso-cover__plate--yellow { background: var(--riso-yellow); }
+
+/* ==========================================================================
+   04 · Footer — the colophon, with a final overprint word
+   ========================================================================== */
+
+.riso-footer {
+  position: relative;
+  border-top: 1px solid var(--riso-ink);
+  background: var(--riso-paper);
+}
+
+.riso-footer__big {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(48px, 9vh, 100px) clamp(20px, 5vw, 72px) clamp(16px, 3vh, 32px);
+  font-weight: 700;
+  line-height: 0.92;
+}
+
+/* the overprint word reuses the wordmark plate trick */
+.riso-overprint-word {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-noto-serif-kr), serif;
+  font-weight: 900;
+  font-size: clamp(2.6rem, 12vw, 9rem);
+  letter-spacing: -0.01em;
+  color: var(--riso-ink);
+}
+
+.riso-overprint-word::before,
+.riso-overprint-word::after {
+  content: attr(data-text);
+  content: attr(data-text) / "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+
+.riso-overprint-word::before {
+  color: var(--riso-pink);
+  transform: translate(-0.02em, 0.018em);
+}
+
+.riso-overprint-word::after {
+  color: var(--riso-blue);
+  transform: translate(0.024em, -0.02em);
+}
+
+.riso-overprint-word__ink {
+  position: relative;
+  z-index: 1;
+}
+
+.riso-overprint-word--en {
+  display: block;
+  font-family: var(--riso-font-serif);
+  font-size: clamp(1.6rem, 7vw, 5rem);
+  margin-top: 0.1em;
+}
+
+.riso-footer__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(20px, 3vw, 44px);
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 72px);
+}
+
+.riso-footer__col {
+  border-top: 1px solid var(--riso-ink);
+  padding-top: 0.8em;
+}
+
+.riso-footer__k {
+  margin: 0 0 0.4em;
+  font-family: var(--riso-font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--riso-blue);
+}
+
+.riso-footer__v {
+  margin: 0;
+  font-size: clamp(0.86rem, 1.3vw, 1rem);
+  line-height: 1.55;
+}
+
+.riso-footer__v :lang(ko) {
+  display: inline;
+}
+
+.riso-footer__mono {
+  font-family: var(--riso-font-mono);
+  font-size: 0.76rem;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+.riso-footer__mono :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+}
+
+.riso-footer__legal {
+  max-width: 1240px;
+  margin: clamp(36px, 6vh, 72px) auto 0;
+  padding: 0 clamp(20px, 5vw, 72px) clamp(28px, 5vh, 56px);
+  font-family: var(--riso-font-mono);
+  font-size: clamp(0.66rem, 1vw, 0.78rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.riso-footer__legal :lang(ko) {
+  font-family: var(--font-noto-serif-kr), serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ==========================================================================
+   Paper grain — static feTurbulence noise multiplied over the sheet
+   ========================================================================== */
+
+.riso-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+.riso-grain svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Responsive composition
+   ========================================================================== */
+
+@media (min-width: 760px) {
+  .riso-hero {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: center;
+  }
+  .riso-poster {
+    align-items: center;
+  }
+}
+
+@media (max-width: 880px) {
+  /* drum legend moves under the sheet on small screens */
+  .riso-press__drums {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: clamp(16px, 3vh, 28px) 0 0;
+  }
+  .riso-press__drum {
+    font-size: 0.6rem;
+  }
+  .riso-press__drum-no {
+    display: none;
+  }
+  .riso-press {
+    height: 300vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .riso-press {
+    height: 280vh;
+  }
+  .riso-colorbar__label {
+    display: none;
+  }
+}
+
+@media (min-width: 1440px) {
+  .riso-press__drums {
+    right: clamp(-180px, -12vw, -130px);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the print stands still and fully inked
+   (JS also gates the press scrub and misregistration drift via
+   usePrefersReducedMotion; this block covers everything CSS-driven and
+   guarantees the completed-page SSR state.)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .riso-root {
+    --riso-press: 1;
+  }
+
+  .riso-js .riso-poster__sheet {
+    animation: none;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .riso-js .riso-cover {
+    clip-path: inset(0 0 0 0);
+    transition: none;
+  }
+
+  .riso-root .riso-btn,
+  .riso-root .riso-link {
+    transition: none;
+  }
+
+  .riso-plate {
+    transition: none;
+  }
+}

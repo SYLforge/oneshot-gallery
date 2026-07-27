@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "pixel",
+  "no": 29,
+  "title": {
+    "en": "PIXEL — 8-bit Arcade Studio",
+    "ko": "PIXEL — 8비트 아케이드 스튜디오"
+  },
+  "description": {
+    "en": "A retro indie-game studio landing page for a fictional 2003 arcade — a hero hand-drawn one CSS box-shadow per pixel, a CRT scanline and chromatic-aberration glow that breathes on idle, and a chiptune high-score marquee. Saturated dopamine color, chrome, and the warm optimism of a CRT that still believes someone is playing.",
+    "ko": "2003년 아케이드를 배경으로 한 가상 인디 게임 스튜디오의 랜딩 페이지 — 픽셀 하나당 box-shadow 하나로 손그린 히어로, 유휴 상태에서 숨 쉬는 CRT 주사선과 색수차 빛, 칩튠 하이스코어 마퀴. 포화된 도파민 컬러, 크롬, 그리고 여전히 누군가가 플레이하고 있다고 믿는 CRT의 따뜻한 낙관주의."
+  },
+  "aesthetic": "retro-y2k",
+  "techniques": ["ascii-render", "crt-scanline", "marquee"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#ff3d8a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

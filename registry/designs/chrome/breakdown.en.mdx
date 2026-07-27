@@ -1,0 +1,218 @@
+# CHROME — breakdown
+
+## The hook
+
+A beauty house in Seongsu-dong refuses to call its lip glosses a color. Every
+pour is a metal — Liquid Mercury, Iridescent Pearl, Gunmetal Veil, Hot
+Hologram — and the page's only job is to make you believe the metal is wet.
+The headline is not chrome-*colored* type, it is a fragment shader pouring
+liquid metal into the glyph shapes; the buttons are wet chrome bands; the
+cards are sealed in three offset rainbow foil layers. It is 2003's conviction
+that everything looks better chrome, rendered as pure code.
+
+The design bet is the family line. This entry shares its aesthetic family
+(retro-y2k) with PIXEL — but PIXEL owns pixel-art arcade: blocky, cheerful,
+a CRT grid of discrete cells. CHROME owns liquid chrome beauty: smooth,
+metallic, reflective, continuous gradients, the opposite of a grid. A
+grayscale screenshot of each is unmistakable. PIXEL is a mosaic of squares;
+CHROME is a smooth gradient with a moving specular. The two share only the
+decade.
+
+## Art direction
+
+Chrome-on-light is the trickiest brief in the gallery, because the obvious
+move — set copy in shiny silver or holographic pink — fails contrast
+immediately. Chrome silver `#c8d0d8` measures 1.40:1 as text on the
+holo-mist background; the bright accent pink `#ff8ad8` is worse at 1.91:1.
+So the discipline is absolute: **chrome silver and accent pink are fills
+only, never text.** Every functional text token runs on the deep chrome
+shadow: chrome-ink `#2a2a3a` at 12.66:1 (AAA), chrome-ink-2 `#4a4a5e` at
+7.76:1 (AA+), ink-soft `#6a6a7e` at 4.75:1 (AA). The bright metal is the
+surface; the dark metal is the ink. The one place an accent color carries
+text is the eyebrow / large-display register, where a deepened
+`accent-deep #c84aa0` clears AA-large (3.82:1) — documented, never body.
+
+The three faces are three registers. Syne is the Latin chrome display — its
+800 weight fills like poured metal, and heads go tight (-0.02em) so the heavy
+mass reads as one shape, not six letters. Black Han Sans is every Hangul
+glyph, a chunky Y2K Korean display face that sounds like the lettering on a
+flip-phone casing. Major Mono Display is the chrome console — the spec codes
+(CRM-01…), the eyebrows, the footer legal — its even advance width is the
+rhythm of a product sheet stamped into foil. Display stacks put Hangul second
+so Korean typed in a heading falls through Syne into Black Han Sans with no
+markup.
+
+## Technique 1 — the chrome shader (liquid metal, with a fallback)
+
+The signature is the headline: a WebGL fragment shader painting liquid metal
+into the wordmark's glyph shapes. A single full-quad program, a horizontal
+chrome band stack displaced by layered sine ripples and a gaussian lens that
+follows the pointer:
+
+```glsl
+// the chrome: a 5-stop silver band stack, shadow edge -> silver -> highlight
+vec3 chrome(float v) {
+  vec3 a = mix(SHADOW, SILVER, smoothstep(0.00, 0.28, v));
+  vec3 b = mix(a,       HILITE, smoothstep(0.28, 0.46, v));
+  vec3 c = mix(b,       SILVER, smoothstep(0.46, 0.74, v));
+  return   mix(c,       SHADOW, smoothstep(0.74, 1.00, v));
+}
+// the gradient coordinate is displaced by summed sines + a pointer gaussian
+float lens = exp(-(dx * dx * 3.5 + dy * dy * 6.0));
+g += lens * 0.10 * uPtr.z;   // the metal leans where you look
+```
+
+The palette is fixed to the entry's chrome tokens (shadow `#2a2a3a`, silver
+`#c8d0d8`, highlight `#ffffff`) so the shader is a literal token render —
+WebGL cannot sample CSS custom properties, so the stops are documented
+literals that mirror `tokens.json`. The pointer drives a gaussian lens that
+raises ripple amplitude where you look, lerped at 0.09/frame (energy attack
+0.06, release 0.025 — notices slowly, forgets slower). On touch, or after
+2.4s of pointer silence, an autonomous lissajous ripple keeps the metal
+alive.
+
+The honest part is the fallback. A shader alone is fragile: WebGL can be
+absent, the context can be lost, the program can fail to compile or link. So
+the wordmark is built in three layers:
+
+1. a **CSS chrome-gradient text fill** (`background-clip: text`, a 5-stop
+   ink→silver→highlight→silver→ink gradient) — always on, the no-JS and
+   reduced-motion and failure state;
+2. the **WebGL canvas** layered over it in `mix-blend-mode: screen`,
+   transparent until its first real frame (`.is-live`), hidden entirely on
+   any failure;
+3. the **per-glyph sweep** (next section) that masks the whole stack.
+
+If WebGL fails, the page loses the ripple — never the wordmark. The CSS fill
+is the chrome, the shader is the wetness.
+
+The loop is throttled to ~64fps, `dt` clamped to 48ms, DPR capped at 2, and
+pauses offscreen (IntersectionObserver, 120px margin) and on
+`visibilitychange`. Under reduced motion, one composed still frame is drawn
+at a hand-picked `t = 4200` and the loop never starts.
+
+## Technique 2 — holographic foil (pointer parallax of the rainbow sheen)
+
+Every foil panel — the manifesto plaque, the product cards, the wordmark's
+frame — is the same recipe: a chrome-silver base with three offset conic-
+gradient bands (sky → pink → mint) blended in `mix-blend-mode: screen`, plus
+a moving white specular streak. The rainbow sheen.
+
+```css
+.chrome-holofoil__band--pink {
+  background: conic-gradient(
+    from calc(120deg + calc(var(--shift-x) * -0.6)),
+    var(--chrome-glow-pink), transparent 35%, var(--chrome-holo-pink) 60%, ...);
+  filter: blur(14px);
+  mix-blend-mode: screen;
+}
+```
+
+The three bands' angular origins shift with `--chrome-px` / `--chrome-py`,
+the pointer offset from the panel center (range -1..1), set by a
+`useFoilParallax` rAF hook that lerps at 0.06/frame and caps the value. Each
+band reacts at a different rate (±18°/±11°/±6° and opposite signs) so the
+sheen never moves as one flat sheet — it reads as light catching a curved
+foil. The white specular streak slides its `background-position` with the
+same pointer source, the thing that makes the metal read as *wet* rather
+than printed.
+
+This is the honest basis for the `pointer-parallax` tag: three real layers
+(sky, pink, mint) drifting with the pointer, lerped and capped, over a
+fourth (the silver base). No transform-on-hover trickery — the layers
+physically shift their gradient origins. On touch and under reduced motion
+the foils rest at `--chrome-px: 0`, their neutral rainbow state; the chrome
+shader carries the motion instead, so nothing is hover-only.
+
+## Technique 3 — the metallic sweep (character-split reveal)
+
+The wordmark arrives as a sweep, not a fade. Six aria-hidden glyph spans sit
+behind an `aria-label`, each clipping open left-to-right as the metal crosses
+it:
+
+```css
+.chrome-js .chrome-wordmark__ch {
+  clip-path: inset(0 100% 0 0);             /* start: clipped to nothing */
+  transition: clip-path 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--chrome-ci, 0) * 55ms);
+}
+.chrome-js .chrome-wordmark.is-visible .chrome-wordmark__ch {
+  clip-path: inset(0 0 0 0);                 /* end: fully open */
+}
+```
+
+`cubic-bezier(0.16, 1, 0.3, 1)` — `ease-chrome` — is the metallic sweep: a
+fast gather and a long, bright tail. The 55ms stagger means the sweep crosses
+the wordmark like light travelling across metal. The glyphs themselves are
+*transparent ink*: they exist only to define the headline's metrics and act
+as a clip mask. The visible metal is the CSS fill + the WebGL shader layered
+beneath them, revealed left-to-right as each glyph unclips. Because the mask
+is `clip-path` (compositor-friendly) and the underlying metal is already
+onscreen, the sweep costs nothing but six clip transitions.
+
+The CSS default is fully unclipped, so without JavaScript and under reduced
+motion the headline simply rests — the glyphs are open, the CSS chrome
+gradient shows through, and the wordmark is complete and legible. The split
+is real (`char-split-reveal`): an `aria-label` on the h1, `aria-hidden` on
+the animated spans, per-glyph animation.
+
+## Motion math
+
+- **Shader pointer lerp 0.09 / energy attack 0.06 / release 0.025.** The
+  chrome takes ~110ms to slew toward your hand, ~190ms half-life to brighten,
+  ~480ms to forget you. Asymmetry is the personality — heavy liquid attention.
+- **Foil lerp 0.06/frame.** Half-life ≈ 11 frames ≈ 180ms. The rainbow drifts
+  like foil held in the hand, never snapping.
+- **Ambient ripple 0.18 / 0.27 rad/s** on the two shader axes; idle lissajous
+  runs three unrelated frequencies (0.00021 / 0.00033 / 0.00045); glow and
+  hint pulse at 4.2s — no shared periods, nothing visibly loops in sync.
+- **Char sweep 620ms, 55ms stagger.** Six glyphs cross in ~900ms total — long
+  enough to read as a sweep, short enough not to test patience.
+
+## Performance notes
+
+- One rAF loop per animated system (shader, foil, reveal), each throttled to
+  ~64fps (`FRAME_MS = 15.5`), `dt` clamped to 48ms. All three pause offscreen
+  via IntersectionObserver (120px margin) *and* on `visibilitychange`.
+- The WebGL shader is one full-quad draw call per frame — six vertices, a
+  handful of uniforms. DPR capped at 2; the backing store tops out around
+  2200×600 device pixels for the hero headline.
+- The foil parallax writes two CSS custom properties per frame on one element;
+  CSS does the gradient-origin math. No per-frame React re-renders anywhere —
+  the reveal observer writes classes imperatively.
+- Everything CSS-animates is `transform`, `opacity`, `filter`, or
+  `clip-path`; the one exception is the foil specular streak's
+  `background-position` (GPU-composited, far cheaper than repainting the conic
+  bands).
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (useSyncExternalStore over
+  matchMedia) makes the shader render one composed still frame at `t = 4200`
+  with no loop and no listeners; the glyphs rest fully unclipped; the foil
+  rests at neutral rainbow; a media query removes every reveal transition and
+  the glow/hint pulses. The page becomes a calm, fully-legible chrome poster.
+- **No-JS:** every pre-reveal state is gated behind `.chrome-js`, added on
+  mount. The CSS chrome-gradient fill is the headline's default, so the
+  wordmark's no-JS state is the finished one; the holo scrim backs the canvas
+  so there is never a hole; all copy, cards, and the creed are plain DOM.
+- **Semantics:** the wordmark is an h1 with `aria-label="CHROME — 크롬"` over
+  aria-hidden glyph spans; the shader canvas is `role="img"` with a bilingual
+  description; the chrome pills are `role="img"` with bilingual labels; the
+  foil layers are decorative and hidden.
+- **Contrast:** chrome-ink 12.66:1, chrome-ink-2 7.76:1, ink-soft 4.75:1 on
+  holo-mist — all functional text AA or better. Chrome-silver (1.40:1) and
+  accent pink (1.91:1) never carry text; accent-deep (3.82:1, AA-large)
+  carries accent-colored text only at eyebrow/large-display scale.
+
+## Remix ideas
+
+1. **Chrome energy drink.** Keep the shader headline and foil cards; redraw
+   the chrome pills as cans, retitle the line by caffeine content. The
+   holographic underglow becomes the can's refrigerated condensation.
+2. **Car paint showroom.** The shader stays chrome but the foil shifts to
+   automotive candy flake; the product grid becomes paint chips you can tilt
+   (pointer parallax on each chip's flake orientation).
+3. **Skateboard deck shop.** Invert the gloss: the chrome becomes the trucks
+   and hardware, the foil becomes the deck art. The sweep reveal lands on each
+   deck's foil-stamped logo.

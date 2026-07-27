@@ -1,0 +1,732 @@
+/* ==========================================================================
+   GLITCH — corrupted-signal studio
+   terminal-core · RGB-split primaries on void black · every color a named token
+   Scoped by convention to .gl-root; classes prefixed gl-.
+   Deliberately NOT PALE.SIGNAL: corrupted / RGB-shift / datamosh, not clean
+   phosphor. Denser scanlines, chromatic aberration, jagged clip-path tears.
+   ========================================================================== */
+
+.gl-root {
+  /* -- palette ---------------------------------------------------------- */
+  --gl-void: #050508;            /* ground — the dead screen before power */
+  --gl-white: #f0f0f5;           /* glitch-white — the unsplit signal (17.9:1) */
+  --gl-cyan: #00ffe5;            /* accent + secondary text (15.9:1, AAA) */
+  --gl-red: #ff0044;             /* red channel of chromatic aberration (5.17:1) */
+  --gl-blue: #0044ff;            /* blue channel — large/decorative only (3.17:1) */
+  --gl-cyan-dim: #0aa399;        /* cyan @ 72% over void — calm voice (6.51:1) */
+  --gl-mute: #9a9aad;            /* tertiary text — the operator muttering (7.37:1) */
+  --gl-error: #ff3344;           /* decode-failed tags, lifted from red (5.6:1) */
+  --gl-grid: #1d3b39;            /* decorative ONLY — rules, tear edges (1.68:1) */
+
+  /* -- type -------------------------------------------------------------- */
+  --gl-font-display: var(--font-glitch-display), "Major Mono Display", monospace;
+  --gl-font-mono: var(--font-glitch-mono), "Space Mono", "Courier New", monospace;
+  --gl-font-ko: var(--font-glitch-ko), "Noto Sans KR", sans-serif;
+  /* Hangul falls through the Latin faces into Noto Sans KR */
+  --gl-font-stack: var(--font-glitch-mono), var(--font-glitch-ko), "Space Mono", monospace;
+
+  /* -- motion ------------------------------------------------------------ */
+  --gl-ease-tear: cubic-bezier(0.85, 0, 0.15, 1);   /* reveals: violent in, hard settle */
+  --gl-ease-signal: cubic-bezier(0.22, 1, 0.36, 1); /* fades: fast, long tail */
+  --gl-reveal-ms: 480ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--gl-void);
+  color: var(--gl-white);
+  font-family: var(--gl-font-stack);
+  font-size: clamp(15px, 1.6vw + 9px, 18px);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: Noto Sans KR, its own voice. Never nest :lang(ko)
+   inside :lang(ko). Slightly tighter so it sits on the Space Mono rhythm. */
+.gl-root :lang(ko) {
+  font-family: var(--gl-font-ko);
+  font-size: 0.94em;
+  letter-spacing: -0.005em;
+}
+
+/* Glitch selection: cyan bg, void text — scoped to the entry root */
+.gl-root ::selection {
+  background: var(--gl-cyan);
+  color: var(--gl-void);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a cyan ring with an RGB-split halo */
+.gl-root :focus-visible {
+  outline: 2px solid var(--gl-cyan);
+  outline-offset: 3px;
+  border-radius: 1px;
+  box-shadow:
+    0 0 0 1px var(--gl-red),
+    0 0 14px rgba(0, 255, 229, 0.4);
+}
+
+.gl-link {
+  color: var(--gl-cyan);
+  text-decoration: underline;
+  text-decoration-color: var(--gl-cyan-dim);
+  text-underline-offset: 3px;
+}
+
+.gl-link:hover {
+  text-decoration-color: var(--gl-cyan);
+  text-shadow: 1px 0 0 var(--gl-red), -1px 0 0 var(--gl-blue);
+}
+
+/* The content layer; the glass overlay sits above it, pointer-events: none */
+.gl-screen {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   01 · Hero — the RGB-split wordmark (signature moment)
+   ========================================================================== */
+
+.gl-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(20px, 5vw, 64px);
+}
+
+.gl-hero__eyebrow {
+  margin: 0 0 clamp(1.5rem, 5vh, 3rem);
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gl-cyan);
+}
+
+.gl-wordmark {
+  position: relative;
+  margin: 0;
+  font-family: var(--gl-font-display);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 17vw, 13rem);
+  line-height: 0.86;
+  letter-spacing: 0.02em;
+  /* single-case display face: keep lower display to optical size */
+  text-transform: lowercase;
+  isolation: isolate;
+}
+
+/* The three channels stack; the base is the readable layer. */
+.gl-wordmark__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.gl-wordmark__base {
+  position: relative;
+  display: inline-block;
+  color: var(--gl-white);
+  text-shadow: 0 0 26px rgba(240, 240, 245, 0.18);
+}
+
+.gl-wordmark__red {
+  color: var(--gl-red);
+}
+
+.gl-wordmark__blue {
+  color: var(--gl-blue);
+}
+
+/* JS-mounted resting micro-shift + the periodic burst. Pre-.gl-js the
+   layers sit dead-center so SSR / no-JS shows a clean resolved wordmark. */
+.gl-js .gl-wordmark__red {
+  transform: translate(-2px, -1px);
+  animation: gl-burst-red 4.2s steps(1, end) infinite;
+}
+
+.gl-js .gl-wordmark__blue {
+  transform: translate(2px, 1px);
+  animation: gl-burst-blue 4.2s steps(1, end) infinite;
+}
+
+.gl-hero__sub {
+  margin: clamp(1.2rem, 3vh, 2rem) 0 0.3rem;
+  font-size: clamp(1.2rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: var(--gl-cyan);
+}
+
+.gl-hero__sub-en {
+  margin: 0 0 clamp(1.6rem, 4vh, 2.4rem);
+  max-width: 42ch;
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  color: var(--gl-white);
+}
+
+.gl-hero__meta {
+  margin: 0 0 clamp(1.4rem, 3vh, 2rem);
+  display: grid;
+  gap: 0.4rem 2rem;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+  color: var(--gl-mute);
+}
+
+.gl-hero__meta div {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.gl-hero__meta dt {
+  flex: 0 0 4.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gl-cyan-dim);
+}
+
+.gl-hero__meta dd {
+  margin: 0;
+  flex: 1 1 14rem;
+  color: var(--gl-white);
+}
+
+.gl-hero__hint {
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+  font-size: 0.85em;
+  letter-spacing: 0.1em;
+  color: var(--gl-cyan-dim);
+}
+
+/* ==========================================================================
+   Section headers — ▚ NN title · 한국어
+   ========================================================================== */
+
+.gl-sechead {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
+  border-bottom: 1px solid var(--gl-grid);
+}
+
+.gl-sechead__no {
+  font-size: 0.9em;
+  color: var(--gl-grid); /* decorative numeral */
+}
+
+.gl-sechead__title {
+  margin: 0;
+  font-family: var(--font-glitch-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 3.4vw, 2.2rem);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--gl-white);
+}
+
+.gl-sechead__ko {
+  margin-left: 0.5rem;
+  font-family: var(--font-glitch-ko);
+  color: var(--gl-cyan-dim);
+}
+
+/* ==========================================================================
+   02 · Manifesto — clip-path torn panels
+   ========================================================================== */
+
+.gl-manifesto {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+}
+
+.gl-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.gl-panel {
+  position: relative;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--gl-grid);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 229, 0.03),
+    rgba(5, 5, 8, 0) 60%
+  );
+  overflow: hidden;
+}
+
+.gl-panel__tag {
+  margin: 0 0 0.8rem;
+  font-size: 0.75em;
+  letter-spacing: 0.1em;
+  color: var(--gl-error);
+}
+
+.gl-panel__no {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.7rem;
+  margin: 0;
+  font-family: var(--font-glitch-display);
+  font-size: 2.6em;
+  line-height: 1;
+  color: var(--gl-grid); /* decorative */
+}
+
+.gl-panel__en {
+  margin: 0 0 0.7rem;
+  color: var(--gl-white);
+}
+
+.gl-panel__ko {
+  margin: 0;
+  color: var(--gl-cyan-dim);
+}
+
+@media (min-width: 900px) {
+  .gl-panels {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ==========================================================================
+   03 · ASCII ident — the corrupted signal
+   ========================================================================== */
+
+.gl-ascii {
+  max-width: 980px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+}
+
+.gl-ascii__stage {
+  margin: 0;
+  padding: clamp(0.6rem, 2vw, 1.2rem);
+  background: rgba(0, 255, 229, 0.02);
+  border-top: 1px solid var(--gl-grid);
+  border-bottom: 1px solid var(--gl-grid);
+  overflow-x: auto;
+}
+
+.gl-ascii__block {
+  margin: 0;
+  font-family: var(--font-glitch-mono);
+  font-size: clamp(8px, 1.5vw, 13px);
+  line-height: 1.15;
+  letter-spacing: 0;
+  white-space: pre;
+  color: var(--gl-cyan);
+  text-shadow: 0 0 8px rgba(0, 255, 229, 0.35);
+}
+
+/* The compact block shows below 560px; the wide block above. */
+.gl-ascii__block--compact {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .gl-ascii__block--wide {
+    display: none;
+  }
+  .gl-ascii__block--compact {
+    display: block;
+  }
+}
+
+.gl-ascii__caption {
+  margin: 1rem 0 0;
+  font-size: 0.9em;
+  color: var(--gl-mute);
+}
+
+/* ==========================================================================
+   04 · Catalogue — the release ledger
+   ========================================================================== */
+
+.gl-tracks {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 128px) clamp(20px, 5vw, 64px);
+}
+
+.gl-tracks__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px dashed var(--gl-grid);
+}
+
+.gl-track {
+  border-bottom: 1px dashed var(--gl-grid);
+}
+
+.gl-track__row {
+  display: grid;
+  grid-template-columns: 1.1rem 6.5rem 1fr 5.5rem 4.5rem 10rem;
+  grid-template-areas: "cross cat name bpm len status";
+  gap: 0.35rem 0.9rem;
+  align-items: baseline;
+  width: 100%;
+  padding: 0.95rem 0.5rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Instant state change — glitch does not ease its row highlights */
+.gl-track__row:hover,
+.gl-track__row:focus-visible,
+.gl-track__row[aria-expanded="true"] {
+  background: rgba(0, 255, 229, 0.06);
+}
+
+.gl-track__cross {
+  grid-area: cross;
+  opacity: 0;
+  color: var(--gl-cyan);
+}
+
+.gl-track__row:hover .gl-track__cross,
+.gl-track__row:focus-visible .gl-track__cross,
+.gl-track__row[aria-expanded="true"] .gl-track__cross {
+  opacity: 1;
+}
+
+.gl-track__cat {
+  grid-area: cat;
+  letter-spacing: 0.06em;
+  color: var(--gl-cyan);
+}
+
+.gl-track__name {
+  grid-area: name;
+  color: var(--gl-white);
+}
+
+.gl-track__bpm {
+  grid-area: bpm;
+  color: var(--gl-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.gl-track__len {
+  grid-area: len;
+  color: var(--gl-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.gl-track__status {
+  grid-area: status;
+  letter-spacing: 0.08em;
+}
+
+.gl-track--rendering .gl-track__status {
+  color: var(--gl-cyan);
+}
+
+.gl-track--held .gl-track__status {
+  color: var(--gl-mute);
+}
+
+.gl-track--archived .gl-track__status {
+  color: var(--gl-error);
+}
+
+.gl-track--archived .gl-track__cat,
+.gl-track--archived .gl-track__name {
+  color: var(--gl-mute);
+}
+
+.gl-track__note {
+  max-width: 720px;
+  padding: 0.1rem 0.5rem 1.15rem 2.35rem;
+}
+
+.gl-track__note p {
+  margin: 0 0 0.3rem;
+}
+
+.gl-track__note p:lang(ko) {
+  color: var(--gl-cyan-dim);
+}
+
+/* Hiding is JS-gated: without .gl-js every note is plainly visible */
+.gl-js .gl-track__note.is-closed {
+  display: none;
+}
+
+.gl-js .gl-track__note.is-open p {
+  animation: gl-appear 380ms var(--gl-ease-signal) both;
+}
+
+.gl-js .gl-track__note.is-open p + p {
+  animation-delay: 70ms;
+}
+
+@media (max-width: 760px) {
+  .gl-track__row {
+    grid-template-columns: 1.1rem 1fr auto;
+    grid-template-areas:
+      "cross cat   status"
+      ".     name   name"
+      ".     bpm    len";
+    row-gap: 0.15rem;
+  }
+
+  .gl-track__len {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   05 · Footer / end of signal
+   ========================================================================== */
+
+.gl-footer {
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 64px)
+    clamp(96px, 14vh, 160px);
+}
+
+.gl-footer__line {
+  margin: 0 0 1.8rem;
+}
+
+.gl-footer__time {
+  color: var(--gl-cyan);
+  letter-spacing: 0.08em;
+}
+
+.gl-footer__data {
+  margin: 0 0 2rem;
+}
+
+.gl-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px dotted var(--gl-grid);
+}
+
+.gl-footer__data dt {
+  flex: 0 0 6.5rem;
+  font-size: 0.8em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gl-cyan-dim);
+}
+
+.gl-footer__data dd {
+  flex: 1 1 16rem;
+  margin: 0;
+  color: var(--gl-white);
+}
+
+.gl-footer__copy {
+  margin: 0 0 2.6rem;
+}
+
+.gl-footer__nav {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+/* ==========================================================================
+   Glass — dense scanlines + datamosh noise + RGB-split vignette
+   ========================================================================== */
+
+.gl-glass {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Denser than PALE.SIGNAL's 3px CRT grille: 1px of faint white ink every
+   2px — the glitch aesthetic. Light enough (5% alpha) that worst-case text
+   contrast stays above AA. */
+.gl-glass__scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(240, 240, 245, 0.05) 0px,
+    rgba(240, 240, 245, 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+.gl-js .gl-glass__scan {
+  animation: gl-scan-drift 8.8s linear infinite;
+}
+
+/* Datamosh shimmer: a tiled SVG feTurbulence at low opacity over multiply.
+   Static — no animation — so it never competes with the wordmark burst. */
+.gl-glass__noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%222%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23n)%22%2F%3E%3C%2Fsvg%3E");
+}
+
+/* RGB-split vignette: a subtle red/blue fringe at the corners — chromatic
+   aberration as ambient atmosphere. */
+.gl-glass__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      130% 100% at 50% 50%,
+      transparent 58%,
+      rgba(255, 0, 68, 0.06) 92%,
+      rgba(0, 68, 255, 0.08) 100%
+    );
+}
+
+/* Rare single-frame horizontal tear of the fixed glass (~every 7.7s). The
+   glass is viewport-sized and fixed, so promoting a compositor layer is
+   contained; the content layer never animates layout. */
+.gl-js .gl-glass {
+  animation: gl-tear-jitter 7.7s linear infinite;
+}
+
+/* ==========================================================================
+   Clip-path torn reveals — JS-gated pre-state, the tear opens on .is-torn
+   ========================================================================== */
+
+/* Pre-tear: clipped to a thin horizontal slit. Gated on .gl-js so no-JS
+   shows every panel open. */
+.gl-js [data-tear] {
+  clip-path: polygon(0 46%, 100% 46%, 100% 54%, 0 54%);
+  opacity: 0;
+  transition:
+    clip-path var(--gl-reveal-ms) var(--gl-ease-tear),
+    opacity var(--gl-reveal-ms) var(--gl-ease-signal);
+  will-change: clip-path, opacity;
+}
+
+.gl-js [data-tear].is-torn {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / filter / clip-path only
+   ========================================================================== */
+
+@keyframes gl-appear {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* RGB-split burst: one frame every 4.2s the red/blue channels jump wide,
+   then resolve to a resting ±2px micro-shift. steps(1,end) = instant cuts,
+   no easing — glitch does not tween. Each channel on its own period-derived
+   offset so they rarely tear together. */
+@keyframes gl-burst-red {
+  0%,
+  99.6%,
+  100% {
+    transform: translate(-2px, -1px);
+  }
+  99.7% {
+    transform: translate(-7px, 2px);
+  }
+  99.85% {
+    transform: translate(3px, -3px);
+  }
+}
+
+@keyframes gl-burst-blue {
+  0%,
+  99.55%,
+  100% {
+    transform: translate(2px, 1px);
+  }
+  99.65% {
+    transform: translate(8px, -2px);
+  }
+  99.8% {
+    transform: translate(-3px, 3px);
+  }
+}
+
+/* Scanline drift: 0 → -2px over 8.8s = ~0.23Hz. Well below 3Hz, photosafe. */
+@keyframes gl-scan-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -2px;
+  }
+}
+
+/* One horizontal tear per 7.7s — three ~16ms keyframe segments. */
+@keyframes gl-tear-jitter {
+  0%,
+  99.5%,
+  100% {
+    transform: translateX(0);
+  }
+  99.62% {
+    transform: translateX(2px) skewX(-0.4deg);
+  }
+  99.75% {
+    transform: translateX(-1.5px);
+  }
+  99.88% {
+    transform: translateX(1px);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — instant everything, one beautiful static frame
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .gl-js .gl-glass,
+  .gl-js .gl-glass__scan,
+  .gl-js .gl-wordmark__red,
+  .gl-js .gl-wordmark__blue,
+  .gl-js .gl-track__note.is-open p {
+    animation: none;
+  }
+
+  /* Wordmark resolves dead-center; no resting micro-shift. */
+  .gl-js .gl-wordmark__red,
+  .gl-js .gl-wordmark__blue {
+    transform: none;
+  }
+
+  .gl-js [data-tear] {
+    clip-path: none;
+    opacity: 1;
+    transition: none;
+  }
+}

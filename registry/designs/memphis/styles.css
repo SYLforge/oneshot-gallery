@@ -1,0 +1,958 @@
+/* ==========================================================================
+   MEMPHIS — 멤피스, a postmodern design-studio portfolio
+   tactile-craft · Sottsass geometries · five colors · 3px lines · feTurbulence tooth
+   Scoped by convention to .memphis-root; classes prefixed mp-.
+   ========================================================================== */
+
+.memphis-root {
+  /* -- palette: five drums, each earns its place ------------------------- */
+  --mp-paper: #f7f2e8;    /* warm off-white stock — the sheet on the table */
+  --mp-ink: #1a1a1a;      /* text + 3px outlines — 15.6:1 on paper */
+  --mp-teal: #2bb1a8;     /* the signature — hero fill, focus, marquee B.
+                             Ink on it: 6.59:1 (AA). As text on paper only
+                             2.4:1 → decorative/surface only, never text. */
+  --mp-coral: #ff6b8a;    /* Memphis pink — blobs, tiles, ::selection.
+                             Ink on it: 6.40:1 (AA). */
+  --mp-marigold: #ffc933; /* sunny yellow — squiggles, CTA, halos.
+                             Ink on it: 11.3:1 (AAA). */
+  --mp-cobalt: #3a5fcd;   /* the disciplined counterpoint — section-head text
+                             at 5.1:1 (AA) on paper; surfaces carry WHITE
+                             type (5.68:1 AA). Ink on cobalt only 3.07:1 so
+                             cobalt surfaces never carry ink body text. */
+  --mp-plum: #6a3b8a;     /* terrazzo fleck + secondary accent — ink-text
+                             safe at 7.0:1 on paper, for links + rare fleck */
+  --mp-cream: #fffaf0;    /* lightest wash — cobalt-panel fills etc. */
+
+  /* -- type: two geometric voices ---------------------------------------- */
+  --mp-font-display: var(--font-grotesk), var(--font-han), "Space Grotesk", sans-serif;
+  --mp-font-ko: var(--font-han), "Black Han Sans", "Apple SD Gothic Neo", sans-serif;
+  --mp-font-body: var(--font-grotesk), var(--font-han), "Space Grotesk", sans-serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --mp-press-in: 0ms;
+  --mp-press-out: 140ms;
+  --mp-shadow: 5px 5px 0 0 var(--mp-ink);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--mp-paper);
+  color: var(--mp-ink);
+  font-family: var(--mp-font-body);
+  font-size: clamp(15px, 0.5vw + 13px, 18px);
+  line-height: 1.6;
+  font-weight: 400;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.memphis-root,
+.memphis-root *,
+.memphis-root *::before,
+.memphis-root *::after {
+  box-sizing: border-box;
+}
+
+.memphis-root h1,
+.memphis-root h2,
+.memphis-root h3,
+.memphis-root p,
+.memphis-root ul,
+.memphis-root dl,
+.memphis-root dd {
+  margin: 0;
+}
+
+.memphis-root ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Korean is first-class: Black Han Sans, its own rhythm, words kept whole.
+   The geometric Korean face is the studio's loud voice — blocky as cut paper. */
+.memphis-root :lang(ko) {
+  font-family: var(--mp-font-ko);
+  word-break: keep-all;
+  line-height: 1.45;
+  font-weight: 400; /* Black Han Sans only ships 400; it is already heavy */
+  letter-spacing: 0;
+}
+
+/* Coral selection, scoped to the entry root */
+.memphis-root ::selection {
+  background: var(--mp-coral);
+  color: var(--mp-ink);
+}
+
+/* Keyboard focus: a teal ring — the studio's signature color. On the ink
+   footer the ring becomes marigold so it stays visible. */
+.memphis-root :focus-visible {
+  outline: 3px solid var(--mp-teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.memphis-footer :focus-visible {
+  outline-color: var(--mp-marigold);
+}
+
+/* Visually hidden, still spoken */
+.mp-vh {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Press feedback — a shape pressing into the page.
+   .mp-btn--press carries the 5px hard shadow; :active snaps INTO it (0ms in)
+   and springs out over 140ms with a confident overshoot curve. Not a
+   spring; a shape being pressed flat, then letting go.
+   ========================================================================== */
+
+.mp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.8em 1.5em;
+  border: 3px solid var(--mp-ink);
+  background: var(--mp-marigold);
+  color: var(--mp-ink);
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: var(--mp-shadow);
+  cursor: pointer;
+  transform: translateZ(0);
+  transition:
+    transform var(--mp-press-out) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--mp-press-out) cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 120ms linear;
+}
+
+.mp-btn:hover {
+  background: var(--mp-coral);
+}
+
+.mp-btn--ghost {
+  background: var(--mp-paper);
+}
+
+.mp-btn--ghost:hover {
+  background: var(--mp-teal);
+}
+
+.mp-btn--footer {
+  background: var(--mp-marigold);
+  color: var(--mp-ink);
+}
+
+.mp-btn--press {
+  /* JS/pointer presses override inline; this is the keyboard :active + the
+     reduced-motion fallback: a static press-down, no overshoot. */
+}
+
+.mp-btn--press:active {
+  transition-duration: var(--mp-press-in);
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 0 var(--mp-ink);
+}
+
+/* ==========================================================================
+   Shape parallax field — pointer-parallax + idle bob.
+   Decorative: aria-hidden, pointer-events none. Each layer multiplies
+   --mp-x/--mp-y (−1…1, set by usePointerParallax) by a depth factor so
+   nearer shapes drift more. Idle bob is mutually-prime per shape so the
+   field is never still when a pointer is absent (touch fallback).
+   ========================================================================== */
+
+.mp-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mp-field__layer {
+  position: absolute;
+  inset: -8%;
+}
+
+.mp-field__layer--far {
+  transform: translate3d(
+    calc(var(--mp-x, 0) * 8px),
+    calc(var(--mp-y, 0) * 6px),
+    0
+  );
+  opacity: 0.45;
+}
+.mp-field__layer--mid {
+  transform: translate3d(
+    calc(var(--mp-x, 0) * 16px),
+    calc(var(--mp-y, 0) * 12px),
+    0
+  );
+  opacity: 0.7;
+}
+.mp-field__layer--near {
+  transform: translate3d(
+    calc(var(--mp-x, 0) * 26px),
+    calc(var(--mp-y, 0) * 20px),
+    0
+  );
+  opacity: 0.9;
+}
+
+.mp-field__sh {
+  position: absolute;
+  display: block;
+  will-change: transform;
+  animation: mp-bob 6.4s ease-in-out infinite alternate;
+}
+/* shape scatter — mutually-prime idle periods for life without a pointer */
+.mp-field__sh--s1 { top: 8%;  left: 5%;  animation-duration: 9.1s; }
+.mp-field__sh--b1 { top: 16%; right: 9%; animation-duration: 7.7s; }
+.mp-field__sh--d1 { top: 30%; left: 14%; animation-duration: 5.3s; }
+.mp-field__sh--z1 { top: 38%; right: 12%; animation-duration: 8.2s; }
+.mp-field__sh--b2 { top: 50%; left: 7%;  animation-duration: 7.1s; }
+.mp-field__sh--a1 { top: 58%; right: 8%; animation-duration: 9.8s; }
+.mp-field__sh--d2 { top: 70%; left: 18%; animation-duration: 6.8s; }
+.mp-field__sh--s2 { top: 80%; right: 14%; animation-duration: 5.9s; }
+.mp-field__sh--b3 { top: 88%; left: 10%; animation-duration: 7.4s; }
+.mp-field__sh--d3 { top: 24%; right: 30%; animation-duration: 4.6s; }
+.mp-field__sh--z2 { top: 64%; right: 28%; animation-duration: 5.5s; }
+
+@keyframes mp-bob {
+  from { translate: 0 -7px; rotate: -2deg; }
+  to   { translate: 0 7px;  rotate: 2deg; }
+}
+
+/* ==========================================================================
+   Stage — sits above the floating field
+   ========================================================================== */
+
+.memphis-stage {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   clip-path reveal — the pre-reveal state is JS-gated.
+   .is-clipped holds the from-clip (set inline by useClipReveal); .is-revealed
+   (or the bare element, with no JS) shows the full shape. Only .memphis-js
+   .is-clipped is ever hidden — without JS the rule never applies and the
+   page is a finished poster.
+   ========================================================================== */
+
+.memphis-js .is-clipped {
+  transition: clip-path 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.memphis-js [data-mp-squiggle] {
+  transition: stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   01 · Hero — the shape explosion + wordmark
+   ========================================================================== */
+
+.mp-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(20px, 5vw, 72px);
+}
+
+.mp-hero__kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4em 2em;
+  margin: 0 0 clamp(20px, 4vh, 48px);
+  padding-bottom: 0.7em;
+  border-bottom: 3px solid var(--mp-ink);
+  font-weight: 700;
+  font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mp-hero__kicker :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* the shape explosion — absolute scatter over the hero. */
+.mp-hero__shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mp-shape {
+  position: absolute;
+  display: block;
+  /* default clip reveal — JS overrides --mp-clip-from inline per target */
+  --mp-clip-from: inset(0 100% 0 0); /* wipe in from the left by default */
+}
+
+.mp-shape--blob1 { top: 10%; right: 8%; }
+.mp-shape--sq1   { top: 22%; right: 26%; }
+.mp-shape--zz1   { top: 8%;  left: 12%; }
+.mp-shape--arch1 { bottom: 16%; right: 14%; }
+.mp-shape--dot1  { top: 38%; left: 22%; }
+.mp-shape--dot2  { top: 48%; right: 40%; }
+.mp-shape--dot3  { bottom: 28%; left: 30%; }
+.mp-shape--disc  { bottom: 12%; left: 8%; }
+
+/* give the hero shapes their per-shape from-clip variety so the wipes
+   don't all come from the same direction. */
+.mp-shape--blob1 { --mp-clip-from: inset(0 0 100% 0); }   /* from top */
+.mp-shape--sq1   { --mp-clip-from: inset(0 0 0 100%); }   /* from right */
+.mp-shape--zz1   { --mp-clip-from: inset(100% 0 0 0); }   /* from bottom */
+.mp-shape--arch1 { --mp-clip-from: inset(0 100% 0 0); }   /* from left */
+.mp-shape--dot1  { --mp-clip-from: circle(0% at 50% 50%); }
+.mp-shape--dot2  { --mp-clip-from: circle(0% at 50% 50%); }
+.mp-shape--dot3  { --mp-clip-from: circle(0% at 50% 50%); }
+.mp-shape--disc  { --mp-clip-from: inset(0 0 100% 0); }
+
+.mp-wordmark {
+  position: relative;
+  z-index: 1;
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: clamp(4rem, 21vw, 15rem);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.mp-word {
+  display: block;
+  color: var(--mp-ink);
+}
+
+.mp-word--ko {
+  font-size: 0.42em;
+  letter-spacing: 0;
+  margin-top: 0.1em;
+  color: var(--mp-cobalt); /* cobalt as large display text — 5.1:1 AA */
+}
+
+.mp-hero__lede {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(28px, 5vh, 56px);
+  max-width: 42ch;
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.mp-hero__lede :lang(ko) {
+  color: var(--mp-cobalt);
+  font-weight: 700;
+}
+
+.mp-hero__stack {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(28px, 5vh, 56px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em;
+}
+
+/* ==========================================================================
+   Section chrome
+   ========================================================================== */
+
+.mp-section {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(56px, 9vh, 120px) clamp(16px, 5vw, 72px);
+}
+
+.mp-sec {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em 1em;
+  margin-bottom: clamp(20px, 4vh, 40px);
+}
+
+.mp-sec__no {
+  padding: 0.12em 0.5em;
+  background: var(--mp-ink);
+  color: var(--mp-paper);
+  font-weight: 700;
+  font-size: clamp(1rem, 2.4vw, 1.4rem);
+}
+
+.mp-sec__title {
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.mp-sec__title :lang(ko) {
+  color: var(--mp-cobalt);
+}
+
+.mp-sec__title-en {
+  display: block;
+  font-family: var(--mp-font-display);
+  font-size: 0.42em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mp-ink);
+  opacity: 0.7;
+  margin-top: 0.25em;
+}
+
+/* ==========================================================================
+   02 · The work — FLIP project grid (the signature)
+   ========================================================================== */
+
+.mp-work__lede {
+  max-width: 60ch;
+  margin-bottom: clamp(24px, 4vh, 40px);
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  line-height: 1.6;
+}
+
+.mp-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6em;
+  margin-bottom: clamp(28px, 4vh, 44px);
+}
+
+.mp-filter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  padding: 0.55em 1.1em;
+  border: 3px solid var(--mp-ink);
+  background: var(--mp-paper);
+  color: var(--mp-ink);
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: var(--mp-shadow);
+  cursor: pointer;
+  transition:
+    transform var(--mp-press-out) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--mp-press-out) cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 120ms linear;
+}
+
+.mp-filter:hover {
+  background: var(--mp-marigold);
+}
+
+.mp-filter.is-active {
+  background: var(--mp-ink);
+  color: var(--mp-paper);
+}
+
+.mp-filter.is-active:hover {
+  background: var(--mp-cobalt);
+}
+
+.mp-filter:active {
+  transition-duration: var(--mp-press-in);
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 0 var(--mp-ink);
+}
+
+.mp-filter__en {
+  font-size: 0.78em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.mp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(16px, 2.2vw, 28px);
+  align-items: start;
+}
+
+.mp-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  padding: clamp(20px, 2vw, 28px);
+  border: 3px solid var(--mp-ink);
+  background: var(--mp-cream);
+  box-shadow: var(--mp-shadow);
+  outline: none;
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* opacity fade is what FLIP uses for incoming tiles */
+  animation: mp-tile-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--mp-tile-i, 0) * 50ms);
+}
+
+.mp-tile:focus-visible {
+  box-shadow: var(--mp-shadow), 0 0 0 4px var(--mp-teal);
+}
+
+.mp-tile:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 0 var(--mp-ink);
+}
+
+/* tone tints — a soft wash of the project's color behind the motif, kept
+   pale enough that ink text stays well above AA. */
+.mp-tile--teal    { background: color-mix(in srgb, var(--mp-teal) 14%, var(--mp-cream)); }
+.mp-tile--coral   { background: color-mix(in srgb, var(--mp-coral) 16%, var(--mp-cream)); }
+.mp-tile--marigold{ background: color-mix(in srgb, var(--mp-marigold) 22%, var(--mp-cream)); }
+.mp-tile--cobalt  { background: color-mix(in srgb, var(--mp-cobalt) 12%, var(--mp-cream)); }
+.mp-tile--plum    { background: color-mix(in srgb, var(--mp-plum) 12%, var(--mp-cream)); }
+
+@keyframes mp-tile-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.mp-tile__motif {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 64px;
+}
+
+.mp-tile__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mp-tile__top :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.mp-tile__year {
+  color: var(--mp-cobalt);
+}
+
+.mp-tile__title {
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem);
+  line-height: 1.1;
+}
+
+.mp-tile__ko {
+  display: block;
+  color: var(--mp-ink);
+}
+
+.mp-tile__en {
+  display: block;
+  font-size: 0.62em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-top: 0.2em;
+}
+
+.mp-tile__blurb {
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.mp-tile__blurb-en {
+  display: block;
+  margin-top: 0.35em;
+  opacity: 0.75;
+}
+
+.mp-work__caption {
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: clamp(0.78rem, 1.6vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.mp-work__caption :lang(ko) {
+  letter-spacing: 0;
+}
+
+/* ==========================================================================
+   Marquee band — two tickers, opposite directions
+   ========================================================================== */
+
+.mp-marquee {
+  position: relative;
+  border-top: 3px solid var(--mp-ink);
+  border-bottom: 3px solid var(--mp-ink);
+  background: var(--mp-paper);
+}
+
+.mp-marquee__row {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-block: 0.6em;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2.2vw, 1.35rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mp-marquee__row--b {
+  border-top: 3px solid var(--mp-ink);
+  background: var(--mp-teal);
+  color: var(--mp-ink); /* ink on teal holds 6.59:1 AA */
+}
+
+.mp-marquee__track {
+  display: inline-flex;
+  will-change: transform;
+}
+
+.mp-marquee__group {
+  display: inline-flex;
+  flex: none;
+}
+
+.mp-marquee__item {
+  display: inline-block;
+  padding-right: 1.4em;
+}
+
+.mp-marquee__ko {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.mp-marquee__sep {
+  display: inline-block;
+  padding-left: 1.4em;
+  color: var(--mp-coral);
+}
+
+.mp-marquee__row--b .mp-marquee__sep {
+  color: var(--mp-cobalt);
+}
+
+/* ==========================================================================
+   03 · The studio — composed poster: cobalt panel + principle list
+   ========================================================================== */
+
+.mp-studio__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 4vw, 48px);
+}
+
+.mp-studio__panel {
+  position: relative;
+  padding: clamp(24px, 4vw, 44px);
+  background: var(--mp-cobalt);
+  color: var(--mp-cream); /* white on cobalt = 5.68:1 AA */
+  border: 3px solid var(--mp-ink);
+  box-shadow: var(--mp-shadow);
+  /* clip-path reveal from the left */
+  --mp-clip-from: inset(0 100% 0 0);
+}
+
+.mp-studio__panel-kicker {
+  margin: 0 0 0.8em;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mp-marigold);
+}
+
+.mp-studio__panel-kicker :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.mp-studio__panel-body {
+  font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+.mp-studio__principle {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.5vw, 24px);
+}
+
+.mp-studio__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(10px, 2vw, 20px);
+  padding-bottom: clamp(16px, 2.5vw, 24px);
+  border-bottom: 3px solid var(--mp-ink);
+}
+
+.mp-studio__chips > * {
+  flex: none;
+}
+
+.mp-studio__rule {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8em;
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.mp-studio__num {
+  display: inline-block;
+  flex: none;
+  padding: 0.1em 0.5em;
+  background: var(--mp-ink);
+  color: var(--mp-paper);
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: 0.6em;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   04 · Footer — ink block, terrazzo mark, the invitation
+   ========================================================================== */
+
+.mp-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 3px solid var(--mp-ink);
+  background: var(--mp-ink);
+  color: var(--mp-paper);
+}
+
+.mp-footer ::selection {
+  background: var(--mp-marigold);
+  color: var(--mp-ink);
+}
+
+.mp-footer__shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.mp-footer__sh {
+  position: absolute;
+  display: block;
+}
+
+.mp-footer__sh--s    { top: 8%;  right: 6%; }
+.mp-footer__sh--z    { bottom: 14%; left: 8%; }
+.mp-footer__sh--d1   { top: 30%; left: 22%; }
+.mp-footer__sh--d2   { top: 20%; left: 60%; }
+.mp-footer__sh--disc { bottom: 10%; right: 14%; }
+
+.mp-footer__giant {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(48px, 9vh, 110px) clamp(16px, 5vw, 72px) 0;
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 8vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.mp-footer__giant :lang(ko) {
+  color: var(--mp-marigold);
+}
+
+.mp-footer__giant-en {
+  display: block;
+  margin-top: 0.15em;
+  text-transform: lowercase;
+}
+
+.mp-footer__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(16px, 3vw, 40px);
+  max-width: 1280px;
+  margin: clamp(28px, 6vh, 64px) auto 0;
+  padding: 0 clamp(16px, 5vw, 72px);
+}
+
+.mp-footer__cell {
+  border-top: 3px solid var(--mp-paper);
+  padding-top: 0.8em;
+}
+
+.mp-footer__k {
+  margin: 0 0 0.4em;
+  color: var(--mp-marigold);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mp-footer__k :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.mp-footer__v {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.7vw, 1rem);
+  line-height: 1.6;
+}
+
+.mp-footer__v :lang(ko) {
+  color: var(--mp-cream);
+}
+
+.mp-footer__legal {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(32px, 6vh, 72px) clamp(16px, 5vw, 72px) clamp(24px, 4vh, 48px);
+  font-size: clamp(0.72rem, 1.4vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.mp-footer__legal :lang(ko) {
+  letter-spacing: 0;
+  color: var(--mp-marigold);
+}
+
+/* ==========================================================================
+   Paper tooth — static feTurbulence noise multiplied over the sheet
+   ========================================================================== */
+
+.memphis-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+
+.memphis-grain svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Responsive composition
+   ========================================================================== */
+
+@media (max-width: 720px) {
+  .mp-hero__shapes .mp-shape--disc,
+  .mp-hero__shapes .mp-shape--zz1 {
+    display: none; /* thin the explosion on small screens */
+  }
+  .mp-shape--blob1 { top: 6%; right: 4%; }
+}
+
+@media (min-width: 900px) {
+  .mp-studio__grid {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: start;
+  }
+}
+
+@media (min-width: 1440px) {
+  .mp-hero {
+    max-width: 1320px;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the poster stands still.
+   JS also gates the marquee loop, the parallax drift, and the FLIP play
+   (useClipReveal + usePointerParallax + ProjectFlipGrid all read the pref);
+   this block covers everything CSS-driven.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .memphis-root .mp-field__layer {
+    transform: none !important;
+  }
+
+  .memphis-root .mp-field__sh,
+  .memphis-root .mp-shape,
+  .memphis-root .mp-footer__sh {
+    animation: none !important;
+  }
+
+  /* No pre-reveal: shapes sit at rest, squiggles fully drawn. */
+  .memphis-js .is-clipped {
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  .memphis-js [data-mp-squiggle] {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+
+  .memphis-root .mp-tile {
+    animation: none !important;
+  }
+
+  .memphis-root .mp-marquee__track {
+    transform: none !important;
+  }
+
+  .memphis-root .mp-btn,
+  .memphis-root .mp-filter,
+  .memphis-root .mp-tile {
+    transition: none !important;
+  }
+
+  /* Keep a clear press feedback even without motion: the shadow swap is
+     instant, the transform lands without a ramp. */
+  .memphis-root .mp-btn--press:active,
+  .memphis-root .mp-filter:active {
+    transform: translate(5px, 5px);
+  }
+}

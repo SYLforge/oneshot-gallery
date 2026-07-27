@@ -1,0 +1,842 @@
+/* ==========================================================================
+   PIXEL — 8-bit arcade studio
+   retro-y2k · dopamine color on CRT black · cheerful, saturated, optimistic
+   Scoped by convention to .pixel-root; classes prefixed pixel-.
+   ========================================================================== */
+
+.pixel-root {
+  /* -- palette (contrast measured against ground #0a0a12) --------------- */
+  --pixel-ground: #0a0a12;     /* page background — the CRT ground */
+  --pixel-void: #050509;       /* deeper than ground — footer, marquee, stage */
+  --pixel-panel: #14141f;      /* card / cabinet bodies (body 11.7:1 on it) */
+  --pixel-bubblegum: #ff3d8a;  /* THE accent — title, INSERT COIN, marquee marks (5.9:1) */
+  --pixel-cyan: #00e5ff;       /* links, focus, hi-score digits (12.8:1, AAA) */
+  --pixel-acid: #fff44f;       /* acid yellow — lamps, score highlights (17.2:1, AAA) */
+  --pixel-mint: #4dff9f;       /* mint — CONTINUE, secondary accent (15.1:1, AAA) */
+  --pixel-violet: #b967ff;     /* magenta-violet — small labels, chrome (6.0:1, AA) */
+  --pixel-chrome: #c8d0d8;     /* reading text — long copy allowed here (12.7:1, AAA) */
+  --pixel-haze: #8a93a8;       /* secondary text, captions, Korean glosses (6.6:1, AA) */
+  --pixel-line: rgba(185, 103, 255, 0.28); /* hairlines — decorative */
+
+  /* -- aberration envelope (written live by useScrollRush) -------------- */
+  --pixel-shift: 0px;
+  --pixel-ghost: 0;
+
+  /* -- type --------------------------------------------------------------- */
+  --pixel-font-display: var(--font-pixel-display), var(--font-pixel-ko), monospace;
+  --pixel-font-ko: var(--font-pixel-ko), sans-serif;
+  --pixel-font-mono: var(--font-pixel-mono), var(--font-pixel-ko), monospace;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--pixel-ground);
+  color: var(--pixel-chrome);
+  font-family: var(--pixel-font-mono);
+  font-size: clamp(15px, 1vw + 11px, 18px);
+  line-height: 1.55;
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* Hangul is first-class: it always renders in Gugi (never fallback sans),
+   with mono tracking turned off and words kept whole. */
+.pixel-root :lang(ko) {
+  font-family: var(--pixel-font-ko);
+  letter-spacing: 0;
+  word-break: keep-all;
+}
+
+/* The hidden attribute must win over any display we set. */
+.pixel-root [hidden] {
+  display: none !important;
+}
+
+/* Pixel selection — bubblegum block, ground text */
+.pixel-root ::selection {
+  background: var(--pixel-bubblegum);
+  color: var(--pixel-ground);
+  text-shadow: none;
+}
+
+/* Keyboard focus: cyan ring with a bubblegum halo — arcade signage */
+.pixel-root :focus-visible {
+  outline: 2px solid var(--pixel-cyan);
+  outline-offset: 3px;
+  border-radius: 0;
+  box-shadow:
+    0 0 0 5px rgba(255, 61, 138, 0.4),
+    0 0 18px rgba(0, 229, 255, 0.5);
+}
+
+/* Screen-reader-only content (the marquee's accessible list) */
+.pixel-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   CRT overlay — full-page scanline grille + vignette (crt-scanline)
+   Fixed over the viewport, pointer-events: none, behind text. The grille
+   breathes via JS opacity (CRTOverlay.tsx); reduced motion renders it
+   static. The vignette is a soft radial darkening at the screen edges —
+   the curved-tube feel — and never touches text contrast (text sits
+   inside the bright center).
+   ========================================================================== */
+
+.pixel-crt {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+}
+
+.pixel-crt__scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(5, 5, 9, 0.55) 0 1px,
+    transparent 1px 3px
+  );
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+}
+
+.pixel-crt__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      120% 120% at 50% 50%,
+      transparent 58%,
+      rgba(5, 5, 9, 0.55) 100%
+    );
+}
+
+/* ==========================================================================
+   Chromatic aberration — .pixel-ab (the smear)
+   Two pseudo-element ghosts of the same text (cyan left, magenta right)
+   ride --pixel-shift / --pixel-ghost on top of an always-on idle breathe.
+   mix-blend-mode: screen means ghosts only ADD light over the base glyphs
+   — the readable text never moves and never loses contrast. At rest the
+   idle breathe gives ±1px; scroll rush (via useScrollRush) drives it to
+   ±3px. Reduced motion removes the ghosts entirely.
+   ========================================================================== */
+
+.pixel-ab {
+  position: relative;
+}
+
+.pixel-ab::before,
+.pixel-ab::after {
+  content: attr(data-text) / "";
+  position: absolute;
+  inset: 0;
+  opacity: var(--pixel-ghost, 0);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.pixel-ab::before {
+  color: var(--pixel-cyan);
+  transform: translate3d(calc(var(--pixel-shift, 0px) * -1), 0, 0);
+}
+
+.pixel-ab::after {
+  color: var(--pixel-bubblegum);
+  transform: translate3d(var(--pixel-shift, 0px), 0, 0);
+}
+
+/* The idle CRT breathe — always-on at rest, the screen is alive even when
+   you are not scrolling. The ghosts sit at a low idle opacity so the base
+   glyphs stay crisp; scroll rush raises the opacity via --pixel-ghost. */
+.pixel-js .pixel-ab::before {
+  animation: pixel-ab-idle-l 6s ease-in-out infinite;
+}
+.pixel-js .pixel-ab::after {
+  animation: pixel-ab-idle-r 6s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.pixel-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+/* The no-JS / pre-paint backdrop: a warm CRT bloom + a pixel-tile floor. */
+.pixel-hero__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.pixel-hero__bloom {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle 30vmin at 30% 38%,
+      rgba(255, 61, 138, 0.22),
+      rgba(255, 61, 138, 0) 65%
+    ),
+    radial-gradient(
+      circle 26vmin at 72% 30%,
+      rgba(0, 229, 255, 0.16),
+      rgba(0, 229, 255, 0) 60%
+    ),
+    radial-gradient(
+      circle 40vmin at 50% 120%,
+      rgba(185, 103, 255, 0.18),
+      rgba(185, 103, 255, 0) 70%
+    );
+}
+
+/* The pixel-tile floor: a 4px conic checker, faint, the arcade's carpet. */
+.pixel-hero__floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background:
+    repeating-conic-gradient(
+      rgba(185, 103, 255, 0.05) 0% 25%,
+      transparent 0% 50%
+    )
+    0 0 / 16px 16px;
+  mask-image: linear-gradient(180deg, transparent, #000 40%);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%);
+}
+
+.pixel-hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(28px, 6vw, 80px);
+}
+
+/* A quiet scrim behind hero copy so chrome body text stays AA over the
+   bloom — the glow lives around the words, not through them. */
+.pixel-hero__content::before {
+  content: "";
+  position: absolute;
+  inset: -8% -12% -8% -12%;
+  z-index: -1;
+  background: radial-gradient(
+    100% 100% at 30% 50%,
+    rgba(10, 10, 18, 0.72),
+    rgba(10, 10, 18, 0) 70%
+  );
+  pointer-events: none;
+}
+
+.pixel-hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.4rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--pixel-acid);
+  color: var(--pixel-acid);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  background: rgba(255, 244, 79, 0.06);
+}
+
+.pixel-hero__lamp {
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--pixel-acid);
+  box-shadow: 0 0 8px rgba(255, 244, 79, 0.9);
+}
+
+.pixel-js .pixel-hero__lamp {
+  animation: pixel-lamp 2.4s ease-in-out infinite;
+}
+
+.pixel-hero__ko {
+  margin-left: 0.4rem;
+  color: var(--pixel-haze);
+  letter-spacing: 0;
+}
+
+.pixel-hero__title {
+  margin: 0;
+  font-family: var(--pixel-font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 14vw, 9rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--pixel-bubblegum);
+  text-shadow:
+    0 0 22px rgba(255, 61, 138, 0.55),
+    0 0 70px rgba(255, 61, 138, 0.22),
+    4px 4px 0 var(--pixel-void);
+  image-rendering: pixelated;
+}
+
+.pixel-hero__sub {
+  margin: 0.6rem 0 0;
+  font-family: var(--pixel-font-ko);
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  color: var(--pixel-cyan);
+  text-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
+}
+
+/* The mascot stage: sprite + INSERT COIN panel */
+.pixel-hero__stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.2rem, 4vw, 3rem);
+  margin: clamp(1.6rem, 4vh, 2.6rem) 0;
+}
+
+.pixel-hero__mascot {
+  filter: drop-shadow(0 0 18px rgba(255, 61, 138, 0.35));
+  flex: none;
+}
+
+.pixel-hero__insertcoin {
+  border: 2px solid var(--pixel-bubblegum);
+  background: var(--pixel-panel);
+  padding: 0.8rem 1.2rem;
+  box-shadow: 5px 5px 0 var(--pixel-void), 0 0 24px rgba(255, 61, 138, 0.18);
+}
+
+.pixel-hero__insertcoin-text {
+  display: block;
+  font-family: var(--pixel-font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: var(--pixel-bubblegum);
+}
+
+.pixel-hero__insertcoin-ko {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--pixel-haze);
+}
+
+.pixel-hero__lede {
+  max-width: 52ch;
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: var(--pixel-chrome);
+}
+
+.pixel-hero__lede-ko {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--pixel-haze);
+  font-size: 0.95em;
+}
+
+.pixel-hero__hint {
+  margin: 2rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--pixel-cyan);
+}
+
+.pixel-hero__hint [lang="ko"] {
+  color: var(--pixel-haze);
+}
+
+/* ==========================================================================
+   High-score marquee (marquee)
+   ========================================================================== */
+
+.pixel-marquee {
+  position: relative;
+  z-index: 1;
+  border-block: 1px solid var(--pixel-line);
+  background: var(--pixel-void);
+}
+
+.pixel-marquee__clip {
+  overflow: hidden;
+  padding: 0.6rem 0;
+}
+
+.pixel-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.pixel-marquee__run {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.pixel-marquee__score {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex: none;
+  padding: 0 2rem;
+  border-right: 1px solid var(--pixel-line);
+  white-space: nowrap;
+  font-size: 0.95rem;
+  color: var(--pixel-chrome);
+}
+
+.pixel-marquee__rank {
+  color: var(--pixel-acid);
+  letter-spacing: 0.12em;
+}
+
+.pixel-marquee__num {
+  color: var(--pixel-cyan);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.pixel-marquee__name {
+  color: var(--pixel-bubblegum);
+  letter-spacing: 0.08em;
+}
+
+.pixel-marquee__ko {
+  color: var(--pixel-haze);
+  font-size: 0.85em;
+}
+
+.pixel-marquee__credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+  padding: 0 2rem;
+  border-right: 1px solid var(--pixel-line);
+  white-space: nowrap;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  color: var(--pixel-violet);
+}
+
+.pixel-marquee__star {
+  color: var(--pixel-acid);
+}
+
+/* ==========================================================================
+   Sections & headers
+   ========================================================================== */
+
+.pixel-root main {
+  position: relative;
+  z-index: 1;
+}
+
+.pixel-grid {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(24px, 6vw, 72px);
+}
+
+.pixel-sechead {
+  margin-bottom: clamp(2rem, 5vh, 3.2rem);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--pixel-line);
+}
+
+.pixel-sechead__no {
+  margin: 0 0 0.5rem;
+  color: var(--pixel-violet);
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+}
+
+.pixel-sechead__title {
+  margin: 0;
+  font-family: var(--pixel-font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  color: var(--pixel-bubblegum);
+  text-shadow:
+    0 0 16px rgba(255, 61, 138, 0.4),
+    3px 3px 0 var(--pixel-void);
+}
+
+.pixel-sechead__ko {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--pixel-font-ko);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--pixel-haze);
+  text-shadow: none;
+}
+
+.pixel-sechead__meta {
+  margin: 0.8rem 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--pixel-haze);
+}
+
+/* ==========================================================================
+   Game grid — pixel-thumbnailed cards
+   ========================================================================== */
+
+.pixel-grid__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 620px) {
+  .pixel-grid__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 980px) {
+  .pixel-grid__list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.pixel-card {
+  background: var(--pixel-panel);
+  border: 2px solid var(--pixel-line);
+  box-shadow: 5px 5px 0 var(--pixel-void);
+  transition: transform 0.08s linear, box-shadow 0.08s linear;
+}
+
+/* Per-card accent frame — the cabinet color story */
+.pixel-card--bubblegum { border-color: var(--pixel-bubblegum); }
+.pixel-card--chrome    { border-color: var(--pixel-chrome); }
+.pixel-card--cyan      { border-color: var(--pixel-cyan); }
+.pixel-card--mint      { border-color: var(--pixel-mint); }
+
+.pixel-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--pixel-void);
+}
+
+.pixel-card:active {
+  transform: translateY(2px);
+  box-shadow: 2px 2px 0 var(--pixel-void);
+}
+
+.pixel-card__body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.1rem 1.1rem 1.2rem;
+}
+
+/* Thumbnail well — a dark inset, the CRT that plays the cartridge */
+.pixel-card__thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--pixel-line);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(0, 229, 255, 0.08), transparent 70%),
+    var(--pixel-void);
+  image-rendering: pixelated;
+}
+
+.pixel-card__head {
+  margin-bottom: 0.4rem;
+}
+
+.pixel-card__title {
+  margin: 0;
+  font-family: var(--pixel-font-display);
+  font-weight: 400;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: var(--pixel-chrome);
+  text-shadow: 2px 2px 0 var(--pixel-void);
+}
+
+.pixel-card__ko {
+  margin: 0.3rem 0 0;
+  font-family: var(--pixel-font-ko);
+  color: var(--pixel-haze);
+  font-size: 0.95rem;
+}
+
+.pixel-card__meta {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0 0 0.7rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--pixel-violet);
+}
+
+.pixel-card__dot {
+  opacity: 0.5;
+}
+
+.pixel-card__blurb {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  color: var(--pixel-chrome);
+  line-height: 1.5;
+}
+
+.pixel-card__blurbko {
+  margin: 0 0 auto;
+  color: var(--pixel-haze);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.pixel-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--pixel-line);
+}
+
+.pixel-card__status {
+  padding: 0.18rem 0.55rem;
+  border: 1px solid currentColor;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+}
+
+.pixel-card__status--outnow { color: var(--pixel-mint); }
+.pixel-card__status--soon   { color: var(--pixel-acid); }
+.pixel-card__status--beta   { color: var(--pixel-cyan); }
+
+.pixel-card__icons {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.pixel-card__icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ==========================================================================
+   Footer — end credits
+   ========================================================================== */
+
+.pixel-footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--pixel-line);
+  background: var(--pixel-void);
+}
+
+.pixel-footer__inner {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: clamp(64px, 11vh, 120px) clamp(24px, 6vw, 72px)
+    clamp(80px, 12vh, 140px);
+}
+
+.pixel-footer__sign {
+  margin: 0;
+  font-family: var(--pixel-font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 4.4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  color: var(--pixel-bubblegum);
+  text-shadow:
+    0 0 18px rgba(255, 61, 138, 0.5),
+    0 0 60px rgba(255, 61, 138, 0.2),
+    3px 3px 0 var(--pixel-ground);
+}
+
+.pixel-footer__signko {
+  margin: 0.6rem 0 2.4rem;
+  font-family: var(--pixel-font-ko);
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  color: var(--pixel-cyan);
+}
+
+.pixel-footer__data {
+  margin: 0 0 2.2rem;
+}
+
+.pixel-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--pixel-line);
+}
+
+.pixel-footer__data dt {
+  flex: 0 0 5.5rem;
+  color: var(--pixel-violet);
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+}
+
+.pixel-footer__data dd {
+  flex: 1 1 18rem;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--pixel-chrome);
+}
+
+.pixel-footer__data dd [lang="ko"] {
+  color: var(--pixel-haze);
+}
+
+.pixel-footer__copy {
+  margin: 0;
+  color: var(--pixel-haze);
+  font-size: 0.86rem;
+}
+
+.pixel-footer__copy [lang="ko"] {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   Pixel sprite primitive — the box-shadow renderer (ascii-render)
+   A 1px×1px anchor carries the whole sprite as a box-shadow list. The
+   wrapper sizes to the sprite's bounding box; the anchor is positioned at
+   the top-left so every shadow tuple (x, y, 0, color) lands in grid.
+   ========================================================================== */
+
+.pixel-sprite {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  image-rendering: pixelated;
+}
+
+.pixel-sprite__anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.pixel-char {
+  position: relative;
+  display: inline-block;
+}
+
+.pixel-char__blink {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.pixel-char__blink .pixel-sprite {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity only
+   ========================================================================== */
+
+@keyframes pixel-lamp {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Idle CRT breathe — cyan ghost drifts left, magenta ghost drifts right,
+   both at a low idle opacity. Scroll rush then layers the --pixel-shift /
+   --pixel-ghost envelope on top via the custom properties. */
+@keyframes pixel-ab-idle-l {
+  0%,
+  100% {
+    transform: translate3d(-1px, 0, 0);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translate3d(1px, 0, 0);
+    opacity: 0.34;
+  }
+}
+
+@keyframes pixel-ab-idle-r {
+  0%,
+  100% {
+    transform: translate3d(1px, 0, 0);
+    opacity: 0.18;
+  }
+  50% {
+    transform: translate3d(-1px, 0, 0);
+    opacity: 0.34;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — one beautiful still of the arcade.
+   (The JS side checks the same media query: the sprite cycle parks on
+   frame 0, the scroll-rush loop never starts, the CRT flicker never
+   starts, the marquee never moves. The static scanline grille stays —
+   it is a real layer, not motion.)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-root {
+    --pixel-shift: 0px;
+    --pixel-ghost: 0;
+  }
+
+  .pixel-ab::before,
+  .pixel-ab::after {
+    content: none;
+  }
+
+  .pixel-js .pixel-ab::before,
+  .pixel-js .pixel-ab::after,
+  .pixel-js .pixel-hero__lamp {
+    animation: none;
+  }
+
+  /* The grille holds at a steady, composed opacity — still a CRT, no flicker */
+  .pixel-crt__scan {
+    opacity: 0.18;
+  }
+}

@@ -1,0 +1,21 @@
+# ORBIT — breakdown
+
+## The hook
+The gallery's first `three-d-immersive` entry. A fictional studio drops one
+sneaker silhouette at a time; the signature sneaker sits on a turntable in a
+seamless studio — drag to orbit it 360°. Built **vanilla** (no three.js) per
+the zero-dependency policy: a canvas 2.5D sprite turntable.
+
+## Renderer choice
+Canvas 2.5D sprite-turntable — pre-rendered angles swapped on drag with
+smooth interpolation, plus specular hint and turntable shadow. Chosen over
+raw WebGL for reliability. Enough angles to feel continuous.
+
+## Techniques
+1. **pointer-parallax** — drag-orbit the product with inertia.
+2. **scroll-scrub-pinned** — pinned "the build" exploded-view section.
+3. **clip-path-reveal** — colorway/feature panels wipe in.
+
+## Accessibility
+Reduced motion: product static at hero angle, no orbit inertia. No-JS: static
+product hero. AA contrast. Korean-first bilingual.

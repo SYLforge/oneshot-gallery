@@ -1,0 +1,229 @@
+# MEMPHIS — breakdown
+
+## The hook
+
+Two designers in Seongsu-dong treat Memphis not as a 1981 reference but as
+a working method: geometry is a language, color is a noun, and every shape
+has to justify itself before it stays on the page. Their portfolio is the
+proof — a hero that explodes into squiggles and blobs, a manifesto ticker,
+and a project grid that re-sorts itself when you pick a filter, with every
+shape sliding to its new place instead of popping. The studio's bet is the
+hard one: maximalism reads as craft, not clutter, only when the discipline
+is visible. Five colors. 3px lines. Three techniques, each the headline of
+a section. A squiggle with no job gets cut.
+
+## Art direction
+
+The palette is a manifesto in seven tokens: warm off-white paper, ink, and
+five Memphis drums — teal, coral, marigold, cobalt, plum. The discipline
+that keeps it honest is a contrast map, not a vibe. Ink holds 6.4–15.6:1
+on every warm surface, so the saturated colors are safe *as surfaces under
+ink type*, which is exactly how Memphis uses color — fills, not type. Teal
+failed as text on paper (2.4:1) and was reassigned: it is the signature
+fill, the focus ring, the marquee row. Cobalt surfaces carry white (5.68:1)
+and never ink body (3.07:1); cobalt *as text* on paper is the one place it
+reads as type (5.1:1), which is why every section headline is cobalt.
+Project tiles tint their cream background with 12–22% of the project's
+tone via `color-mix`, so the tile reads as the project's color while the
+text stays well clear of AA. Color is doing worldbuilding.
+
+Two geometric faces, one system: Space Grotesk for every Latin glyph
+(display, body, labels across its weight range) and Black Han Sans for
+every Hangul. The display stack ends in Black Han Sans, so a Korean glyph
+inside a Latin headline falls through into it with no markup; `:lang(ko)`
+pins it and zeroes tracking. One heavy geometric Korean face is the tell
+that the studio's Korean voice is as loud and blocky as its Latin one —
+cut paper, not system fallback.
+
+## Technique 1 — clip-path reveal: the shape explosion
+
+The hero's shapes do not fade in. They are *cut* in — a geometric clip-path
+opens to reveal each blob, squiggle, and zigzag, and the direction of the
+cut is part of the choreography:
+
+```css
+/* styles.css — the pre-reveal state is JS-gated. Without .memphis-js the
+   rule never applies, so the no-JS page is a finished poster. */
+.memphis-js .is-clipped {
+  transition: clip-path 620ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mp-shape--blob1 { --mp-clip-from: inset(0 0 100% 0); } /* wipe from top   */
+.mp-shape--sq1   { --mp-clip-from: inset(0 0 0 100%  } /* wipe from right */
+.mp-shape--dot1  { --mp-clip-from: circle(0% at 50% 50%); } /* grow        */
+```
+
+Each target carries its own `--mp-clip-from` (the starting clip string) and
+a `--mp-delay`; `useClipReveal` reads the from-clip, sets it inline, and on
+scroll-in (IntersectionObserver, threshold 0.2) toggles the class so CSS
+transitions `clip-path` to its resting value. The variety of from-clips is
+the point — a synchronized wipe from one direction reads as a slide deck;
+wipes from four directions plus a circle-grow reads as a Memphis
+composition assembling itself.
+
+Squiggles get a second reveal: `data-mp-squiggle` paths stroke-draw
+themselves. The hook measures each path's `getTotalLength()`, seeds
+`stroke-dasharray` / `stroke-dashoffset` to that length, then transitions
+the offset to zero over 900ms — the squiggle draws itself in time with the
+clip wipes around it. The structural decision that matters: the pre-reveal
+state lives entirely behind `.memphis-js`. With JavaScript disabled, or
+under reduced motion, every shape is at its resting clip (full), every
+squiggle is fully drawn, and the page is a finished poster — nothing is
+ever hidden behind a script that didn't run.
+
+## Technique 2 — pointer parallax: the depth field
+
+A fixed field of Memphis shapes sits behind the whole stage in three depth
+layers. A pointer moving over the page sets `--mp-x` / `--mp-y` (each
+−1…1, the normalized position within the field) on the field root, and
+each layer multiplies that into a capped, depth-scaled translation:
+
+```css
+/* nearer shapes follow the pointer more; far ones barely move */
+.mp-field__layer--far  { transform: translate3d(calc(var(--mp-x, 0) * 8px),  calc(var(--mp-y, 0) * 6px),  0); }
+.mp-field__layer--mid  { transform: translate3d(calc(var(--mp-x, 0) * 16px), calc(var(--mp-y, 0) * 12px), 0); }
+.mp-field__layer--near { transform: translate3d(calc(var(--mp-x, 0) * 26px), calc(var(--mp-y, 0) * 20px), 0); }
+```
+
+The lerp toward the target is gentle (`0.06` per frame, 60fps-normalized),
+so the shapes feel like they are catching up to the pointer, not tracking
+it 1:1 — a parallax, not a follow. The plumbing is the careful part:
+
+```ts
+// usePointerParallax — fine pointers only; touch gets the idle bob instead
+if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+const k = DRIFT_LERP * (dt / 16.7);
+x += (tx - x) * k;
+el.style.setProperty("--mp-x", x.toFixed(4));
+```
+
+Two decisions keep it cheap and alive. First, the depth transform lives on
+the *layer wrapper* and the idle bob lives on the *shape* — separate
+elements, so the two translates compose instead of clobbering each other.
+Second, every shape bobs on a mutually-prime idle period (4.6–9.8s), so on
+a touch device — where the pointer hook no-ops — the field is still
+breathing. The rAF loop pauses when the field is offscreen
+(IntersectionObserver) and when the tab is hidden; reduced motion pins
+both variables at 0 and the field sits still.
+
+## Technique 3 — FLIP layout: the re-sorting grid
+
+The signature section is a project grid that reorganizes when you filter.
+Pick *Print* and the print projects slide together; pick *All* and they
+fan back out. The motion is FLIP — First, Last, Invert, Play — and it is
+hand-rolled:
+
+```ts
+// ProjectFlipGrid — useLayoutEffect runs around React's commit, so First
+// (the OLD rects) is captured before the new layout paints.
+const first = new Map<string, DOMRect>();
+for (const li of tiles) first.set(li.dataset.flipKey, li.getBoundingClientRect());
+// …React has already swapped the DOM by now (Last = current layout)…
+for (const li of grid.querySelectorAll(".mp-tile")) {
+  const old = first.get(li.dataset.flipKey);
+  if (!old) continue;                 // a brand-new tile → CSS fade-in
+  const now = li.getBoundingClientRect();
+  const dx = old.left - now.left;     // Invert: the delta back to its old spot
+  const dy = old.top - now.top;
+  el.style.transition = "none";
+  el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+}
+void grid.getBoundingClientRect();     // force reflow so Invert commits
+for (const { el } of movers) {         // Play: transition to identity
+  el.style.transition = `transform 480ms cubic-bezier(0.22,1,0.36,1)`;
+  el.style.transform = "";
+}
+```
+
+The Invert step is the trick. After React moves a tile to its new DOM
+position, we measure how far that was and immediately apply the *opposite*
+as a transform — so visually the tile hasn't moved yet. Then we transition
+that transform to zero, and the browser animates the tile gliding from its
+old spot to its new one. No layout jump is ever visible; the grid appears
+to reorganize itself fluidly.
+
+Two structural notes. The grid stays a real `<ul>` / `<li>`; filtering only
+changes which projects render and in what order, so the list semantics
+survive every re-sort. Incoming tiles (ones with no First rect) don't FLIP
+— they fade in via a CSS keyframe staggered 50ms by their index, so a new
+filter feels like the relevant work arriving. Under reduced motion the play
+step is skipped entirely: the hook clears any leftover transforms and the
+grid swaps instantly. The same honest trade-off as every FLIP-in-React
+implementation: a tile that leaves and comes back unmounts and re-enters
+fresh, fading in rather than remembering its old seat.
+
+## Motion math
+
+- **Clip wipe 620ms, cubic-bezier(0.16, 1, 0.3, 1).** A strong decelerate
+  — the shape snaps most of its reveal in the first ~180ms then settles.
+  Staggered 70ms per target via `--mp-delay`, so a six-shape hero assembles
+  over ~1s without ever looking synchronized into a slideshow.
+- **Parallax lerp `0.06` per normalized frame.** Half-life of the pointer
+  error is ~11 frames (~185ms) — the shapes trail the pointer by about a
+  beat, which is what makes them read as depth instead of a cursor mirror.
+- **FLIP play 480ms cubic-bezier(0.22, 1, 0.36, 1).** A confident
+  overshoot-free glide; any faster and a six-tile re-sort reads as a
+  jump-cut, any slower and it feels sticky.
+- **Marquee 0.05 px/ms (~50 px/s).** Deliberately calm — slow enough to
+  read each slogan, fast enough to feel alive. Two rows run opposite
+  directions; the band pauses offscreen.
+- **Press 0ms in / 140ms out, cubic-bezier(0.22, 1, 0.36, 1).** A shape
+  pressed flat, then let go. No spring; the overshoot curve on release is
+  the personality, the instant press is the discipline.
+
+## Performance notes
+
+- Three rAF loops total (parallax, marquee, FLIP is one-shot per filter),
+  all self-terminating: parallax and marquee pause via IntersectionObserver
+  offscreen and on hidden tabs; FLIP runs once per filter change and cleans
+  up after the settle. Idle page = zero frames.
+- Everything animated is `transform`, `opacity`, `filter`, or `clip-path` —
+  no layout or paint properties move. The grain, tints, and terrazzo are
+  static filters/gradients rasterized once.
+- FLIP measures rects in a `useLayoutEffect` and forces one reflow before
+  play — a single synchronous layout pass per filter, not a per-frame cost.
+- `dt` is clamped to 48ms in every loop, so a background tab resuming never
+  teleports a shape or a ticker.
+- No canvas, no images, no dependencies; the heaviest assets are two Google
+  font families. Budget 0.
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over `matchMedia`) pins the parallax field still, statics every shape's
+  idle bob, opens every clip to full, draws every squiggle, skips the FLIP
+  play (grid swaps instantly), and a CSS block freezes the marquee and the
+  press transitions. The page loses nothing but momentum.
+- **No-JS:** the pre-reveal clip state and squiggle dashoffset are gated
+  behind `.memphis-js`; without it every shape is at rest and the page is a
+  finished poster. The marquee is a bordered strip of readable slogans.
+- **Keyboard:** filter chips are real `<button>` elements with `aria-pressed`
+  reflecting the active filter; tiles are focusable `<li>` with descriptive
+  `aria-label` (Korean title, tag, English title, year). Focus is a 3px
+  teal ring — marigold on the ink footer so it stays visible.
+- **Parallax on touch:** the hook is hover + fine-pointer only; on touch the
+  field's idle bob carries the life. Nothing essential is hidden behind a
+  pointer.
+- **FLIP semantics:** the grid is a real list at all times; filtering never
+  breaks the `<ul>` / `<li>` structure, so the accessibility tree and tab
+  order survive every re-sort.
+- **Contrast:** ink on paper 15.6:1, on marigold 11.3:1, on teal 6.59:1, on
+  coral 6.40:1; cobalt as text on paper 5.1:1; white on cobalt 5.68:1;
+  plum on paper 7.0:1 — every functional pairing clears AA with the grain's
+  worst case included. Teal as text (2.4:1) and ink-on-cobalt (3.07:1)
+  exist only as surfaces, never as functional type.
+
+## Remix ideas
+
+1. **Terrazzo tile shop.** Keep the FLIP grid, swap projects for handmade
+   cement tile patterns (each tile a generative terrazzo SVG), filters
+   become color families, and the spotted-disc mark becomes the studio's
+   custom chip configurator. The squiggle reveals become the tile edges
+   cutting in.
+2. **Memphis record label.** The grid becomes a discography (filter by
+   format: 7" / 12" / cassette), each tile's motif becomes the sleeve's
+   signature shape, and the marquee runs tour dates in both directions.
+   The cobalt studio panel becomes the liner-notes essay.
+3. **Kids' museum exhibit guide.** Same shape system, warmer voice: the
+   FLIP grid sorts exhibits by zone, the parallax field becomes the
+   gallery's floating wayfinding shapes, and the squiggle reveal becomes
+   each exhibit card opening like a pop-up book page.

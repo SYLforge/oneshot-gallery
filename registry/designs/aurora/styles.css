@@ -1,0 +1,1051 @@
+/* ==========================================================================
+   AURORA — a SaaS launch site that breathes
+   glass-futurism · deep space, morphing mesh, floating glass cards
+   Scoped by convention to .aurora-root; classes prefixed aurora-.
+   Every color is a token; the mesh is the signature, never pointer-reactive.
+   ========================================================================== */
+
+.aurora-root {
+  /* -- palette ---------------------------------------------------------- */
+  --aurora-space: #0a0e1a;        /* deep space — the ground the mesh drifts over */
+  --aurora-space-deep: #06080f;   /* derived: where the night goes behind text */
+  --aurora-violet: #7c3aed;       /* primary accent — brand, focus, CTA, mesh blob (12.3:1 on glass) */
+  --aurora-fuchsia: #d946ef;      /* mesh blob, second headline line, progress — accents only (6.0:1) */
+  --aurora-cyan: #06b6d4;         /* mesh blob, hairline tint, kicker — the cool register (10.4:1) */
+  --aurora-emerald: #10b981;      /* mesh blob, success / live marker (12.6:1) */
+  --aurora-frost: #f1f3fb;        /* primary text — the reading voice (15.4:1 on space) */
+  --aurora-frost-dim: #aab2c9;    /* secondary text — captions, glosses, labels (8.0:1 on glass) */
+  --aurora-glass-fill: rgba(16, 22, 39, 0.46); /* glass card body over the mesh */
+  --aurora-hairline: #2f333e;     /* decorative ONLY (1.8:1): card borders, dividers, tracks */
+  --aurora-hairline-soft: rgba(241, 243, 251, 0.14); /* frost @ 14% — faint borders */
+
+  /* -- type -------------------------------------------------------------- */
+  /* Latin stacks put Noto Sans KR last so Hangul routes into it with no
+     markup; Korean is never a system-sans fallback. */
+  --aurora-font-display: var(--font-display), var(--font-kr), "Space Grotesk", sans-serif;
+  --aurora-font-body: var(--font-body), var(--font-kr), "Inter", system-ui, sans-serif;
+  --aurora-font-kr: var(--font-kr), var(--font-body), "Noto Sans KR", sans-serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --aurora-ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --aurora-ease-morph: cubic-bezier(0.45, 0, 0.55, 1);
+  --aurora-reveal-ms: 650ms;
+
+  /* -- pin scrub (JS writes 0→1; parked at 1 under reduced motion / no-JS) */
+  --aurora-pin: 1;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--aurora-space);
+  color: var(--aurora-frost);
+  font-family: var(--aurora-font-body);
+  font-size: clamp(15px, 0.35vw + 13.5px, 17px);
+  line-height: 1.65;
+  /* The 3D tilt needs a perspective on an ancestor. */
+  perspective: 900px;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: keep-all line breaking, tightened tracking, and the
+   Korean face first. Never letter-spaced apart, even in tracked kickers. */
+.aurora-root :lang(ko) {
+  word-break: keep-all;
+  letter-spacing: -0.01em;
+}
+
+/* Aurora selection, scoped to the entry root */
+.aurora-root ::selection {
+  background: var(--aurora-violet);
+  color: var(--aurora-frost);
+  text-shadow: none;
+}
+
+/* Keyboard focus: a violet ring with a soft outer veil */
+.aurora-root :focus-visible {
+  outline: 2px solid var(--aurora-violet);
+  outline-offset: 3px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.22);
+}
+
+.aurora-link {
+  color: var(--aurora-frost);
+  text-decoration: underline;
+  text-decoration-color: rgba(124, 58, 237, 0.6);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 200ms ease;
+}
+
+.aurora-link:hover {
+  text-decoration-color: var(--aurora-violet);
+}
+
+/* ==========================================================================
+   The living mesh — five blobs on mutually-prime cycles, never pointer-reactive
+   This is the signature. It breathes on its own.
+   ========================================================================== */
+
+.aurora-mesh {
+  position: absolute;
+  inset: -12%; /* oversized so the drift never shows an edge */
+  z-index: 0;
+  overflow: hidden;
+  background: var(--aurora-space);
+  animation-play-state: running;
+  will-change: transform;
+}
+
+/* Each blob is its own layer, drifting on its own prime cycle so the field
+   never visibly loops. translate + scale only (transform) — no layout cost. */
+.aurora-mesh__layer {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px) saturate(150%);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.aurora-mesh__layer--violet {
+  width: 60vw;
+  height: 60vw;
+  max-width: 760px;
+  max-height: 760px;
+  top: -6%;
+  left: 8%;
+  background: radial-gradient(circle at 50% 50%, var(--aurora-violet), transparent 64%);
+  opacity: 0.78;
+  animation: aurora-drift-a 24s var(--aurora-ease-morph) infinite alternate;
+}
+
+.aurora-mesh__layer--fuchsia {
+  width: 52vw;
+  height: 52vw;
+  max-width: 680px;
+  max-height: 680px;
+  top: 12%;
+  right: 4%;
+  background: radial-gradient(circle at 50% 50%, var(--aurora-fuchsia), transparent 66%);
+  opacity: 0.62;
+  animation: aurora-drift-b 31s var(--aurora-ease-morph) infinite alternate;
+}
+
+.aurora-mesh__layer--cyan {
+  width: 46vw;
+  height: 46vw;
+  max-width: 600px;
+  max-height: 600px;
+  bottom: 2%;
+  left: 22%;
+  background: radial-gradient(circle at 50% 50%, var(--aurora-cyan), transparent 64%);
+  opacity: 0.58;
+  animation: aurora-drift-c 19s var(--aurora-ease-morph) infinite alternate;
+}
+
+.aurora-mesh__layer--emerald {
+  width: 40vw;
+  height: 40vw;
+  max-width: 520px;
+  max-height: 520px;
+  bottom: -4%;
+  right: 18%;
+  background: radial-gradient(circle at 50% 50%, var(--aurora-emerald), transparent 66%);
+  opacity: 0.5;
+  animation: aurora-drift-d 17s var(--aurora-ease-morph) infinite alternate;
+}
+
+/* A soft violet→fuchsia blend that ties the field together low and center. */
+.aurora-mesh__layer--blend {
+  width: 70vw;
+  height: 50vw;
+  max-width: 900px;
+  max-height: 640px;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(124, 58, 237, 0.5),
+    rgba(217, 70, 239, 0.18) 45%,
+    transparent 72%);
+  opacity: 0.55;
+  animation: aurora-drift-e 29s var(--aurora-ease-morph) infinite alternate;
+}
+
+/* A single slow conic sweep — the "aurora curtain" ghost, once per cycle. */
+.aurora-mesh__sweep {
+  position: absolute;
+  inset: -20%;
+  background: conic-gradient(
+    from 200deg at 50% 40%,
+    transparent 42%,
+    rgba(124, 58, 237, 0.12) 48%,
+    rgba(6, 182, 212, 0.1) 54%,
+    transparent 62%
+  );
+  filter: blur(50px);
+  opacity: 0.6;
+  animation: aurora-sweep 43s linear infinite;
+  will-change: transform;
+}
+
+/* A fine fractal grain to kill the banding mesh gradients show on dark
+   panels. SVG data-uri, no payload. */
+.aurora-mesh__grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   01 · Hero — the masthead over the sky
+   ========================================================================== */
+
+.aurora-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Guarantees AA for the masthead over the brightest possible blob. */
+.aurora-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(6, 8, 15, 0.55), transparent 24%),
+    linear-gradient(
+      0deg,
+      rgba(6, 8, 15, 0.92) 0%,
+      rgba(6, 8, 15, 0.4) 36%,
+      transparent 64%
+    );
+}
+
+.aurora-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 64px);
+}
+
+.aurora-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0 0 clamp(1rem, 2.5vh, 1.8rem);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--aurora-cyan);
+}
+
+.aurora-kicker__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--aurora-emerald);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
+}
+
+.aurora-kicker__ko {
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--aurora-frost-dim);
+}
+
+.aurora-title {
+  margin: 0;
+  font-family: var(--aurora-font-display);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+  color: var(--aurora-frost);
+  text-shadow: 0 2px 34px rgba(6, 8, 15, 0.6);
+}
+
+.aurora-title__word {
+  display: inline-block;
+  font-size: clamp(3.4rem, 13vw, 10rem);
+  /* the word is one line; the sub line sits below */
+}
+
+.aurora-title__sub {
+  display: block;
+  margin-top: 0.4em;
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3.4vw, 2.4rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  max-width: 18ch;
+}
+
+.aurora-title__ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  font-size: 0.78em;
+  line-height: 1.3;
+  color: var(--aurora-frost-dim);
+}
+
+/* -- char-split headline (char-split-reveal) ------------------------------ */
+/* Each glyph sits in an inline-block behind a per-line overflow-clip mask.
+   Pre-state (translated down) is JS-gated; no JS = headline simply visible. */
+.aurora-split {
+  display: inline-block;
+  position: relative;
+}
+
+.aurora-split__line {
+  display: inline-block;
+  overflow: hidden;
+  /* vertical padding so descenders/ascenders aren't clipped when translated */
+  padding-block: 0.14em;
+  margin-block: -0.14em;
+  line-height: 1;
+}
+
+.aurora-split__glyph {
+  display: inline-block;
+}
+
+/* The pre-state lives behind `.aurora-js` (the root class added on mount),
+ * so SSR, no-JS, and reduced-motion all render the wordmark visible. Only
+ * the JS-on client ever sees the glyphs translated down, and only until the
+ * rAF-added `.is-visible` reveals them. */
+.aurora-js .aurora-split .aurora-split__glyph {
+  transform: translateY(110%);
+  transition: transform 620ms var(--aurora-ease-settle);
+}
+
+.aurora-js .aurora-split.is-visible .aurora-split__glyph {
+  transform: translateY(0);
+}
+
+.aurora-lede {
+  margin: clamp(1.4rem, 3.5vh, 2.4rem) 0 0;
+  max-width: 48ch;
+  font-size: clamp(1.02rem, 1.5vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--aurora-frost);
+}
+
+.aurora-lede__ko {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--aurora-font-kr);
+  color: var(--aurora-frost-dim);
+  line-height: 1.7;
+}
+
+.aurora-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin: clamp(1.8rem, 4vh, 2.6rem) 0 0;
+}
+
+.aurora-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.85em 1.4em;
+  border-radius: 12px;
+  font-family: var(--aurora-font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 220ms var(--aurora-ease-settle),
+              box-shadow 220ms var(--aurora-ease-settle),
+              border-color 220ms ease;
+  transform-style: preserve-3d;
+}
+
+.aurora-btn__ko {
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  font-size: 0.88em;
+  opacity: 0.78;
+}
+
+.aurora-btn--primary {
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--aurora-violet), #9333ea);
+  color: var(--aurora-frost);
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.36);
+}
+
+.aurora-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(124, 58, 237, 0.46);
+}
+
+.aurora-btn--ghost {
+  border: 1px solid var(--aurora-hairline-soft);
+  background: rgba(16, 22, 39, 0.4);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--aurora-frost);
+}
+
+.aurora-btn--ghost:hover {
+  transform: translateY(-2px);
+  border-color: var(--aurora-cyan);
+}
+
+.aurora-btn--lg {
+  padding: 1em 1.8em;
+  font-size: 1.05rem;
+}
+
+.aurora-hero__hint {
+  margin: clamp(1.8rem, 4vh, 2.8rem) 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--aurora-frost-dim);
+}
+
+/* ==========================================================================
+   Shared section heads — 0N · title · 한국어 · meta
+   ========================================================================== */
+
+.aurora-section__no {
+  margin: 0 0 0.5rem;
+  font-family: var(--aurora-font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: var(--aurora-violet);
+}
+
+.aurora-section__title {
+  margin: 0;
+  font-family: var(--aurora-font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 4vw, 2.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--aurora-frost);
+}
+
+.aurora-section__ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  font-size: 0.62em;
+  color: var(--aurora-frost-dim);
+  margin-top: 0.25em;
+}
+
+.aurora-section__meta {
+  margin: 0.8rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--aurora-cyan);
+}
+
+/* ==========================================================================
+   02 · FeatureGlass — the pinned stack (scroll-scrub-pinned)
+   A tall region holds a sticky stage; --aurora-pin 0→1 drives the cards.
+   ========================================================================== */
+
+.aurora-pin {
+  position: relative;
+  /* Tall track so there is room to scrub. 4 cards × ~1 viewport of scrub. */
+  height: 420vh;
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+
+.aurora-pin__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-block: clamp(40px, 7vh, 80px);
+}
+
+.aurora-pin__head {
+  text-align: center;
+  margin-bottom: clamp(1.4rem, 3vh, 2.2rem);
+}
+
+.aurora-pin__head .aurora-section__title {
+  font-size: clamp(1.5rem, 3.2vw, 2.2rem);
+}
+
+/* The scrubbed progress meter — fills with scroll. */
+.aurora-pin__progress {
+  position: relative;
+  width: min(280px, 60%);
+  height: 2px;
+  margin: 0 auto clamp(1.6rem, 3.5vh, 2.6rem);
+  background: var(--aurora-hairline);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.aurora-pin__progress-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--aurora-pin));
+  background: linear-gradient(90deg, var(--aurora-violet), var(--aurora-fuchsia));
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+}
+
+.aurora-pin__stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  /* Cards absolutely stack at the same anchor; transform distributes them. */
+  height: clamp(320px, 52vh, 460px);
+}
+
+/* -- the glass card primitive ------------------------------------------- */
+.aurora-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  /* pointer-tilt vars (JS-written; flat by default) */
+  --aurora-rx: 0deg;
+  --aurora-ry: 0deg;
+  --aurora-lift: 0px;
+  /* Each card's piece of the timeline: card i enters in the slice
+     [i/N .. (i+1)/N] of --aurora-pin. */
+  --aurora-card-i: 0;
+  /* stash the count locally for the calc */
+  --aurora-card-n: 4;
+  transform:
+    translateY(calc(var(--aurora-card-offset, 0px)))
+    scale(var(--aurora-card-scale, 1))
+    translateZ(var(--aurora-lift))
+    rotateX(var(--aurora-rx))
+    rotateY(var(--aurora-ry));
+  transform-style: preserve-3d;
+  border: 1px solid var(--aurora-hairline-soft);
+  border-radius: 22px;
+  background:
+    linear-gradient(150deg, rgba(241, 243, 251, 0.07), rgba(241, 243, 251, 0) 42%),
+    var(--aurora-glass-fill);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(241, 243, 251, 0.18),
+    0 24px 60px rgba(4, 6, 16, 0.55);
+  opacity: var(--aurora-card-opacity, 1);
+  overflow: hidden;
+  transition: transform 120ms linear; /* tilt is rAF-driven; this smooths edges */
+  will-change: transform, opacity;
+}
+
+/* Accent top hairline per card — borrows its accent token. */
+.aurora-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 6%,
+    var(--aurora-card-accent, var(--aurora-violet)),
+    transparent 94%);
+  opacity: 0.7;
+}
+
+.aurora-card--violet { --aurora-card-accent: var(--aurora-violet); }
+.aurora-card--cyan { --aurora-card-accent: var(--aurora-cyan); }
+.aurora-card--emerald { --aurora-card-accent: var(--aurora-emerald); }
+.aurora-card--fuchsia { --aurora-card-accent: var(--aurora-fuchsia); }
+
+/* A soft moving sheen across each card — the glass catching the mesh. */
+.aurora-card__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg,
+    transparent 30%,
+    rgba(241, 243, 251, 0.07) 48%,
+    transparent 66%);
+  opacity: 0.7;
+}
+
+.aurora-card__body {
+  position: relative;
+  width: 100%;
+  padding: clamp(22px, 4vw, 44px) clamp(24px, 5vw, 56px);
+  display: grid;
+  gap: 0.9rem;
+}
+
+.aurora-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+}
+
+.aurora-card__no {
+  font-family: var(--aurora-font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--aurora-card-accent);
+  letter-spacing: 0.04em;
+}
+
+.aurora-card__kicker {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--aurora-frost-dim);
+}
+
+.aurora-card__kicker-ko {
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: none;
+}
+
+.aurora-card__title {
+  margin: 0;
+  font-family: var(--aurora-font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: var(--aurora-frost);
+  max-width: 26ch;
+}
+
+.aurora-card__title-ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  font-size: 0.7em;
+  line-height: 1.35;
+  color: var(--aurora-frost-dim);
+  margin-top: 0.3em;
+}
+
+.aurora-card__text {
+  margin: 0;
+  max-width: 62ch;
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  line-height: 1.6;
+  color: var(--aurora-frost);
+}
+
+.aurora-card__text-ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  margin-top: 0.5rem;
+  color: var(--aurora-frost-dim);
+  line-height: 1.7;
+}
+
+.aurora-pin__hint {
+  margin: clamp(1.2rem, 3vh, 2rem) 0 0;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--aurora-frost-dim);
+}
+
+/* ==========================================================================
+   02b · The scrub choreography
+   --aurora-pin is 0..1. Card i's local progress p_i:
+     p_i = clamp((pin - i/n) / (1/n), 0, 1)
+   Before its slice: hidden below + transparent. In its slice: rises to 0,
+   scale 1, opaque. After its slice (overtopped by the next card): recedes —
+   slight upward drift, scale down, dimmed — the "assembling/disassembling"
+   read. The LAST card never recedes.
+   These are pure functions of the custom property, so fully scrubbable.
+   ========================================================================== */
+
+/* For each card, derive p_i. calc() with custom props handles it inline. */
+.aurora-card {
+  /* p_i in [0,1]: how far through THIS card's slice the scroll is */
+  --aurora-pi: clamp(
+    0,
+    calc(
+      (var(--aurora-pin) - var(--aurora-card-i) / var(--aurora-card-n))
+      * var(--aurora-card-n)
+    ),
+    1
+  );
+  /* entered = 1 once p_i > 0, i.e. pin past the card's start; 0 before. */
+  --aurora-entered: clamp(0, calc(var(--aurora-pi) * 9999), 1);
+  /* overtaken = 1 once the NEXT card has started entering; 0 until then.
+     Last card (i = n-1) is never overtaken. */
+  --aurora-overtaken: clamp(
+    0,
+    calc(
+      (var(--aurora-pi) - (1 - 1 / var(--aurora-card-n) + 0.001))
+      * 9999
+    ),
+    1
+  );
+  /* On the last card, force overtaken to 0. (i == n-1 check via clamp.) */
+  --aurora-is-last: clamp(0, calc((var(--aurora-card-i) - (var(--aurora-card-n) - 1.5)) * 9999), 1);
+
+  /* The visible state: rise from below + fade in on enter; */
+  --aurora-card-offset: calc((1 - var(--aurora-entered)) * 90px + var(--aurora-overtaken-final) * -28px);
+  --aurora-card-scale: calc(1 - var(--aurora-overtaken-final) * 0.06);
+  --aurora-card-opacity: calc(var(--aurora-entered) * (1 - var(--aurora-overtaken-final) * 0.5));
+}
+
+/* overtaken-final: 0 for the last card, otherwise the raw overtaken value.
+   (We multiply overtaken by (1 - is-last) — but calc can't branch, so we
+   subtract: overtaken * (1 - is_last).) */
+.aurora-card {
+  --aurora-overtaken-final: calc(var(--aurora-overtaken) * (1 - var(--aurora-is-last)));
+}
+
+/* ==========================================================================
+   03 · CTA / manifesto
+   ========================================================================== */
+
+.aurora-cta {
+  position: relative;
+  padding: clamp(90px, 14vh, 170px) clamp(20px, 5vw, 64px);
+}
+
+.aurora-cta__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.aurora-cta__title {
+  margin: 0.4rem 0 0;
+  font-family: var(--aurora-font-display);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 3.8vw, 2.8rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  max-width: 20ch;
+}
+
+.aurora-cta__title-ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  font-size: 0.62em;
+  line-height: 1.4;
+  color: var(--aurora-frost-dim);
+  margin-top: 0.4em;
+}
+
+.aurora-cta__body {
+  margin: clamp(1.4rem, 3vh, 2.2rem) 0 0;
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+  line-height: 1.65;
+}
+
+.aurora-cta__body-ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  margin-top: 0.6rem;
+  color: var(--aurora-frost-dim);
+  line-height: 1.75;
+}
+
+.aurora-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.4rem;
+  margin: clamp(2rem, 4.5vh, 3rem) 0 0;
+}
+
+.aurora-cta__note {
+  font-size: 0.85rem;
+  color: var(--aurora-frost-dim);
+  max-width: 36ch;
+}
+
+.aurora-cta__log {
+  margin: clamp(2.6rem, 6vh, 4rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--aurora-hairline);
+  border: 1px solid var(--aurora-hairline);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.aurora-cta__log div {
+  background: rgba(10, 14, 26, 0.72);
+  padding: 1.1rem 1.2rem;
+}
+
+.aurora-cta__log dt {
+  margin: 0 0 0.4rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--aurora-frost-dim);
+}
+
+.aurora-cta__log dd {
+  margin: 0;
+  font-family: var(--aurora-font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--aurora-frost);
+}
+
+/* ==========================================================================
+   04 · Footer — end of launch
+   ========================================================================== */
+
+.aurora-footer {
+  max-width: 1020px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 64px)
+    clamp(90px, 13vh, 150px);
+  border-top: 1px solid var(--aurora-hairline);
+}
+
+.aurora-footer__signoff {
+  margin: 0 0 2.2rem;
+  font-family: var(--aurora-font-display);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.aurora-footer__ko {
+  display: block;
+  font-family: var(--aurora-font-kr);
+  font-weight: 500;
+  font-size: 0.72em;
+  color: var(--aurora-frost-dim);
+  margin-top: 0.4em;
+}
+
+.aurora-footer__data {
+  margin: 0 0 2.4rem;
+}
+
+.aurora-footer__data div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1.2rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dotted var(--aurora-hairline);
+}
+
+.aurora-footer__data dt {
+  flex: 0 0 7rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--aurora-frost-dim);
+  line-height: 2.1;
+}
+
+.aurora-footer__data dd {
+  flex: 1 1 16rem;
+  margin: 0;
+}
+
+.aurora-footer__live {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--aurora-emerald);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
+  vertical-align: middle;
+  margin-right: 0.4em;
+}
+
+.aurora-footer__nav {
+  margin: 0 0 2.4rem;
+  font-size: 0.9rem;
+}
+
+.aurora-footer__copy {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--aurora-frost-dim);
+}
+
+.aurora-footer__copy .aurora-footer__ko {
+  display: inline;
+  margin-left: 0.4em;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.aurora-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--aurora-reveal-ms) var(--aurora-ease-settle),
+    transform var(--aurora-reveal-ms) var(--aurora-ease-settle);
+  will-change: opacity, transform;
+}
+
+.aurora-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform only; the mesh breathes on mutually-prime cycles
+   ========================================================================== */
+
+@keyframes aurora-drift-a {
+  0%   { transform: translate3d(-4%, 2%, 0) scale(1.02) rotate(-2deg); }
+  100% { transform: translate3d(6%, -3%, 0) scale(1.14) rotate(3deg); }
+}
+
+@keyframes aurora-drift-b {
+  0%   { transform: translate3d(3%, -2%, 0) scale(1.08) rotate(2deg); }
+  100% { transform: translate3d(-5%, 4%, 0) scale(0.96) rotate(-3deg); }
+}
+
+@keyframes aurora-drift-c {
+  0%   { transform: translate3d(-2%, 4%, 0) scale(1.05); }
+  100% { transform: translate3d(4%, -3%, 0) scale(1.16); }
+}
+
+@keyframes aurora-drift-d {
+  0%   { transform: translate3d(4%, -2%, 0) scale(1.1) rotate(1.5deg); }
+  100% { transform: translate3d(-3%, 3%, 0) scale(1) rotate(-2deg); }
+}
+
+@keyframes aurora-drift-e {
+  0%   { transform: translateX(-50%) translate3d(-3%, 0, 0) scale(1.05); }
+  100% { transform: translateX(-50%) translate3d(3%, 2%, 0) scale(1.12); }
+}
+
+@keyframes aurora-sweep {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Reduced motion — one composed still, everything readable
+   The mesh keyframes pause on a mid-pose; the pin parks at 1 (fully
+   assembled); reveals and char-split are simply visible.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-mesh,
+  .aurora-mesh__layer,
+  .aurora-mesh__sweep {
+    animation: none !important;
+    /* Hold a composed mid-pose so the field still reads as a living sky,
+       frozen at one beautiful frame. */
+    transform: none;
+  }
+  .aurora-mesh__layer--blend {
+    transform: translateX(-50%);
+  }
+
+  .aurora-card {
+    transition: none;
+  }
+
+  .aurora-btn {
+    transition: none;
+  }
+
+  .aurora-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* The pinned stack lays out statically and fully readable. We turn the
+     absolute stack into a normal vertical list so all four cards are
+     visible without scrubbing. */
+  .aurora-pin {
+    height: auto;
+  }
+  .aurora-pin__stage {
+    position: static;
+    height: auto;
+  }
+  .aurora-pin__stack {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .aurora-card {
+    position: relative;
+    inset: auto;
+    --aurora-card-offset: 0px;
+    --aurora-card-scale: 1;
+    --aurora-card-opacity: 1;
+    transform: none;
+  }
+  .aurora-pin__progress-bar {
+    transform: scaleX(1);
+  }
+}
+
+/* ==========================================================================
+   Responsive — composed at 360px and 1440px+
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .aurora-title__word {
+    font-size: clamp(2.8rem, 16vw, 5rem);
+  }
+  .aurora-card__body {
+    padding: clamp(20px, 6vw, 28px);
+  }
+  .aurora-card__head {
+    flex-wrap: wrap;
+    gap: 0.4rem 0.8rem;
+  }
+  .aurora-pin__stack {
+    height: clamp(380px, 60vh, 540px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .aurora-hero__inner,
+  .aurora-pin__stage,
+  .aurora-cta__inner {
+    max-width: 1280px;
+  }
+}

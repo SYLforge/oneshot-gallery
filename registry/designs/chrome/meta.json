@@ -1,0 +1,49 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "chrome",
+  "no": 25,
+  "title": {
+    "en": "CHROME — Liquid Metal Beauty, Seoul",
+    "ko": "크롬 — 액체 금속 뷰티, 서울"
+  },
+  "description": {
+    "en": "A Y2K beauty house that pours its lip glosses in liquid chrome and seals every card in holographic foil — a WebGL chrome shader that ripples to the pointer, foil layers that shift rainbow with your hand, and headline glyphs that reveal in a metallic sweep.",
+    "ko": "립 글로스를 액체 크롬으로 붓고 모든 카드를 홀로그램 박으로 마감하는 Y2K 뷰티 하우스 — 포인터를 따라 출렁이는 WebGL 크롬 셰이더, 손을 따라 무지개로 흐르는 박 레이어, 금속 스위프로 드러나는 헤드라인 글리프."
+  },
+  "aesthetic": "retro-y2k",
+  "techniques": [
+    "webgl-shader",
+    "pointer-parallax",
+    "char-split-reveal"
+  ],
+  "industry": [
+    "fashion-beauty"
+  ],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": [
+      "dom",
+      "canvas"
+    ]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#ff8ad8",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "orbit",
+  "no": 36,
+  "title": {
+    "en": "ORBIT — Studio Configurator",
+    "ko": "오르빗 — 스튜디오 컨피규레이터"
+  },
+  "description": {
+    "en": "A fictional studio that drops one silhouette at a time. The signature sneaker sits on a turntable in a seamless studio — drag to orbit it a full 360°, with real specular key light, a turntable contact shadow, and a floor reflection that foreshortens as you swing. Three colorways, an exploded build scrubbed by scroll, and panels that wipe in. Pure canvas 2.5D — no three.js, no image files.",
+    "ko": "한 번에 하나의 실루엣만 내놓는 가상의 스튜디오. 시그니처 스니커즈가 시임리스 스튜디오의 턴테이블 위에 앉아 있다 — 드래그해 360도로 궤도를 돌면, 진짜 스펙큘러 키 라이트와 턴테이블 접촉 그림자, 회전에 따라 단축되는 바닥 반사가 따라온다. 세 가지 컬러웨이, 스크롤로 분해하는 빌드 섹션, 와이프되며 들어오는 패널. 순수 캔버스 2.5D — three.js도, 이미지 파일도 없다."
+  },
+  "aesthetic": "three-d-immersive",
+  "techniques": ["pointer-parallax", "scroll-scrub-pinned", "clip-path-reveal"],
+  "industry": ["product", "retail-food"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#ff5722",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

@@ -1,0 +1,26 @@
+# AURORA — breakdown
+
+## The hook
+A SaaS launch site that breathes. A slow morphing CSS mesh gradient (violet,
+fuchsia, cyan, emerald) drifts behind translucent glass cards — the
+"Linear-era" look. The signature is the living gradient, not pointer
+reactivity (which is LUMEN NORD's territory).
+
+## Distinction from LUMEN NORD
+LUMEN NORD = pointer-reactive WebGL aurora + frosty Nordic panels.
+AURORA = self-morphing CSS mesh + floating glass cards + SaaS vertical.
+Different trigger (ambient vs pointer), different medium (CSS vs WebGL),
+different industry.
+
+## Techniques
+1. **scroll-scrub-pinned** — pinned features section; glass cards assemble
+   with scroll progress, disassemble on exit.
+2. **pointer-parallax** — glass cards tilt subtly toward the pointer (3D
+   transform, compositor-only).
+3. **char-split-reveal** — hero headline glyphs reveal per-letter.
+
+## Accessibility
+- Reduced motion: gradient holds at a composed frame; cards static.
+- No-JS: fully readable SaaS page; gradient at default frame.
+- AA contrast verified on glass-over-gradient.
+- Korean-first bilingual throughout.

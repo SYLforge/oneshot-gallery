@@ -4,6 +4,96 @@
   "homepage": "https://oneshot.gallery",
   "items": [
     {
+      "name": "aurora",
+      "type": "registry:block",
+      "title": "AURORA — A field guide for the next thing you'll build",
+      "description": "A SaaS launch site that breathes — a slow morphing CSS mesh gradient in violet, fuchsia, cyan and emerald drifts behind translucent glass cards that assemble as you scroll and lean toward the cursor. The Linear-era launch page, redrawn as a living sky.",
+      "dependencies": [],
+      "categories": [
+        "glass-futurism",
+        "scroll-scrub-pinned",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/aurora/components/AuroraFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/aurora/components/AuroraFooter.tsx"
+        },
+        {
+          "path": "registry/designs/aurora/components/CTASection.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/aurora/components/CTASection.tsx"
+        },
+        {
+          "path": "registry/designs/aurora/components/FeatureGlass.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/aurora/components/FeatureGlass.tsx"
+        },
+        {
+          "path": "registry/designs/aurora/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/aurora/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/aurora/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/aurora/fonts.ts"
+        },
+        {
+          "path": "registry/designs/aurora/hooks/usePinnedScrub.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/aurora/hooks/usePinnedScrub.ts"
+        },
+        {
+          "path": "registry/designs/aurora/hooks/usePointerTilt.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/aurora/hooks/usePointerTilt.ts"
+        },
+        {
+          "path": "registry/designs/aurora/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/aurora/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/aurora/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/aurora/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/aurora/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/aurora/page.tsx"
+        },
+        {
+          "path": "registry/designs/aurora/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/aurora/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/aurora/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/aurora/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"AURORA — A field guide for the next thing you'll build\" installs into app/oneshot/aurora/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 6,
+        "accent": "#7c3aed",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "bloom",
       "type": "registry:block",
       "title": "BLOOM — A Perfume That Opens",
@@ -385,6 +475,106 @@
       }
     },
     {
+      "name": "chrome",
+      "type": "registry:block",
+      "title": "CHROME — Liquid Metal Beauty, Seoul",
+      "description": "A Y2K beauty house that pours its lip glosses in liquid chrome and seals every card in holographic foil — a WebGL chrome shader that ripples to the pointer, foil layers that shift rainbow with your hand, and headline glyphs that reveal in a metallic sweep.",
+      "dependencies": [],
+      "categories": [
+        "retro-y2k",
+        "webgl-shader",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/chrome/components/ChromeButton.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chrome/components/ChromeButton.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/components/ChromeFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chrome/components/ChromeFooter.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chrome/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/components/HoloFoil.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chrome/components/HoloFoil.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/components/Manifesto.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chrome/components/Manifesto.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/components/ProductLine.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chrome/components/ProductLine.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/chrome/fonts.ts"
+        },
+        {
+          "path": "registry/designs/chrome/hooks/useChromeShader.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chrome/hooks/useChromeShader.ts"
+        },
+        {
+          "path": "registry/designs/chrome/hooks/useFoilParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chrome/hooks/useFoilParallax.ts"
+        },
+        {
+          "path": "registry/designs/chrome/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chrome/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/chrome/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chrome/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/chrome/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/chrome/page.tsx"
+        },
+        {
+          "path": "registry/designs/chrome/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/chrome/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/chrome/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/chrome/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"CHROME — Liquid Metal Beauty, Seoul\" installs into app/oneshot/chrome/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 25,
+        "accent": "#ff8ad8",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "giwa",
       "type": "registry:block",
       "title": "GIWA — Under Painted Eaves",
@@ -469,6 +659,96 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "glitch",
+      "type": "registry:block",
+      "title": "GLITCH — Corrupted-Signal Studio",
+      "description": "A VFX and experimental-music studio that treats failure as a finish — datamoshed type, RGB-split wordmarks, scanline and noise overlays, and ASCII that scrambles itself periodically. The aesthetic of failing hardware made intentional.",
+      "dependencies": [],
+      "categories": [
+        "terminal-core",
+        "crt-scanline",
+        "clip-path-reveal",
+        "ascii-render"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/glitch/components/AsciiCorrupt.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/glitch/components/AsciiCorrupt.tsx"
+        },
+        {
+          "path": "registry/designs/glitch/components/GlitchFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/glitch/components/GlitchFooter.tsx"
+        },
+        {
+          "path": "registry/designs/glitch/components/GlitchHero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/glitch/components/GlitchHero.tsx"
+        },
+        {
+          "path": "registry/designs/glitch/components/Manifesto.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/glitch/components/Manifesto.tsx"
+        },
+        {
+          "path": "registry/designs/glitch/components/TrackList.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/glitch/components/TrackList.tsx"
+        },
+        {
+          "path": "registry/designs/glitch/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/glitch/fonts.ts"
+        },
+        {
+          "path": "registry/designs/glitch/hooks/useAsciiScramble.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/glitch/hooks/useAsciiScramble.ts"
+        },
+        {
+          "path": "registry/designs/glitch/hooks/useGlitchReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/glitch/hooks/useGlitchReveal.ts"
+        },
+        {
+          "path": "registry/designs/glitch/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/glitch/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/glitch/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/glitch/page.tsx"
+        },
+        {
+          "path": "registry/designs/glitch/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/glitch/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/glitch/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/glitch/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"GLITCH — Corrupted-Signal Studio\" installs into app/oneshot/glitch/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 35,
+        "accent": "#00ffe5",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-18",
           "oneshot": false,
           "followUps": 0
         },
@@ -1066,6 +1346,106 @@
       }
     },
     {
+      "name": "memphis",
+      "type": "registry:block",
+      "title": "MEMPHIS — Sottsass Studio",
+      "description": "A postmodern design-studio portfolio in full Memphis 80s style — squiggles, terrazzo, confetti blobs, and zigzags in teal, coral, marigold, and cobalt. A project grid that FLIP-rearranges on filter, shape layers that drift toward your pointer, and geometric clip-path reveals. Maximalist, but every shape has a job.",
+      "dependencies": [],
+      "categories": [
+        "tactile-craft",
+        "clip-path-reveal",
+        "pointer-parallax",
+        "flip-layout"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/memphis/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/components/MemphisFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/MemphisFooter.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/components/ProjectFlipGrid.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/ProjectFlipGrid.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/components/ShapeParallax.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/ShapeParallax.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/components/Shapes.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/Shapes.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/components/StudioMarquee.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/StudioMarquee.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/components/StudioSection.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/memphis/components/StudioSection.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/memphis/fonts.ts"
+        },
+        {
+          "path": "registry/designs/memphis/hooks/useClipReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/memphis/hooks/useClipReveal.ts"
+        },
+        {
+          "path": "registry/designs/memphis/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/memphis/hooks/usePointerParallax.ts"
+        },
+        {
+          "path": "registry/designs/memphis/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/memphis/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/memphis/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/memphis/page.tsx"
+        },
+        {
+          "path": "registry/designs/memphis/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/memphis/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/memphis/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/memphis/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MEMPHIS — Sottsass Studio\" installs into app/oneshot/memphis/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 30,
+        "accent": "#2bb1a8",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "minhwa",
       "type": "registry:block",
       "title": "MINHWA — A Gallery of Wishes",
@@ -1476,6 +1856,106 @@
       }
     },
     {
+      "name": "orbit",
+      "type": "registry:block",
+      "title": "ORBIT — Studio Configurator",
+      "description": "A fictional studio that drops one silhouette at a time. The signature sneaker sits on a turntable in a seamless studio — drag to orbit it a full 360°, with real specular key light, a turntable contact shadow, and a floor reflection that foreshortens as you swing. Three colorways, an exploded build scrubbed by scroll, and panels that wipe in. Pure canvas 2.5D — no three.js, no image files.",
+      "dependencies": [],
+      "categories": [
+        "three-d-immersive",
+        "pointer-parallax",
+        "scroll-scrub-pinned",
+        "clip-path-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/orbit/components/ColorwayPicker.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/orbit/components/ColorwayPicker.tsx"
+        },
+        {
+          "path": "registry/designs/orbit/components/ExplodedBuild.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/orbit/components/ExplodedBuild.tsx"
+        },
+        {
+          "path": "registry/designs/orbit/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/orbit/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/orbit/components/OrbitFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/orbit/components/OrbitFooter.tsx"
+        },
+        {
+          "path": "registry/designs/orbit/components/ProductTurntable.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/orbit/components/ProductTurntable.tsx"
+        },
+        {
+          "path": "registry/designs/orbit/components/sneaker.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/orbit/components/sneaker.ts"
+        },
+        {
+          "path": "registry/designs/orbit/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/orbit/fonts.ts"
+        },
+        {
+          "path": "registry/designs/orbit/hooks/useOrbit.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/orbit/hooks/useOrbit.ts"
+        },
+        {
+          "path": "registry/designs/orbit/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/orbit/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/orbit/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/orbit/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/orbit/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/orbit/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/orbit/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/orbit/page.tsx"
+        },
+        {
+          "path": "registry/designs/orbit/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/orbit/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/orbit/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/orbit/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"ORBIT — Studio Configurator\" installs into app/oneshot/orbit/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 36,
+        "accent": "#ff5722",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "pale-signal",
       "type": "registry:block",
       "title": "PALE.SIGNAL — Deep Sky Listening Post",
@@ -1559,6 +2039,111 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "pixel",
+      "type": "registry:block",
+      "title": "PIXEL — 8-bit Arcade Studio",
+      "description": "A retro indie-game studio landing page for a fictional 2003 arcade — a hero hand-drawn one CSS box-shadow per pixel, a CRT scanline and chromatic-aberration glow that breathes on idle, and a chiptune high-score marquee. Saturated dopamine color, chrome, and the warm optimism of a CRT that still believes someone is playing.",
+      "dependencies": [],
+      "categories": [
+        "retro-y2k",
+        "ascii-render",
+        "crt-scanline",
+        "marquee"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/pixel/components/CRTOverlay.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/CRTOverlay.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/GameGrid.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/GameGrid.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/HighScoreMarquee.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/HighScoreMarquee.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/PixelCharacter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/PixelCharacter.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/PixelFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/PixelFooter.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/PixelSprite.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/PixelSprite.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/components/sprites.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/pixel/components/sprites.ts"
+        },
+        {
+          "path": "registry/designs/pixel/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/pixel/fonts.ts"
+        },
+        {
+          "path": "registry/designs/pixel/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pixel/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/pixel/hooks/useScrollRush.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pixel/hooks/useScrollRush.ts"
+        },
+        {
+          "path": "registry/designs/pixel/hooks/useSpriteCycle.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/pixel/hooks/useSpriteCycle.ts"
+        },
+        {
+          "path": "registry/designs/pixel/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/pixel/page.tsx"
+        },
+        {
+          "path": "registry/designs/pixel/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/pixel/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/pixel/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/pixel/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PIXEL — 8-bit Arcade Studio\" installs into app/oneshot/pixel/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 29,
+        "accent": "#ff3d8a",
+        "theme": "dark",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-07-18",
           "oneshot": false,
           "followUps": 0
         },
@@ -1843,6 +2428,91 @@
           "model": "glm-5.2",
           "modelLabel": "GLM-5.2",
           "tool": "zcode",
+          "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "riso",
+      "type": "registry:block",
+      "title": "RISO — Independent Press & Cinema",
+      "description": "An independent book publisher and art-house cinema in full risograph print style — halftone dots, fluorescent pink + blue + yellow overprinting, visible registration marks, and paper grain. A pinned press section builds the overprint layer by layer as you scroll.",
+      "dependencies": [],
+      "categories": [
+        "tactile-craft",
+        "feturbulence-texture",
+        "clip-path-reveal",
+        "scroll-scrub-pinned"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/riso/components/BookGrid.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/riso/components/BookGrid.tsx"
+        },
+        {
+          "path": "registry/designs/riso/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/riso/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/riso/components/RegistrationMarks.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/riso/components/RegistrationMarks.tsx"
+        },
+        {
+          "path": "registry/designs/riso/components/RisoFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/riso/components/RisoFooter.tsx"
+        },
+        {
+          "path": "registry/designs/riso/components/ThePress.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/riso/components/ThePress.tsx"
+        },
+        {
+          "path": "registry/designs/riso/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/riso/fonts.ts"
+        },
+        {
+          "path": "registry/designs/riso/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/riso/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/riso/hooks/useScrollProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/riso/hooks/useScrollProgress.ts"
+        },
+        {
+          "path": "registry/designs/riso/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/riso/page.tsx"
+        },
+        {
+          "path": "registry/designs/riso/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/riso/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/riso/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/riso/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"RISO — Independent Press & Cinema\" installs into app/oneshot/riso/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 34,
+        "accent": "#ff3d7f",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
           "date": "2026-07-18",
           "oneshot": false,
           "followUps": 0
@@ -2534,6 +3204,106 @@
           "modelLabel": "Claude Fable 5",
           "tool": "claude-code",
           "date": "2026-07-10",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "zine",
+      "type": "registry:block",
+      "title": "ZINE — The Photocopy Underground",
+      "description": "An independent punk-culture zine that reads like a photocopied collage: dense multi-column newsprint, highlighter marks, taped-on halftone photos, marginalia, drop caps, and a scrolling masthead band — the loud opposite of the airy literary magazine.",
+      "dependencies": [],
+      "categories": [
+        "editorial-serif",
+        "clip-path-reveal",
+        "marquee",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/zine/components/ArticleGrid.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/ArticleGrid.tsx"
+        },
+        {
+          "path": "registry/designs/zine/components/HalftonePhoto.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/HalftonePhoto.tsx"
+        },
+        {
+          "path": "registry/designs/zine/components/Hero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/Hero.tsx"
+        },
+        {
+          "path": "registry/designs/zine/components/LeadEssay.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/LeadEssay.tsx"
+        },
+        {
+          "path": "registry/designs/zine/components/MarqueeBand.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/MarqueeBand.tsx"
+        },
+        {
+          "path": "registry/designs/zine/components/ZineFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/ZineFooter.tsx"
+        },
+        {
+          "path": "registry/designs/zine/components/ZineLink.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/zine/components/ZineLink.tsx"
+        },
+        {
+          "path": "registry/designs/zine/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/zine/fonts.ts"
+        },
+        {
+          "path": "registry/designs/zine/hooks/useMarquee.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/zine/hooks/useMarquee.ts"
+        },
+        {
+          "path": "registry/designs/zine/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/zine/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/zine/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/zine/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/zine/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/zine/page.tsx"
+        },
+        {
+          "path": "registry/designs/zine/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/zine/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/zine/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/zine/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"ZINE — The Photocopy Underground\" installs into app/oneshot/zine/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 32,
+        "accent": "#fff44f",
+        "theme": "light",
+        "prompt": {
+          "model": "glm-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode-cli",
+          "date": "2026-07-18",
           "oneshot": false,
           "followUps": 0
         },

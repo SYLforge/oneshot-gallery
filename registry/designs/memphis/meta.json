@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "memphis",
+  "no": 30,
+  "title": {
+    "en": "MEMPHIS — Sottsass Studio",
+    "ko": "멤피스 — 소트사스 스튜디오"
+  },
+  "description": {
+    "en": "A postmodern design-studio portfolio in full Memphis 80s style — squiggles, terrazzo, confetti blobs, and zigzags in teal, coral, marigold, and cobalt. A project grid that FLIP-rearranges on filter, shape layers that drift toward your pointer, and geometric clip-path reveals. Maximalist, but every shape has a job.",
+    "ko": "80년대 멤피스 포스트모던 스타일 그대로의 디자인 스튜디오 포트폴리오 — 물결, 테라조, 꽃가루 블롭, 지그재그가 틸·코랄·마리골드·코발트 위로 흩날린다. 필터를 바꾸면 FLIP으로 재정렬되는 프로젝트 그리드, 포인터를 향해 떠다니는 도형 레이어, 기하학적 클립패스 리빌. 난잡해 보여도 각 도형은 제 할 일이 있다."
+  },
+  "aesthetic": "tactile-craft",
+  "techniques": ["clip-path-reveal", "pointer-parallax", "flip-layout"],
+  "industry": ["atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#2bb1a8",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "zine",
+  "no": 32,
+  "title": {
+    "en": "ZINE — The Photocopy Underground",
+    "ko": "잡지 — 복사기 지하의 독립지"
+  },
+  "description": {
+    "en": "An independent punk-culture zine that reads like a photocopied collage: dense multi-column newsprint, highlighter marks, taped-on halftone photos, marginalia, drop caps, and a scrolling masthead band — the loud opposite of the airy literary magazine.",
+    "ko": "복사기로 찍어낸 콜라주처럼 읽히는 독립 펑크 잡지. 빽빽한 다단 신문지, 형광펜 자국, 테이프로 붙인 망점 사진, 날글, 두문자, 그리고 흐르는 헤드라인 띠 — 조용한 문예지의 정반대, 시끄러운 지면."
+  },
+  "aesthetic": "editorial-serif",
+  "techniques": ["clip-path-reveal", "marquee", "char-split-reveal"],
+  "industry": ["publishing", "culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#fff44f",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

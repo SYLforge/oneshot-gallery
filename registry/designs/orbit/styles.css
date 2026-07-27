@@ -1,0 +1,816 @@
+/* ==========================================================================
+   ORBIT — studio configurator
+   three-d-immersive · seamless studio, key/rim light, ember accent · tokens
+   Scoped by convention to .orbit-root; classes prefixed orbit-.
+   ========================================================================== */
+
+.orbit-root {
+  /* -- palette ---------------------------------------------------------- */
+  --orbit-floor: #1a1a22;          /* studio floor — the seamless ground */
+  --orbit-rise: #2a2a36;           /* the floor lifting into the cyclorama */
+  --orbit-ink: #0d0d12;            /* deepest shadow — turntable base, footer well */
+  --orbit-ember: #ff5722;          /* hero accent, focus ring, default colorway, call-outs (4.9:1 large on floor) */
+  --orbit-ocean: #0066ff;          /* second colorway; rim-light tint on readouts (4.6:1 — labels only) */
+  --orbit-frost: #e8eef5;          /* third colorway; primary text (14.6:1) + specular highlight */
+  --orbit-frost-dim: #9aa0ad;      /* secondary text — frost at ~60% over floor (7.0:1) */
+  --orbit-key: #fff5e6;            /* warm key light tinting lit side + specular */
+  --orbit-rim: #b8d8ff;            /* cool rim light raking the shadow side */
+  --orbit-hairline: #3a3a48;       /* decorative only (2.6:1): dividers, panel borders, rails */
+
+  /* -- turntable shadow driver vars (written by JS each frame) ---------- */
+  --orbit-shadow-sx: 1;            /* contact shadow horizontal scale */
+  --orbit-shadow-op: 0.6;          /* contact shadow opacity */
+  --orbit-shadow-lift: 0px;        /* contact shadow vertical offset on grab */
+
+  /* -- scroll-scrub progress (written by useScrollProgress) ------------- */
+  --orbit-build: 0;                /* smoothed 0→1 */
+  --orbit-build-raw: 0;            /* unsmoothed 0→1 */
+
+  /* -- exploded part travel unit (responsive) -------------------------- */
+  --orbit-explode-unit: 1.4px;     /* multiplied by per-part max in calc() */
+
+  /* -- type ------------------------------------------------------------- */
+  --orbit-font-display: var(--font-grotesk), "Space Grotesk", sans-serif;
+  --orbit-font-body: var(--font-inter), var(--font-noto-kr), system-ui, sans-serif;
+  --orbit-font-ko: var(--font-noto-kr), var(--font-inter), sans-serif;
+
+  /* -- motion ----------------------------------------------------------- */
+  --orbit-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--orbit-floor);
+  color: var(--orbit-frost);
+  font-family: var(--orbit-font-body);
+  font-size: clamp(15px, 0.35vw + 13.5px, 17px);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is first-class: it lands in Noto Sans KR through the stack, keeps
+   its own line-breaking, and is never letter-spaced apart. */
+.orbit-root :lang(ko) {
+  font-family: var(--orbit-font-ko);
+  word-break: keep-all;
+  letter-spacing: -0.005em;
+}
+
+/* Ember selection, scoped to the entry root */
+.orbit-root ::selection {
+  background: var(--orbit-ember);
+  color: var(--orbit-ink);
+  text-shadow: none;
+}
+
+/* Keyboard focus: ember ring with a soft outer veil */
+.orbit-root :focus-visible {
+  outline: 2px solid var(--orbit-ember);
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px rgba(255, 87, 34, 0.18);
+}
+
+.orbit-link {
+  color: var(--orbit-frost);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 87, 34, 0.5);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.orbit-link:hover {
+  text-decoration-color: var(--orbit-ember);
+  text-shadow: 0 0 14px rgba(255, 87, 34, 0.4);
+}
+
+/* ==========================================================================
+   01 · Hero — the seamless studio + the turntable
+   ========================================================================== */
+
+.orbit-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+/* The seamless: floor rising into a cyclorama backdrop. Always painted —
+   this is the no-JS view and the canvas understudy. */
+.orbit-hero__seamless {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(120% 80% at 50% 118%, var(--orbit-floor) 38%, transparent 62%),
+    radial-gradient(100% 70% at 50% 0%, var(--orbit-rise) 0%, transparent 55%),
+    linear-gradient(180deg, var(--orbit-rise) 0%, var(--orbit-floor) 60%, var(--orbit-ink) 100%);
+}
+
+/* Key-light pool — warm, stage-right-upper. The "lit" half of the studio. */
+.orbit-hero__key {
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(
+    42% 38% at 72% 22%,
+    rgba(255, 245, 230, 0.16),
+    rgba(255, 245, 230, 0.04) 48%,
+    transparent 70%
+  );
+  filter: blur(8px);
+}
+
+/* Rim-light pool — cool, stage-left-lower. Rakes the shadow side. */
+.orbit-hero__rim {
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(
+    38% 42% at 20% 68%,
+    rgba(184, 216, 255, 0.1),
+    rgba(184, 216, 255, 0.02) 50%,
+    transparent 72%
+  );
+  filter: blur(10px);
+}
+
+/* Corner vignette to seat text contrast and focus the eye on the product. */
+.orbit-hero__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    130% 110% at 60% 52%,
+    transparent 50%,
+    rgba(13, 13, 18, 0.55) 100%
+  );
+}
+
+.orbit-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(24px, 4vh, 48px);
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 64px);
+}
+
+@media (min-width: 920px) {
+  .orbit-hero__inner {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(32px, 4vw, 64px);
+  }
+}
+
+/* -- hero copy ----------------------------------------------------------- */
+
+.orbit-kicker {
+  margin: 0 0 clamp(0.8rem, 2vh, 1.4rem);
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--orbit-ember);
+}
+.orbit-kicker__ko {
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.orbit-title {
+  margin: 0;
+  font-family: var(--orbit-font-display);
+  font-weight: 700;
+  font-size: clamp(4rem, 16vw, 12rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--orbit-frost);
+  text-shadow: 0 4px 40px rgba(13, 13, 18, 0.6);
+}
+.orbit-title__ko {
+  display: block;
+  margin-top: 0.2em;
+  font-weight: 500;
+  font-size: clamp(1.4rem, 3.4vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: var(--orbit-frost-dim);
+}
+
+.orbit-lede {
+  margin: clamp(1.4rem, 3.5vh, 2.2rem) 0 0;
+  max-width: 42ch;
+  font-size: clamp(1.02rem, 1.6vw, 1.3rem);
+  line-height: 1.55;
+  color: var(--orbit-frost);
+}
+.orbit-lede__ko {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--orbit-frost-dim);
+  font-size: 0.96em;
+}
+
+.orbit-spec {
+  margin: clamp(1.4rem, 3vh, 2rem) 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem 1.6rem;
+}
+.orbit-spec div {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--orbit-hairline);
+}
+.orbit-spec dt {
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orbit-frost-dim);
+}
+.orbit-spec dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  color: var(--orbit-frost);
+}
+
+.orbit-hero__scrollhint {
+  margin: clamp(1.6rem, 4vh, 2.6rem) 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--orbit-frost-dim);
+}
+
+/* -- the stage ----------------------------------------------------------- */
+
+.orbit-hero__stage {
+  position: relative;
+  width: 100%;
+  min-height: clamp(320px, 52vh, 560px);
+}
+
+/* ==========================================================================
+   The turntable stage — canvas + contact shadow + affordance ring
+   ========================================================================== */
+
+.orbit-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 52vh, 560px);
+  touch-action: pan-y; /* allow vertical scroll, capture horizontal drag */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.orbit-stage:active {
+  cursor: grabbing;
+}
+
+/* Affordance ring — 36 ticks at 10° each, purely decorative */
+.orbit-stage__ring {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.orbit-stage__tick {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 49%;
+  transform-origin: top center;
+}
+.orbit-stage__tick::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 8px;
+  background: var(--orbit-hairline);
+}
+/* Every 3rd tick (30°) is slightly longer — a degree scale read */
+.orbit-stage__tick:nth-child(3n)::before {
+  height: 12px;
+  background: var(--orbit-frost-dim);
+  opacity: 0.6;
+}
+
+/* Contact shadow — elliptical, foreshortens with rotation. The vars are
+   written imperatively from ProductTurntable's draw loop. */
+.orbit-stage__shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: 62%;
+  height: 5%;
+  transform: translateX(-50%) translatey(var(--orbit-shadow-lift)) scaleX(var(--orbit-shadow-sx));
+  background: radial-gradient(
+    50% 100% at 50% 50%,
+    rgba(13, 13, 18, var(--orbit-shadow-op)) 0%,
+    rgba(13, 13, 18, calc(var(--orbit-shadow-op) * 0.4)) 55%,
+    transparent 80%
+  );
+  filter: blur(6px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.orbit-stage__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* the stage handles pointer events, not the canvas */
+}
+
+/* Drag hint + angle readout — studio instrument voice */
+.orbit-stage__hint,
+.orbit-stage__readout {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orbit-frost-dim);
+  pointer-events: none;
+  transition: opacity 400ms var(--orbit-ease);
+}
+.orbit-stage__hint {
+  bottom: 4%;
+}
+.orbit-stage__hint[data-active="false"] {
+  opacity: 0;
+}
+.orbit-stage__readout {
+  top: 4%;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+}
+.orbit-stage__readout-deg {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--orbit-ember);
+  letter-spacing: 0.04em;
+}
+.orbit-stage__readout-ko {
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+/* ==========================================================================
+   Section headers — 0N · title · 한국어 · meta
+   ========================================================================== */
+
+.orbit-section__head {
+  max-width: 1160px;
+  margin: 0 auto clamp(2rem, 5vh, 3.2rem);
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+.orbit-section__no {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--orbit-ember);
+}
+.orbit-section__title {
+  margin: 0;
+  font-family: var(--orbit-font-display);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--orbit-frost);
+}
+.orbit-section__ko {
+  font-weight: 400;
+  color: var(--orbit-frost-dim);
+  letter-spacing: 0.02em;
+}
+.orbit-section__meta {
+  margin: 0.8rem 0 0;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--orbit-ocean);
+}
+
+/* ==========================================================================
+   02 · The build — pinned, scrubbed, exploded
+   ========================================================================== */
+
+.orbit-build {
+  position: relative;
+  /* The pin runway: 220vh so there's scroll to scrub through. */
+  height: 220vh;
+  background: linear-gradient(180deg, var(--orbit-floor) 0%, var(--orbit-ink) 100%);
+}
+.orbit-build__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 64px);
+  overflow: hidden;
+}
+.orbit-build__head {
+  text-align: center;
+  margin-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+/* The head inside the build is centered — reuse section classes but center */
+.orbit-build .orbit-section__head {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.orbit-build__diagram {
+  position: relative;
+  width: min(680px, 92vw);
+  height: min(52vh, 460px);
+  margin: 0 auto;
+}
+
+/* Rails — vertical hairlines connecting the parts, revealed by clip-path
+   inset as the build progresses. Driven by --orbit-build (raw, unsmoothed). */
+.orbit-build__rail {
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--orbit-hairline) 18%,
+    var(--orbit-hairline) 82%,
+    transparent
+  );
+  transform: translateX(-50%);
+  /* top/height set per-rail below */
+  clip-path: inset(50% 0 50% 0);
+  transition: none;
+}
+.orbit-build__rail--a { top: 18%; height: 64%; transform: translateX(calc(-50% - 38%)); }
+.orbit-build__rail--b { top: 18%; height: 64%; transform: translateX(calc(-50% - 13%)); }
+.orbit-build__rail--c { top: 18%; height: 64%; transform: translateX(calc(-50% + 13%)); }
+.orbit-build__rail--d { top: 18%; height: 64%; transform: translateX(calc(-50% + 38%)); }
+
+/* JS-gated rails draw themselves as build progresses */
+.orbit-js .orbit-build__rail {
+  clip-path: inset(calc((1 - var(--orbit-build-raw)) * 50%) 0 calc((1 - var(--orbit-build-raw)) * 50%) 0);
+}
+
+/* Part layers — absolutely positioned, stacked, each translating up by its
+   own offset × build progress. */
+.orbit-build__part {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  transform: translate(-50%, -50%);
+}
+/* Per-part upward travel at progress=1 (in explode units). */
+.orbit-build__part--counter  { transform: translate(-50%, calc(-50% - var(--orbit-build) * 150 * var(--orbit-explode-unit))); }
+.orbit-build__part--laces    { transform: translate(-50%, calc(-50% - var(--orbit-build) * 95  * var(--orbit-explode-unit))); }
+.orbit-build__part--upper    { transform: translate(-50%, calc(-50% - var(--orbit-build) * 40  * var(--orbit-explode-unit))); }
+.orbit-build__part--midsole  { transform: translate(-50%, calc(-50% + var(--orbit-build) * 30  * var(--orbit-explode-unit))); }
+.orbit-build__part--outsole  { transform: translate(-50%, calc(-50% + var(--orbit-build) * 95  * var(--orbit-explode-unit))); }
+
+.orbit-build__part-art {
+  width: 100%;
+  filter: drop-shadow(0 8px 18px rgba(13, 13, 18, 0.5));
+}
+.orbit-build__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.orbit-build__part-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.3em 0.9em;
+  margin-top: 0.3rem;
+  opacity: calc(0.35 + 0.65 * var(--orbit-build));
+}
+.orbit-build__part-en {
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orbit-frost);
+}
+.orbit-build__part-ko {
+  font-size: 0.74rem;
+  color: var(--orbit-frost-dim);
+}
+.orbit-build__part-meta {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--orbit-frost-dim);
+  text-transform: uppercase;
+  font-family: var(--font-grotesk), sans-serif;
+}
+
+/* Narrower explode travel on small screens so the diagram stays composed */
+@media (max-width: 600px) {
+  .orbit-root { --orbit-explode-unit: 0.9px; }
+}
+
+/* ==========================================================================
+   03 · Colorway — clip-path wipe panels
+   ========================================================================== */
+
+.orbit-colorway {
+  padding: clamp(80px, 12vh, 150px) clamp(20px, 5vw, 64px);
+  background: var(--orbit-floor);
+}
+.orbit-colorway__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(14px, 2vw, 22px);
+  max-width: 1160px;
+  margin-inline: auto;
+}
+@media (min-width: 760px) {
+  .orbit-colorway__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.orbit-colorway__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid var(--orbit-hairline);
+  border-radius: 4px;
+  background: linear-gradient(165deg, rgba(232, 238, 245, 0.04), rgba(232, 238, 245, 0) 40%), rgba(42, 42, 54, 0.5);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: var(--orbit-frost);
+  transition: border-color 300ms var(--orbit-ease), transform 300ms var(--orbit-ease);
+  clip-path: inset(0 0 0 0); /* visible by default (no-JS) */
+}
+.orbit-colorway__panel:hover {
+  border-color: var(--orbit-frost-dim);
+  transform: translateY(-2px);
+}
+.orbit-colorway__panel.is-selected {
+  border-color: var(--orbit-ember);
+  box-shadow: 0 0 0 1px var(--orbit-ember), 0 18px 44px rgba(13, 13, 18, 0.4);
+}
+
+/* JS-gated pre-wipe state. data-reveal-wipe picks the direction. */
+.orbit-js .orbit-colorway__panel[data-reveal-wipe="0"] { clip-path: inset(0 0 0 100%); }
+.orbit-js .orbit-colorway__panel[data-reveal-wipe="1"] { clip-path: inset(0 0 100% 0); }
+.orbit-js .orbit-colorway__panel[data-reveal-wipe="2"] { clip-path: inset(0 100% 0 0); }
+
+.orbit-js .orbit-colorway__panel.is-visible {
+  clip-path: inset(0 0 0 0);
+  transition:
+    clip-path 640ms var(--orbit-ease) var(--orbit-wipe-delay, 0ms),
+    border-color 300ms var(--orbit-ease),
+    transform 300ms var(--orbit-ease);
+}
+
+/* Swatch */
+.orbit-colorway__swatch {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 0.4rem;
+}
+.orbit-colorway__swatch-dot {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.25), 0 4px 12px rgba(13, 13, 18, 0.5);
+}
+.orbit-colorway__swatch-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--orbit-hairline);
+}
+.orbit-colorway__panel.is-selected .orbit-colorway__swatch-ring {
+  border-color: var(--orbit-ember);
+}
+
+.orbit-colorway__name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+}
+.orbit-colorway__name-en {
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.orbit-colorway__name-ko {
+  font-size: 1rem;
+  color: var(--orbit-frost-dim);
+}
+.orbit-colorway__blurb {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--orbit-frost);
+}
+.orbit-colorway__blurb--ko {
+  color: var(--orbit-frost-dim);
+  font-size: 0.88rem;
+}
+.orbit-colorway__hex {
+  margin-top: auto;
+  padding-top: 0.8rem;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--orbit-frost-dim);
+  border-top: 1px solid var(--orbit-hairline);
+}
+
+/* ==========================================================================
+   04 · Footer — release notes
+   ========================================================================== */
+
+.orbit-footer {
+  max-width: 1020px;
+  margin-inline: auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 5vw, 64px) clamp(90px, 13vh, 150px);
+  border-top: 1px solid var(--orbit-hairline);
+  background: var(--orbit-ink);
+}
+.orbit-footer__signoff {
+  margin: 0 0 2.4rem;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  line-height: 1.5;
+  color: var(--orbit-frost);
+}
+.orbit-footer__ko {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--orbit-frost-dim);
+}
+.orbit-footer__spec {
+  margin: 0 0 2.6rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.2rem 2rem;
+}
+.orbit-footer__spec div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px dotted var(--orbit-hairline);
+}
+.orbit-footer__spec dt {
+  flex: 0 0 5.5rem;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orbit-frost-dim);
+  line-height: 2;
+}
+.orbit-footer__spec dd {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.orbit-footer__calendar {
+  margin: 0 0 2.4rem;
+}
+.orbit-footer__cal-title {
+  margin: 0 0 1.2rem;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--orbit-frost);
+}
+.orbit-footer__cal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.orbit-footer__cal-list li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.3rem 1rem;
+  align-items: baseline;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--orbit-hairline);
+}
+.orbit-footer__cal-date {
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--orbit-ember);
+}
+.orbit-footer__cal-name {
+  font-size: 0.92rem;
+  color: var(--orbit-frost);
+}
+.orbit-footer__cal-ko {
+  color: var(--orbit-frost-dim);
+  font-size: 0.86rem;
+}
+
+.orbit-footer__nav {
+  margin: 0 0 2.2rem;
+  font-size: 0.9rem;
+}
+.orbit-footer__copy {
+  margin: 0;
+  font-family: var(--font-grotesk), sans-serif;
+  font-size: 0.9rem;
+  color: var(--orbit-frost-dim);
+}
+.orbit-footer__copy .orbit-footer__ko {
+  display: inline;
+  margin: 0 0 0 0.4em;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.orbit-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 700ms var(--orbit-ease),
+    transform 700ms var(--orbit-ease);
+  will-change: opacity, transform;
+}
+.orbit-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Reduced motion — the turntable is a re-posable still; everything readable
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reveals simply visible */
+  .orbit-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Clip-wipe panels simply visible */
+  .orbit-js .orbit-colorway__panel,
+  .orbit-js .orbit-colorway__panel[data-reveal-wipe="0"],
+  .orbit-js .orbit-colorway__panel[data-reveal-wipe="1"],
+  .orbit-js .orbit-colorway__panel[data-reveal-wipe="2"] {
+    clip-path: inset(0 0 0 0);
+    transition: none;
+  }
+
+  /* Drag hint stays visible (no inertia, so the affordance matters more) */
+  .orbit-stage__hint[data-active="false"] {
+    opacity: 1;
+  }
+
+  /* Hover transforms off — motion stays input-only */
+  .orbit-colorway__panel:hover {
+    transform: none;
+  }
+}

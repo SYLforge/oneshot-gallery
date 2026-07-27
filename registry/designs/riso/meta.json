@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "riso",
+  "no": 34,
+  "title": {
+    "en": "RISO — Independent Press & Cinema",
+    "ko": "리소 — 독립 출판·아트시네마"
+  },
+  "description": {
+    "en": "An independent book publisher and art-house cinema in full risograph print style — halftone dots, fluorescent pink + blue + yellow overprinting, visible registration marks, and paper grain. A pinned press section builds the overprint layer by layer as you scroll.",
+    "ko": "독립 출판사이자 아트하우스 영화관을 리소그래프 인쇄 그 자체로 — 망점, 형광 핑크·블루·옐로의 겹침 인쇄, 보이는 레지스터 마크, 종이 결. 스크롤하면 핀 된 인쇄기 섹션에서 도수가 한 장씩 쌓인다."
+  },
+  "aesthetic": "tactile-craft",
+  "techniques": ["feturbulence-texture", "clip-path-reveal", "scroll-scrub-pinned"],
+  "industry": ["publishing"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode-cli",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#ff3d7f",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

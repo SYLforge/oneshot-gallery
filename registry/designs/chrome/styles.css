@@ -1,0 +1,971 @@
+/* ==========================================================================
+   CHROME — liquid metal beauty, Seoul
+   retro-y2k · chrome silver / holographic foil / deep chrome shadow
+   Scoped by convention to .chrome-root; classes prefixed chrome-.
+   ========================================================================== */
+
+.chrome-root {
+  /* -- palette ---------------------------------------------------------- */
+  --chrome-holo-mist: #f4f1ff;     /* page bg — chrome-ink on it 12.66:1 */
+  --chrome-holo-sky: #e0e8ff;      /* foil stop 1 (lavender ice) */
+  --chrome-holo-pink: #ffd8f0;     /* foil stop 2 (pink ice) */
+  --chrome-holo-mint: #d8fff0;     /* foil stop 3 (mint ice) */
+  --chrome-silver: #c8d0d8;        /* chrome silver — surface, never text */
+  --chrome-highlight: #ffffff;     /* wet chrome top sheen */
+  --chrome-ink: #2a2a3a;           /* deep chrome shadow — THE ink */
+  --chrome-ink-2: #4a4a5e;         /* secondary text (7.76:1 on mist) */
+  --chrome-ink-soft: #6a6a7e;      /* tertiary text (4.75:1 on mist) */
+  --chrome-accent: #ff8ad8;        /* holographic pink — FILL ONLY */
+  --chrome-accent-deep: #c84aa0;   /* deepened pink for accent TEXT (AA-large) */
+
+  /* the three holographic underglow hues, referenced by product glow tokens */
+  --chrome-glow-sky: #b8c8ff;
+  --chrome-glow-pink: #ff8ad8;
+  --chrome-glow-mint: #8affd0;
+
+  /* derived structure */
+  --chrome-hairline: rgba(42, 42, 58, 0.16);
+  --chrome-hairline-strong: rgba(42, 42, 58, 0.28);
+  --chrome-foil-edge: rgba(255, 255, 255, 0.7);
+
+  /* pointer-parallax source (set by useFoilParallax; default 0 = centered) */
+  --chrome-px: 0;
+  --chrome-py: 0;
+
+  /* -- type -------------------------------------------------------------- */
+  --chrome-font-display: var(--font-syne), "Syne", var(--font-hangul), "Black Han Sans", sans-serif;
+  --chrome-font-hangul: var(--font-hangul), "Black Han Sans", sans-serif;
+  --chrome-font-mono: var(--font-mono), "Major Mono Display", ui-monospace, monospace;
+  --chrome-font-body: var(--font-syne), "Syne", var(--font-hangul), "Black Han Sans", sans-serif;
+
+  /* -- motion ------------------------------------------------------------ */
+  --chrome-ease-chrome: cubic-bezier(0.16, 1, 0.3, 1);   /* metallic sweep */
+  --chrome-ease-foil: cubic-bezier(0.34, 1.56, 0.64, 1); /* foil settle */
+  --chrome-reveal-ms: 700ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--chrome-holo-mist);
+  color: var(--chrome-ink);
+  font-family: var(--chrome-font-body);
+  font-weight: 400;
+  font-size: clamp(16px, 1vw + 12px, 19px);
+  line-height: 1.65;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Hangul is first-class: Black Han Sans, a chunky Y2K Korean display face.
+   In body settings it carries every Korean glyph; the Latin body font is
+   Syne, which has Korean coverage of zero, so Hangul falls straight through. */
+.chrome-root :lang(ko) {
+  font-family: var(--chrome-font-hangul);
+  letter-spacing: 0.005em;
+}
+
+/* Holographic selection, scoped to the entry root — accent is a fill here */
+.chrome-root ::selection {
+  background: var(--chrome-accent);
+  color: var(--chrome-ink);
+  text-shadow: none;
+}
+
+/* Keyboard focus: an accent halo ring, art-directed for chrome */
+.chrome-root :focus-visible {
+  outline: 2px solid var(--chrome-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.chrome-link {
+  color: var(--chrome-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--chrome-accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.chrome-link:hover {
+  color: var(--chrome-accent-deep);
+}
+
+.chrome-sheet {
+  position: relative;
+}
+
+/* ==========================================================================
+   Section shell — eyebrow · title · line
+   ========================================================================== */
+
+.chrome-eyebrow {
+  margin: 0 0 1.1rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--chrome-accent-deep); /* AA-large on mist (3.82:1), eyebrow scale */
+}
+
+.chrome-sechead {
+  max-width: 920px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+  margin-bottom: clamp(2.4rem, 6vh, 4.2rem);
+}
+
+.chrome-sechead__title {
+  margin: 0;
+  font-family: var(--chrome-font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--chrome-ink);
+}
+
+.chrome-sechead__ko {
+  margin-left: 0.3em;
+  font-size: 0.52em;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-sechead__line {
+  margin: 1.1rem 0 0;
+  max-width: 38rem;
+  color: var(--chrome-ink);
+}
+
+.chrome-sechead__lineko {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--chrome-ink-2);
+}
+
+/* ==========================================================================
+   Hero — the chrome shader headline + holographic foil frame
+   ========================================================================== */
+
+.chrome-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(28px, 6vw, 80px);
+  text-align: center;
+}
+
+/* The scrim: a flat holographic gradient behind everything, so no-JS and
+   shader-failure never show a hole. It is the page's permanent backlight. */
+.chrome-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 22%, var(--chrome-holo-pink) 0%, transparent 55%),
+    linear-gradient(115deg, var(--chrome-holo-sky) 0%, var(--chrome-holo-mist) 38%, var(--chrome-holo-mint) 100%);
+  z-index: 0;
+}
+
+.chrome-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.chrome-hero__eyebrow {
+  margin: 0 0 2rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--chrome-accent-deep);
+}
+
+.chrome-hero__titlewrap {
+  position: relative;
+  width: 100%;
+  max-width: min(92vw, 1100px);
+  padding: clamp(2rem, 6vw, 4rem) 0;
+}
+
+/*
+ * The holographic foil frame around the wordmark. Three offset conic bands
+ * (sky / pink / mint) in mix-blend-mode: screen over a silver base; their
+ * angular origins shift with --chrome-px / --chrome-py (pointer parallax).
+ * Decorative; the headline sits on top in AA-safe chrome-ink.
+ */
+.chrome-foil {
+  position: absolute;
+  inset: -8% -4%;
+  pointer-events: none;
+  z-index: 1;
+  --shift-x: calc(var(--chrome-px) * 1deg);
+  --shift-y: calc(var(--chrome-py) * 1deg);
+}
+
+.chrome-foil__band {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  will-change: background;
+}
+
+.chrome-foil__band--sky {
+  background: conic-gradient(
+    from calc(0deg + var(--shift-x)),
+    var(--chrome-glow-sky),
+    var(--chrome-holo-mist),
+    var(--chrome-glow-sky)
+  );
+  filter: blur(18px);
+  opacity: 0.5;
+}
+
+.chrome-foil__band--pink {
+  background: conic-gradient(
+    from calc(120deg + calc(var(--shift-x) * -0.6)),
+    var(--chrome-glow-pink),
+    var(--chrome-holo-pink),
+    var(--chrome-glow-pink)
+  );
+  filter: blur(26px);
+  opacity: 0.45;
+  transform: scale(1.04);
+}
+
+.chrome-foil__band--mint {
+  background: conic-gradient(
+    from calc(240deg + calc(var(--shift-x) * 0.4)),
+    var(--chrome-glow-mint),
+    var(--chrome-holo-mint),
+    var(--chrome-glow-mint)
+  );
+  filter: blur(34px);
+  opacity: 0.4;
+  transform: scale(1.08);
+}
+
+/*
+ * The wordmark. Three layered elements:
+ *  1. .chrome-wordmark__fill — a CSS chrome-gradient TEXT fill, the honest
+ *     fallback. Always visible; the canvas sits on top of it.
+ *  2. .chrome-wordmark__metal — the WebGL canvas, clipped to the glyph
+ *     shapes via mix-blend-mode: screen over the fill, transparent until
+ *     its first real frame (.is-live).
+ *  3. .chrome-wordmark__glyphs — the per-character sweep reveal, laid out
+ *     as the visible (opaque ink) glyphs that clip open then sweep.
+ *
+ * The layout is driven by __glyphs; __fill and __metal are absolutely
+ * positioned to match its metrics. Each glyph carries its index in
+ * --chrome-ci for the sweep stagger.
+ */
+.chrome-wordmark {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  font-family: var(--chrome-font-display);
+  font-weight: 800;
+  font-size: clamp(3.6rem, 17vw, 12rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--chrome-ink);
+}
+
+.chrome-wordmark__fill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* CSS chrome text gradient — the no-JS / shader-failed fallback.
+     A horizontal silver band stack matching the shader's palette. */
+  background: linear-gradient(
+    180deg,
+    var(--chrome-ink) 0%,
+    var(--chrome-silver) 30%,
+    var(--chrome-highlight) 48%,
+    var(--chrome-silver) 62%,
+    var(--chrome-ink) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  z-index: 2;
+}
+
+.chrome-wordmark__metal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  mix-blend-mode: screen;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* The canvas only appears once its first real frame has been drawn. */
+.chrome-js .chrome-wordmark__metal.is-live {
+  opacity: 0.9;
+  transition: opacity 900ms var(--chrome-ease-foil);
+}
+
+.chrome-wordmark__glyphs {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/*
+ * The per-glyph sweep reveal. CSS default = fully visible (no-JS, reduced
+ * motion rest here). Under .chrome-js, each glyph starts clipped to nothing
+ * (inset(0 100% 0 0)) and a metallic sweep crosses it as it becomes
+ * visible — the clip-path wipes left-to-right while a chrome ::after
+ * highlight band passes across the glyph.
+ */
+.chrome-wordmark__ch {
+  display: inline-block;
+  position: relative;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* The glyphs themselves are invisible ink — they exist only for layout +
+   the clip mask. The visible metal is __fill + __metal beneath them. We
+   make them transparent so the layered fill/metal show through, while
+   their box still defines the headline's metrics. */
+.chrome-js .chrome-wordmark__ch {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 620ms var(--chrome-ease-chrome);
+  transition-delay: calc(var(--chrome-ci, 0) * 55ms);
+}
+
+.chrome-js .chrome-wordmark.is-visible .chrome-wordmark__ch {
+  clip-path: inset(0 0 0 0);
+}
+
+.chrome-hero__sub {
+  margin: 1.6rem 0 0;
+  font-family: var(--chrome-font-hangul);
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+  letter-spacing: 0.18em;
+  color: var(--chrome-ink);
+}
+
+.chrome-hero__line {
+  margin: 1rem 0 0;
+  font-size: clamp(0.98rem, 1.7vw, 1.15rem);
+  letter-spacing: 0.04em;
+  color: var(--chrome-ink);
+}
+
+.chrome-hero__lineko {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-hero__hint {
+  margin: 3.4rem 0 0;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  color: var(--chrome-ink-soft);
+}
+
+.chrome-js .chrome-hero__hint {
+  animation: chrome-hint 4.2s var(--chrome-ease-foil) infinite;
+}
+
+/* ==========================================================================
+   01 · Manifesto — holographic-foil plaque + rules ledger
+   ========================================================================== */
+
+.chrome-manifesto {
+  padding: clamp(84px, 12vh, 150px) 0 clamp(40px, 6vh, 64px);
+}
+
+.chrome-manifesto__plaque {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-inline: clamp(20px, 6vw, 72px);
+}
+
+.chrome-credo {
+  margin: 0 0 1rem;
+  font-family: var(--chrome-font-display);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: var(--chrome-ink);
+}
+
+.chrome-credo:lang(ko) {
+  font-weight: 400;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-credo:last-child {
+  margin-bottom: 0;
+}
+
+.chrome-rules {
+  max-width: 920px;
+  margin: clamp(3rem, 7vh, 4.6rem) auto 0;
+  padding-inline: clamp(20px, 6vw, 72px);
+}
+
+.chrome-rule {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.2rem 2rem;
+  padding: clamp(1.5rem, 3.5vh, 2.4rem) 0;
+  border-top: 1px solid var(--chrome-hairline);
+}
+
+.chrome-rule:last-of-type {
+  border-bottom: 1px solid var(--chrome-hairline);
+}
+
+.chrome-rule__num {
+  margin: 0 0 0.4rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--chrome-accent-deep);
+}
+
+.chrome-rule__name {
+  margin: 0 0 0.6rem;
+  font-family: var(--chrome-font-display);
+  font-weight: 800;
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  letter-spacing: -0.01em;
+  color: var(--chrome-ink);
+}
+
+.chrome-rule__nameko {
+  margin-left: 0.3em;
+  font-weight: 400;
+  font-size: 0.6em;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-rule__line {
+  margin: 0;
+  letter-spacing: 0.02em;
+  color: var(--chrome-ink);
+}
+
+.chrome-rule__line:lang(ko) {
+  margin-top: 0.15rem;
+  color: var(--chrome-ink-2);
+}
+
+@media (min-width: 760px) {
+  .chrome-rule {
+    grid-template-columns: 4rem 1fr;
+  }
+
+  .chrome-rule__num {
+    grid-row: 1 / span 3;
+  }
+}
+
+/* ==========================================================================
+   02 · The line — chrome pills in holographic-foil cards
+   ========================================================================== */
+
+.chrome-line {
+  padding: clamp(64px, 10vh, 110px) 0;
+}
+
+.chrome-line__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 3vw, 32px);
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 6vw, 72px);
+  list-style: none;
+}
+
+@media (min-width: 620px) {
+  .chrome-line__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .chrome-line__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.chrome-line__item {
+  display: flex;
+}
+
+.chrome-line__card {
+  width: 100%;
+  min-height: 460px;
+  padding: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.chrome-line__art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 260 / 340;
+  margin-bottom: 1rem;
+}
+
+.chrome-pill {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.chrome-line__body {
+  position: relative;
+  z-index: 1;
+}
+
+.chrome-line__code {
+  margin: 0 0 0.4rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--chrome-accent-deep);
+}
+
+.chrome-line__name {
+  margin: 0 0 0.3rem;
+  font-family: var(--chrome-font-display);
+  font-weight: 800;
+  font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+  letter-spacing: -0.01em;
+  color: var(--chrome-ink);
+}
+
+.chrome-line__nameko {
+  margin-left: 0.3em;
+  font-weight: 400;
+  font-size: 0.66em;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-line__shade {
+  margin: 0 0 0.8rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-line__shadeko {
+  margin-left: 0.4em;
+  color: var(--chrome-ink-soft);
+}
+
+.chrome-line__line {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--chrome-ink);
+}
+
+.chrome-line__line:lang(ko) {
+  margin-top: 0.15rem;
+  color: var(--chrome-ink-2);
+}
+
+/* ==========================================================================
+   Holographic foil panel (shared by cards + manifesto plaque)
+   ========================================================================== */
+
+.chrome-holofoil {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  background: var(--chrome-silver);
+  overflow: hidden;
+  isolation: isolate; /* contain mix-blend-mode: screen inside the panel */
+  --shift-x: calc(var(--chrome-px) * 1deg);
+  --shift-y: calc(var(--chrome-py) * 1deg);
+}
+
+.chrome-holofoil__base {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    var(--chrome-silver) 0%,
+    var(--chrome-highlight) 35%,
+    var(--chrome-silver) 55%,
+    var(--chrome-ink-soft) 100%
+  );
+  z-index: 0;
+}
+
+.chrome-holofoil__band {
+  position: absolute;
+  inset: -10%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.chrome-holofoil__band--sky {
+  background: conic-gradient(
+    from calc(0deg + var(--shift-x)),
+    var(--chrome-glow-sky) 0%,
+    transparent 30%,
+    var(--chrome-holo-sky) 55%,
+    transparent 80%,
+    var(--chrome-glow-sky) 100%
+  );
+  filter: blur(10px);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.chrome-holofoil__band--pink {
+  background: conic-gradient(
+    from calc(120deg + calc(var(--shift-x) * -0.6)),
+    var(--chrome-glow-pink) 0%,
+    transparent 35%,
+    var(--chrome-holo-pink) 60%,
+    transparent 85%,
+    var(--chrome-glow-pink) 100%
+  );
+  filter: blur(14px);
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.chrome-holofoil__band--mint {
+  background: conic-gradient(
+    from calc(240deg + calc(var(--shift-x) * 0.4)),
+    var(--chrome-glow-mint) 0%,
+    transparent 35%,
+    var(--chrome-holo-mint) 60%,
+    transparent 85%,
+    var(--chrome-glow-mint) 100%
+  );
+  filter: blur(18px);
+  opacity: 0.45;
+  z-index: 3;
+}
+
+/* a moving white specular streak across the panel — the "wet" read */
+.chrome-holofoil__spec {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.2) 52%,
+    transparent 62%
+  );
+  background-size: 280% 280%;
+  background-position: calc(50% + var(--chrome-px) * 40%) calc(50% + var(--chrome-py) * 40%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.chrome-holofoil__content {
+  position: relative;
+  z-index: 5;
+}
+
+.chrome-holofoil__label {
+  position: absolute;
+  top: clamp(0.7rem, 1.5vw, 1rem);
+  right: clamp(0.7rem, 1.5vw, 1rem);
+  z-index: 6;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--chrome-highlight);
+  background: var(--chrome-ink);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Chrome button — the wet metal pill
+   ========================================================================== */
+
+.chrome-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 2rem;
+  min-height: 52px;
+  font-family: var(--chrome-font-display);
+  font-weight: 800;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--chrome-highlight); /* 14.09:1 on the chrome-ink core */
+  background: var(--chrome-ink);   /* the dark chrome core */
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  isolation: isolate;
+  transition: transform 220ms var(--chrome-ease-foil);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* the chrome-silver frame around the dark core */
+.chrome-btn__frame {
+  position: absolute;
+  inset: -3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    var(--chrome-highlight) 0%,
+    var(--chrome-silver) 45%,
+    var(--chrome-ink-soft) 100%
+  );
+  z-index: -1;
+}
+
+/* the wet top sheen — a white band across the top half */
+.chrome-btn__sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.35) 40%,
+    transparent 55%
+  );
+  mix-blend-mode: screen;
+}
+
+/* the breathing holographic accent rim glow */
+.chrome-btn__rim {
+  position: absolute;
+  inset: -2px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px var(--chrome-accent), 0 0 18px 2px var(--chrome-accent);
+  opacity: 0.4;
+  z-index: -2;
+}
+
+.chrome-js .chrome-btn__rim {
+  animation: chrome-glow 4.2s var(--chrome-ease-foil) infinite;
+}
+
+.chrome-btn__label {
+  position: relative;
+  z-index: 1;
+}
+
+.chrome-btn:hover {
+  transform: translateY(-2px);
+}
+
+.chrome-btn:hover .chrome-btn__rim {
+  opacity: 0.8;
+}
+
+.chrome-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.chrome-btn:focus-visible {
+  outline: 2px solid var(--chrome-accent);
+  outline-offset: 4px;
+}
+
+/* ==========================================================================
+   Footer — the chrome sign-off
+   ========================================================================== */
+
+.chrome-footer {
+  position: relative;
+  padding: clamp(84px, 12vh, 150px) clamp(20px, 6vw, 72px)
+    clamp(72px, 10vh, 120px);
+  text-align: center;
+  background:
+    radial-gradient(110% 70% at 50% 0%, var(--chrome-holo-pink) 0%, transparent 55%),
+    var(--chrome-holo-mist);
+}
+
+.chrome-footer__sign {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.chrome-footer__eyebrow {
+  margin: 0 0 1.4rem;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--chrome-accent-deep);
+}
+
+.chrome-footer__call {
+  margin: 0;
+  font-family: var(--chrome-font-display);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 7vw, 4.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--chrome-ink);
+}
+
+.chrome-footer__callko {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 400;
+  font-size: 0.4em;
+  letter-spacing: 0.04em;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-footer__line {
+  margin: 1.4rem 0 0;
+  font-size: clamp(0.98rem, 1.7vw, 1.12rem);
+  letter-spacing: 0.03em;
+  color: var(--chrome-ink);
+}
+
+.chrome-footer__lineko {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--chrome-ink-2);
+}
+
+.chrome-footer__cta {
+  margin-top: 2.4rem;
+}
+
+.chrome-footer__rule {
+  width: clamp(80px, 16vw, 150px);
+  height: 2px;
+  margin: clamp(2.6rem, 6vh, 3.6rem) auto;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--chrome-accent),
+    transparent
+  );
+}
+
+.chrome-footer__address {
+  max-width: 560px;
+  margin: 0 auto 2.2rem;
+  font-style: normal;
+  font-size: 0.95rem;
+  line-height: 2;
+  letter-spacing: 0.03em;
+  color: var(--chrome-ink);
+}
+
+.chrome-footer__address :lang(ko) {
+  color: var(--chrome-ink-2);
+}
+
+.chrome-footer__legal {
+  margin: 0;
+  font-family: var(--chrome-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--chrome-ink-soft);
+}
+
+/* ==========================================================================
+   Reveals — all pre-states gated behind .chrome-js
+   ========================================================================== */
+
+.chrome-js [data-reveal="fade"] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--chrome-reveal-ms) var(--chrome-ease-foil),
+    transform var(--chrome-reveal-ms) var(--chrome-ease-foil);
+  will-change: opacity, transform;
+}
+
+.chrome-js [data-reveal="fade"].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity only
+   ========================================================================== */
+
+@keyframes chrome-hint {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(5px);
+  }
+}
+
+@keyframes chrome-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — everything settles into one composed, static state:
+   the headline rests in its CSS chrome-gradient fill (no shader loop), the
+   foil sits in its neutral rainbow, glyphs are fully unclipped, reveals
+   appear instantly, nothing pulses.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .chrome-js .chrome-hero__hint,
+  .chrome-js .chrome-btn__rim {
+    animation: none;
+  }
+
+  .chrome-js .chrome-wordmark__ch {
+    clip-path: none !important;
+    transition: none;
+  }
+
+  .chrome-js .chrome-wordmark__metal.is-live {
+    transition: none;
+    opacity: 0.85;
+  }
+
+  .chrome-js [data-reveal="fade"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .chrome-btn {
+    transition: none;
+  }
+}

@@ -1,5 +1,38 @@
 [
   {
+    "slug": "aurora",
+    "no": 6,
+    "title": {
+      "en": "AURORA — A field guide for the next thing you'll build",
+      "ko": "오로라 — 당신이 다음에 지을 것을 위한 안내서"
+    },
+    "description": {
+      "en": "A SaaS launch site that breathes — a slow morphing CSS mesh gradient in violet, fuchsia, cyan and emerald drifts behind translucent glass cards that assemble as you scroll and lean toward the cursor. The Linear-era launch page, redrawn as a living sky.",
+      "ko": "스스로 숨 쉬는 SaaS 런칭 사이트. 바이올렛·퓨시아·시안·에메랄드가 천천히 모프하는 CSS 메쉬 그라디언트 위에 반투명 유리 카드가 떠 있고, 스크롤하면 모여들며 커서를 향해 기울인다. 리니어 시대의 런칭 페이지를, 살아 있는 하늘로 다시 그렸다."
+    },
+    "aesthetic": "glass-futurism",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#7c3aed",
+    "theme": "dark",
+    "published": "2026-07-18",
+    "featured": false
+  },
+  {
     "slug": "bloom",
     "no": 28,
     "title": {
@@ -138,6 +171,40 @@
     "featured": false
   },
   {
+    "slug": "chrome",
+    "no": 25,
+    "title": {
+      "en": "CHROME — Liquid Metal Beauty, Seoul",
+      "ko": "크롬 — 액체 금속 뷰티, 서울"
+    },
+    "description": {
+      "en": "A Y2K beauty house that pours its lip glosses in liquid chrome and seals every card in holographic foil — a WebGL chrome shader that ripples to the pointer, foil layers that shift rainbow with your hand, and headline glyphs that reveal in a metallic sweep.",
+      "ko": "립 글로스를 액체 크롬으로 붓고 모든 카드를 홀로그램 박으로 마감하는 Y2K 뷰티 하우스 — 포인터를 따라 출렁이는 WebGL 크롬 셰이더, 손을 따라 무지개로 흐르는 박 레이어, 금속 스위프로 드러나는 헤드라인 글리프."
+    },
+    "aesthetic": "retro-y2k",
+    "techniques": [
+      "webgl-shader",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "fashion-beauty"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "canvas"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff8ad8",
+    "theme": "light",
+    "published": "2026-07-18",
+    "featured": false
+  },
+  {
     "slug": "giwa",
     "no": 8,
     "title": {
@@ -170,6 +237,39 @@
     "accent": "#8a3b2a",
     "theme": "light",
     "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "glitch",
+    "no": 35,
+    "title": {
+      "en": "GLITCH — Corrupted-Signal Studio",
+      "ko": "글리치 — 파손된 신호의 스튜디오"
+    },
+    "description": {
+      "en": "A VFX and experimental-music studio that treats failure as a finish — datamoshed type, RGB-split wordmarks, scanline and noise overlays, and ASCII that scrambles itself periodically. The aesthetic of failing hardware made intentional.",
+      "ko": "고장을 완성으로 받아들이는 VFX·실험음악 스튜디오 — 데이타모시된 타이포, RGB 분할 워드마크, 주사선과 노이즈 오버레이, 주기적으로 뒤바뀌는 ASCII. 고장 나는 하드웨어를 의도로 끌어올린 미학."
+    },
+    "aesthetic": "terminal-core",
+    "techniques": [
+      "crt-scanline",
+      "clip-path-reveal",
+      "ascii-render"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#00ffe5",
+    "theme": "dark",
+    "published": "2026-07-18",
     "featured": false
   },
   {
@@ -379,6 +479,40 @@
     "featured": false
   },
   {
+    "slug": "memphis",
+    "no": 30,
+    "title": {
+      "en": "MEMPHIS — Sottsass Studio",
+      "ko": "멤피스 — 소트사스 스튜디오"
+    },
+    "description": {
+      "en": "A postmodern design-studio portfolio in full Memphis 80s style — squiggles, terrazzo, confetti blobs, and zigzags in teal, coral, marigold, and cobalt. A project grid that FLIP-rearranges on filter, shape layers that drift toward your pointer, and geometric clip-path reveals. Maximalist, but every shape has a job.",
+      "ko": "80년대 멤피스 포스트모던 스타일 그대로의 디자인 스튜디오 포트폴리오 — 물결, 테라조, 꽃가루 블롭, 지그재그가 틸·코랄·마리골드·코발트 위로 흩날린다. 필터를 바꾸면 FLIP으로 재정렬되는 프로젝트 그리드, 포인터를 향해 떠다니는 도형 레이어, 기하학적 클립패스 리빌. 난잡해 보여도 각 도형은 제 할 일이 있다."
+    },
+    "aesthetic": "tactile-craft",
+    "techniques": [
+      "clip-path-reveal",
+      "pointer-parallax",
+      "flip-layout"
+    ],
+    "industry": [
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#2bb1a8",
+    "theme": "light",
+    "published": "2026-07-18",
+    "featured": false
+  },
+  {
     "slug": "minhwa",
     "no": 18,
     "title": {
@@ -516,6 +650,42 @@
     "featured": false
   },
   {
+    "slug": "orbit",
+    "no": 36,
+    "title": {
+      "en": "ORBIT — Studio Configurator",
+      "ko": "오르빗 — 스튜디오 컨피규레이터"
+    },
+    "description": {
+      "en": "A fictional studio that drops one silhouette at a time. The signature sneaker sits on a turntable in a seamless studio — drag to orbit it a full 360°, with real specular key light, a turntable contact shadow, and a floor reflection that foreshortens as you swing. Three colorways, an exploded build scrubbed by scroll, and panels that wipe in. Pure canvas 2.5D — no three.js, no image files.",
+      "ko": "한 번에 하나의 실루엣만 내놓는 가상의 스튜디오. 시그니처 스니커즈가 시임리스 스튜디오의 턴테이블 위에 앉아 있다 — 드래그해 360도로 궤도를 돌면, 진짜 스펙큘러 키 라이트와 턴테이블 접촉 그림자, 회전에 따라 단축되는 바닥 반사가 따라온다. 세 가지 컬러웨이, 스크롤로 분해하는 빌드 섹션, 와이프되며 들어오는 패널. 순수 캔버스 2.5D — three.js도, 이미지 파일도 없다."
+    },
+    "aesthetic": "three-d-immersive",
+    "techniques": [
+      "pointer-parallax",
+      "scroll-scrub-pinned",
+      "clip-path-reveal"
+    ],
+    "industry": [
+      "product",
+      "retail-food"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff5722",
+    "theme": "dark",
+    "published": "2026-07-18",
+    "featured": false
+  },
+  {
     "slug": "pale-signal",
     "no": 3,
     "title": {
@@ -548,6 +718,39 @@
     "theme": "dark",
     "published": "2026-07-10",
     "featured": true
+  },
+  {
+    "slug": "pixel",
+    "no": 29,
+    "title": {
+      "en": "PIXEL — 8-bit Arcade Studio",
+      "ko": "PIXEL — 8비트 아케이드 스튜디오"
+    },
+    "description": {
+      "en": "A retro indie-game studio landing page for a fictional 2003 arcade — a hero hand-drawn one CSS box-shadow per pixel, a CRT scanline and chromatic-aberration glow that breathes on idle, and a chiptune high-score marquee. Saturated dopamine color, chrome, and the warm optimism of a CRT that still believes someone is playing.",
+      "ko": "2003년 아케이드를 배경으로 한 가상 인디 게임 스튜디오의 랜딩 페이지 — 픽셀 하나당 box-shadow 하나로 손그린 히어로, 유휴 상태에서 숨 쉬는 CRT 주사선과 색수차 빛, 칩튠 하이스코어 마퀴. 포화된 도파민 컬러, 크롬, 그리고 여전히 누군가가 플레이하고 있다고 믿는 CRT의 따뜻한 낙관주의."
+    },
+    "aesthetic": "retro-y2k",
+    "techniques": [
+      "ascii-render",
+      "crt-scanline",
+      "marquee"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff3d8a",
+    "theme": "dark",
+    "published": "2026-07-18",
+    "featured": false
   },
   {
     "slug": "ppang",
@@ -648,6 +851,40 @@
     "media": "code",
     "accent": "#0066ff",
     "theme": "dark",
+    "published": "2026-07-18",
+    "featured": false
+  },
+  {
+    "slug": "riso",
+    "no": 34,
+    "title": {
+      "en": "RISO — Independent Press & Cinema",
+      "ko": "리소 — 독립 출판·아트시네마"
+    },
+    "description": {
+      "en": "An independent book publisher and art-house cinema in full risograph print style — halftone dots, fluorescent pink + blue + yellow overprinting, visible registration marks, and paper grain. A pinned press section builds the overprint layer by layer as you scroll.",
+      "ko": "독립 출판사이자 아트하우스 영화관을 리소그래프 인쇄 그 자체로 — 망점, 형광 핑크·블루·옐로의 겹침 인쇄, 보이는 레지스터 마크, 종이 결. 스크롤하면 핀 된 인쇄기 섹션에서 도수가 한 장씩 쌓인다."
+    },
+    "aesthetic": "tactile-craft",
+    "techniques": [
+      "feturbulence-texture",
+      "clip-path-reveal",
+      "scroll-scrub-pinned"
+    ],
+    "industry": [
+      "publishing"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff3d7f",
+    "theme": "light",
     "published": "2026-07-18",
     "featured": false
   },
@@ -890,6 +1127,41 @@
     "accent": "#7d2a26",
     "theme": "light",
     "published": "2026-07-10",
+    "featured": false
+  },
+  {
+    "slug": "zine",
+    "no": 32,
+    "title": {
+      "en": "ZINE — The Photocopy Underground",
+      "ko": "잡지 — 복사기 지하의 독립지"
+    },
+    "description": {
+      "en": "An independent punk-culture zine that reads like a photocopied collage: dense multi-column newsprint, highlighter marks, taped-on halftone photos, marginalia, drop caps, and a scrolling masthead band — the loud opposite of the airy literary magazine.",
+      "ko": "복사기로 찍어낸 콜라주처럼 읽히는 독립 펑크 잡지. 빽빽한 다단 신문지, 형광펜 자국, 테이프로 붙인 망점 사진, 날글, 두문자, 그리고 흐르는 헤드라인 띠 — 조용한 문예지의 정반대, 시끄러운 지면."
+    },
+    "aesthetic": "editorial-serif",
+    "techniques": [
+      "clip-path-reveal",
+      "marquee",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "publishing",
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#fff44f",
+    "theme": "light",
+    "published": "2026-07-18",
     "featured": false
   }
 ]

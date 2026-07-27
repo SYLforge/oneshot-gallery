@@ -1,0 +1,310 @@
+# RISO — breakdown
+
+## The hook
+
+Behind a door in Seochon, a three-drum risograph press shares a wall with a
+24-seat cinema. The press publishes books; the cinema screens the films
+those books became. The page is one of its print sheets: uncoated paper,
+three fluorescent spot colors that darken where they cross, halftone dots
+instead of flat ink, registration marks at the corners, and a paper grain
+laid over everything. As you scroll, the signature scene builds an image
+one drum at a time — pink, then blue, then yellow — and the overlaps do the
+work that a fourth color would do in any other process.
+
+The design bet: riso printing is a *craft*, not a gimmick, when its physics
+are honored literally in the browser. Transparent inks multiply where they
+meet. Spot colors are dot screens, not fills. A misregistration is a few
+pixels of drift, not a filter. Build the physics and the aesthetic stops
+being a costume.
+
+## Art direction
+
+The palette is a drum inventory: one paper (`#f0ebe0`, uncoated, never
+white), one warm ink (`#1a1410`), and three fluorescents — pink, blue,
+yellow. The honesty rule is a physics claim: every drum-colored element
+carries `mix-blend-mode: multiply`, because that is what transparent riso
+inks do on paper. Where pink crosses blue the sheet goes violet
+(`#2d175d`); where all three cross it goes near-ink. The press section
+exists to *show* this building up, drum by drum, with scroll.
+
+The other physics claim is halftone. Spot colors are never flat fills here
+— they are `radial-gradient` dot fields (color ~40% → transparent ~44%,
+tiled at 10–11px), so each plate reads as a screen of dots the way a real
+drum lays ink. A pink "flat" is actually thousands of pink dots; multiply
+two of those dot fields and the dots interleave and darken in the gaps. It
+is doing worldbuilding.
+
+Fluorescent pink and yellow both failed their interview as text colors
+(2.84:1 and 1.21:1 on paper) and were reassigned as plates and surfaces.
+Everything readable that touches them is ink sitting *on* them (ink-on-pink
+5.4:1, ink-on-yellow 12.6:1). Blue earns body use only at large sizes and
+as link underlines (3.0:1 as text); paragraph body is always ink at 15.3:1.
+
+Three faces, three jobs: Noto Serif KR sets every Hangul and leads the
+Korean display — a book publisher sets Korean in a serif first; Lora is the
+Latin body and section serif, italic for the English subtitle track; Space
+Mono is the press operator's ledger hand (folios, specs, captions). Both
+serif stacks fall through into Noto Serif KR, so Hangul never lands in a
+fallback sans. One serif register across both languages is the tell that the
+house hand-sets them in the same family of letter.
+
+This is where RISO parts ways with BLUNT, the gallery's other riso-adjacent
+entry. Blunt is one ink, 3px rules, hard black shadows, 0ms anti-easing — a
+*shop* shouting. RISO is three drums, 1px hairlines, soft low shadows,
+gentle ease-out reveals, serif-led — a *press* building an image. Same
+process family, opposite temperament. And where MEMPHIS (the first
+tactile-craft entry) is Sottsass geometry — confetti shapes, hard pattern —
+RISO is print physics: overprint, halftone, registration. You would not
+confuse a grayscale crop of either.
+
+## Technique 1 — feturbulence-texture: paper that is a dot screen
+
+The grain over the whole page is one static SVG rect run through
+`feTurbulence`:
+
+```xml
+<feTurbulence type="fractalNoise" baseFrequency="0.9"
+              numOctaves="2" seed="11" stitchTiles="stitch" />
+<feColorMatrix type="matrix"
+               values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0" />
+```
+
+The color matrix zeroes RGB and scales the noise alpha to 0.07 — sparser
+than blunt's 0.1, because this stock is cooler and the halftone already
+adds texture. The wrapper multiplies it over the page at opacity 0.5. Net
+effect is a few percent of darkening in the fiber — enough that flat paper
+stops reading as `#f0ebe0` and starts reading as stock, never enough to
+threaten a contrast ratio (ink starts at 15.3:1). It is never animated.
+Grain in paper does not move, and a page that believes it is printed has to
+hold that line.
+
+The halftone is the texture's partner, and it is CSS, not SVG:
+
+```css
+.riso-plate__dots--pink {
+  background-image: radial-gradient(var(--riso-pink) 40%, transparent 44%);
+  background-size: 11px 11px;
+  transform: translate(-3px, -2px);   /* a little off-register */
+}
+```
+
+Each drum is a dot field; the per-plate `translate` (pink −3/−2, blue
++3/+2, yellow −1/+3) is the deliberate misregistration that makes a
+three-color print read as three passes instead of one muddy layer. Multiply
+two of these and the dots interleave where they don't overlap — the gaps
+stay paper, the overlaps darken. That is the entire illusion of a riso
+print, in two CSS declarations per plate.
+
+The ambient motion budget — the only continuous movement on the page — is
+the three color-bar chips drifting a few pixels toward the pointer:
+
+```ts
+// RegistrationMarks.tsx — the print breathes under the hand
+const k = 1 - Math.pow(0.82, 1);          // frame-normalized approach
+ptx += (tx - ptx) * k;
+pink.style.transform  = `translate(${(-2 + ptx * 1.0).toFixed(2)}px, …)`;
+blue.style.transform  = `translate(${( 1.5 + ptx * 0.7).toFixed(2)}px, …)`;
+yellow.style.transform= `translate(${(-0.5 + ptx * -0.5).toFixed(2)}px, …)`;
+```
+
+Each chip has a different constant offset and a different gain, so the
+"registered" state already reads as slightly off and the drift amplifies
+the misregistration rather than creating it. It is capped at ±4px and dies
+under reduced motion and without JS. A rAF only spins up on pointer move
+and stops itself when the chips settle.
+
+## Technique 2 — clip-path-reveal: sheets feeding off the press
+
+Every reveal is a hard press cut — a `clip-path: inset()` that opens like a
+sheet feeding out of the machine. Two triggers, one technique.
+
+The hero poster opens once, on mount, from the center out:
+
+```css
+.riso-poster__sheet { clip-path: inset(50% 50% 50% 50%); }
+.riso-js .riso-poster__sheet {
+  animation: riso-press-open 520ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+@keyframes riso-press-open {
+  from { clip-path: inset(50% 50% 50% 50%); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+```
+
+The book covers below use the same `inset()` wipe, but from the bottom edge
+(sheets feed up off the press), and they are triggered by an
+IntersectionObserver that adds `.is-revealed`:
+
+```css
+.riso-js .riso-cover { clip-path: inset(100% 0 0 0); transition: clip-path 520ms …; }
+.riso-js .riso-cover.is-revealed { clip-path: inset(0 0 0 0); }
+```
+
+```ts
+// BookGrid.tsx — covers wipe open as they feed into view
+const io = new IntersectionObserver((hits) => {
+  for (const h of hits) {
+    if (h.isIntersecting) {
+      h.target.classList.add("is-revealed");
+      io.unobserve(h.target);
+    }
+  }
+}, { rootMargin: "0px 0px -12% 0px", threshold: 0.12 });
+covers.forEach((c) => io.observe(c));
+```
+
+The `-12%` bottom rootMargin delays each reveal until the cover is
+comfortably in view, and because covers enter at slightly different scroll
+positions, a row reveals as a small staggered print run without any
+explicit delay math. The pre-reveal clip is gated behind `.riso-js`, so
+without JavaScript every cover is simply `clip-path: inset(0)` — fully
+printed. Under reduced motion the same: the covers stand revealed.
+
+Why clip-path and not opacity or transform? A press sheet doesn't fade in
+and doesn't scale up — it *feeds*, a hard edge sweeping across paper.
+`clip-path: inset()` is the only property that gives you that hard
+directional cut without masking image content (and there are no images here
+anyway; everything is CSS + inline SVG). The easing is the soft
+`cubic-bezier(0.16, 1, 0.3, 1)` ease-out — a press is a deliberate machine,
+so the cut decelerates gently rather than snapping.
+
+## Technique 3 — scroll-scrub-pinned: the press, drum by drum
+
+The signature section is a tall (320vh) block with a sticky inner. As you
+scroll through it, one print sheet builds up in three drum passes, and the
+overprint darkens in real time. A single CSS custom property,
+`--riso-press` (0 → 1), is the whole timeline; the hook only writes that
+one property:
+
+```ts
+// useScrollProgress.ts — the build is scrubbable, not autoplaying
+const total = rect.height - window.innerHeight;
+const traveled = Math.min(Math.max(-rect.top, 0), total);
+target = traveled / total;
+// …
+const next = value + (target - value) * 0.12 * (dt / 16.7);   // lerp
+el.style.setProperty("--riso-press", value.toFixed(4));
+```
+
+The lerp (0.12 per 60fps-normalized frame) is what makes it *scrubbable* —
+scroll fast and the ink lays fast, scroll back up and it lifts off again,
+with a half-beat of catch-up so the build never jitters. The rAF loop runs
+only while the section is on screen (IntersectionObserver) and the tab is
+visible (visibilitychange). One passive scroll listener, one custom
+property, zero layout work.
+
+The three drum phases are CSS arithmetic over `--riso-press`, using
+`clamp()` to turn the linear 0–1 into three staggered 0–1 ramps:
+
+```css
+.riso-plate--pink   { opacity: clamp(0, (var(--riso-press) - 0.02) * 3.33, 1); }
+.riso-plate--blue   { opacity: clamp(0, (var(--riso-press) - 0.35) * 3.03, 1); }
+.riso-plate--yellow { opacity: clamp(0, (var(--riso-press) - 0.68) * 3.13, 1); }
+```
+
+Pink starts at 0.02 and is full by ~0.32; blue starts at 0.35 and is full
+by ~0.68; yellow starts at 0.68 and is full by 1.00. The `* 3.0x` is just
+`1 / rise-width`. Each plate is a multiply halftone field, so as its opacity
+rises the dots lay down over the ink line-art (a book opening into a film
+reel) and over the previous plates — the overlaps darken exactly as they
+would on a real three-drum pass. The drum legend beside the sheet lights up
+on the same ramps, so you can read which pass you're watching.
+
+The CSS fallback is `var(--riso-press, 1)` — fully printed — so without
+JavaScript, and under reduced motion (where the hook does nothing and the
+reduced-motion block pins `--riso-press: 1`), the signature sheet simply
+stands complete, all three drums down. The SSR frame *is* the finished
+print; the scroll build is a grace note on top.
+
+## Motion math
+
+- **Scrub lerp 0.12 per normalized frame.** Half-life of the progress error
+  is ~5.4 frames (~90ms) — fast enough to track a deliberate scroll, slow
+  enough that a fast scroll leaves a visible catch-up as the ink chases.
+  This is the same family of constant as blunt's marquee approach, tuned
+  slower because a press is patient.
+- **Color-bar drift `1 − 0.82^1` per frame.** Half-life ~3.5 frames (~58ms)
+  — the chips respond to the pointer in a beat and settle just as fast.
+  Capped at ±4px so the misregistration never reads as broken.
+- **Reveal 520ms `cubic-bezier(0.16, 1, 0.3, 1)`.** A steep ease-out: the
+  cut moves quickly then decelerates — a sheet snapping through the press
+  and slowing as it clears the drum.
+- **Phase rise width 0.30.** Each drum takes 30% of the scroll to come to
+  full opacity, with 3% gaps between phases — enough overlap that the build
+  feels continuous, enough separation that you can point to "the blue pass".
+
+## Performance notes
+
+- One rAF loop active at a time: the press scrubber runs only while the
+  press section is on screen; the color-bar drift loop only spins on
+  pointer move and self-terminates when chips settle. Idle page = zero
+  frames.
+- Everything animated is `transform`, `opacity`, `filter`, or `clip-path`
+  — no layout properties move. The grain, halftone fields, and
+  registration marks are static gradients/SVG rasterized once.
+- The scrub loop writes one CSS custom property per frame; the three drum
+  opacities and three legend opacities are all derived from it in CSS, so
+  six visual changes cost one style write.
+- `dt` is clamped to 48ms in every loop, so a background tab resuming never
+  teleports the build or the chips.
+- No canvas, no images, no dependencies; the heaviest assets are three
+  Google font families (Noto Serif KR is the largest, subset to
+  latin + korean).
+
+## Accessibility notes
+
+- **Reduced motion:** `usePrefersReducedMotion` (a `useSyncExternalStore`
+  over matchMedia) statics the press build (the hook returns early and the
+  reduced-motion CSS block pins `--riso-press: 1`), removes the clip-path
+  animations and transitions, and the color-bar drift never subscribes. The
+  page loses nothing but momentum — it is the finished print.
+- **No-JS:** the press sheet's CSS fallback is `var(--riso-press, 1)` so
+  all three drums are down; covers default to `clip-path: inset(0)`; the
+  poster's pre-reveal clip is gated behind `.riso-js`. The no-JS page is a
+  complete three-color print.
+- **Keyboard:** the two links and the mailto are the only interactive
+  elements; both are real anchors, reachable in order, with a visible 2px
+  ink `:focus-visible` ring (yellow on the footer). The press build and
+  reveals are scroll/IO-driven, not interactive, so there is nothing to
+  operate — the content is fully present without them.
+- **Overprint without double-speak:** the pink/blue wordmark plates and the
+  footer overprint word are CSS pseudo-elements using
+  `content: attr(data-text) / ""` — the alt-text syntax keeps screen
+  readers from hearing "RISO" or "오버프린트" multiple times.
+- **Scene description:** the pinned press stage carries `role="img"` with a
+  visually hidden bilingual label describing the build, so the signature
+  scene is not a black box to assistive tech.
+- **Contrast:** ink/paper 15.3:1, ink/yellow 12.6:1, ink/pink 5.4:1,
+  paper/blue 5.1:1 — every functional pairing clears AA with the grain's
+  worst case included; pink/paper (2.84:1) and yellow/paper (1.21:1) exist
+  only as plates, halftone fields, and surfaces under ink.
+
+## Distinction from the family
+
+RISO is the second `tactile-craft` entry. MEMPHIS (the first) is Sottsass
+geometry — confetti shapes, hard pattern, primary color blocks; its craft
+is *composition*. RISO is risograph *physics* — overprint multiply,
+halftone dot screens, registration marks, paper grain; its craft is
+*process*. A grayscale crop of MEMPHIS reads as geometric pattern; a
+grayscale crop of RISO reads as a halftoned print sheet with registration
+crosshairs. Different medium (pattern vs print), different signature
+(sticker scatter vs scroll-built overprint), different typography
+(display-sans vs literary-serif), different accent (MEMPHIS primaries vs
+RISO fluorescents). They share only the family's thesis: design you can
+almost touch.
+
+## Remix ideas
+
+1. **Riso record label.** Keep the press build, swap the book covers for
+   7" sleeves, the cinema reel for a tape spool, and the catalogue for a
+   discography. The overprint word becomes the label name in three plates;
+   the color bar becomes a track listing keyed to drum color.
+2. **Protest poster archive.** Same three-drum system played urgent: the
+   press builds a poster layer by layer, the catalogue is an archive of
+   past prints, each cover a real CSS poster. The misregistration gets a
+   little wider; the fluorescents get a little louder.
+3. **Children's picture-book publisher.** The press build becomes a single
+   illustration revealing in three colors (pink sky, blue sea, yellow sun),
+   the catalogue covers become storybook pages, and the overprint word
+   becomes the book's title in both scripts. Gentler easings, rounder
+   marks, same physics.

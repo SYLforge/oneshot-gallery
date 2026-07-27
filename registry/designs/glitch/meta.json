@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "glitch",
+  "no": 35,
+  "title": {
+    "en": "GLITCH — Corrupted-Signal Studio",
+    "ko": "글리치 — 파손된 신호의 스튜디오"
+  },
+  "description": {
+    "en": "A VFX and experimental-music studio that treats failure as a finish — datamoshed type, RGB-split wordmarks, scanline and noise overlays, and ASCII that scrambles itself periodically. The aesthetic of failing hardware made intentional.",
+    "ko": "고장을 완성으로 받아들이는 VFX·실험음악 스튜디오 — 데이타모시된 타이포, RGB 분할 워드마크, 주사선과 노이즈 오버레이, 주기적으로 뒤바뀌는 ASCII. 고장 나는 하드웨어를 의도로 끌어올린 미학."
+  },
+  "aesthetic": "terminal-core",
+  "techniques": ["crt-scanline", "clip-path-reveal", "ascii-render"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#00ffe5",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}

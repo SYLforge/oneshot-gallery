@@ -1,0 +1,1069 @@
+/* ==========================================================================
+   잡지 ZINE — The Photocopy Underground · No. 32
+   editorial-serif · ink on newsprint · the loud opposite of a literary journal
+   Scoped by convention to .zine-root; classes prefixed zine-.
+   ========================================================================== */
+
+.zine-root {
+  /* -- palette ------------------------------------------------------------ */
+  --z-newsprint: #f4f0e6;          /* the page — cheap newsprint cream */
+  --z-stock: #fbf8ef;              /* taped-on photos & pull quotes — glossy on newsprint */
+  --z-ink: #1a1a1a;                /* text ink — 14.6:1 on newsprint */
+  --z-ink-soft: #4a4640;           /* secondary text — 8.7:1 on newsprint */
+  --z-highlighter: #fff44f;        /* DECORATIVE ONLY — the marker stroke (2.3:1 as text — never alone) */
+  --z-stamp: #c1272d;              /* rubber-stamp red — folios, the stamp, focus ring (5.7:1, large weight) */
+  --z-rule: #1a1a1a;               /* column rules & borders — ink hairlines */
+  --z-rule-faint: rgba(26, 26, 26, 0.22); /* derived: faint photo frames */
+  --z-tape: rgba(26, 26, 26, 0.10);       /* derived: tape translucency */
+  --z-tape-cream: rgba(244, 240, 230, 0.66); /* derived: cream tape over photos */
+  --z-shadow: rgba(26, 26, 26, 0.18);     /* derived: photocopy contact shadow */
+
+  /* -- type ---------------------------------------------------------------- */
+  --z-font-body: var(--font-noto-serif-kr), "Noto Serif KR", Georgia, serif;
+  --z-font-display: var(--font-oswald), "Oswald", "Noto Serif KR", Impact, sans-serif;
+  /* Body stack is Noto Serif KR first: Hangul and Latin serif both resolve there;
+     display elements get --z-font-display by class. */
+
+  /* -- motion --------------------------------------------------------------- */
+  --z-ease-punk: cubic-bezier(0.2, 0.8, 0.2, 1);   /* clip wipes & letters: snappy, slight settle */
+  --z-ease-stamp: cubic-bezier(0.34, 1.56, 0.5, 1); /* stamp drop: ~6% overshoot */
+  --z-reveal-ms: 560ms;
+
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--z-newsprint);
+  color: var(--z-ink);
+  font-family: var(--z-font-body);
+  font-size: clamp(15px, 0.4vw + 13.5px, 18px);
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Korean is the first language of this zine: Noto Serif KR, keep-all line
+   breaking, a touch of negative tracking. Display weight for punch. */
+.zine-root :lang(ko) {
+  font-family: var(--z-font-body);
+  letter-spacing: -0.005em;
+  word-break: keep-all;
+  line-height: 1.72;
+}
+
+/* Highlighter-yellow selection, scoped to the entry root (ink on yellow) */
+.zine-root ::selection {
+  background: var(--z-highlighter);
+  color: var(--z-ink);
+}
+
+/* Keyboard focus: a stamp-red ring, offset like a registration mark */
+.zine-root :focus-visible {
+  outline: 2px solid var(--z-stamp);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* Visually hidden — carries the marquee credits for assistive tech */
+.zine-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.zine-issue {
+  position: relative;
+}
+
+/* ==========================================================================
+   Links — the highlighter-stroke underline
+   A static faint ink underline is always present (touch users never lose
+   the affordance); a highlighter-yellow bar slides in beneath the text
+   (scaleX 0 → 1) on hover/focus. Pure CSS: works without JS.
+   ========================================================================== */
+
+.zine-link {
+  position: relative;
+  display: inline-block;
+  color: var(--z-ink);
+  text-decoration: none;
+  border-bottom: 2px solid rgba(26, 26, 26, 0.3);
+  padding: 0 0.05em 0.04em;
+  transition: color 220ms var(--z-ease-punk);
+}
+
+.zine-link:hover,
+.zine-link:focus-visible {
+  color: var(--z-ink);
+  border-bottom-color: rgba(26, 26, 26, 0.12);
+}
+
+.zine-link__hl {
+  position: absolute;
+  left: -0.1em;
+  right: -0.1em;
+  bottom: -0.05em;
+  height: 0.62em;
+  background: var(--z-highlighter);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: -1;
+  transition: transform 260ms var(--z-ease-punk);
+}
+
+.zine-link:hover .zine-link__hl,
+.zine-link:focus-visible .zine-link__hl {
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 340ms var(--z-ease-stamp);
+}
+
+/* ==========================================================================
+   Kicker — the zine's recurring ornament: an ink rule, then a small-tracked
+   bilingual label, set in condensed display
+   ========================================================================== */
+
+.zine-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 0.9rem;
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--z-stamp);
+}
+
+.zine-kicker::before {
+  content: "";
+  display: block;
+  width: 2.4rem;
+  height: 2px;
+  background: var(--z-stamp);
+}
+
+.zine-kicker :lang(ko) {
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   01 · Hero — the photocopied masthead
+   ========================================================================== */
+
+.zine-hero {
+  position: relative;
+  padding: clamp(20px, 4vw, 44px);
+}
+
+.zine-hero__frame {
+  position: relative;
+  border: 2px solid var(--z-ink);
+  padding: clamp(16px, 3vw, 30px);
+  background: var(--z-newsprint);
+}
+
+/* Topline — folio, dateline, price in a tight row */
+.zine-hero__topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem 1.4rem;
+  padding-bottom: 0.8rem;
+  margin-bottom: clamp(1.4rem, 4vh, 2.6rem);
+  border-bottom: 1px solid var(--z-ink);
+  font-family: var(--z-font-display);
+  font-weight: 500;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--z-ink-soft);
+}
+
+.zine-hero__folio {
+  color: var(--z-stamp);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.zine-hero__price {
+  color: var(--z-ink);
+  font-weight: 600;
+}
+
+/* Identity block — the wordmark + dek */
+.zine-hero__id {
+  margin-bottom: clamp(1.4rem, 4vh, 2.4rem);
+}
+
+.zine-hero__wordmark {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: clamp(0.6rem, 2vw, 1.6rem);
+  margin: 0 0 0.6rem;
+  line-height: 0.86;
+}
+
+.zine-hero__wordmark-ko {
+  display: inline-flex;
+  font-family: var(--z-font-body);
+  font-weight: 900;
+  font-size: clamp(5.5rem, 24vw, 17rem);
+  letter-spacing: -0.04em;
+}
+
+.zine-hero__wordmark-en {
+  font-family: var(--z-font-display);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 9vw, 6.4rem);
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  color: var(--z-ink);
+  padding-bottom: 0.12em;
+}
+
+.zine-hero__ch {
+  display: inline-block;
+}
+
+.zine-hero__rule {
+  height: 2px;
+  background: var(--z-ink);
+  margin: 0.4rem 0 1rem;
+}
+
+.zine-hero__dek {
+  margin: 0;
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+/* The highlighter behind the dek — a marker pass, slightly oversized */
+.zine-hero__hl {
+  background: var(--z-highlighter);
+  color: var(--z-ink);
+  padding: 0.04em 0.18em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Hero lower grid — lede / stamp / mast */
+.zine-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.4rem 2rem;
+  padding-top: clamp(1.2rem, 3vh, 2rem);
+  border-top: 1px solid var(--z-ink);
+}
+
+@media (min-width: 760px) {
+  .zine-hero__grid {
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.zine-hero__lede {
+  margin: 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  line-height: 1.62;
+  font-weight: 500;
+}
+
+/* The rubber stamp — a rotated red box, hand-inked */
+.zine-hero__stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  justify-self: start;
+  padding: 0.55rem 1.1rem;
+  border: 3px double var(--z-stamp);
+  color: var(--z-stamp);
+  transform: rotate(-7deg);
+  background: var(--z-newsprint);
+}
+
+.zine-hero__stamp-en {
+  font-family: var(--z-font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+}
+
+.zine-hero__stamp-ko {
+  font-weight: 900;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+}
+
+.zine-hero__mast {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--z-ink-soft);
+  align-self: end;
+}
+
+.zine-hero__mast-year {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--z-ink);
+  letter-spacing: 0.04em;
+}
+
+/* Begin-reading anchor */
+.zine-hero__begin {
+  margin-top: clamp(1.6rem, 4vh, 2.6rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--z-ink);
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Hero choreography — JS-gated; the no-JS hero is simply complete */
+.zine-js .zine-hero__ch {
+  animation: z-letter 540ms var(--z-ease-punk) both;
+  animation-delay: calc(90ms + var(--z-ci, 0) * 160ms);
+}
+
+.zine-js .zine-hero__wordmark-en {
+  opacity: 0;
+  transform: translateY(0.4em);
+  animation: z-rise 600ms var(--z-ease-punk) 420ms both;
+}
+
+.zine-js .zine-hero__topline,
+.zine-js .zine-hero__rule {
+  opacity: 0;
+  animation: z-rise 600ms var(--z-ease-punk) 260ms both;
+}
+
+.zine-js .zine-hero__dek {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: z-rise 600ms var(--z-ease-punk) 560ms both;
+}
+
+.zine-js .zine-hero__grid {
+  opacity: 0;
+  animation: z-rise 700ms var(--z-ease-punk) 720ms both;
+}
+
+.zine-js .zine-hero__begin {
+  opacity: 0;
+  animation: z-rise 700ms var(--z-ease-punk) 900ms both;
+}
+
+/* ==========================================================================
+   02 · Marquee band — the scrolling masthead & credits
+   ========================================================================== */
+
+.zine-marquee {
+  position: relative;
+  border-top: 2px solid var(--z-ink);
+  border-bottom: 2px solid var(--z-ink);
+  background: var(--z-highlighter);
+}
+
+.zine-marquee__row {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-block: 0.5em;
+  font-family: var(--z-font-display);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2vw, 1.3rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--z-ink);
+}
+
+.zine-marquee__track {
+  display: inline-flex;
+  will-change: transform;
+}
+
+.zine-marquee__group {
+  display: inline-flex;
+  flex: none;
+}
+
+.zine-marquee__item {
+  display: inline-flex;
+  align-items: baseline;
+  padding-right: 1.6em;
+}
+
+.zine-marquee__sep {
+  display: inline-block;
+  padding: 0 0.9em;
+  color: var(--z-stamp);
+}
+
+.zine-marquee__en {
+  padding-left: 0.5em;
+}
+
+/* ==========================================================================
+   03 · Lead essay — multi-column newsprint, drop cap, pull quote, marginalia
+   ========================================================================== */
+
+.zine-essay {
+  padding: clamp(64px, 12vh, 140px) clamp(20px, 4vw, 40px);
+}
+
+.zine-essay__head {
+  max-width: 46rem;
+  margin: 0 auto clamp(2.4rem, 6vh, 4rem);
+}
+
+.zine-essay__title {
+  margin: 0 0 0.3rem;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.zine-essay__title-en {
+  margin: 0 0 1rem;
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--z-ink-soft);
+}
+
+.zine-essay__byline {
+  margin: 0;
+  font-family: var(--z-font-display);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--z-ink-soft);
+}
+
+/* Multi-column running text — the dense newsprint register */
+.zine-essay__columns {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 940px) {
+  .zine-essay__columns {
+    column-count: 2;
+    column-gap: 2.6rem;
+    column-rule: 1px solid var(--z-ink);
+    max-width: 60rem;
+  }
+}
+
+.zine-essay__p {
+  margin: 0;
+  break-inside: avoid;
+}
+
+.zine-essay__p--ko {
+  margin-bottom: 0.7rem;
+  line-height: 1.74;
+  font-weight: 500;
+}
+
+.zine-essay__p--en {
+  margin-bottom: 1.4rem;
+  font-family: var(--z-font-display);
+  font-weight: 400;
+  font-size: 0.92em;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--z-ink-soft);
+}
+
+.zine-essay__columns > .zine-essay__p--en:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Drop cap — a real wrapped glyph with the highlighter behind it.
+   Using a span (not ::first-letter) so the highlighter marker sits behind
+   only the cap, and the KO paragraph leads the column honestly. */
+.zine-essay__p--drop {
+  position: relative;
+}
+
+.zine-essay__drop {
+  float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7em;
+  height: 1.5em;
+  margin: 0.06em 0.12em 0 0;
+  font-family: var(--z-font-body);
+  font-weight: 900;
+  font-size: 3.6em;
+  line-height: 1;
+  color: var(--z-ink);
+  background: var(--z-highlighter);
+  text-align: center;
+  /* slight misregistration — the cap leans into the collage */
+  transform: rotate(-2deg);
+}
+
+/* Pull quote — highlighter stroke behind a bilingual blockquote */
+.zine-pull {
+  break-inside: avoid;
+  margin: clamp(1.4rem, 3.5vh, 2.2rem) 0;
+  padding: clamp(1rem, 2.5vh, 1.6rem) clamp(0.9rem, 2vw, 1.3rem);
+  background: var(--z-stock);
+  border-left: 4px solid var(--z-ink);
+  border-top: 1px solid var(--z-ink);
+  border-bottom: 1px solid var(--z-ink);
+  position: relative;
+  /* a touch of misregistration against the column */
+  transform: rotate(-0.6deg);
+}
+
+.zine-pull__text {
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+}
+
+.zine-pull__text-en {
+  margin: 0;
+  font-family: var(--z-font-display);
+  font-weight: 500;
+  font-size: clamp(0.92rem, 1.8vw, 1.05rem);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--z-ink-soft);
+}
+
+.zine-pull__hl {
+  background: var(--z-highlighter);
+  color: var(--z-ink);
+  padding: 0.02em 0.16em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Marginalia — a margin rail of pinned annotations at wide viewports */
+.zine-marginalia {
+  max-width: 60rem;
+  margin: clamp(1.6rem, 4vh, 2.6rem) auto 0;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 1080px) {
+  .zine-essay {
+    position: relative;
+  }
+
+  .zine-marginalia {
+    position: absolute;
+    top: clamp(8rem, 18vh, 12rem);
+    right: clamp(20px, 4vw, 5vw);
+    width: 13rem;
+    margin: 0;
+  }
+}
+
+.zine-marg {
+  position: relative;
+  margin: 0;
+  padding: 0.7rem 0.7rem 0.7rem 1.6rem;
+  background: var(--z-stock);
+  border: 1px solid var(--z-ink);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--z-ink-soft);
+  box-shadow: 2px 2px 0 var(--z-ink);
+}
+
+.zine-marg--a {
+  transform: rotate(-1.4deg);
+}
+
+.zine-marg--b {
+  transform: rotate(1deg);
+}
+
+.zine-marg--c {
+  transform: rotate(-0.6deg);
+}
+
+.zine-marg__star {
+  position: absolute;
+  left: 0.5rem;
+  top: 0.55rem;
+  color: var(--z-stamp);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   04 · Article grid — dense multi-column, clip-path reveals, halftone photos
+   ========================================================================== */
+
+.zine-grid {
+  padding: clamp(56px, 10vh, 120px) clamp(16px, 3vw, 32px);
+  border-top: 2px solid var(--z-ink);
+}
+
+.zine-grid__head {
+  max-width: 64rem;
+  margin: 0 auto clamp(2rem, 5vh, 3.4rem);
+}
+
+.zine-grid__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem 1rem;
+  margin: 0 0 0.5rem;
+  font-weight: 900;
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.zine-grid__title-en {
+  font-family: var(--z-font-display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.6vw, 1.7rem);
+  letter-spacing: 0.06em;
+  color: var(--z-stamp);
+}
+
+.zine-grid__sub {
+  margin: 0;
+  font-family: var(--z-font-display);
+  font-weight: 500;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  letter-spacing: 0.04em;
+  color: var(--z-ink-soft);
+}
+
+.zine-grid__wall {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1rem, 2.4vh, 1.8rem);
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 620px) {
+  .zine-grid__wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .zine-grid__wall {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The card — a clipped panel */
+.zine-card {
+  position: relative;
+  background: var(--z-newsprint);
+  border: 1px solid var(--z-ink);
+  padding: clamp(0.7rem, 1.5vw, 1rem);
+  box-shadow: 3px 3px 0 var(--z-ink);
+}
+
+.zine-card__body {
+  padding-top: 0.8rem;
+}
+
+.zine-card__kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0 0 0.4rem;
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--z-stamp);
+}
+
+.zine-card__title {
+  margin: 0 0 0.25rem;
+  font-weight: 900;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+}
+
+.zine-card__title-en {
+  margin: 0 0 0.6rem;
+  font-family: var(--z-font-display);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  color: var(--z-ink-soft);
+}
+
+.zine-card__dek {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  font-weight: 500;
+}
+
+.zine-card__dek-en {
+  margin: 0 0 0.7rem;
+  font-family: var(--z-font-display);
+  font-weight: 400;
+  font-size: 0.78rem;
+  line-height: 1.46;
+  letter-spacing: 0.01em;
+  color: var(--z-ink-soft);
+}
+
+.zine-card__byline {
+  margin: 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--z-rule-faint);
+  font-family: var(--z-font-display);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--z-ink-soft);
+}
+
+/* The halftone photo panel — clipped alongside the card */
+.zine-photo {
+  position: relative;
+  background: var(--z-stock);
+  border: 1px solid var(--z-rule-faint);
+  aspect-ratio: 320 / 236;
+  overflow: hidden;
+  transform: rotate(var(--z-photo-rot, 0deg));
+  box-shadow: 0 8px 18px -14px var(--z-shadow);
+}
+
+.zine-photo__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.zine-photo__dot {
+  fill: var(--z-ink);
+}
+
+/* Tape strips holding the photo on — translucent cream, rotated */
+.zine-photo__tape {
+  position: absolute;
+  width: 38%;
+  height: 1.1rem;
+  background: var(--z-tape-cream);
+  box-shadow: 0 1px 2px var(--z-tape);
+}
+
+.zine-photo__tape--tl {
+  left: -6%;
+  top: -4%;
+  transform: rotate(-32deg);
+}
+
+.zine-photo__tape--br {
+  right: -6%;
+  bottom: -4%;
+  transform: rotate(-32deg);
+}
+
+/* Clip-path reveal — direction-aware polygon wipes.
+   Each variant sets a different pre-state; the is-visible state opens
+   the polygon fully. The photo + body reveal together with a beat delay. */
+.zine-js [data-reveal="clip"] .zine-photo {
+  transition: clip-path 760ms var(--z-ease-punk);
+  transition-delay: var(--z-reveal-delay, 0ms);
+  will-change: clip-path;
+}
+
+.zine-js [data-reveal="clip"] .zine-card__body {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 600ms var(--z-ease-punk),
+    transform 600ms var(--z-ease-punk);
+  transition-delay: calc(var(--z-reveal-delay, 0ms) + 180ms);
+}
+
+.zine-js [data-reveal="clip"].is-visible .zine-card__body {
+  opacity: 1;
+  transform: none;
+}
+
+/* Direction variants — left-to-right, right-to-left, top-to-bottom, diagonal */
+.zine-js .zine-card--clip-ltr .zine-photo {
+  clip-path: inset(0 100% 0 0);
+}
+.zine-js .zine-card--clip-ltr.is-visible .zine-photo {
+  clip-path: inset(0 0 0 0);
+}
+
+.zine-js .zine-card--clip-rtl .zine-photo {
+  clip-path: inset(0 0 0 100%);
+}
+.zine-js .zine-card--clip-rtl.is-visible .zine-photo {
+  clip-path: inset(0 0 0 0);
+}
+
+.zine-js .zine-card--clip-ttb .zine-photo {
+  clip-path: inset(0 0 100% 0);
+}
+.zine-js .zine-card--clip-ttb.is-visible .zine-photo {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Diagonal — a polygon wipe for the photocopied feel */
+.zine-js .zine-card--clip-diag .zine-photo {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+}
+.zine-js .zine-card--clip-diag.is-visible .zine-photo {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* ==========================================================================
+   05 · Colophon
+   ========================================================================== */
+
+.zine-colophon {
+  padding: clamp(64px, 12vh, 140px) clamp(20px, 4vw, 40px)
+    clamp(72px, 14vh, 160px);
+  border-top: 2px solid var(--z-ink);
+  background: var(--z-newsprint);
+}
+
+.zine-colophon__inner {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.zine-colophon__title {
+  margin: 0 0 0.7rem;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.zine-colophon__statement {
+  margin: 0 0 2.4rem;
+  max-width: 34rem;
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.zine-colophon__statement-en {
+  font-family: var(--z-font-display);
+  font-weight: 400;
+  font-size: 0.92em;
+  letter-spacing: 0.02em;
+  color: var(--z-ink-soft);
+}
+
+/* The ledger — a dense masthead-style definition list */
+.zine-colophon__ledger {
+  margin: 0 0 2.6rem;
+}
+
+.zine-colophon__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.2rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--z-ink);
+}
+
+@media (min-width: 620px) {
+  .zine-colophon__row {
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+  }
+}
+
+.zine-colophon__row dt {
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--z-stamp);
+}
+
+.zine-colophon__row dd {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.zine-colophon__end {
+  padding-top: 1rem;
+  border-top: 2px solid var(--z-ink);
+}
+
+.zine-colophon__legal {
+  margin: 0 0 1.2rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.zine-colophon__top {
+  margin: 0;
+  font-family: var(--z-font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.zine-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--z-reveal-ms) var(--z-ease-punk),
+    transform var(--z-reveal-ms) var(--z-ease-punk);
+  transition-delay: var(--z-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+/* Marginalia slides in from the margin (right rail) */
+.zine-js [data-reveal="margin"] {
+  transform: translateX(22px);
+}
+
+/* clip panels: the body handles its own reveal (above); the card wrapper
+   itself should not also translate — keep it in place. */
+.zine-js [data-reveal="clip"] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.zine-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity only
+   ========================================================================== */
+
+@keyframes z-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.32em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Per-glyph headline reveal — a punk letter-splice, not a quiet rise */
+@keyframes z-letter {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em) rotate(-4deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — one composed, static zine
+   - hero: no choreography, fully composed
+   - reveals: present, no motion
+   - marginalia: present, no slide
+   - marquee: holds still (the hook returns early)
+   - clip panels: photos fully shown, no wipe
+   - link highlighter: simply present, no draw
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .zine-js .zine-hero__ch,
+  .zine-js .zine-hero__wordmark-en,
+  .zine-js .zine-hero__topline,
+  .zine-js .zine-hero__rule,
+  .zine-js .zine-hero__dek,
+  .zine-js .zine-hero__grid,
+  .zine-js .zine-hero__begin {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .zine-js [data-reveal],
+  .zine-js [data-reveal="margin"],
+  .zine-js [data-reveal="clip"] .zine-card__body {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Every clip variant opens fully so the photo is shown */
+  .zine-js [data-reveal="clip"] .zine-photo,
+  .zine-js .zine-card--clip-ltr .zine-photo,
+  .zine-js .zine-card--clip-rtl .zine-photo,
+  .zine-js .zine-card--clip-ttb .zine-photo,
+  .zine-js .zine-card--clip-diag .zine-photo {
+    clip-path: none;
+    transition: none;
+  }
+
+  /* The photo's intentional misregistration rotation stays — it is art
+     direction, not motion. Only transform/opacity animations are removed. */
+
+  .zine-link .zine-link__hl,
+  .zine-link:hover .zine-link__hl,
+  .zine-link:focus-visible .zine-link__hl {
+    transform: scaleX(1);
+    transition: none;
+  }
+}

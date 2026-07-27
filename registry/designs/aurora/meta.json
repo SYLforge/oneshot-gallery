@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "aurora",
+  "no": 6,
+  "title": {
+    "en": "AURORA — A field guide for the next thing you'll build",
+    "ko": "오로라 — 당신이 다음에 지을 것을 위한 안내서"
+  },
+  "description": {
+    "en": "A SaaS launch site that breathes — a slow morphing CSS mesh gradient in violet, fuchsia, cyan and emerald drifts behind translucent glass cards that assemble as you scroll and lean toward the cursor. The Linear-era launch page, redrawn as a living sky.",
+    "ko": "스스로 숨 쉬는 SaaS 런칭 사이트. 바이올렛·퓨시아·시안·에메랄드가 천천히 모프하는 CSS 메쉬 그라디언트 위에 반투명 유리 카드가 떠 있고, 스크롤하면 모여들며 커서를 향해 기울인다. 리니어 시대의 런칭 페이지를, 살아 있는 하늘로 다시 그렸다."
+  },
+  "aesthetic": "glass-futurism",
+  "techniques": ["scroll-scrub-pinned", "pointer-parallax", "char-split-reveal"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "glm-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-07-18",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#7c3aed",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-07-18",
+  "featured": false
+}
