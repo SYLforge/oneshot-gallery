@@ -73,8 +73,7 @@ export default function PrismPage() {
             aria-labelledby="prism-beam-label"
           >
             <title id="prism-beam-label">
-              <span lang="ko">프리즘이 빛을 굴절시킨다 — 흰 빛이 일곱 색으로 갈라진다.</span>
-              The prism refracts light — white splits into seven colors.
+              프리즘이 빛을 굴절시킨다 — 흰 빛이 일곱 색으로 갈라진다. The prism refracts light — white splits into seven colors.
             </title>
             {/* incoming white beam */}
             <line
