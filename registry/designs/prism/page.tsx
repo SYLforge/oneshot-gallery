@@ -66,6 +66,17 @@ export default function PrismPage() {
 
         {/* The prism scene — pointer-parallax + svg-line-draw */}
         <section ref={stageRef} className="prism-stage" data-reveal="">
+          {/* A generated spectrum-beam render behind the SVG refraction — the
+              ambient dispersed light of the glass studio, so the stage reads
+              as a real light-room, not a flat card. The SVG line-draw stays
+              the focal diagram. */}
+          <img
+            className="prism-stage__field"
+            src="/media/prism/spectrum-beam.avif"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+          />
           <svg
             className="prism-beam-svg"
             viewBox="0 0 800 400"

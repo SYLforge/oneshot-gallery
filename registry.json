@@ -2283,7 +2283,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -2913,7 +2913,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -3093,7 +3093,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {

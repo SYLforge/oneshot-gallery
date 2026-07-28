@@ -37,7 +37,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "One spectrum-beam render generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 1024x768, 30 steps, CFG 5.5, encoded to AVIF + WebP (~17 KB). It drifts behind the SVG refraction diagram in the glass stage at 30% multiply — the ambient dispersed light of the studio. The SVG line-draw prism stays the focal diagram. Full recipe in PROMPT.md image-recipe.",
+      "ko": "한 장의 스펙트럼 빔 렌더는 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 1024x768, 30스텝, CFG 5.5, AVIF + WebP 인코딩(약 17KB). 글래스 스테이지에서 SVG 굴절 도표 뒤에 30% multiply로 떠 있다 — 스튜디오의 대기 분산광. SVG 선 드로잉 프리즘은 초점 도표로 남는다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "light",

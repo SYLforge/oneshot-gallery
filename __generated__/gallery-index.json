@@ -846,7 +846,7 @@
         "svg"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#ff2d95",
     "theme": "dark",
     "published": "2026-07-27",
@@ -1087,7 +1087,7 @@
         "canvas"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#f472b6",
     "theme": "light",
     "published": "2026-07-27",
@@ -1155,7 +1155,7 @@
         "svg"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#06b6d4",
     "theme": "light",
     "published": "2026-07-27",

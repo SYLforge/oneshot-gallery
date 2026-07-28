@@ -57,9 +57,31 @@
 
 /* Hero */
 .pop-hero {
+  position: relative;
+  isolation: isolate;
   padding: clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
   text-align: center;
 }
+
+/* The generated pop-art burst — a candy explosion behind the title, so the
+   wordmark pops out of real comic energy, not a flat pink void. Saturated
+   and soft-edged; the bubble buttons stay the foreground. */
+.pop-hero__burst {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.42;
+  filter: saturate(1.25) blur(1px);
+  z-index: -1;
+  pointer-events: none;
+}
+.pop-kicker,
+.pop-title,
+.pop-title__ko,
+.pop-sub { position: relative; z-index: 1; }
 .pop-kicker {
   font-size: 0.78rem;
   font-weight: 700;

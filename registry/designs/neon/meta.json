@@ -28,7 +28,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "One rain-city render generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 1024x1024, 30 steps, CFG 5.5, encoded to AVIF + WebP (~161 KB). It drifts hard-darkened behind the CSS skyline at 40% opacity — the real Blade-Runner metropolis the code buildings + hanging signs sit in front of. The interactive parallax scene stays code; only the city depth is photographic. Full recipe in PROMPT.md image-recipe.",
+      "ko": "한 장의 빗물 도시 렌더는 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 1024x1024, 30스텝, CFG 5.5, AVIF + WebP 인코딩(약 161KB). CSS 스카이라인 뒤에 40% 불투명도로 강하게 어둡게 떠 있다 — 코드 빌딩과 매달린 간판이 그 앞에 서 있는 실제 블레이드 러너 대도시. 인터랙티브 패럴랙스 씬은 코드로 남고, 도시의 깊이만 사진이다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "dark",

@@ -63,6 +63,16 @@ export default function NeonPage() {
           aria-label="거리 씬 — 빗물에 번지는 네온. The rain-slick street scene."
           ref={sceneRef}
         >
+          {/* A generated rain-city render deep behind the CSS skyline — the
+              real Blade-Runner city the code buildings sit in front of.
+              Darkened and blurred; the hanging signs + puddle stay focal. */}
+          <img
+            className="neon-scene__city"
+            src="/media/neon/rain-city.avif"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+          />
           <div className="neon-skyline" aria-hidden="true">
             <span className="neon-bldg neon-bldg--1" />
             <span className="neon-bldg neon-bldg--2" />

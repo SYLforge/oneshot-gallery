@@ -39,6 +39,16 @@ export default function PopPage() {
     <div ref={rootRef} className={`${fredoka.variable} ${notoSansKR.variable} pop-root`}>
       <div ref={revealRef} className="pop-doc">
         <header className="pop-hero">
+          {/* A generated pop-art burst behind the title — the candy explosion
+              the wordmark pops out of. The bubble buttons below stay the
+              interactive foreground; this is the comic energy behind them. */}
+          <img
+            className="pop-hero__burst"
+            src="/media/pop/pop-burst.avif"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+          />
           <p className="pop-kicker"><span lang="ko">풍선 만화 가게</span> · BUBBLE COMIC STORE</p>
           <h1 className="pop-title" aria-label="POP 팝">
             {TITLE.split("").map((ch, i) => (

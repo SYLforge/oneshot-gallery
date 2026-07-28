@@ -38,7 +38,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "One pop-art burst render generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 1024x768, 28 steps, CFG 6, encoded to AVIF + WebP (~122 KB). It sits behind the title at 42% opacity — the candy explosion the wordmark pops out of. The bubble buttons stay the interactive foreground. Full recipe in PROMPT.md image-recipe.",
+      "ko": "한 장의 팝아트 버스트 렌더는 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 1024x768, 28스텝, CFG 6, AVIF + WebP 인코딩(약 122KB). 타이틀 뒤에 42% 불투명도로 앉아 있다 — 워드마크가 터져 나오는 사탕색 폭발. 버블 버튼은 인터랙티브 전경으로 남는다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "light",
