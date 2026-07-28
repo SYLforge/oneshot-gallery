@@ -299,7 +299,7 @@
         "canvas"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#ff8ad8",
     "theme": "light",
     "published": "2026-07-18",
@@ -860,7 +860,7 @@
       "ko": "야식 — 새벽 한 시의 포장마차"
     },
     "description": {
-      "en": "A late-night pojangmacha street-food tent told as a crowded, steamy webtoon chapter — the third webtoon twin. Where PPANG! is a cozy dawn bakery and MOONLIT is a lonely delivery ride, NIGHT-SNACK is the loud, neon-lit, soju-clinking chaos of the tent at 1 AM: skewers on the grill, steam off the odeng, halftone-dot SFX, ASCII neon signs that flicker, and glasses you can drag and clink. Pure code — no generated imagery, just CSS/SVG webtoon shapes.",
+      "en": "A late-night pojangmacha street-food tent told as a crowded, steamy webtoon chapter — the third webtoon twin. Where PPANG! is a cozy dawn bakery and MOONLIT is a lonely delivery ride, NIGHT-SNACK is the loud, neon-lit, soju-clinking chaos of the tent at 1 AM: skewers on the grill, steam off the odeng, halftone-dot SFX, ASCII neon signs that flicker, and glasses you can drag and clink. The foreground is pure CSS/SVG webtoon shapes; one generated alley photo drifts blurred behind the hero as the back-alley atmosphere.",
       "ko": "새벽 한 시의 포장마차를 시끌벅적하고 김 서리는 웹툰 한 화로 풀었다 — 웹툰 셋째 쌍둥이. 빵!이 따뜻한 새벽 빵집이고 달빛이 외로운 배달이라면, 야식은 새벽 한 시 포장마차의 시끄럽고 네온 밝고 소주잔이 부딪치는 혼잡함이다 — 굽는 꼬치, 피어나는 오뎅 김, 하프톤 점 효과음, 깜빡이는 ASCII 네온 사인, 그리고 끌어서 부딪칠 수 있는 잔. 순수 코드 — 생성 이미지 없이 오직 CSS/SVG 웹툰 도형."
     },
     "aesthetic": "webtoon",
@@ -880,7 +880,7 @@
         "svg"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#ffb347",
     "theme": "dark",
     "published": "2026-07-18",
@@ -1257,7 +1257,7 @@
         "svg"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#0066ff",
     "theme": "dark",
     "published": "2026-07-18",
@@ -1395,7 +1395,7 @@
         "dom"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#e8869e",
     "theme": "dark",
     "published": "2026-07-18",
@@ -1464,7 +1464,7 @@
         "svg"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#ff7a45",
     "theme": "light",
     "published": "2026-07-18",
@@ -1567,7 +1567,7 @@
         "svg"
       ]
     },
-    "media": "code",
+    "media": "hybrid",
     "accent": "#c6ff3a",
     "theme": "dark",
     "published": "2026-07-18",

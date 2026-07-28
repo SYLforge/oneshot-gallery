@@ -691,6 +691,7 @@
 
 .sakura-garden__bloom {
   position: relative;
+  z-index: 2;
   width: 100%;
   height: clamp(320px, 50vh, 560px);
   margin-block: clamp(1rem, 3vh, 2rem);
@@ -699,6 +700,25 @@
   overflow: hidden;
   background: var(--sakura-ink-panel);
   pointer-events: auto;
+}
+
+/* The generated sumi-e plate — the garden's memory behind the live bloom.
+   Darkened and blended so the code petals read on top of it; the
+   feDisplacementMap ink-settle filter (defined inline on the SVG) lets the
+   plate share the entry's ink language rather than sit as a flat photo.   */
+.sakura-garden__plate {
+  position: absolute;
+  z-index: 1;
+  inset: clamp(1rem, 3vh, 2rem) 0;
+  width: 100%;
+  height: clamp(320px, 50vh, 560px);
+  opacity: 0.32;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  filter: saturate(0.85);
+}
+@media (max-width: 760px) {
+  .sakura-garden__plate { inset: 1rem 0; }
 }
 
 .sakura-garden__notes {

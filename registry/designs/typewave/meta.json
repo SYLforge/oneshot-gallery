@@ -28,7 +28,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "One waveform render generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 1024x768, 28 steps, CFG 6, encoded to AVIF + WebP (~59 KB). It drifts behind the hero cover at 18% opacity in screen blend — thin acid sound-lines so the pure-black Swiss stage reads as a room with signal. The wordmark's velocity stretch stays the focal motion. Full recipe in PROMPT.md image-recipe.",
+      "ko": "한 장의 파형 렌더는 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 1024x768, 28스텝, CFG 6, AVIF + WebP 인코딩(약 59KB). 히어로 표지 뒤에 18% 불투명도로 screen 블렌드되어 떠 있다 — 순흑 스위스 무대가 신호가 있는 방으로 읽히도록 하는 얇은 산성 사운드선. 워드마크의 속도 스트레치는 초점 모션으로 남는다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "dark",

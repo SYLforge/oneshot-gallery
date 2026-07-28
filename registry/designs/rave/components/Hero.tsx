@@ -30,6 +30,17 @@ export default function Hero() {
 
   return (
     <header className="rave-hero" ref={rootRef}>
+      {/* The room at 02:00 — a generated club render deep behind the strobe,
+         so the hero reads as a real dark room with light cutting through
+         fog, not a flat black flyer. The wordmark + blue plate stay focal. */}
+      <img
+        className="rave-hero__room"
+        src="/media/rave/strobe-floor.avif"
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      />
+
       {/* CRT scanline overlay — decorative, pointer-transparent, hero-only. */}
       <div className="rave-hero__scanlines" aria-hidden="true" />
 

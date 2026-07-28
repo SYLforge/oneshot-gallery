@@ -20,10 +20,12 @@ import { useReveal } from "./hooks/useReveal";
  * food tent at 1 AM — neon, steam, soju, laughter, skewers. Energetic and
  * social, not lonely or cozy.
  *
- * This is a PURE-CODE entry (no generated images) — unlike ppang/moonlit
- * which ship ComfyUI illustrations. NIGHT-SNACK uses CSS/SVG webtoon-style
- * illustration: flat shapes, halftone dots, speech-bubble SFX, neon glow.
- * `media.source: "code"`, no `media/` payload, budget 0.
+ * The foreground is PURE CODE (CSS/SVG webtoon shapes) — unlike ppang/moonlit
+ * which ship ComfyUI illustrations as the subject. NIGHT-SNACK keeps its
+ * signature CSS/SVG illustration (flat shapes, halftone dots, speech-bubble
+ * SFX, neon glow) in the foreground, with one generated alley photo drifting
+ * blurred behind the hero as the back-alley atmosphere. `media.source:
+ * "hybrid"`.
  *
  * Three techniques, all earned on screen, all DIFFERENT from ppang's
  * (clip-path-reveal / char-split-reveal / pointer-parallax) and moonlit's

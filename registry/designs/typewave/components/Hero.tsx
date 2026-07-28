@@ -106,6 +106,17 @@ export default function Hero({
       className="typewave-hero"
       aria-labelledby="typewave-title"
     >
+      {/* A generated waveform render deep behind the cover — the ambient
+         sound-field the wordmark plays against. Pure-black base preserved;
+         only thin acid lines bleed through, so the page stays Swiss/minimal. */}
+      <img
+        className="typewave-hero__field"
+        src="/media/typewave/waveform.avif"
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      />
+
       <div className="typewave-frame typewave-hero__inner">
         <p className="typewave-hero__kicker typewave-mono">
           <span>typewave — type that plays like a track · 2026</span>

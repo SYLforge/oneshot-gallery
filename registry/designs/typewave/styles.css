@@ -150,7 +150,24 @@
   overflow: hidden;
 }
 
+/* The generated waveform field — thin acid-green sound lines deep behind the
+   cover, so the pure-black stage reads as a real dark room with signal in it.
+   The wordmark's velocity stretch stays the focal motion. */
+.typewave-hero__field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  z-index: 0;
+  pointer-events: none;
+}
 .typewave-hero__inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   min-height: 100vh;

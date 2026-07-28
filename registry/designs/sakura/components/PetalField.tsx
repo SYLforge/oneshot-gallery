@@ -44,8 +44,43 @@ export default function PetalField() {
 
       <BloomCanvas
         className="sakura-garden__bloom"
-        ariaLabel="바람에 흩날리는 벚꽃잎밭. A field of cherry petals drifting on a curl-noise wind."
+        ariaLabel="바람에 흽날리는 벚꽃잎밭. A field of cherry petals drifting on a curl-noise wind."
       />
+
+      {/* A generated sumi-e blossom plate, embedded as an SVG <image> so the
+          entry's signature feTurbulence ink-settle filter still acts on it —
+          the plate becomes part of the ink garden, not a foreign photo. It
+          sits behind the bloom canvas, darkened, as the garden's memory. */}
+      <svg
+        className="sakura-garden__plate"
+        viewBox="0 0 768 1024"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <filter id="sakura-plate-settle">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.012"
+            numOctaves="2"
+            seed="11"
+            result="grain"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="grain"
+            scale="6"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+        <image
+          href="/media/sakura/blossom-plate.avif"
+          width="768"
+          height="1024"
+          filter="url(#sakura-plate-settle)"
+        />
+      </svg>
 
       <div className="sakura-garden__notes" data-reveal>
         <div className="sakura-garden__note">

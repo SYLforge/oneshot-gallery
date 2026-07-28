@@ -28,7 +28,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "One sumi-e blossom plate generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 768x1024, 32 steps, CFG 7, encoded to AVIF + WebP (~42 KB). It is embedded as an SVG <image> in the garden so the entry's signature feDisplacementMap ink-settle filter still acts on it — the plate shares the ink language, the smoke remains canvas, the petals remain code. Full recipe in PROMPT.md image-recipe.",
+      "ko": "한 폭의 수묵 벚꽃 도판은 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 768x1024, 32스텝, CFG 7, AVIF + WebP 인코딩(약 42KB). 정원에 SVG <image>로 삽입되어 이 엔트리의 시그니처인 feDisplacementMap 잉크 가라앉음 필터가 그대로 작동한다 — 도판은 잉크 언어를 공유하고, 연기는 여전히 캔버스, 꽃잎은 여전히 코드. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "dark",

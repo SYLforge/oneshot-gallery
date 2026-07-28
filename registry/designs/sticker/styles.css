@@ -187,6 +187,20 @@
   margin: clamp(8px, 2vh, 24px) 0;
 }
 
+/* The desk — a generated sticker-pack render blurred behind the pile. The
+   draggable CSS stickers stay foreground; this is the scattered paper. */
+.sticker-hero__desk {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  opacity: 0.22;
+  filter: blur(2px) saturate(1.2);
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* far parallax ghosts — outline-only, behind everything */
 .sticker-hero__ghost {
   position: absolute;

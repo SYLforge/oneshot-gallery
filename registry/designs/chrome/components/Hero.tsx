@@ -36,6 +36,17 @@ export default function Hero() {
 
   return (
     <header className="chrome-hero" aria-labelledby="chrome-hero-title">
+      {/* A generated liquid-chrome render drifting behind the scrim — the
+          ambient metal of the stage, so the hero reads as a chrome studio,
+          not a flat gradient. Darkened and blurred under the holographic
+          scrim; the wordmark's shader stays the focal metal. */}
+      <img
+        className="chrome-hero__metal-bg"
+        src="/media/chrome/liquid-chrome.avif"
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      />
       <div className="chrome-hero__scrim" aria-hidden="true" />
 
       <p className="chrome-hero__eyebrow">

@@ -28,7 +28,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "One club-room render generated in ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 1024x768, 30 steps, CFG 5.5, encoded to AVIF + WebP (~106 KB). It drifts hard-darkened behind the hero strobe at 34% opacity — laser haze and silhouettes bleeding through as the room at 02:00. The brutalist wordmark and blue plate stay focal; the flyer stays code. Full recipe in PROMPT.md image-recipe.",
+      "ko": "한 장의 클럽 룸 렌더는 ComfyUI에서 생성 — Illustrious 계열 체크포인트 bismuthIllustrious_v80, 1024x768, 30스텝, CFG 5.5, AVIF + WebP 인코딩(약 106KB). 히어로 스트로브 뒤에 34% 불투명도로 강하게 어둡게 떠 있다 — 레이저 안개와 실루엣이 02:00의 방으로 스며든다. 브루탈리스트 워드마크와 블루 플레이트는 초점으로 남고, 플라이어는 코드로 남는다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "dark",

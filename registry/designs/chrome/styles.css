@@ -160,6 +160,21 @@
   text-align: center;
 }
 
+/* The generated liquid-chrome render — the ambient metal of the stage,
+   behind the holographic scrim. Blurred and partly veiled so it reads as
+   atmosphere (a chrome studio), not a literal photo. */
+.chrome-hero__metal-bg {
+  position: absolute;
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  opacity: 0.4;
+  filter: blur(2px) saturate(1.1) brightness(0.9);
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* The scrim: a flat holographic gradient behind everything, so no-JS and
    shader-failure never show a hole. It is the page's permanent backlight. */
 .chrome-hero__scrim {
@@ -169,6 +184,7 @@
     radial-gradient(120% 90% at 50% 22%, var(--chrome-holo-pink) 0%, transparent 55%),
     linear-gradient(115deg, var(--chrome-holo-sky) 0%, var(--chrome-holo-mist) 38%, var(--chrome-holo-mint) 100%);
   z-index: 0;
+  opacity: 0.82;
 }
 
 .chrome-hero > * {

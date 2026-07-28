@@ -208,6 +208,22 @@
   isolation: isolate;
 }
 
+/* The ambient alley photo — a generated night-food-street render blurred
+   deep behind the diorama. The CSS tent stays the foreground; this is the
+   back-alley the tent sits in at 1 AM. */
+.ns-hero__alley {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.5;
+  filter: blur(3px) saturate(1.15) brightness(0.7);
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* Neon haze over the hero — amber bloom top-right (the grill), pink bloom
    left (the drinks sign). Decorative only. */
 .ns-hero::before {

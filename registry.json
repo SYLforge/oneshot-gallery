@@ -796,7 +796,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -2290,7 +2290,7 @@
       "name": "night-snack",
       "type": "registry:block",
       "title": "NIGHT-SNACK — 1 AM Street-Food Tent",
-      "description": "A late-night pojangmacha street-food tent told as a crowded, steamy webtoon chapter — the third webtoon twin. Where PPANG! is a cozy dawn bakery and MOONLIT is a lonely delivery ride, NIGHT-SNACK is the loud, neon-lit, soju-clinking chaos of the tent at 1 AM: skewers on the grill, steam off the odeng, halftone-dot SFX, ASCII neon signs that flicker, and glasses you can drag and clink. Pure code — no generated imagery, just CSS/SVG webtoon shapes.",
+      "description": "A late-night pojangmacha street-food tent told as a crowded, steamy webtoon chapter — the third webtoon twin. Where PPANG! is a cozy dawn bakery and MOONLIT is a lonely delivery ride, NIGHT-SNACK is the loud, neon-lit, soju-clinking chaos of the tent at 1 AM: skewers on the grill, steam off the odeng, halftone-dot SFX, ASCII neon signs that flicker, and glasses you can drag and clink. The foreground is pure CSS/SVG webtoon shapes; one generated alley photo drifts blurred behind the hero as the back-alley atmosphere.",
       "dependencies": [],
       "categories": [
         "webtoon",
@@ -2393,7 +2393,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -3358,7 +3358,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -3703,7 +3703,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -3903,7 +3903,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {
@@ -4193,7 +4193,7 @@
           "oneshot": false,
           "followUps": 0
         },
-        "media": "code"
+        "media": "hybrid"
       }
     },
     {

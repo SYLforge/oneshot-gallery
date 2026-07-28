@@ -28,6 +28,18 @@ export default function Hero() {
       aria-labelledby="ns-title"
       ref={heroRef}
     >
+      {/* The ambient alley — a generated painterly night-food-street photo
+          blurred deep behind the CSS diorama, so the tent reads as sitting
+          in a real back-alley at 1 AM. The code illustration stays the
+          foreground; this is atmosphere, not a replacement for it. */}
+      <img
+        className="ns-hero__alley"
+        src="/media/night-snack/alley.avif"
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+      />
+
       {/* The CSS diorama. Decorative — the accessible name rides on the h1. */}
       <div className="ns-hero__scene" aria-hidden="true">
         <div className="ns-hero__roof" />

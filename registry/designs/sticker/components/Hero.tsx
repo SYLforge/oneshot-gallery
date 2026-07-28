@@ -51,6 +51,19 @@ export default function Hero() {
       </p>
 
       <div className="sticker-hero__stage">
+        {/* The desk — a generated sticker-pack render blurred deep behind the
+            hero pile, so the stage reads as a real desk scattered with
+            stickers, not a flat white void. The draggable CSS stickers stay
+            the foreground; this is the paper they sit on. */}
+        <img
+          className="sticker-hero__desk"
+          src="/media/sticker/sticker-pack.avif"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+          data-sticker-parallax="0.02"
+        />
+
         {/* far parallax layer: ghost outline stickers, behind everything */}
         <span
           className="sticker-hero__ghost sticker-hero__ghost--a"
