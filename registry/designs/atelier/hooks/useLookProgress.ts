@@ -44,6 +44,19 @@ export function useLookProgress(
       const traveled = Math.min(Math.max(-rect.top, 0), usable);
       lastTargetRef.current = traveled / usable;
       el.style.setProperty(`${progressVar}-raw`, lastTargetRef.current.toFixed(4));
+      // The integer look index (0..4) drives a robust single-look crossfade
+      // in CSS via a data-lookstate on the sticky stage (LOOKS = 5). The
+      // lerped float crossfade is the smooth layer on top.
+      const idx = Math.min(
+        4,
+        Math.max(0, Math.floor(lastTargetRef.current * 5 + 0.0001)),
+      );
+      const stage = el.querySelector<HTMLElement>(".atelier-lookbook__sticky");
+      if (stage) {
+        stage.dataset.lookstate = String(idx);
+        const prog = stage.querySelector<HTMLElement>(".atelier-lookbook__progress");
+        if (prog) prog.textContent = String(idx + 1).padStart(2, "0");
+      }
     };
 
     const tick = (now: number) => {

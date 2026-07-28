@@ -19,6 +19,18 @@
   overflow-x: clip;
 }
 
+/* Film grain — the silver-halide texture of noir stock. A static fractal
+   noise laid under the blinds; no motion, a photograph does not breathe. */
+.noir-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+}
+
 .noir-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
 .noir-root ::selection { background: var(--noir-silver); color: var(--noir-black); }
 .noir-root :focus-visible { outline: 2px solid var(--noir-silver); outline-offset: 4px; }

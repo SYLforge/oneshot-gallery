@@ -21,6 +21,26 @@
   overflow-x: clip;
 }
 
+/* A faint water surface — concentric ripples that breathe slowly, the only
+   ambient texture. Pure CSS, paused under reduced motion. */
+.flow-root::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 30% at 30% 20%, rgba(14,165,233,0.06), transparent 60%),
+    radial-gradient(45% 35% at 75% 70%, rgba(14,165,233,0.05), transparent 60%);
+  animation: flow-surface 18s ease-in-out infinite alternate;
+}
+@keyframes flow-surface {
+  to { transform: translate3d(2%, -1%, 0) scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-root::before { animation: none; }
+}
+
 .flow-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
 .flow-root ::selection { background: var(--flow-accent); color: #fff; }
 .flow-root :focus-visible { outline: 2px solid var(--flow-accent); outline-offset: 4px; }
@@ -38,6 +58,8 @@
 
 /* pointer-parallax layer */
 .flow-parallax {
+  position: relative;
+  z-index: 1;
   transition: transform 600ms cubic-bezier(0.16,1,0.3,1);
   will-change: transform;
 }
@@ -105,11 +127,14 @@
   top: 0;
   min-height: 100vh;
   min-height: 100svh;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
-  background: var(--flow-bg-deep);
+  background:
+    radial-gradient(80% 60% at 50% 50%, rgba(14,165,233,0.08), transparent 70%),
+    var(--flow-bg-deep);
   border-top: 1px solid var(--flow-accent-soft);
   border-bottom: 1px solid var(--flow-accent-soft);
 }

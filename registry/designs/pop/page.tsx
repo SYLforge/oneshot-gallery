@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import "./styles.css";
-import { inter, notoSansKR } from "./fonts";
+import { fredoka, notoSansKR } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 import { usePointerParallax } from "./hooks/usePointerParallax";
@@ -36,7 +36,7 @@ export default function PopPage() {
   };
 
   return (
-    <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} pop-root`}>
+    <div ref={rootRef} className={`${fredoka.variable} ${notoSansKR.variable} pop-root`}>
       <div ref={revealRef} className="pop-doc">
         <header className="pop-hero">
           <p className="pop-kicker"><span lang="ko">풍선 만화 가게</span> · BUBBLE COMIC STORE</p>

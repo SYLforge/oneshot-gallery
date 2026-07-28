@@ -6,17 +6,38 @@
   --pop-ink: #1e1b4b;
   --pop-ink-soft: #4c1d95;
   --pop-accent: #f472b6;
+  --pop-sky: #60a5fa;
+  --pop-butter: #facc15;
+  --pop-mint: #34d399;
 
   position: relative;
   min-height: 100vh;
   background: var(--pop-bg);
   color: var(--pop-ink);
-  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  font-family: var(--font-fredoka), var(--font-noto-sans-kr), sans-serif;
   font-weight: 500;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
   line-height: 1.6;
   overflow-x: hidden;
   overflow-x: clip;
+}
+
+/* Bubble-dot confetti — scattered pastel polka dots, the comic-store wall.
+   Static; the bubbles themselves are the motion. */
+.pop-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(244,114,182,0.25) 0 8px, transparent 9px),
+    radial-gradient(circle at 82% 12%, rgba(96,165,250,0.22) 0 12px, transparent 13px),
+    radial-gradient(circle at 70% 78%, rgba(250,204,21,0.22) 0 10px, transparent 11px),
+    radial-gradient(circle at 22% 82%, rgba(167,139,250,0.22) 0 14px, transparent 15px),
+    radial-gradient(circle at 48% 48%, rgba(244,114,182,0.12) 0 6px, transparent 7px);
+  background-size: 420px 420px;
 }
 
 .pop-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
@@ -55,7 +76,12 @@
   display: flex;
   justify-content: center;
   gap: 0.02em;
-  color: var(--pop-ink);
+  color: var(--pop-butter);
+  /* comic-book outline: thick ink stroke + colored fill */
+  -webkit-text-stroke: 3px var(--pop-ink);
+  paint-order: stroke fill;
+  text-shadow: 8px 8px 0 var(--pop-accent), 8px 8px 0 var(--pop-ink);
+  letter-spacing: -0.02em;
 }
 /* char-split-reveal: bubbles bounce in with overshoot spring */
 .pop-glyph {

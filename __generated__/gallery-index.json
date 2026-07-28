@@ -832,7 +832,8 @@
     "techniques": [
       "crt-scanline",
       "marquee",
-      "ascii-render"
+      "ascii-render",
+      "pointer-parallax"
     ],
     "industry": [
       "entertainment"

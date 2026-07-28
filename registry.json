@@ -2230,13 +2230,19 @@
         "vaporwave",
         "crt-scanline",
         "marquee",
-        "ascii-render"
+        "ascii-render",
+        "pointer-parallax"
       ],
       "files": [
         {
           "path": "registry/designs/neon/fonts.ts",
           "type": "registry:file",
           "target": "app/oneshot/neon/fonts.ts"
+        },
+        {
+          "path": "registry/designs/neon/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/neon/hooks/usePointerParallax.ts"
         },
         {
           "path": "registry/designs/neon/hooks/usePrefersReducedMotion.ts",

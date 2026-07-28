@@ -32,6 +32,28 @@
   overflow-x: clip;
 }
 
+/* Aurora light field — two slow iris blooms drifting behind the glass, the
+   ambient light of a spatial OS. Pure CSS, paused under reduced motion. */
+.widget-root::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 40% at 25% 30%, rgba(99,102,241,0.22), transparent 60%),
+    radial-gradient(45% 45% at 78% 70%, rgba(168,85,247,0.18), transparent 60%);
+  filter: blur(20px);
+  animation: widget-aurora 24s ease-in-out infinite alternate;
+}
+@keyframes widget-aurora {
+  to { transform: translate3d(3%, -2%, 0) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .widget-root::before { animation: none; }
+}
+.widget-doc { position: relative; z-index: 1; }
+
 .widget-root :lang(ko) { font-family: var(--w-font-kr); }
 .widget-root ::selection { background: var(--w-iris); color: #fff; }
 .widget-root :focus-visible { outline: 2px solid var(--w-iris); outline-offset: 4px; }
@@ -45,8 +67,6 @@
 @media (prefers-reduced-motion: reduce) {
   .widget-js [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
-
-.widget-doc { position: relative; z-index: 1; }
 
 /* Hero */
 .widget-hero {

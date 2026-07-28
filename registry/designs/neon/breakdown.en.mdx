@@ -1,17 +1,45 @@
 # NEON — breakdown
 
 ## The hook
-A cyberpunk street at 3 AM — rain-slick neon signs, holographic storefronts,
-retrowave grid. Where GRADIENT-PLAZA is an open vaporwave mall under the sky,
-NEON is a claustrophobic vertical city in the rain. Pure code, no images.
+A cyberpunk street at 3 AM in 2087 — rain-slick neon signs, holographic
+storefront tickers, vertical signs hanging off building faces, light bleeding
+into puddles, and a retrowave grid where the city ends. Where GRADIENT-PLAZA
+is an open vaporwave mall under the sky, NEON is a claustrophobic vertical
+city in the rain. Not a single raster pixel.
+
+## Scene structure
+Top to bottom — a title bleeding through rain; a street scene of building
+silhouettes, hanging signs, and a puddle whose reflections drift to your
+pointer; a bilingual holographic ticker; an ASCII neon sign gallery
+(ramen · bar · electronics · barber); a retrowave grid-and-sun at the
+vanishing horizon; and a short poem that is the city's voice.
 
 ## Techniques
-1. **crt-scanline** — neon glow flicker + scanline overlay + animated rain
-   (diagonal lines). Photosensitive-safe (under 3Hz, off under reduced motion).
-2. **marquee** — holographic storefront tickers scrolling at varying speeds.
-3. **ascii-render** — neon signs (라면, 술, 전자) as glowing ASCII block letters
-   in text-shadow stacks.
+1. **crt-scanline** — neon glow flicker + scanline overlay + animated
+   diagonal rain (a repeating gradient). The flicker keyframes run on
+   mutually-prime periods (3.2s / 4.1s / 5.7s) so they never synchronize and
+   the street reads as alive. Photosensitive-safe (under 3Hz, fully stopped
+   under reduced motion).
+2. **marquee** — a holographic storefront ticker scrolling at 30s linear.
+   Korean rides in magenta, English in cyan; the track is doubled so it
+   loops without a seam.
+3. **ascii-render** — the neon signs (라면, 술, 전자, 이발) are glowing ASCII
+   block letters in monospace, lit by stacked text-shadows. Each sign carries
+   its own flicker period keyed to its color.
+4. **pointer-parallax** — the normalized pointer (-0.5→0.5) is written to
+   `--neon-px` / `--neon-py`. Buildings drift at depth-tiered 8–20px offsets,
+   hanging signs lift vertically, and puddle reflections slide sideways — all
+   from two CSS custom properties. It is pure input→style mapping with no
+   animation loop, so under reduced motion the scene simply composes at rest.
+
+## The retrowave grid
+The horizon section is a floor on a 320px perspective, rotated 70° and
+scrolling toward the viewer every 4s in cyan+magenta. The sun above it is a
+circular magenta→amber→purple gradient sliced by a horizontal-slat mask — the
+sun from an '80s album cover, drawn entirely in CSS.
 
 ## Accessibility
-Reduced motion: rain static, signs steady. No-JS: fully readable. AA contrast.
-Korean-first bilingual.
+Reduced motion: rain, flicker, and grid-scroll all stop; signs stay steadily
+lit. No-JS: every line of text is a readable static list. AA contrast — every
+neon hue clears 5:1 on rain-black. Korean-first bilingual: the poem and the
+signs let Korean speak first.

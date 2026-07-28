@@ -33,6 +33,30 @@
   overflow-x: clip;
 }
 
+/* CRT atmosphere — a faint phosphor bloom at screen center + scanlines, the
+   glass face of an old monitor. The scanline overlay sits above content but
+   stays pointer-events-none and very subtle (AA contrast preserved).       */
+.wave-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(100% 80% at 50% 40%, rgba(74,222,128,0.06), transparent 60%);
+}
+.wave-root::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,0.10) 2px 3px);
+  opacity: 0.6;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave-root::after { opacity: 0.4; }
+}
+
 .wave-root :lang(ko) {
   font-family: var(--wave-font-kr);
   letter-spacing: 0;
@@ -71,6 +95,8 @@
 
 /* Hero */
 .wave-hero {
+  position: relative;
+  z-index: 2;
   padding: clamp(80px, 18vh, 160px) clamp(24px, 6vw, 80px) clamp(40px, 8vh, 80px);
   border-bottom: 1px solid var(--wave-hairline);
 }
@@ -100,6 +126,8 @@
 
 /* Spectrum — the signature */
 .wave-spectrum-section {
+  position: relative;
+  z-index: 2;
   padding: clamp(60px, 12vh, 120px) clamp(24px, 6vw, 80px);
   border-bottom: 1px solid var(--wave-hairline);
 }
@@ -133,6 +161,8 @@
 
 /* Stats */
 .wave-stats {
+  position: relative;
+  z-index: 2;
   padding: clamp(60px, 12vh, 120px) clamp(24px, 6vw, 80px);
   border-bottom: 1px solid var(--wave-hairline);
 }
@@ -162,6 +192,8 @@
 
 /* Marquee */
 .wave-marquee {
+  position: relative;
+  z-index: 2;
   overflow: hidden;
   border-bottom: 1px solid var(--wave-hairline);
   padding: 16px 0;
@@ -188,6 +220,8 @@
 
 /* Footer */
 .wave-foot {
+  position: relative;
+  z-index: 2;
   padding: clamp(48px, 10vh, 96px) clamp(24px, 6vw, 80px);
   color: var(--wave-dim);
   font-size: 0.8rem;

@@ -2,17 +2,43 @@
 
 ## The hook
 A high-fashion maison publishing the RESERVE collection as an editorial
-lookbook — the magazine-cover-as-website. Pure black/off-white + one rare
-antique-gold accent. Where ONDO is a single perfume bottle, ATELIER is a full
-collection — oversized Bodoni, expensive silence.
+lookbook — the magazine-cover-as-website. Pure black, warm off-white, and one
+rare antique-gold accent used four times in the whole page. Where ONDO is a
+single perfume bottle refracting light, ATELIER is a full collection —
+oversized Bodoni, expensive silence, the page that turns.
+
+## The page, top to bottom
+The cover (a near-black field with a faint paper wash, the maison name in
+full-bleed Bodoni, one gold hairline beneath it); the editor's letter (a
+lifted-ink spread whose frame rises on a clip-path curtain); the lookbook
+(the signature moment — five looks pinned and scrubbed); and the colophon.
 
 ## Techniques
-1. **char-split-reveal** — the maison masthead reveals letter-by-letter in
-   oversized Bodoni serif (the cover masthead).
-2. **scroll-scrub-pinned** — a lookbook section where looks crossfade as you
-   scroll, like turning editorial pages.
-3. **clip-path-reveal** — editorial sections wipe in with hairline cuts.
+1. **char-split-reveal** — the cover masthead. Each letter is an
+   `aria-hidden` span lifted off the baseline and clipped; on mount a
+   double-rAF flips the heading to `is-set` and the letters settle back at
+   85ms stagger over 720ms ease-spread. The CSS default state IS the finished
+   one, so without JS the name simply stands, fully set.
+2. **scroll-scrub-pinned** — the lookbook. A 420vh section holds a
+   `position: sticky; height: 100vh` stage. `useLookProgress` tracks the
+   scroll runway, lerps at 0.14/frame, and writes an integer `data-lookstate`
+   (0–4) plus a smoothed `--atelier-page`. CSS shows exactly one look per
+   state — opacity + a 1.5% scale, never a layout property — so the page
+   genuinely *turns*. Under reduced motion the lerp is bypassed but the turn
+   still tracks the wheel 1:1 (a reveal, not motion).
+3. **clip-path-reveal** — the editor's letter. `inset(0 0 100% 0)` rises to
+   `inset(0)` over 820ms ease-spread, the editorial wipe rising like a
+   curtain; the copy inside follows one beat behind.
+
+## The five "photographs"
+Not a raster pixel. Each garment is a CSS gradient: silk is a vertical
+bone-to-ink gradient under a diagonal gold light; wool is horizontal grays
+with a faint weave repeat; organza a radial wash; the trench a wide diagonal
+with a single gold seam; the gown a near-black field with a paper spine.
 
 ## Accessibility
-Reduced motion: static editorial spread. No-JS: fully readable lookbook.
-AA contrast. Korean-first bilingual.
+Reduced motion: the masthead stands set, the letter stands open, the lookbook
+tracks scroll without smoothing — a complete, composed static editorial. No-JS:
+the first look holds and all five remain a readable static list in source
+order. AA contrast (gold held to large type + hairlines only; 5.5:1 on ink).
+Korean-first bilingual — every line is transcreated, never translated.

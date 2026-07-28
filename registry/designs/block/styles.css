@@ -22,6 +22,20 @@
   overflow-x: clip;
 }
 
+/* Raw concrete grain — an SVG fractal-noise data URI laid over the slab.
+   Static; brutalism has no ambient motion. */
+.block-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.09  0 0 0 0 0.09  0 0 0 0 0.09  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+}
+.block-doc { position: relative; z-index: 1; }
+
 .block-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
 .block-root ::selection { background: var(--block-green); color: #fff; }
 .block-root :focus-visible { outline: 3px solid var(--block-ink); outline-offset: 4px; }
@@ -35,8 +49,6 @@
 @media (prefers-reduced-motion: reduce) {
   .block-js [data-reveal] { clip-path: none; transition: none; }
 }
-
-.block-doc { position: relative; }
 
 /* Hero */
 .block-hero {

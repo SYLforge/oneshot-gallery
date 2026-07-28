@@ -20,6 +20,27 @@
   overflow-x: clip;
 }
 
+/* Faint concentric waterlines — the pond's surface remembered as rings,
+   drifting very slowly. Pure CSS; the canvas carries the live ripples. */
+.rip-root::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 40%, transparent 0, transparent 80px, rgba(124,58,237,0.05) 81px, transparent 82px),
+    radial-gradient(circle at 30% 40%, transparent 0, transparent 140px, rgba(124,58,237,0.04) 141px, transparent 142px),
+    radial-gradient(circle at 70% 65%, transparent 0, transparent 100px, rgba(79,70,229,0.04) 101px, transparent 102px);
+  animation: rip-drift 26s ease-in-out infinite alternate;
+}
+@keyframes rip-drift {
+  to { transform: translate3d(2%, -1.5%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rip-root::before { animation: none; }
+}
+
 .rip-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
 .rip-root ::selection { background: var(--rip-violet); color: #fff; }
 .rip-root :focus-visible { outline: 2px solid var(--rip-violet); outline-offset: 4px; }

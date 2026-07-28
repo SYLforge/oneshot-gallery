@@ -11,7 +11,7 @@
     "ko": "새벽 3시의 사이버펑크 거리 — 웅덩이에 반사되는 빗 젖은 네온 사인, 홀로그래픽 상점 간판, 레트로웨이브 그리드 지평선. GRADIENT-PLAZA가 하늘 아래 열린 베이퍼웨이브 몰이라면, NEON은 빗속의 폐쇄적인 수직 도시다. 순수 코드 — 이미지 없음."
   },
   "aesthetic": "vaporwave",
-  "techniques": ["crt-scanline", "marquee", "ascii-render"],
+  "techniques": ["crt-scanline", "marquee", "ascii-render", "pointer-parallax"],
   "industry": ["entertainment"],
   "stack": {
     "animation": "vanilla-js",

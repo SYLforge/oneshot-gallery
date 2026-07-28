@@ -1,7 +1,8 @@
 /* ==========================================================================
-   ATELIER — high-fashion maison · the RESERVE collection
-   luxury-fashion · black / off-white / one antique-gold accent
+   ATELIER 아틀리에 — high-fashion maison · the RESERVE collection
+   luxury-fashion · pure black / warm paper / one antique-gold accent
    Scoped by convention to .atelier-root; classes prefixed atelier-.
+   Every "photograph" is a CSS gradient. Not one raster pixel.
    ========================================================================== */
 
 .atelier-root {
@@ -9,25 +10,47 @@
   --at-paper: #f8f6f2;
   --at-ink-soft: #6b6660;
   --at-gold: #b8945a;
-  --at-hairline: rgba(10, 10, 10, 0.14);
+  --at-panel: #141414;
+  --at-paper-dim: #a8a39a;
+  --at-paper-quiet: #6f6b63;
+  --at-hairline: rgba(248, 246, 242, 0.14);
+  --at-hairline-strong: rgba(248, 246, 242, 0.28);
 
   --at-font-latin: var(--font-bodoni), "Bodoni Moda", serif;
   --at-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
   --at-font-stack: var(--font-bodoni), var(--font-noto-serif-kr), serif;
 
-  --at-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --at-reveal-ms: 1200ms;
+  --at-ease-spread: cubic-bezier(0.7, 0, 0.2, 1);
+  --at-ease-leaf: cubic-bezier(0.22, 1, 0.36, 1);
+  --at-ease: var(--at-ease-leaf);
+  --at-reveal-ms: 640ms;
 
   position: relative;
   min-height: 100vh;
-  background: var(--at-paper);
-  color: var(--at-black);
+  background: var(--at-black);
+  color: var(--at-paper);
   font-family: var(--at-font-stack);
   font-weight: 400;
   font-size: clamp(16px, 0.5vw + 14px, 18px);
   line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
   overflow-x: clip;
+}
+
+/* The darkroom veil — a faint vignette closing the edges plus an almost-
+   imperceptible film grain, so pure black reads as ink-on-stock rather
+   than a flat digital fill. Static; the page holds its breath. */
+.atelier-root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 100% at 50% 35%, transparent 45%, rgba(0,0,0,0.55) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
 }
 
 .atelier-root :lang(ko) {
@@ -36,8 +59,8 @@
 }
 
 .atelier-root ::selection {
-  background: var(--at-black);
-  color: var(--at-paper);
+  background: var(--at-gold);
+  color: var(--at-black);
 }
 
 .atelier-root :focus-visible {
@@ -50,32 +73,568 @@
   z-index: 1;
 }
 
-/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.atelier-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Shared folio numerals — the running heads that frame every spread */
+.atelier-folio {
+  font-family: var(--at-font-latin);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--at-paper-quiet);
+}
+.atelier-folio--mid { color: var(--at-paper-dim); }
+.atelier-folio--right { margin-left: auto; }
+
+/* ---- Reveal gating (JS-dependent pre-states) -----------------------------
+   Without JS the full page stands finished; with JS, pre-states gate the
+   reveal. data-reveal="clip" rises like a curtain; "fade" lifts 12px.       */
 .atelier-js [data-reveal] {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(12px);
   transition:
-    opacity var(--at-reveal-ms) var(--at-ease),
-    transform var(--at-reveal-ms) var(--at-ease);
+    opacity var(--at-reveal-ms) var(--at-ease-leaf),
+    transform var(--at-reveal-ms) var(--at-ease-leaf);
+}
+.atelier-js [data-reveal="clip"] {
+  transform: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 820ms var(--at-ease-spread);
 }
 .atelier-js [data-reveal].is-visible {
   opacity: 1;
   transform: none;
-}
-
-/* ---- Typography ---- */
-.atelier-root h1,
-.atelier-root h2 {
-  font-family: var(--at-font-latin);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  clip-path: inset(0 0 0 0);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .atelier-js [data-reveal] {
     opacity: 1;
     transform: none;
+    clip-path: none;
     transition: none;
   }
+}
+
+/* ==========================================================================
+   Cover / Masthead — the magazine set down on the table
+   ========================================================================== */
+.atelier-cover {
+  position: relative;
+  min-height: 100vh;
+  padding: clamp(28px, 4vh, 48px) clamp(20px, 4vw, 56px) clamp(56px, 9vh, 96px);
+  display: flex;
+  flex-direction: column;
+  /* faint radial paper wash — the only light on the cover */
+  background:
+    radial-gradient(
+      120% 90% at 50% 38%,
+      rgba(248, 246, 242, 0.05) 0%,
+      rgba(248, 246, 242, 0.012) 38%,
+      transparent 70%
+    ),
+    var(--at-black);
+}
+
+.atelier-cover__topline {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 3vw, 32px);
+  padding-bottom: clamp(20px, 3vh, 32px);
+  border-bottom: 1px solid var(--at-hairline);
+}
+
+.atelier-cover__eyebrow {
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  color: var(--at-paper-dim);
+  margin: clamp(48px, 9vh, 88px) 0 0;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* The masthead: oversized Bodoni set across the full width, revealed glyph
+   by glyph. The CSS default state IS the finished one (clipped → shown),
+   so without JS the name simply stands.                                    */
+.atelier-masthead {
+  font-family: var(--at-font-latin);
+  font-weight: 900;
+  font-size: clamp(3.6rem, 17vw, 16rem);
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  margin: clamp(8px, 1.4vh, 18px) 0 clamp(14px, 2.4vh, 28px);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(0.01em, 0.6vw, 0.04em);
+}
+.atelier-masthead__ch {
+  display: inline-block;
+  transform: translateY(0.42em);
+  clip-path: inset(0 0 100% 0);
+}
+.atelier-js .atelier-masthead.is-set .atelier-masthead__ch {
+  transform: translateY(0);
+  clip-path: inset(0 0 0 0);
+  transition:
+    transform 720ms var(--at-ease-spread),
+    clip-path 720ms var(--at-ease-spread);
+  transition-delay: calc(var(--atelier-ci, 0) * 85ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .atelier-masthead__ch,
+  .atelier-js .atelier-masthead.is-set .atelier-masthead__ch {
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}
+
+.atelier-cover__ko {
+  font-family: var(--at-font-kr);
+  font-weight: 200;
+  font-size: clamp(0.95rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  text-align: center;
+  color: var(--at-paper-dim);
+  margin: 0 0 clamp(28px, 5vh, 52px);
+}
+
+/* the single gold hairline — the only gold on the cover */
+.atelier-cover__rule {
+  width: min(280px, 38vw);
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--at-gold) 30%,
+    var(--at-gold) 70%,
+    transparent
+  );
+}
+
+.atelier-cover__stand {
+  max-width: 34em;
+  margin: clamp(28px, 5vh, 48px) auto 0;
+  text-align: center;
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  line-height: 1.55;
+  color: var(--at-paper);
+}
+.atelier-cover__standko {
+  display: block;
+  font-family: var(--at-font-kr);
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.92em;
+  letter-spacing: 0.02em;
+  color: var(--at-paper-dim);
+  margin-top: 0.6em;
+}
+
+.atelier-cover__scroll {
+  margin-top: auto;
+  padding-top: clamp(40px, 8vh, 80px);
+  text-align: center;
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: lowercase;
+  color: var(--at-paper-quiet);
+}
+
+/* ==========================================================================
+   Section heading — shared editorial head
+   ========================================================================== */
+.atelier-sechead {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(72px, 12vh, 140px) clamp(20px, 4vw, 56px) clamp(28px, 4vh, 44px);
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 3vw, 40px);
+  border-bottom: 1px solid var(--at-hairline);
+}
+.atelier-eyebrow {
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--at-gold);
+  margin: 0;
+  white-space: nowrap;
+}
+.atelier-sechead__title {
+  font-family: var(--at-font-latin);
+  font-weight: 500;
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+/* ==========================================================================
+   01 — Manifesto / the editor's letter (clip-path reveal)
+   ========================================================================== */
+.atelier-manifesto {
+  position: relative;
+  background: var(--at-black);
+}
+.atelier-letter {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(36px, 6vh, 72px) clamp(20px, 4vw, 56px) clamp(72px, 12vh, 140px);
+}
+.atelier-letter__frame {
+  position: relative;
+  padding: clamp(36px, 5vw, 72px) clamp(28px, 5vw, 80px);
+  background: var(--at-panel);
+  border-top: 1px solid var(--at-hairline-strong);
+  border-bottom: 1px solid var(--at-hairline-strong);
+}
+.atelier-letter__pull {
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.6vw, 2.9rem);
+  line-height: 1.16;
+  letter-spacing: -0.012em;
+  color: var(--at-paper);
+  margin: 0 0 clamp(32px, 5vh, 56px);
+  max-width: 22ch;
+}
+.atelier-letter__pull-en { display: block; }
+.atelier-letter__pull-ko {
+  display: block;
+  font-family: var(--at-font-kr);
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.66em;
+  color: var(--at-paper-dim);
+  margin-top: 0.5em;
+  letter-spacing: 0.01em;
+  max-width: 30ch;
+}
+
+.atelier-letter__body {
+  max-width: 46ch;
+  margin-left: auto;
+  font-family: var(--at-font-kr);
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--at-paper-dim);
+}
+.atelier-letter__body p { margin: 0 0 1.2em; }
+.atelier-letter__body p:not([lang="ko"]) {
+  font-family: var(--at-font-latin);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--at-paper);
+}
+.atelier-letter__sign {
+  margin-top: 2.2em !important;
+  font-family: var(--at-font-latin) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: 0.92rem !important;
+  color: var(--at-paper-dim) !important;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   02 — Lookbook, pinned & scrubbed (the signature moment)
+   Section height 420vh; inner sticky pinned 100vh. --atelier-page (0→1)
+   drives the five-look crossfade — opacity + 1.5% scale, never layout.
+   ========================================================================== */
+.atelier-lookbook {
+  position: relative;
+  height: 420vh;
+  background: var(--at-black);
+}
+.atelier-lookbook__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.atelier-lookbook__chrome {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 3vw, 32px);
+  padding: clamp(22px, 3.4vh, 34px) clamp(20px, 4vw, 56px);
+  border-bottom: 1px solid var(--at-hairline);
+  flex: none;
+}
+.atelier-lookbook__progress {
+  display: inline-block;
+  width: 1.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.atelier-looks {
+  position: relative;
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.atelier-look {
+  grid-area: 1 / 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: stretch;
+  /* default: hidden; only the active look (by data-lookstate) shows */
+  opacity: 0;
+  transform: scale(1.015);
+  transition:
+    opacity 700ms var(--at-ease-leaf),
+    transform 700ms var(--at-ease-leaf);
+  pointer-events: none;
+}
+
+/* The sticky stage carries data-lookstate="0".."4" (written by JS from
+   scroll). Exactly one look matches at a time — a clean crossfade with no
+   fragile float math. Without JS the stage never gets a lookstate, so the
+   fallback rule below shows the first look and the rest stay readable in
+   source order as a static list.                                       */
+.atelier-lookbook__sticky[data-lookstate="0"] .atelier-look[data-look="silk"],
+.atelier-lookbook__sticky[data-lookstate="1"] .atelier-look[data-look="wool"],
+.atelier-lookbook__sticky[data-lookstate="2"] .atelier-look[data-look="organza"],
+.atelier-lookbook__sticky[data-lookstate="3"] .atelier-look[data-look="trench"],
+.atelier-lookbook__sticky[data-lookstate="4"] .atelier-look[data-look="gown"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* No-JS fallback: the stage has no data-lookstate → show the first look. */
+.atelier-lookbook__sticky:not([data-lookstate]) .atelier-look[data-look="silk"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.atelier-look__frame {
+  position: relative;
+  margin: clamp(20px, 4vh, 44px) clamp(20px, 3vw, 40px) clamp(20px, 4vh, 44px) clamp(20px, 4vw, 48px);
+  border: 1px solid var(--at-hairline-strong);
+  overflow: hidden;
+}
+
+/* the gradient "photographs" — every garment is light, not pixels */
+.atelier-look__art--silk {
+  height: 100%;
+  background:
+    linear-gradient(115deg, transparent 38%, rgba(184, 148, 90, 0.22) 46%, transparent 54%),
+    linear-gradient(180deg, #efe9df 0%, #d9d1c2 42%, #2a2723 100%);
+}
+.atelier-look__art--wool {
+  height: 100%;
+  background:
+    repeating-linear-gradient(180deg, rgba(10,10,10,0.04) 0 2px, transparent 2px 5px),
+    linear-gradient(90deg, #3a3835 0%, #6b6660 45%, #4a4742 75%, #2a2825 100%);
+}
+.atelier-look__art--organza {
+  height: 100%;
+  background:
+    radial-gradient(120% 90% at 50% 40%, rgba(248,246,242,0.10) 0%, transparent 60%),
+    linear-gradient(160deg, #cfc8bb 0%, #9a9388 50%, #5b564f 100%);
+}
+.atelier-look__art--trench {
+  height: 100%;
+  background:
+    linear-gradient(70deg, transparent 49.6%, var(--at-gold) 49.6%, var(--at-gold) 50.4%, transparent 50.4%),
+    linear-gradient(105deg, #6f5b3e 0%, #8a6f4a 40%, #5a4631 70%, #3c2f21 100%);
+}
+.atelier-look__art--gown {
+  height: 100%;
+  background:
+    linear-gradient(90deg, transparent 49.4%, rgba(248,246,242,0.85) 49.4%, rgba(248,246,242,0.85) 50.6%, transparent 50.6%),
+    linear-gradient(180deg, #161412 0%, #0c0b0a 60%, #050505 100%);
+}
+
+.atelier-look__caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(8px, 1.4vh, 14px);
+  padding: clamp(20px, 4vw, 48px) clamp(20px, 4vw, 56px) clamp(20px, 4vh, 44px) clamp(8px, 2vw, 24px);
+  border-top: 1px solid var(--at-hairline);
+}
+.atelier-look__no {
+  font-family: var(--at-font-latin);
+  font-weight: 900;
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--at-gold);
+  margin: 0;
+}
+.atelier-look__divider {
+  color: var(--at-paper-quiet);
+  margin: 0;
+  font-family: var(--at-font-latin);
+}
+.atelier-look__name {
+  font-family: var(--at-font-latin);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--at-paper);
+}
+.atelier-look__nameko {
+  display: block;
+  font-family: var(--at-font-kr);
+  font-weight: 300;
+  font-size: 0.5em;
+  letter-spacing: 0.04em;
+  color: var(--at-paper-dim);
+  margin-top: 0.3em;
+}
+.atelier-look__fabric {
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--at-paper-dim);
+  margin: 0;
+}
+.atelier-look__fabricko {
+  font-family: var(--at-font-kr);
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+.atelier-look__line {
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--at-paper);
+  max-width: 30ch;
+  margin: 0;
+}
+.atelier-look__line[lang="ko"] {
+  font-family: var(--at-font-kr);
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.94rem;
+  color: var(--at-paper-dim);
+  max-width: 34ch;
+}
+
+.atelier-lookbook__hint {
+  flex: none;
+  padding: clamp(14px, 2.4vh, 24px) clamp(20px, 4vw, 56px);
+  border-top: 1px solid var(--at-hairline);
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  color: var(--at-paper-quiet);
+  text-align: center;
+}
+
+/* ==========================================================================
+   Footer / colophon
+   ========================================================================== */
+.atelier-foot {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(72px, 12vh, 132px) clamp(20px, 4vw, 56px) clamp(40px, 6vh, 64px);
+  text-align: center;
+  border-top: 1px solid var(--at-hairline);
+}
+.atelier-foot__brand {
+  font-family: var(--at-font-latin);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  margin: 0 0 clamp(14px, 2vh, 22px);
+  color: var(--at-paper);
+}
+.atelier-foot__brand [lang="ko"] {
+  font-family: var(--at-font-kr);
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
+  color: var(--at-paper-dim);
+}
+.atelier-foot__line {
+  font-family: var(--at-font-latin);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--at-paper-dim);
+  margin: 0 0 1.4em;
+}
+.atelier-foot__line [lang="ko"] {
+  font-family: var(--at-font-kr);
+  font-style: normal;
+  font-weight: 300;
+}
+.atelier-foot__copy {
+  font-family: var(--at-font-latin);
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--at-paper-quiet);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Responsive — honest at 360px, composed at 1440px+
+   ========================================================================== */
+@media (max-width: 760px) {
+  .atelier-cover__topline {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .atelier-folio--right { margin-left: 0; }
+  .atelier-sechead {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .atelier-look {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .atelier-look__frame {
+    margin: 16px 16px 0;
+    min-height: 38vh;
+  }
+  .atelier-look__caption {
+    padding: 18px 20px 22px;
+  }
+  .atelier-letter__body { margin-left: 0; }
+  .atelier-letter__frame { padding: 28px 22px; }
 }

@@ -48,7 +48,7 @@ export default function Lookbook() {
             the lookbook · 룩북
           </span>
           <span className="atelier-folio atelier-folio--right">
-            <span className="atelier-lookbook__progress" /> / 05
+            <span className="atelier-lookbook__progress">01</span> / 05
           </span>
         </div>
 
