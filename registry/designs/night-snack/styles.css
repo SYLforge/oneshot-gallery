@@ -209,8 +209,9 @@
 }
 
 /* The ambient alley photo — a generated night-food-street render blurred
-   deep behind the diorama. The CSS tent stays the foreground; this is the
-   back-alley the tent sits in at 1 AM. */
+   deep behind the diorama. Re-tinted warm (amber/ember) so the source
+   render's cool midnight blue — an AI-template tell — gives way to the
+   tent's actual lantern-lit mood. The CSS tent stays the foreground. */
 .ns-hero__alley {
   position: absolute;
   inset: -6%;
@@ -218,8 +219,8 @@
   height: 112%;
   object-fit: cover;
   object-position: center 30%;
-  opacity: 0.5;
-  filter: blur(3px) saturate(1.15) brightness(0.7);
+  opacity: 0.46;
+  filter: blur(3px) sepia(0.35) saturate(1.3) hue-rotate(-12deg) brightness(0.66) contrast(1.05);
   z-index: -1;
   pointer-events: none;
 }

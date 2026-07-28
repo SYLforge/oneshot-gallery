@@ -168,8 +168,9 @@
 }
 
 /* The generated rain-city render — the real Blade-Runner metropolis behind
-   the CSS skyline. Darkened hard so the code buildings + hanging signs read
-   in front; only neon haze and tower silhouettes bleed through. */
+   the CSS skyline. Re-tinted toward the entry's neon palette (magenta +
+   cyan) so the source render's default indigo/violet — an AI-template tell —
+   is suppressed; darkened so code buildings + hanging signs read in front. */
 .neon-scene__city {
   position: absolute;
   inset: 0;
@@ -177,8 +178,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center 40%;
-  opacity: 0.40;
-  filter: saturate(1.2) brightness(0.6) contrast(1.05);
+  opacity: 0.38;
+  filter: hue-rotate(290deg) saturate(1.4) brightness(0.55) contrast(1.1);
   z-index: 0;
   pointer-events: none;
 }

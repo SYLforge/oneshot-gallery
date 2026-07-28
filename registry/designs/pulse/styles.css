@@ -104,13 +104,16 @@
   overflow: hidden;
 }
 
-/* The void — radial ground lifting toward the core. Always painted; this is
-   the no-JS view and the canvas understudy. */
+/* The void — radial ground lifting toward the core, with a faint magenta +
+   cyan nebula bloom so the no-JS / canvas-not-yet-painted view still reads as
+   a cosmic nebula, not a flat gray field. Always painted; canvas understudy. */
 .pulse-hero__void {
   position: absolute;
   inset: 0;
   z-index: 0;
   background:
+    radial-gradient(38% 46% at 46% 58%, rgba(255, 45, 149, 0.20), transparent 60%),
+    radial-gradient(42% 50% at 58% 50%, rgba(0, 200, 255, 0.14), transparent 62%),
     radial-gradient(80% 60% at 50% 60%, var(--pulse-void-rise) 0%, transparent 55%),
     linear-gradient(180deg, var(--pulse-void) 0%, #070818 60%, var(--pulse-void) 100%);
 }
