@@ -37,7 +37,11 @@
     "followUps": 0
   },
   "media": {
-    "source": "code",
+    "source": "hybrid",
+    "provenance": {
+      "en": "The far canopy layer is a single generated painterly forest photo — ComfyUI on the Illustrious checkpoint bismuthIllustrious_v80 at 1536x640, 30 steps, CFG 5.5, encoded to AVIF + WebP (~200 KB). It is darkened to 42% opacity and tinted so it reads as atmosphere behind the CSS leaf shapes, which remain code. Full recipe in PROMPT.md image-recipe.",
+      "ko": "멀리 수관 레이어 한 장은 생성된 그림풍 숲 사진 — ComfyUI의 Illustrious 계열 체크포인트 bismuthIllustrious_v80, 1536x640, 30스텝, CFG 5.5, AVIF + WebP 인코딩(약 200KB). 코드로 그린 잎 모양 뒤에 대기로 읽히도록 42% 불투명도로 어둡게 하고 틴트를 입혔다. 전체 레시피는 PROMPT.md의 image-recipe에."
+    },
     "budgetKB": 5120
   },
   "theme": "light",

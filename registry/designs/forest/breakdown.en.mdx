@@ -1,8 +1,39 @@
 # FOREST — breakdown
 
 ## The hook
-a forest retreat where canopy darkens as you descend. The third organic-nature entry, visually distinct from SUP, DREAM. Part of the gallery's
-50-entry milestone.
+A forest retreat where the canopy darkens as you descend. A real painterly
+canopy photograph hangs behind CSS leaf shapes and a feTurbulence dapple, so
+the retreat reads as a place — not a gradient. The third organic-nature entry,
+visually distinct from SUP (water surface) and DREAM (soft pastel haze).
+
+## The page, top to bottom
+The hero under a drifting canopy; the descent — a sticky section that
+darkens with scroll progress, three lines of Korean marking the deepening
+(Light thins · moss thickens · breath deepens); the dappled-leaf overlay
+across everything; and the darkened footer where the forest holds its breath.
+
+## Techniques
+1. **scroll-scrub-pinned** — the descent. A sticky inner reads
+   `--forest-scrub` (0→1, lerp-bypassed under reduced motion) and composes
+   its background and text color from it via `color-mix`: the further you
+   scroll, the deeper the canopy becomes.
+2. **feturbulence-texture** — a full-bleed SVG `feTurbulence` fractalNoise
+   pass, low-frequency, masked into a leaf-dapple color matrix and laid over
+   the page with `mix-blend-mode: multiply`. It is the moving light through
+   leaves.
+3. **pointer-parallax** — the canopy layers drift toward the pointer at
+   different depths (the photograph most, the near CSS shapes least), driven
+   by `--drm-px` / `--drm-py`. Pure input→style; under reduced motion the
+   layers simply sit.
+
+## The canopy photograph
+The far layer is a single generated image (ComfyUI, Illustrious
+bismuthIllustrious_v80, 1536×640), darkened to 42% and saturation-reduced so
+it reads as atmosphere behind the code-drawn leaves — a hybrid of raster
+depth and vector shape. See meta.json provenance.
 
 ## Accessibility
-Reduced motion: static. No-JS: fully readable. AA contrast. Korean-first bilingual.
+Reduced motion: the parallax stops and the descent tracks scroll without
+smoothing — a complete, composed static retreat. No-JS: every line is a
+readable static page. AA contrast (the darkened descent holds text contrast
+against the deepening green). Korean-first bilingual.

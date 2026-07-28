@@ -29,9 +29,16 @@ export default function ForestPage() {
   return (
     <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} forest-root`}>
       <div ref={revealRef} className="forest-doc">
-        {/* pointer-parallax canopy layers */}
+        {/* pointer-parallax canopy layers — a generated painterly canopy photo
+            (far layer) behind the CSS leaf shapes (mid + near), so the
+            retreat reads as a real forest, not a gradient. */}
         <div ref={canopyRef} className="forest-canopy" aria-hidden="true">
-          <div className="forest-canopy__layer forest-canopy__layer--far" />
+          <img
+            className="forest-canopy__photo"
+            src="/media/forest/canopy.avif"
+            alt=""
+            draggable="false"
+          />
           <div className="forest-canopy__layer forest-canopy__layer--mid" />
           <div className="forest-canopy__layer forest-canopy__layer--near" />
         </div>
