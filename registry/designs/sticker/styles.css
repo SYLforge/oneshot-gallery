@@ -237,7 +237,18 @@
   font-family: var(--sticker-font-display);
   font-size: clamp(3.6rem, 17vw, 12rem);
   line-height: 0.9;
-  color: var(--sticker-ink);
+  color: #fff8f0;
+  /* the wordmark is a peel-off holographic-foil sticker type: a bright
+     cream-foil fill with a thick ink outline and a tight, high-contrast
+     4-color chromatic offset (RGB-split, like a misprinted sticker) so the
+     TYPE carries the concept, not just the box behind it. */
+  -webkit-text-stroke: 4px #1a1008;
+  paint-order: stroke fill;
+  text-shadow:
+    3px 0 0 #ff2d6f,
+    -3px 0 0 #2dc8ff,
+    0 3px 0 #ffd62d,
+    6px 6px 0 #1a1008;
 }
 
 .sticker-wordmark__en {
