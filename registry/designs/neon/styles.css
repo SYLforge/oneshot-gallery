@@ -113,25 +113,90 @@
   font-size: clamp(4.5rem, 18vw, 14rem);
   line-height: 0.88;
   margin: 0 0 clamp(18px, 3vh, 28px);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  text-align: center;
 }
-.neon-title__glow {
-  color: var(--neon-magenta);
+/* The wordmark as four separate neon tubes — each letter is a real sign:
+   a bright white-glass core, a saturated gas glow, a wide outer bloom, and
+   a thin tube outline. Tubes flicker on mutually-prime periods. */
+.neon-tubes {
+  display: inline-flex;
+  gap: 0.04em;
+}
+.neon-tube {
+  display: inline-block;
+  /* white-hot core, the glass tube itself */
+  color: #fff;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.55);
+  paint-order: stroke fill;
+}
+.neon-tube--magenta {
   text-shadow:
-    0 0 6px var(--neon-magenta),
-    0 0 16px var(--neon-magenta),
-    0 0 36px rgba(255, 45, 149, 0.55),
-    0 0 70px rgba(255, 45, 149, 0.3);
+    0 0 4px #fff,
+    0 0 10px var(--neon-magenta),
+    0 0 24px var(--neon-magenta),
+    0 0 48px rgba(255, 45, 149, 0.7),
+    0 0 90px rgba(255, 45, 149, 0.4);
   animation: neon-flicker-a 4.1s infinite;
+}
+.neon-tube--cyan {
+  text-shadow:
+    0 0 4px #fff,
+    0 0 10px var(--neon-cyan),
+    0 0 24px var(--neon-cyan),
+    0 0 48px rgba(0, 240, 255, 0.7),
+    0 0 90px rgba(0, 240, 255, 0.4);
+}
+.neon-tube--purple {
+  text-shadow:
+    0 0 4px #fff,
+    0 0 10px var(--neon-purple),
+    0 0 24px var(--neon-purple),
+    0 0 48px rgba(176, 38, 255, 0.7),
+    0 0 90px rgba(176, 38, 255, 0.4);
+  animation: neon-flicker-c 5.7s infinite;
 }
 .neon-title__kr {
   display: block;
   font-family: var(--neon-font-display);
-  font-size: 0.3em;
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px var(--neon-cyan), 0 0 24px rgba(0, 240, 255, 0.5);
-  margin-top: 14px;
-  letter-spacing: 0.08em;
+  font-size: 0.26em;
+  color: #fff;
+  -webkit-text-stroke: 1px rgba(0, 240, 255, 0.5);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 3px #fff,
+    0 0 8px var(--neon-cyan),
+    0 0 18px var(--neon-cyan),
+    0 0 36px rgba(0, 240, 255, 0.6);
+  margin-top: 16px;
+  letter-spacing: 0.12em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .neon-tube, .neon-title__kr { animation: none; }
+}
+
+/* Wet-asphalt reflection — the sign mirrored, faded and smeared downward,
+   the puddle every neon sign stands in. */
+.neon-title__reflect {
+  display: flex;
+  justify-content: center;
+  gap: 0.04em;
+  font-family: var(--neon-font-latin);
+  font-weight: 900;
+  font-size: clamp(4.5rem, 18vw, 14rem);
+  line-height: 0.5;
+  margin-top: 0.1em;
+  transform: scaleY(-1);
+  opacity: 0.22;
+  filter: blur(2px);
+  -webkit-mask: linear-gradient(180deg, #000 0%, transparent 55%);
+  mask: linear-gradient(180deg, #000 0%, transparent 55%);
+  pointer-events: none;
+  user-select: none;
+}
+.neon-title__reflect .neon-tube {
+  font-size: 1em;
+  -webkit-text-stroke: 0;
 }
 .neon-sub {
   color: var(--neon-dim);

@@ -87,12 +87,19 @@
   justify-content: center;
   gap: 0.02em;
 }
-/* char-split-reveal: each glyph in its spectrum color, staggered */
+/* char-split-reveal: each glyph in its spectrum color, staggered, with a
+   prismatic chromatic-aberration glow (the light splitting through glass). */
 .prism-glyph {
   display: inline-block;
   color: var(--prism-c, var(--prism-accent));
   opacity: 0;
   transform: translateY(30px) scale(0.8);
+  font-weight: 800;
+  text-shadow:
+    -0.02em 0 0 rgba(255, 0, 80, 0.55),
+    0.02em 0 0 rgba(0, 200, 255, 0.55),
+    0 0 12px color-mix(in srgb, var(--prism-c, var(--prism-accent)) 55%, transparent),
+    0 0 28px color-mix(in srgb, var(--prism-c, var(--prism-accent)) 30%, transparent);
 }
 .prism-js .prism-glyph {
   animation: prism-glyph-in 800ms cubic-bezier(0.34, 1.56, 0.64, 1) both;

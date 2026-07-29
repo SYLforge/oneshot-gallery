@@ -42,11 +42,24 @@ export default function NeonPage() {
             · DISTRICT 9
           </p>
           <h1 className="neon-title" aria-label="NEON 네온">
-            <span className="neon-title__glow">NEON</span>
-            <span lang="ko" className="neon-title__kr">
+            <span aria-hidden="true" className="neon-tubes">
+              <span className="neon-tube neon-tube--magenta" data-tube="0">N</span>
+              <span className="neon-tube neon-tube--cyan" data-tube="1">E</span>
+              <span className="neon-tube neon-tube--magenta" data-tube="2">O</span>
+              <span className="neon-tube neon-tube--purple" data-tube="3">N</span>
+            </span>
+            <span lang="ko" aria-hidden="true" className="neon-title__kr">
               네온
             </span>
           </h1>
+          {/* The sign reflected in wet asphalt — the wordmark flipped, faded,
+              blurred, the rain puddle beneath every neon sign. Decorative. */}
+          <div className="neon-title__reflect" aria-hidden="true">
+            <span className="neon-tube neon-tube--magenta">N</span>
+            <span className="neon-tube neon-tube--cyan">E</span>
+            <span className="neon-tube neon-tube--magenta">O</span>
+            <span className="neon-tube neon-tube--purple">N</span>
+          </div>
           <p className="neon-sub" data-reveal="">
             <span lang="ko">비가 내리고, 사인이 번진다.</span> The rain falls; the
             signs bleed into the wet asphalt and never quite dry.

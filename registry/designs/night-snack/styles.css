@@ -461,11 +461,15 @@
   font-family: var(--ns-font-display);
   font-size: clamp(4.4rem, 20vw, 14rem);
   color: var(--ns-lantern);
-  /* the neon glow on the wordmark — amber halo, pink underglow */
+  /* webtoon-neon wordmark — thick ink outline + amber neon halo + warm pink
+     underglow, the lantern-lit tent sign made type. */
+  -webkit-text-stroke: 3px rgba(26, 12, 8, 0.85);
+  paint-order: stroke fill;
   text-shadow:
-    0 0 14px rgba(255, 179, 71, 0.55),
-    0 0 38px rgba(255, 179, 71, 0.3),
-    0 0 60px rgba(255, 94, 138, 0.18);
+    0 0 6px rgba(255, 220, 150, 0.8),
+    0 0 18px rgba(255, 179, 71, 0.7),
+    0 0 42px rgba(255, 179, 71, 0.45),
+    0 0 80px rgba(255, 94, 138, 0.3);
 }
 .ns-hero__title-en {
   display: block;

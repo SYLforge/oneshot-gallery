@@ -153,10 +153,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
   min-height: 100svh;
-  padding: clamp(28px, 6vw, 80px);
+  padding: clamp(40px, 8vh, 96px) clamp(28px, 6vw, 80px) clamp(16px, 3vh, 40px);
   text-align: center;
 }
 
@@ -169,9 +169,10 @@
   width: 110%;
   height: 110%;
   object-fit: cover;
-  opacity: 0.4;
-  filter: blur(2px) saturate(1.1) brightness(0.9);
-  z-index: -1;
+  object-position: center 70%;
+  opacity: 0.18;
+  filter: blur(6px) saturate(1.1) brightness(0.6);
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -187,13 +188,17 @@
   opacity: 0.82;
 }
 
-.chrome-hero > * {
+/* Lift all flow children above the background layers, but keep the
+   absolute background layers (metal-bg, scrim) out of the flow — without
+   this exception they took 1500px of document height and pushed the
+   wordmark off the first viewport. */
+.chrome-hero > *:not(.chrome-hero__metal-bg):not(.chrome-hero__scrim) {
   position: relative;
   z-index: 2;
 }
 
 .chrome-hero__eyebrow {
-  margin: 0 0 2rem;
+  margin: 0 0 1rem;
   font-family: var(--chrome-font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.28em;
@@ -205,7 +210,7 @@
   position: relative;
   width: 100%;
   max-width: min(92vw, 1100px);
-  padding: clamp(2rem, 6vw, 4rem) 0;
+  padding: clamp(0.6rem, 1.5vw, 1.4rem) 0;
 }
 
 /*
@@ -286,7 +291,7 @@
   margin: 0;
   font-family: var(--chrome-font-display);
   font-weight: 800;
-  font-size: clamp(3.6rem, 17vw, 12rem);
+  font-size: clamp(2.6rem, 9vw, 6rem);
   line-height: 0.92;
   letter-spacing: -0.02em;
   color: var(--chrome-ink);
@@ -298,21 +303,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* CSS chrome text gradient — the no-JS / shader-failed fallback.
-     A horizontal silver band stack matching the shader's palette. */
-  background: linear-gradient(
-    180deg,
-    var(--chrome-ink) 0%,
-    var(--chrome-silver) 30%,
-    var(--chrome-highlight) 48%,
-    var(--chrome-silver) 62%,
-    var(--chrome-ink) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  z-index: 2;
+  /* Solid silver chrome — opaque so the wordmark reads on ANY background
+     (including the metal-bg render), with a beveled metal edge built from
+     stacked text-shadows. No background-clip (which failed over imagery). */
+  color: #f4f7fa;
+  -webkit-text-fill-color: #f4f7fa;
+  -webkit-text-stroke: 4px #1a1a28;
+  paint-order: stroke fill;
+  text-shadow:
+    0 2px 0 #ffffff,
+    0 3px 0 #c8d0d8,
+    0 4px 1px rgba(0, 0, 0, 0.4),
+    0 5px 3px rgba(0, 0, 0, 0.4),
+    0 7px 8px rgba(0, 0, 0, 0.45),
+    0 10px 18px rgba(0, 0, 0, 0.35);
+  z-index: 4;
 }
 
 .chrome-wordmark__metal {
@@ -369,7 +374,7 @@
 }
 
 .chrome-hero__sub {
-  margin: 1.6rem 0 0;
+  margin: 0.8rem 0 0;
   font-family: var(--chrome-font-hangul);
   font-size: clamp(1rem, 2.2vw, 1.3rem);
   letter-spacing: 0.18em;
@@ -377,7 +382,7 @@
 }
 
 .chrome-hero__line {
-  margin: 1rem 0 0;
+  margin: 0.6rem 0 0;
   font-size: clamp(0.98rem, 1.7vw, 1.15rem);
   letter-spacing: 0.04em;
   color: var(--chrome-ink);
