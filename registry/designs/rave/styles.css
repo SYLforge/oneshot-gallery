@@ -190,7 +190,11 @@
   }
 }
 
-.rave-hero > *:not(.rave-hero__scanlines) {
+/* Lift flow children above the background layers, but keep the absolute
+   background layers (room render, scanlines) out of the flow — without
+   this exception the room image took ~1500px of document height and pushed
+   the wordmark off the first capture viewport. */
+.rave-hero > *:not(.rave-hero__scanlines):not(.rave-hero__room) {
   position: relative;
   z-index: 1;
 }
