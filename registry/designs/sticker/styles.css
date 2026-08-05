@@ -240,16 +240,19 @@
   color: #fff8f0;
   /* the wordmark is a peel-off holographic-foil sticker type: a bright
      cream-foil fill with a thick ink outline and a chunky high-contrast
-     4-color chromatic offset (RGB-split, like a misprinted sticker) so the
-     TYPE carries the concept. Offsets are large enough to clear the 4px
-     stroke and read as distinct colored fringes. */
+     multi-color chromatic offset (RGB-split, like a misprinted sticker) so
+     the TYPE carries the concept. Each channel is pushed hard enough to
+     clear the ink stroke and read as distinct visible fringes: magenta
+     trails right, cyan left, yellow down — the classic misregistration. */
   -webkit-text-stroke: 4px #1a1008;
   paint-order: fill stroke;
   text-shadow:
-    8px 0 0 #ff2d6f,
-    -8px 0 0 #2dc8ff,
-    0 8px 0 #ffd62d,
-    10px 10px 0 #1a1008;
+    12px 0 0 #ff2d6f,
+    -12px 0 0 #2dc8ff,
+    0 14px 0 #ffd62d,
+    14px 14px 0 #ff2d6f,
+    -14px 14px 0 #2dc8ff,
+    16px 16px 0 #1a1008;
 }
 
 .sticker-wordmark__en {

@@ -100,23 +100,25 @@ export type RenderOpts = {
 export function mixHex(a: string, b: string, t: number): string {
   const pa = parseHex(a);
   const pb = parseHex(b);
-  const r = Math.round(pa[0] + (pb[0] - pa[0]) * t);
-  const g = Math.round(pa[1] + (pb[1] - pa[1]) * t);
-  const bl = Math.round(pa[2] + (pb[2] - pa[2]) * t);
+  // Clamp t to 0..1 so a stray non-finite never extrapolates out of gamut.
+  const tt = Number.isFinite(t) ? Math.max(0, Math.min(1, t)) : 0;
+  const r = Math.round(pa[0] + (pb[0] - pa[0]) * tt);
+  const g = Math.round(pa[1] + (pb[1] - pa[1]) * tt);
+  const bl = Math.round(pa[2] + (pb[2] - pa[2]) * tt);
   return `rgb(${r},${g},${bl})`;
 }
 
 function parseHex(c: string): [number, number, number] {
-  const hex = c.replace("#", "");
+  const hex = (c || "").replace("#", "");
   const full =
     hex.length === 3
       ? hex.split("").map((ch) => ch + ch).join("")
       : hex;
-  return [
-    parseInt(full.slice(0, 2), 16),
-    parseInt(full.slice(2, 4), 16),
-    parseInt(full.slice(4, 6), 16),
-  ];
+  const safe = (s: string) => {
+    const n = parseInt(s, 16);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return [safe(full.slice(0, 2)), safe(full.slice(2, 4)), safe(full.slice(4, 6))];
 }
 
 /**
@@ -129,8 +131,12 @@ export function paletteForTrack(track: number): {
   rim: string;
   intensity: number;
 } {
-  const seg = Math.max(0, Math.min(TRACK_PALETTES.length - 2, Math.floor(track * (TRACK_PALETTES.length - 1))));
-  const t = Math.max(0, Math.min(1, track * (TRACK_PALETTES.length - 1) - seg));
+  // Sanitize: the scroll hook can briefly feed a non-finite value (zero-height
+  // pin at first paint, detached ref, etc.). A bad track must never crash the
+  // canvas with an unparseable gradient color — clamp to a safe 0..1.
+  const tk = Number.isFinite(track) ? Math.max(0, Math.min(1, track)) : 0;
+  const seg = Math.max(0, Math.min(TRACK_PALETTES.length - 2, Math.floor(tk * (TRACK_PALETTES.length - 1))));
+  const t = Math.max(0, Math.min(1, tk * (TRACK_PALETTES.length - 1) - seg));
   const a = TRACK_PALETTES[seg];
   const b = TRACK_PALETTES[seg + 1];
   return {
