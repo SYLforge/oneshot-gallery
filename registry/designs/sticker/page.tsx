@@ -1,9 +1,12 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import "./styles.css";
 import { blackHanSans, gaegu, inter } from "./fonts";
 import Hero from "./components/Hero";
 import ServiceMarquee from "./components/ServiceMarquee";
 import StickerBoard from "./components/StickerBoard";
 import StudioFooter from "./components/StudioFooter";
-import StickerShell from "./components/StickerShell";
 
 /**
  * STICKER — studio of bouncy things.
@@ -15,15 +18,20 @@ import StickerShell from "./components/StickerShell";
  * reveal-hide initial states, the rest wobble) is gated — with JavaScript
  * disabled the page is a finished sticker pile: everything readable, the
  * stickers sitting at their default scatter, nothing moving.
- *
- * This page is a SERVER component so `./styles.css` lands in the layout chunk
- * (a Next 16 Turbopack quirk had dropped the CSS chunk for this entry when it
- * was a dynamic-import client component). The shell holds the client-only
- * mount effect; everything else renders on the server.
  */
 export default function StickerPage() {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Imperative on purpose: the class is a signal to CSS that JS is alive,
+    // not React state — and it never changes once set.
+    rootRef.current?.classList.add("sticker-js");
+    window.parent?.postMessage({ type: "oneshot:ready", slug: "sticker" }, "*");
+  }, []);
+
   return (
-    <StickerShell
+    <div
+      ref={rootRef}
       className={`${blackHanSans.variable} ${gaegu.variable} ${inter.variable} sticker-root`}
     >
       <Hero />
@@ -54,6 +62,6 @@ export default function StickerPage() {
           <rect width="100%" height="100%" filter="url(#sticker-grain-f)" />
         </svg>
       </div>
-    </StickerShell>
+    </div>
   );
 }

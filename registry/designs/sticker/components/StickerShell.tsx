@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import "../styles.css";
 
 /**
  * The client shell for the STICKER page. Holds the only client-only side
- * effect — adding `.sticker-js` to the root on mount (the CSS-only signal
- * that JS is alive, gating pre-reveal states) and posting `oneshot:ready`.
- *
- * Keeping this in its own client component lets the page itself stay a server
- * component, so `./styles.css` is hoisted into the layout chunk (a Next 16
- * Turbopack quirk dropped the CSS chunk when the whole page was a dynamic-
- * import client component).
+ * effect — adding `.sticker-js` to the root on mount and posting
+ * `oneshot:ready`. The page's stylesheet is imported at the demo route level
+ * (app/(demo)/view/[slug]/page.tsx) because Next 16 Turbopack drops this
+ * entry's CSS chunk on client dynamic import.
  */
 export default function StickerShell({
   children,
