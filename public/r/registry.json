@@ -3890,11 +3890,6 @@
           "target": "app/oneshot/sticker/PROMPT.md"
         },
         {
-          "path": "registry/designs/sticker/styles-string.ts",
-          "type": "registry:file",
-          "target": "app/oneshot/sticker/styles-string.ts"
-        },
-        {
           "path": "registry/designs/sticker/styles.css",
           "type": "registry:file",
           "target": "app/oneshot/sticker/styles.css"
