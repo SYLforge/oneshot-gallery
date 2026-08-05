@@ -20,9 +20,9 @@
   /* -- type: three sticker-book voices ----------------------------------- */
   /* Korean faces listed first so Hangul never falls through to a default
      sans — the :lang(ko) rule below also pins them. */
-  --sticker-font-display: var(--font-display), var(--font-fredoka), "Arial Black", sans-serif;
+  --sticker-font-display: var(--font-display), var(--font-inter), "Arial Black", sans-serif;
   --sticker-font-ko: var(--font-gaegu), var(--font-display), "Gaegu", cursive;
-  --sticker-font-en: var(--font-fredoka), var(--font-gaegu), "Fredoka", sans-serif;
+  --sticker-font-en: var(--font-inter), var(--font-gaegu), "Inter", sans-serif;
 
   /* -- motion: spring + wobble + press ----------------------------------- */
   --sticker-press-in: 90ms;
@@ -239,16 +239,17 @@
   line-height: 0.9;
   color: #fff8f0;
   /* the wordmark is a peel-off holographic-foil sticker type: a bright
-     cream-foil fill with a thick ink outline and a tight, high-contrast
+     cream-foil fill with a thick ink outline and a chunky high-contrast
      4-color chromatic offset (RGB-split, like a misprinted sticker) so the
-     TYPE carries the concept, not just the box behind it. */
+     TYPE carries the concept. Offsets are large enough to clear the 4px
+     stroke and read as distinct colored fringes. */
   -webkit-text-stroke: 4px #1a1008;
-  paint-order: stroke fill;
+  paint-order: fill stroke;
   text-shadow:
-    3px 0 0 #ff2d6f,
-    -3px 0 0 #2dc8ff,
-    0 3px 0 #ffd62d,
-    6px 6px 0 #1a1008;
+    8px 0 0 #ff2d6f,
+    -8px 0 0 #2dc8ff,
+    0 8px 0 #ffd62d,
+    10px 10px 0 #1a1008;
 }
 
 .sticker-wordmark__en {

@@ -3845,6 +3845,11 @@
           "target": "app/oneshot/sticker/components/StickerBoard.tsx"
         },
         {
+          "path": "registry/designs/sticker/components/StickerShell.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/sticker/components/StickerShell.tsx"
+        },
+        {
           "path": "registry/designs/sticker/components/StudioFooter.tsx",
           "type": "registry:component",
           "target": "app/oneshot/sticker/components/StudioFooter.tsx"
