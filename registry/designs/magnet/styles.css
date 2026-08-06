@@ -1,0 +1,317 @@
+/* ==========================================================================
+   MAGNET 마그넷 — things that pull · no.067
+   playful-pop · bright-pink / hot-pink + ink-black · magnetic pointer field
+   Scoped by convention to .magnet-root; classes prefixed mg- / magnet-.
+   ========================================================================== */
+
+.magnet-root {
+  --mg-bg: #fff5f8;
+  --mg-warm: #ffe9f0;
+  --mg-cream: #fffafb;
+  --mg-text: #1a0a12;
+  --mg-mute: #7a5a68;
+  --mg-quiet: #b896a4;
+  --mg-pink: #ff3d77;
+  --mg-pink-soft: rgba(255, 61, 119, 0.5);
+  --mg-pink-faint: rgba(255, 61, 119, 0.14);
+  --mg-ink: #160a10;
+  --mg-font-display: var(--font-archivo-black), "Archivo Black", system-ui, sans-serif;
+  --mg-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --mg-ease: cubic-bezier(0.18, 1.2, 0.4, 1); /* a slight overshoot spring */
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 61, 119, 0.1), transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, rgba(255, 61, 119, 0.08), transparent 70%),
+    linear-gradient(180deg, var(--mg-warm) 0%, var(--mg-bg) 50%, var(--mg-warm) 100%);
+  color: var(--mg-text);
+  font-family: var(--mg-font-kr);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.magnet-root :lang(ko) {
+  font-family: var(--mg-font-kr);
+}
+
+.magnet-root ::selection {
+  background: var(--mg-pink);
+  color: #fff;
+}
+
+.magnet-root :focus-visible {
+  outline: 2px solid var(--mg-pink);
+  outline-offset: 3px;
+}
+
+/* ---- Atmospheric depth: soft pink blobs drifting behind all ---- */
+.mg-blobs {
+  position: fixed;
+  inset: -10% -10% 0 -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(30% 36% at 18% 22%, rgba(255, 61, 119, 0.22), transparent 70%),
+    radial-gradient(28% 34% at 82% 30%, rgba(255, 138, 180, 0.22), transparent 70%),
+    radial-gradient(34% 40% at 60% 82%, rgba(255, 61, 119, 0.16), transparent 70%);
+  filter: blur(30px);
+  animation: mg-drift 22s ease-in-out infinite alternate;
+}
+@keyframes mg-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(3%, 2%, 0) scale(1.06); }
+}
+
+.mg-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.magnet-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--mg-ease), transform 800ms var(--mg-ease);
+}
+.magnet-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Hero / the magnetic field ---- */
+.mg-hero {
+  padding: clamp(56px, 12vh, 120px) 0 clamp(28px, 5vh, 48px);
+  text-align: center;
+}
+.mg-kicker {
+  margin: 0 0 clamp(18px, 4vh, 32px);
+  font-family: var(--mg-font-display);
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--mg-pink);
+}
+.mg-title {
+  margin: 0 0 16px;
+  font-family: var(--mg-font-display);
+  font-weight: 400; /* Archivo Black only has 400 */
+  font-size: clamp(3.4rem, 18vw, 15rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+.mg-title__row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mg-title__kr {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--mg-font-kr);
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: var(--mg-mute);
+}
+
+/* The wordmark IS the concept: hot-pink solid glyphs that each pull toward
+   the pointer. The pull is the --mg-x/--mg-y transform set from JS. */
+.magnet-glyph {
+  display: inline-block;
+  color: var(--mg-pink);
+  /* the spring press: a subtle pop that reads on hover/pull */
+  text-shadow:
+    0 6px 0 rgba(255, 61, 119, 0.16),
+    0 14px 30px rgba(255, 61, 119, 0.2);
+  transform: translate3d(var(--mg-x, 0), var(--mg-y, 0), 0);
+  will-change: transform;
+}
+
+/* Glyph reveal (entrance). */
+.magnet-js .magnet-glyph {
+  opacity: 0;
+  transform: translate3d(0, 0.35em, 0);
+  transition: opacity 700ms var(--mg-ease), transform 700ms var(--mg-ease);
+  transition-delay: calc(var(--mg-i) * 70ms + 150ms);
+}
+.magnet-js.is-mounted .magnet-glyph {
+  opacity: 1;
+  /* once mounted, transform is owned by the magnetic field vars */
+  transform: translate3d(var(--mg-x, 0), var(--mg-y, 0), 0);
+}
+
+.mg-sub {
+  margin: 22px auto 0;
+  max-width: 44ch;
+  font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  color: var(--mg-mute);
+}
+.mg-sub :lang(ko) {
+  color: var(--mg-text);
+  font-weight: 500;
+}
+
+/* ---- Magnetic pills ---- */
+.mg-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 34px;
+}
+.mg-pill {
+  /* the pull: translate by --mg-x/--mg-y set from JS */
+  --mg-x: 0;
+  --mg-y: 0;
+  transform: translate3d(var(--mg-x), var(--mg-y), 0);
+  will-change: transform;
+  font-family: var(--mg-font-display);
+  font-size: clamp(0.82rem, 1.4vw, 1rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--mg-pink);
+  border: 2px solid var(--mg-pink);
+  padding: 14px 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow:
+    0 6px 0 rgba(255, 61, 119, 0.3),
+    0 12px 26px rgba(255, 61, 119, 0.25);
+  transition: background 180ms var(--mg-ease), color 180ms var(--mg-ease),
+    box-shadow 180ms var(--mg-ease);
+}
+.mg-pill:hover {
+  background: var(--mg-ink);
+  border-color: var(--mg-ink);
+}
+.mg-pill:active {
+  box-shadow: 0 2px 0 rgba(255, 61, 119, 0.3);
+}
+.mg-pill--ghost {
+  color: var(--mg-pink);
+  background: var(--mg-cream);
+  box-shadow:
+    0 6px 0 var(--mg-pink-faint),
+    0 12px 26px rgba(255, 61, 119, 0.12);
+}
+.mg-pill--ghost:hover {
+  color: #fff;
+  background: var(--mg-pink);
+  border-color: var(--mg-pink);
+}
+
+/* ---- Section headers ---- */
+.mg-sechead {
+  text-align: center;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.mg-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--mg-font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--mg-pink);
+}
+.mg-secthead__title {
+  margin: 0 0 8px;
+  font-family: var(--mg-font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  text-transform: lowercase;
+  letter-spacing: -0.01em;
+  color: var(--mg-text);
+}
+.mg-secthead__kr {
+  margin: 0;
+  color: var(--mg-mute);
+  font-size: 0.98rem;
+}
+
+/* ---- How grid ---- */
+.mg-how {
+  padding: clamp(24px, 5vh, 48px) 0;
+}
+.mg-howgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.mg-card {
+  padding: 26px 22px;
+  border: 2px solid var(--mg-pink-faint);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 233, 240, 0.6));
+  text-align: left;
+}
+.mg-card__no {
+  margin: 0 0 12px;
+  font-family: var(--mg-font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--mg-pink);
+}
+.mg-card__h {
+  margin: 0 0 8px;
+  font-family: var(--mg-font-display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--mg-text);
+}
+.mg-card__b {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--mg-mute);
+  line-height: 1.7;
+}
+.mg-card__b :lang(ko) {
+  color: var(--mg-text);
+  font-weight: 500;
+}
+
+/* ---- Footer ---- */
+.mg-foot {
+  margin-top: clamp(40px, 8vh, 80px);
+  padding: clamp(28px, 5vh, 48px) 0;
+  border-top: 2px solid var(--mg-pink-faint);
+  text-align: center;
+}
+.mg-foot__brand {
+  margin: 0 0 6px;
+  font-family: var(--mg-font-display);
+  font-weight: 400;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mg-text);
+}
+.mg-foot__line {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--mg-quiet);
+}
+
+/* ---- Reduced motion: field inert, everything sits at rest ---- */
+@media (prefers-reduced-motion: reduce) {
+  .mg-blobs { animation: none !important; }
+  .magnet-js [data-reveal],
+  .magnet-js .magnet-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .mg-pill { transform: none !important; }
+}
+
+@media (max-width: 560px) {
+  .mg-pill { padding: 12px 20px; }
+}

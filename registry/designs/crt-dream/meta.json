@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "crt-dream",
+  "no": 63,
+  "title": {
+    "en": "CRT DREAM — The Warm Light of 2003",
+    "ko": "CRT 드림 — 2003년의 빛"
+  },
+  "description": {
+    "en": "Retro CRT nostalgia — a warm amber phosphor tube. Scanlines drift down the glass, the corners darken with barrel vignette, and the wordmark glows fuzzy like a monitor left on at 3 AM. The soft, fuzzy warmth of a screen that never quite rendered a straight line.",
+    "ko": "레트로 CRT 향수 — 따뜻한 호박색 인화관. 주사선이 유리를 타고 내려오고, 모서리는 배럴 비네트로 어두워지며, 자형은 새벽 3시에 켜둔 모니터처럼 퍼지게 빛난다. 곧은 선을 결코 렌더링하지 못했던 화면의 부드럽고 퍼지는 따뜻함."
+  },
+  "aesthetic": "ascii-retrotech",
+  "techniques": ["crt-scanline", "char-split-reveal"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#ffb84d",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

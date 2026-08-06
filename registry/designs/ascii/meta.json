@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "ascii",
+  "no": 64,
+  "title": {
+    "en": "ASCII — Pictures Drawn in Characters",
+    "ko": "아스키 — 문자로 그린 그림"
+  },
+  "description": {
+    "en": "An ASCII art renderer — a canvas that maps a density field to the ramp .:-=+*#%@, so a lit sphere and a rolling sine landscape assemble themselves out of characters. Green-on-black terminal, the wordmark glowing like a phosphor CRT, every shape a computation, never an image.",
+    "ko": "아스키 아트 렌더러 — 캔버스가 밀도장을 램프 .:-=+*#%@에 대응시켜, 빛나는 구와 흐르는 사인 파형 풍경이 문자들로 조립된다. 녹색-온-검정 터미널, 인화관 CRT처럼 빛나는 자형, 모든 형태가 계산이지 이미지가 아니다."
+  },
+  "aesthetic": "ascii-retrotech",
+  "techniques": ["ascii-render", "char-split-reveal"],
+  "industry": ["science"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#5effa0",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

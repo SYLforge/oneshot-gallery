@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "prism-glaze",
+  "no": 53,
+  "title": {
+    "en": "PRISM GLAZE — Liquid Glass House",
+    "ko": "프리즘 글레이즈 — 액체 유리 하우스"
+  },
+  "description": {
+    "en": "A material studio that pours interface as glass. Panels refract a drifting aurora wash while a specular highlight tracks the pointer — every surface is a liquid lens.",
+    "ko": "인터페이스를 유리로 부어 내는 재료 스튜디오. 패널이 흐르는 오로라 빛을 굴절하고 하이라이트가 포인터를 따라간다 — 모든 면이 액체 렌즈다."
+  },
+  "aesthetic": "liquid-spatial",
+  "techniques": ["glass-specular", "pointer-parallax", "char-split-reveal"],
+  "industry": ["product", "atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#7fdfff",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

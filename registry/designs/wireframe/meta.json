@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "wireframe",
+  "no": 62,
+  "title": {
+    "en": "WIREFRAME — A World Drawn in Lines",
+    "ko": "와이어프레임 — 선으로 그린 세계"
+  },
+  "description": {
+    "en": "A 3D wireframe studio — a rotating icosahedron drawn entirely in SVG strokes that draw themselves on like a CAD plotter, then turn slowly under your pointer. Green wire on near-black, outlined glyphs, and the engineering register of a viewport that never hides its polygons.",
+    "ko": "3D 와이어프레임 스튜디오 — 회전하는 이코사헤드론이 CAD 플로터처럼 선 하나씩 스스로 그려지고, 포인터를 따라 천천히 돈다. 거의 검은 배경 위 초록 선, 윤곽선 자형, 폴리곤을 숨기지 않는 뷰포트의 엔지니어링 어조."
+  },
+  "aesthetic": "cyber-future",
+  "techniques": ["svg-line-draw", "pointer-parallax", "char-split-reveal"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["svg", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#39ffa0",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

@@ -1,0 +1,277 @@
+.clay-root {
+  --cy-bg: #f5ede0;
+  --cy-paper: #fbf5ea;
+  --cy-text: #4a3a2c;
+  --cy-mute: #9a8772;
+  --cy-clay: #e0683a;
+  --cy-clay-deep: #b94a22;
+  --cy-clay-light: #f0916a;
+  --cy-font-display: var(--font-baloo), "Baloo 2", system-ui, sans-serif;
+  --cy-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --cy-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --cy-px: 0px;
+  --cy-py: 0px;
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(60% 50% at 18% 12%, rgba(240, 145, 106, 0.22), transparent 70%),
+    radial-gradient(50% 46% at 86% 22%, rgba(255, 220, 180, 0.32), transparent 72%),
+    radial-gradient(70% 60% at 50% 110%, rgba(224, 104, 58, 0.14), transparent 72%),
+    var(--cy-bg);
+  color: var(--cy-text);
+  font-family: var(--cy-font-kr);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.clay-root ::selection { background: var(--cy-clay); color: #fff; }
+
+/* Paper grain / texture depth (never flat). */
+.clay-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(rgba(120, 86, 60, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(120, 86, 60, 0.04) 1px, transparent 1px);
+  background-size: 22px 22px, 13px 13px;
+  background-position: 0 0, 7px 7px;
+}
+
+.clay-doc {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Hero ---- */
+.clay-hero {
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(3rem, 10vh, 7rem) 0 2rem;
+  perspective: 900px;
+}
+.clay-kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--cy-font-display);
+  font-size: clamp(0.74rem, 1.1vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--cy-clay-deep);
+}
+.clay-title {
+  margin: 0;
+  font-family: var(--cy-font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 14vw, 11rem);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+}
+/* Extruded clay wordmark: stacked offset shadows in the clay color build the
+   3D extrusion, a top inset highlight reads as a glossy lit top, and a darker
+   stroke defines the silhouette. The glyph layer carries the front face fill. */
+.clay-extrude {
+  display: inline-block;
+  color: var(--cy-clay);
+  text-shadow:
+    0 1px 0 var(--cy-clay-deep),
+    0 2px 0 var(--cy-clay-deep),
+    0 4px 0 var(--cy-clay-deep),
+    0 6px 0 var(--cy-clay-deep),
+    0 8px 0 var(--cy-clay-deep),
+    0 10px 0 var(--cy-clay-deep),
+    0 12px 0 var(--cy-clay-deep),
+    0 14px 1px rgba(120, 50, 22, 0.5),
+    0 18px 18px rgba(120, 50, 22, 0.4);
+  -webkit-text-stroke: 3px var(--cy-clay-deep);
+  paint-order: stroke fill;
+  position: relative;
+}
+/* Glossy inset top highlight, layered above via ::before clone trick is heavy;
+   instead a top-down soft inner highlight gives the lit-clay sheen. */
+.clay-extrude::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 0.35em;
+  background: linear-gradient(to bottom, rgba(255, 240, 220, 0.7), transparent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  pointer-events: none;
+}
+.clay-glyph { display: inline-block; }
+.clay-title__ko {
+  margin: 0.8rem 0 0;
+  font-family: var(--cy-font-kr);
+  font-weight: 700;
+  font-size: clamp(1rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.3em;
+  color: var(--cy-clay-deep);
+}
+.clay-sub {
+  margin: 1.6rem 0 0.4rem;
+  font-family: var(--cy-font-display);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 600;
+}
+.clay-sub span[lang="ko"] { color: var(--cy-mute); margin-right: 0.5rem; }
+.clay-hint {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--cy-clay);
+}
+
+/* ---- Claymorphism cards: inset highlight + dark drop, squash on press ---- */
+.clay-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(1rem, 1.8vw, 1.5rem);
+  padding: clamp(1rem, 3vw, 2rem) 0;
+}
+.clay-card {
+  position: relative;
+  padding: clamp(1.4rem, 2.6vw, 2rem);
+  border-radius: 26px;
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  background: linear-gradient(160deg, var(--cy-clay-light), var(--cy-clay));
+  color: #fff;
+  transform: translate3d(var(--cy-px), var(--cy-py), 0);
+  transition: transform 240ms var(--cy-ease), box-shadow 240ms ease;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 240, 220, 0.7),
+    inset 0 -8px 14px rgba(150, 60, 30, 0.35),
+    0 14px 22px -10px rgba(120, 50, 22, 0.45),
+    0 26px 40px -16px rgba(120, 50, 22, 0.4);
+  cursor: pointer;
+  border: none;
+  font: inherit;
+  text-align: left;
+}
+.clay-card:hover { transform: translate3d(var(--cy-px), var(--cy-py), 0) translateY(-3px); }
+.clay-card__n { font-family: var(--cy-font-display); font-weight: 800; font-size: 0.8rem; color: rgba(255, 240, 220, 0.9); letter-spacing: 0.2em; }
+.clay-card__en { font-family: var(--cy-font-display); font-weight: 700; font-size: 1.25rem; }
+.clay-card__ko { font-size: 0.9rem; opacity: 0.9; }
+
+/* The squash: any `.clay-press` element (cards + buttons) scales to 0.96 on
+   active with the overshoot spring on release. */
+.clay-press { transition: transform 220ms var(--cy-ease), box-shadow 220ms ease; }
+.clay-press:active {
+  transform: translate3d(var(--cy-px), var(--cy-py), 0) scale(0.96);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 240, 220, 0.5),
+    inset 0 -4px 10px rgba(150, 60, 30, 0.4),
+    0 6px 12px -6px rgba(120, 50, 22, 0.5);
+}
+
+/* ---- Buttons ---- */
+.clay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 2rem) 0;
+}
+.clay-btn {
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--cy-font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+  background: linear-gradient(160deg, var(--cy-clay-light), var(--cy-clay));
+  cursor: pointer;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 240, 220, 0.7),
+    inset 0 -8px 14px rgba(150, 60, 30, 0.35),
+    0 10px 18px -8px rgba(120, 50, 22, 0.45);
+  transition: transform 220ms var(--cy-ease), box-shadow 220ms ease;
+}
+.clay-btn:active {
+  transform: scale(0.96);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 240, 220, 0.5),
+    inset 0 -4px 10px rgba(150, 60, 30, 0.4),
+    0 4px 8px -4px rgba(120, 50, 22, 0.5);
+}
+.clay-btn--ghost {
+  background: linear-gradient(160deg, #fff, var(--cy-paper));
+  color: var(--cy-clay-deep);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.9),
+    inset 0 -8px 14px rgba(150, 110, 80, 0.18),
+    0 10px 18px -8px rgba(120, 50, 22, 0.3);
+}
+
+.clay-lead {
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
+  border-top: 1px solid rgba(185, 74, 34, 0.18);
+}
+.clay-lead__p {
+  margin: 0 auto;
+  max-width: 62ch;
+  font-family: var(--cy-font-display);
+  font-weight: 500;
+  font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  text-align: center;
+}
+.clay-lead__p span[lang="ko"] {
+  display: block;
+  font-family: var(--cy-font-kr);
+  color: var(--cy-mute);
+  font-size: 0.74em;
+  margin-bottom: 0.6em;
+}
+
+.clay-foot {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  border-top: 1px solid rgba(185, 74, 34, 0.18);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--cy-mute);
+  font-family: var(--cy-font-display);
+  font-weight: 600;
+}
+
+/* ---- Reveal gating ---- */
+.clay-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--cy-ease), transform 800ms var(--cy-ease);
+  transition-delay: calc(var(--cy-d, 0) * 1ms);
+}
+.clay-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.clay-js .clay-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  display: inline-block;
+  transition: opacity 700ms var(--cy-ease), transform 700ms var(--cy-ease);
+  transition-delay: calc(var(--cy-i) * 70ms + 150ms);
+}
+.clay-js.is-mounted .clay-glyph { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .clay-js [data-reveal], .clay-js .clay-glyph {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .clay-card, .clay-btn { transition: none !important; }
+}
+.clay-root :focus-visible { outline: 2px solid var(--cy-clay); outline-offset: 3px; }

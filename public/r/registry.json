@@ -4,6 +4,65 @@
   "homepage": "https://oneshot.gallery",
   "items": [
     {
+      "name": "ascii",
+      "type": "registry:block",
+      "title": "ASCII — Pictures Drawn in Characters",
+      "description": "An ASCII art renderer — a canvas that maps a density field to the ramp .:-=+*#%@, so a lit sphere and a rolling sine landscape assemble themselves out of characters. Green-on-black terminal, the wordmark glowing like a phosphor CRT, every shape a computation, never an image.",
+      "dependencies": [],
+      "categories": [
+        "ascii-retrotech",
+        "ascii-render",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/ascii/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/ascii/fonts.ts"
+        },
+        {
+          "path": "registry/designs/ascii/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ascii/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/ascii/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/ascii/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/ascii/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/ascii/page.tsx"
+        },
+        {
+          "path": "registry/designs/ascii/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/ascii/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/ascii/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/ascii/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"ASCII — Pictures Drawn in Characters\" installs into app/oneshot/ascii/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 64,
+        "accent": "#5effa0",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "atelier",
       "type": "registry:block",
       "title": "ATELIER — Maison Lookbook, Séoul",
@@ -177,6 +236,126 @@
           "modelLabel": "GLM-5.2",
           "tool": "zcode",
           "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "aurora-paint",
+      "type": "registry:block",
+      "title": "AURORA PAINT — A Studio of Light",
+      "description": "A paint studio whose medium is light. The signature is a canvas aurora — soft flowing mint, violet and cyan ribbons of additive light, drawn with sine-driven curves and a brush that follows your pointer.",
+      "dependencies": [],
+      "categories": [
+        "holographic-iridescent",
+        "canvas-particles",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/aurora-paint/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/aurora-paint/fonts.ts"
+        },
+        {
+          "path": "registry/designs/aurora-paint/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/aurora-paint/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/aurora-paint/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/aurora-paint/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/aurora-paint/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/aurora-paint/page.tsx"
+        },
+        {
+          "path": "registry/designs/aurora-paint/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/aurora-paint/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/aurora-paint/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/aurora-paint/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"AURORA PAINT — A Studio of Light\" installs into app/oneshot/aurora-paint/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 56,
+        "accent": "#7ef9c4",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "bento",
+      "type": "registry:block",
+      "title": "BENTO — Design That Holds",
+      "description": "A bento-grid product showcase. An asymmetric field of rounded tiles — some spanning wide, some standing tall — that holds each feature in its own compartment. Design that holds, like a lunchbox.",
+      "dependencies": [],
+      "categories": [
+        "bento-product",
+        "flip-layout",
+        "char-split-reveal",
+        "clip-path-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/bento/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/bento/fonts.ts"
+        },
+        {
+          "path": "registry/designs/bento/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bento/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/bento/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/bento/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/bento/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/bento/page.tsx"
+        },
+        {
+          "path": "registry/designs/bento/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/bento/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/bento/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/bento/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"BENTO — Design That Holds\" installs into app/oneshot/bento/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 68,
+        "accent": "#2563eb",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
           "oneshot": false,
           "followUps": 0
         },
@@ -800,6 +979,185 @@
       }
     },
     {
+      "name": "clay",
+      "type": "registry:block",
+      "title": "CLAY — Shapes You Sculpt",
+      "description": "A 3D-clay product studio on warm cream. Claymorphism surfaces with soft inset highlights and dark drops that squash to 0.96 with a spring on press. The wordmark is extruded clay — chunky offset shadows and an inset top highlight.",
+      "dependencies": [],
+      "categories": [
+        "clay-squishy",
+        "spring-press",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/clay/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/clay/fonts.ts"
+        },
+        {
+          "path": "registry/designs/clay/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/clay/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/clay/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/clay/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/clay/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/clay/page.tsx"
+        },
+        {
+          "path": "registry/designs/clay/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/clay/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/clay/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/clay/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"CLAY — Shapes You Sculpt\" installs into app/oneshot/clay/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 57,
+        "accent": "#e0683a",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "crt-dream",
+      "type": "registry:block",
+      "title": "CRT DREAM — The Warm Light of 2003",
+      "description": "Retro CRT nostalgia — a warm amber phosphor tube. Scanlines drift down the glass, the corners darken with barrel vignette, and the wordmark glows fuzzy like a monitor left on at 3 AM. The soft, fuzzy warmth of a screen that never quite rendered a straight line.",
+      "dependencies": [],
+      "categories": [
+        "ascii-retrotech",
+        "crt-scanline",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/crt-dream/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/crt-dream/fonts.ts"
+        },
+        {
+          "path": "registry/designs/crt-dream/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/crt-dream/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/crt-dream/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/crt-dream/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/crt-dream/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/crt-dream/page.tsx"
+        },
+        {
+          "path": "registry/designs/crt-dream/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/crt-dream/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/crt-dream/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/crt-dream/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"CRT DREAM — The Warm Light of 2003\" installs into app/oneshot/crt-dream/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 63,
+        "accent": "#ffb84d",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "cyber-grid",
+      "type": "registry:block",
+      "title": "CYBER GRID — The Future as HUD",
+      "description": "A cyberpunk HUD interface. A perspective CSS grid floor of cyan and green lines recedes to a vanishing point, framed by HUD corner brackets and a CRT scan-line overlay. The wordmark is cyan with a cyan glow and a red/blue chromatic offset.",
+      "dependencies": [],
+      "categories": [
+        "cyber-future",
+        "pointer-parallax",
+        "crt-scanline",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/cyber-grid/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/cyber-grid/fonts.ts"
+        },
+        {
+          "path": "registry/designs/cyber-grid/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/cyber-grid/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/cyber-grid/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/cyber-grid/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/cyber-grid/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/cyber-grid/page.tsx"
+        },
+        {
+          "path": "registry/designs/cyber-grid/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/cyber-grid/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/cyber-grid/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/cyber-grid/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"CYBER GRID — The Future as HUD\" installs into app/oneshot/cyber-grid/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 61,
+        "accent": "#00ffc8",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "dream",
       "type": "registry:block",
       "title": "DREAM — A Sleep House",
@@ -893,6 +1251,66 @@
           "modelLabel": "GLM-5.2",
           "tool": "zcode-cli",
           "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "dusk",
+      "type": "registry:block",
+      "title": "DUSK — Between Day and Night",
+      "description": "A cinematic dusk. A layered sky grades from peach to coral to violet to indigo, a silhouetted horizon holds the bottom, and a sun-glow descends with the scroll. Wide, letterboxed, moody — the title card of a film that never ends.",
+      "dependencies": [],
+      "categories": [
+        "cinematic-dark",
+        "scroll-scrub-pinned",
+        "char-split-reveal",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/dusk/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/dusk/fonts.ts"
+        },
+        {
+          "path": "registry/designs/dusk/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/dusk/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/dusk/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/dusk/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/dusk/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/dusk/page.tsx"
+        },
+        {
+          "path": "registry/designs/dusk/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/dusk/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/dusk/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/dusk/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"DUSK — Between Day and Night\" installs into app/oneshot/dusk/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 72,
+        "accent": "#ff7e5f",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
           "oneshot": false,
           "followUps": 0
         },
@@ -1711,6 +2129,66 @@
       }
     },
     {
+      "name": "holograph",
+      "type": "registry:block",
+      "title": "HOLOGRAPH — Foil Card House",
+      "description": "A studio for cards that shift color with angle. The wordmark is an iridescent foil whose rainbow spectrum tracks the pointer — paint made of pure viewing angle.",
+      "dependencies": [],
+      "categories": [
+        "holographic-iridescent",
+        "pointer-parallax",
+        "glass-specular",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/holograph/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/holograph/fonts.ts"
+        },
+        {
+          "path": "registry/designs/holograph/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/holograph/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/holograph/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/holograph/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/holograph/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/holograph/page.tsx"
+        },
+        {
+          "path": "registry/designs/holograph/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/holograph/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/holograph/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/holograph/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"HOLOGRAPH — Foil Card House\" installs into app/oneshot/holograph/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 55,
+        "accent": "#ff5edb",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "kemuri",
       "type": "registry:block",
       "title": "KEMURI — Smoke & Stillness",
@@ -1911,6 +2389,126 @@
       }
     },
     {
+      "name": "magnet",
+      "type": "registry:block",
+      "title": "MAGNET — Things That Pull",
+      "description": "A magnetic interaction studio — as the pointer approaches, the wordmark glyphs and the pill buttons translate toward it, then spring back when you pull away. Bright pink ground, heavy black type, hot-pink fill, and the pull itself is the product: a field where everything leans in.",
+      "dependencies": [],
+      "categories": [
+        "playful-pop",
+        "spring-press",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/magnet/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/magnet/fonts.ts"
+        },
+        {
+          "path": "registry/designs/magnet/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/magnet/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/magnet/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/magnet/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/magnet/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/magnet/page.tsx"
+        },
+        {
+          "path": "registry/designs/magnet/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/magnet/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/magnet/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/magnet/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MAGNET — Things That Pull\" installs into app/oneshot/magnet/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 67,
+        "accent": "#ff3d77",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "marsh",
+      "type": "registry:block",
+      "title": "MARSH — Squishy Marshmallow",
+      "description": "A marshmallow confectionery on warm pinkish cream. The signature is a draggable marshmallow that follows your pointer with inertia and springs back with overshoot on release, squashing as it moves. The wordmark is white fill with a thick pink outline and soft pink drop shadows.",
+      "dependencies": [],
+      "categories": [
+        "clay-squishy",
+        "drag-physics",
+        "spring-press",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/marsh/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/marsh/fonts.ts"
+        },
+        {
+          "path": "registry/designs/marsh/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/marsh/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/marsh/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/marsh/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/marsh/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/marsh/page.tsx"
+        },
+        {
+          "path": "registry/designs/marsh/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/marsh/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/marsh/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/marsh/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MARSH — Squishy Marshmallow\" installs into app/oneshot/marsh/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 58,
+        "accent": "#ff9ec4",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "memphis",
       "type": "registry:block",
       "title": "MEMPHIS — Sottsass Studio",
@@ -2004,6 +2602,65 @@
           "modelLabel": "GLM-5.2",
           "tool": "zcode-cli",
           "date": "2026-07-18",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "mesh",
+      "type": "registry:block",
+      "title": "MESH — A Field of Color",
+      "description": "A gradient studio. The signature is an animated CSS mesh — five large radial color blobs (coral, violet, teal, gold, magenta) that slowly drift and breathe behind a white wordmark with a stacked multi-color glow.",
+      "dependencies": [],
+      "categories": [
+        "mesh-gradient",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/mesh/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/mesh/fonts.ts"
+        },
+        {
+          "path": "registry/designs/mesh/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/mesh/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/mesh/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/mesh/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/mesh/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/mesh/page.tsx"
+        },
+        {
+          "path": "registry/designs/mesh/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/mesh/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/mesh/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/mesh/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MESH — A Field of Color\" installs into app/oneshot/mesh/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 59,
+        "accent": "#ff7a59",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
           "oneshot": false,
           "followUps": 0
         },
@@ -2218,6 +2875,125 @@
           "followUps": 0
         },
         "media": "comfyui"
+      }
+    },
+    {
+      "name": "morph",
+      "type": "registry:block",
+      "title": "MORPH — Letters That Transform",
+      "description": "A kinetic typography piece — the wordmark MORPH splits into glyphs that each rotate, skew, and scale in a staggered loop, so the letters never sit still. Purple fill, a soft purple glow, and a chromatic edge that splits the type into cyan and magenta ghosts. Letters that feel alive.",
+      "dependencies": [],
+      "categories": [
+        "kinetic-variable",
+        "char-split-reveal",
+        "flip-layout"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/morph/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/morph/fonts.ts"
+        },
+        {
+          "path": "registry/designs/morph/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/morph/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/morph/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/morph/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/morph/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/morph/page.tsx"
+        },
+        {
+          "path": "registry/designs/morph/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/morph/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/morph/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/morph/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"MORPH — Letters That Transform\" installs into app/oneshot/morph/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 66,
+        "accent": "#c084fc",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "nebula-warm",
+      "type": "registry:block",
+      "title": "NEBULA WARM — The Warm Spectrum",
+      "description": "A warm-toned generative nebula. A canvas particle field in amber, coral, gold and rose breathes and drifts, with pointer parallax tilting the field. The wordmark carries the same warm spectrum as a clipped text gradient with a warm glow.",
+      "dependencies": [],
+      "categories": [
+        "mesh-gradient",
+        "canvas-particles",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/nebula-warm/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/nebula-warm/fonts.ts"
+        },
+        {
+          "path": "registry/designs/nebula-warm/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/nebula-warm/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/nebula-warm/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/nebula-warm/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/nebula-warm/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/nebula-warm/page.tsx"
+        },
+        {
+          "path": "registry/designs/nebula-warm/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/nebula-warm/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/nebula-warm/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/nebula-warm/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"NEBULA WARM — The Warm Spectrum\" installs into app/oneshot/nebula-warm/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 60,
+        "accent": "#ffb347",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
       }
     },
     {
@@ -2747,6 +3523,126 @@
       }
     },
     {
+      "name": "paper-fold",
+      "type": "registry:block",
+      "title": "PAPER FOLD — Folding Hands",
+      "description": "A papercraft atelier. An origami crane built from folded paper facets draws its crease lines into place, set on warm washi with a faint paper grain. Tactile, handmade — design that you can almost feel the fold of.",
+      "dependencies": [],
+      "categories": [
+        "tactile-craft",
+        "svg-line-draw",
+        "char-split-reveal",
+        "clip-path-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/paper-fold/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/paper-fold/fonts.ts"
+        },
+        {
+          "path": "registry/designs/paper-fold/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/paper-fold/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/paper-fold/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/paper-fold/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/paper-fold/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/paper-fold/page.tsx"
+        },
+        {
+          "path": "registry/designs/paper-fold/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/paper-fold/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/paper-fold/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/paper-fold/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PAPER FOLD — Folding Hands\" installs into app/oneshot/paper-fold/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 70,
+        "accent": "#d4571f",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "perfume-deep",
+      "type": "registry:block",
+      "title": "PERFUME DEEP — A Deep Scent",
+      "description": "A luxury perfume house. A hairline serif wordmark parts slowly on near-black, a feature panel wipes open in gold, and thin hairlines divide the silence. Expensive restraint — gold-on-dark, never loud.",
+      "dependencies": [],
+      "categories": [
+        "luxury-fashion",
+        "char-split-reveal",
+        "clip-path-reveal",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/perfume-deep/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/perfume-deep/fonts.ts"
+        },
+        {
+          "path": "registry/designs/perfume-deep/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/perfume-deep/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/perfume-deep/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/perfume-deep/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/perfume-deep/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/perfume-deep/page.tsx"
+        },
+        {
+          "path": "registry/designs/perfume-deep/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/perfume-deep/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/perfume-deep/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/perfume-deep/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PERFUME DEEP — A Deep Scent\" installs into app/oneshot/perfume-deep/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 69,
+        "accent": "#c9a36a",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "pixel",
       "type": "registry:block",
       "title": "PIXEL — 8-bit Arcade Studio",
@@ -3094,6 +3990,66 @@
           "followUps": 0
         },
         "media": "hybrid"
+      }
+    },
+    {
+      "name": "prism-glaze",
+      "type": "registry:block",
+      "title": "PRISM GLAZE — Liquid Glass House",
+      "description": "A material studio that pours interface as glass. Panels refract a drifting aurora wash while a specular highlight tracks the pointer — every surface is a liquid lens.",
+      "dependencies": [],
+      "categories": [
+        "liquid-spatial",
+        "glass-specular",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/prism-glaze/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/prism-glaze/fonts.ts"
+        },
+        {
+          "path": "registry/designs/prism-glaze/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/prism-glaze/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/prism-glaze/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/prism-glaze/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/prism-glaze/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/prism-glaze/page.tsx"
+        },
+        {
+          "path": "registry/designs/prism-glaze/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/prism-glaze/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/prism-glaze/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/prism-glaze/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"PRISM GLAZE — Liquid Glass House\" installs into app/oneshot/prism-glaze/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 53,
+        "accent": "#7fdfff",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
       }
     },
     {
@@ -3817,6 +4773,66 @@
       }
     },
     {
+      "name": "signal-noise",
+      "type": "registry:block",
+      "title": "SIGNAL NOISE — The Aesthetics of Noise",
+      "description": "A signal-science terminal. Static grain washes over a green-phosphor display where log lines type themselves in, beside a live signal waveform. The noise is not the enemy — it is the texture of a living signal.",
+      "dependencies": [],
+      "categories": [
+        "terminal-core",
+        "feturbulence-texture",
+        "typewriter",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/signal-noise/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/signal-noise/fonts.ts"
+        },
+        {
+          "path": "registry/designs/signal-noise/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/signal-noise/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/signal-noise/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/signal-noise/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/signal-noise/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/signal-noise/page.tsx"
+        },
+        {
+          "path": "registry/designs/signal-noise/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/signal-noise/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/signal-noise/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/signal-noise/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"SIGNAL NOISE — The Aesthetics of Noise\" installs into app/oneshot/signal-noise/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 71,
+        "accent": "#3effa0",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "sticker",
       "type": "registry:block",
       "title": "STICKER — Studio of Bouncy Things",
@@ -4102,6 +5118,66 @@
       }
     },
     {
+      "name": "tide",
+      "type": "registry:block",
+      "title": "TIDE — Liquid Motion Studio",
+      "description": "A studio for things that flow. A canvas of metaballs merges and pulls apart to the pointer — liquid as a field you push through, not a surface you look at.",
+      "dependencies": [],
+      "categories": [
+        "liquid-spatial",
+        "canvas-particles",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/tide/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/tide/fonts.ts"
+        },
+        {
+          "path": "registry/designs/tide/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/tide/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/tide/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/tide/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/tide/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/tide/page.tsx"
+        },
+        {
+          "path": "registry/designs/tide/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/tide/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/tide/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/tide/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"TIDE — Liquid Motion Studio\" installs into app/oneshot/tide/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 54,
+        "accent": "#37e2c5",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
       "name": "typewave",
       "type": "registry:block",
       "title": "TYPEWAVE — Type That Plays Like a Track",
@@ -4199,6 +5275,65 @@
           "followUps": 0
         },
         "media": "hybrid"
+      }
+    },
+    {
+      "name": "variflex",
+      "type": "registry:block",
+      "title": "VARIFLEX — Type That Stretches",
+      "description": "A variable-font showcase — the wordmark VARIFLEX physically morphs as you move: font-weight and slant axes are driven by the pointer, so the type swings from thin and extended to bold and slanted in real time. Warm light ground, accent red, the axis is the interaction.",
+      "dependencies": [],
+      "categories": [
+        "kinetic-variable",
+        "char-split-reveal",
+        "pointer-parallax"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/variflex/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/variflex/fonts.ts"
+        },
+        {
+          "path": "registry/designs/variflex/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/variflex/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/variflex/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/variflex/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/variflex/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/variflex/page.tsx"
+        },
+        {
+          "path": "registry/designs/variflex/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/variflex/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/variflex/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/variflex/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"VARIFLEX — Type That Stretches\" installs into app/oneshot/variflex/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 65,
+        "accent": "#ff4d6d",
+        "theme": "light",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
       }
     },
     {
@@ -4315,6 +5450,66 @@
           "modelLabel": "GLM-5.2",
           "tool": "zcode-cli",
           "date": "2026-07-27",
+          "oneshot": false,
+          "followUps": 0
+        },
+        "media": "code"
+      }
+    },
+    {
+      "name": "wireframe",
+      "type": "registry:block",
+      "title": "WIREFRAME — A World Drawn in Lines",
+      "description": "A 3D wireframe studio — a rotating icosahedron drawn entirely in SVG strokes that draw themselves on like a CAD plotter, then turn slowly under your pointer. Green wire on near-black, outlined glyphs, and the engineering register of a viewport that never hides its polygons.",
+      "dependencies": [],
+      "categories": [
+        "cyber-future",
+        "svg-line-draw",
+        "pointer-parallax",
+        "char-split-reveal"
+      ],
+      "files": [
+        {
+          "path": "registry/designs/wireframe/fonts.ts",
+          "type": "registry:file",
+          "target": "app/oneshot/wireframe/fonts.ts"
+        },
+        {
+          "path": "registry/designs/wireframe/hooks/usePrefersReducedMotion.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/wireframe/hooks/usePrefersReducedMotion.ts"
+        },
+        {
+          "path": "registry/designs/wireframe/hooks/useReveal.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/wireframe/hooks/useReveal.ts"
+        },
+        {
+          "path": "registry/designs/wireframe/page.tsx",
+          "type": "registry:page",
+          "target": "app/oneshot/wireframe/page.tsx"
+        },
+        {
+          "path": "registry/designs/wireframe/PROMPT.md",
+          "type": "registry:file",
+          "target": "app/oneshot/wireframe/PROMPT.md"
+        },
+        {
+          "path": "registry/designs/wireframe/styles.css",
+          "type": "registry:file",
+          "target": "app/oneshot/wireframe/styles.css"
+        }
+      ],
+      "docs": "Full-page design \"WIREFRAME — A World Drawn in Lines\" installs into app/oneshot/wireframe/. Route it or copy the sections you need. The reproducible prompt ships alongside the code in PROMPT.md.",
+      "meta": {
+        "no": 62,
+        "accent": "#39ffa0",
+        "theme": "dark",
+        "prompt": {
+          "model": "builtin:zai-coding-plan/GLM-5.2",
+          "modelLabel": "GLM-5.2",
+          "tool": "zcode",
+          "date": "2026-08-06",
           "oneshot": false,
           "followUps": 0
         },

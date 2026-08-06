@@ -1,5 +1,38 @@
 [
   {
+    "slug": "ascii",
+    "no": 64,
+    "title": {
+      "en": "ASCII — Pictures Drawn in Characters",
+      "ko": "아스키 — 문자로 그린 그림"
+    },
+    "description": {
+      "en": "An ASCII art renderer — a canvas that maps a density field to the ramp .:-=+*#%@, so a lit sphere and a rolling sine landscape assemble themselves out of characters. Green-on-black terminal, the wordmark glowing like a phosphor CRT, every shape a computation, never an image.",
+      "ko": "아스키 아트 렌더러 — 캔버스가 밀도장을 램프 .:-=+*#%@에 대응시켜, 빛나는 구와 흐르는 사인 파형 풍경이 문자들로 조립된다. 녹색-온-검정 터미널, 인화관 CRT처럼 빛나는 자형, 모든 형태가 계산이지 이미지가 아니다."
+    },
+    "aesthetic": "ascii-retrotech",
+    "techniques": [
+      "ascii-render",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "science"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#5effa0",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "atelier",
     "no": 39,
     "title": {
@@ -63,6 +96,73 @@
     "accent": "#7c3aed",
     "theme": "dark",
     "published": "2026-07-18",
+    "featured": false
+  },
+  {
+    "slug": "aurora-paint",
+    "no": 56,
+    "title": {
+      "en": "AURORA PAINT — A Studio of Light",
+      "ko": "오로라 페인트 — 빛의 스튜디오"
+    },
+    "description": {
+      "en": "A paint studio whose medium is light. The signature is a canvas aurora — soft flowing mint, violet and cyan ribbons of additive light, drawn with sine-driven curves and a brush that follows your pointer.",
+      "ko": "빛을 재료로 삼은 페인트 스튜디오. 시그니처는 캔버스 위의 오로라 — 첨가 합성으로 그려지는 민트·바이올렛·시안의 부드러운 빛의 띠가 사인 곡선으로 흐르고, 포인터를 따라 빛이 칠해진다."
+    },
+    "aesthetic": "holographic-iridescent",
+    "techniques": [
+      "canvas-particles",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#7ef9c4",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
+    "slug": "bento",
+    "no": 68,
+    "title": {
+      "en": "BENTO — Design That Holds",
+      "ko": "벤토 — 담는 디자인"
+    },
+    "description": {
+      "en": "A bento-grid product showcase. An asymmetric field of rounded tiles — some spanning wide, some standing tall — that holds each feature in its own compartment. Design that holds, like a lunchbox.",
+      "ko": "벤토 그리드의 제품 쇼케이스. 넓게 자리하거나 곧게 선 둥근 타일들이 각 기능을 칸마다 담아낸다. 도시락처럼 담는 디자인."
+    },
+    "aesthetic": "bento-product",
+    "techniques": [
+      "flip-layout",
+      "char-split-reveal",
+      "clip-path-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#2563eb",
+    "theme": "light",
+    "published": "2026-08-06",
     "featured": false
   },
   {
@@ -306,6 +406,106 @@
     "featured": false
   },
   {
+    "slug": "clay",
+    "no": 57,
+    "title": {
+      "en": "CLAY — Shapes You Sculpt",
+      "ko": "클레이 — 빚는 형태"
+    },
+    "description": {
+      "en": "A 3D-clay product studio on warm cream. Claymorphism surfaces with soft inset highlights and dark drops that squash to 0.96 with a spring on press. The wordmark is extruded clay — chunky offset shadows and an inset top highlight.",
+      "ko": "따뜻한 크림색 위의 3D 클레이 제품 스튜디오. 부드러운 인셋 하이라이트와 어두운 드롭 섀도우를 가진 클레이모피즘 표면이 누르면 스프링처럼 0.96으로 찌린다. 워드마크는 돌출된 클레이 — 덩치 큰 오프셋 섀도우와 인셋 상단 하이라이트."
+    },
+    "aesthetic": "clay-squishy",
+    "techniques": [
+      "spring-press",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product",
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#e0683a",
+    "theme": "light",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
+    "slug": "crt-dream",
+    "no": 63,
+    "title": {
+      "en": "CRT DREAM — The Warm Light of 2003",
+      "ko": "CRT 드림 — 2003년의 빛"
+    },
+    "description": {
+      "en": "Retro CRT nostalgia — a warm amber phosphor tube. Scanlines drift down the glass, the corners darken with barrel vignette, and the wordmark glows fuzzy like a monitor left on at 3 AM. The soft, fuzzy warmth of a screen that never quite rendered a straight line.",
+      "ko": "레트로 CRT 향수 — 따뜻한 호박색 인화관. 주사선이 유리를 타고 내려오고, 모서리는 배럴 비네트로 어두워지며, 자형은 새벽 3시에 켜둔 모니터처럼 퍼지게 빛난다. 곧은 선을 결코 렌더링하지 못했던 화면의 부드럽고 퍼지는 따뜻함."
+    },
+    "aesthetic": "ascii-retrotech",
+    "techniques": [
+      "crt-scanline",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ffb84d",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
+    "slug": "cyber-grid",
+    "no": 61,
+    "title": {
+      "en": "CYBER GRID — The Future as HUD",
+      "ko": "사이버 그리드 — HUD 미래"
+    },
+    "description": {
+      "en": "A cyberpunk HUD interface. A perspective CSS grid floor of cyan and green lines recedes to a vanishing point, framed by HUD corner brackets and a CRT scan-line overlay. The wordmark is cyan with a cyan glow and a red/blue chromatic offset.",
+      "ko": "사이버펑크 HUD 인터페이스. 시안과 녹색 선의 원근 CSS 그리드 바닥이 소실점을 향해 멀어지고, HUD 모서리 괄호와 CRT 스캔라인 오버레이가 그 위를 덮는다. 워드마크는 시안 채움에 시안 글로우와 적/청 색수차 오프셋을 가진다."
+    },
+    "aesthetic": "cyber-future",
+    "techniques": [
+      "pointer-parallax",
+      "crt-scanline",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#00ffc8",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "dream",
     "no": 38,
     "title": {
@@ -337,6 +537,40 @@
     "accent": "#a78bd9",
     "theme": "light",
     "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "dusk",
+    "no": 72,
+    "title": {
+      "en": "DUSK — Between Day and Night",
+      "ko": "황혼 — 낮과 밤 사이"
+    },
+    "description": {
+      "en": "A cinematic dusk. A layered sky grades from peach to coral to violet to indigo, a silhouetted horizon holds the bottom, and a sun-glow descends with the scroll. Wide, letterboxed, moody — the title card of a film that never ends.",
+      "ko": "영화 같은 황혼. 복숭아에서 산호, 보라, 남색으로 물드는 하늘이 층을 이루고, 실루엣 지평이 아래를 잡으며, 해가 스크롤을 따라 진다. 넓고 레터박스된, 끝나지 않는 영화의 타이틀."
+    },
+    "aesthetic": "cinematic-dark",
+    "techniques": [
+      "scroll-scrub-pinned",
+      "char-split-reveal",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "entertainment",
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff7e5f",
+    "theme": "dark",
+    "published": "2026-08-06",
     "featured": false
   },
   {
@@ -646,6 +880,40 @@
     "featured": false
   },
   {
+    "slug": "holograph",
+    "no": 55,
+    "title": {
+      "en": "HOLOGRAPH — Foil Card House",
+      "ko": "홀로그래프 — 은박 카드 하우스"
+    },
+    "description": {
+      "en": "A studio for cards that shift color with angle. The wordmark is an iridescent foil whose rainbow spectrum tracks the pointer — paint made of pure viewing angle.",
+      "ko": "각도마다 색이 바뀌는 카드를 위한 스튜디오. 워드마크는 무지개 스펙트럼이 포인터를 따라가는 은박 — 순수한 관찰 각도로 만든 페인트."
+    },
+    "aesthetic": "holographic-iridescent",
+    "techniques": [
+      "pointer-parallax",
+      "glass-specular",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product",
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff5edb",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "kemuri",
     "no": 1,
     "title": {
@@ -716,6 +984,72 @@
     "featured": false
   },
   {
+    "slug": "magnet",
+    "no": 67,
+    "title": {
+      "en": "MAGNET — Things That Pull",
+      "ko": "마그넷 — 끌려오는 것"
+    },
+    "description": {
+      "en": "A magnetic interaction studio — as the pointer approaches, the wordmark glyphs and the pill buttons translate toward it, then spring back when you pull away. Bright pink ground, heavy black type, hot-pink fill, and the pull itself is the product: a field where everything leans in.",
+      "ko": "마그넷 인터랙션 스튜디오 — 포인터가 다가가면 자형 글자와 알약 버튼이 그쪽으로 끌려가고, 멀어지면 제자리로 돌아온다. 밝은 핑크 바탕, 무거운 검은 자형, 핫핑크 채우기, 끌어당김 자체가 곧 제품이다. 모든 것이 기울어 듯한 장(field)."
+    },
+    "aesthetic": "playful-pop",
+    "techniques": [
+      "spring-press",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff3d77",
+    "theme": "light",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
+    "slug": "marsh",
+    "no": 58,
+    "title": {
+      "en": "MARSH — Squishy Marshmallow",
+      "ko": "마쉬 — 말랑한 마시멜로"
+    },
+    "description": {
+      "en": "A marshmallow confectionery on warm pinkish cream. The signature is a draggable marshmallow that follows your pointer with inertia and springs back with overshoot on release, squashing as it moves. The wordmark is white fill with a thick pink outline and soft pink drop shadows.",
+      "ko": "따뜻한 핑크빛 크림 위의 마시멜로 제과점. 시그니처는 끌어서 움직이면 관성으로 따라오고 놓으면 되튕기며 오버슈트하는 마시멜로 — 움직일 때 찌릿하게 찌린다. 워드마크는 흰색 채움에 두꺼운 핑크 외곽선과 부드러운 핑크 드롭 섀도우."
+    },
+    "aesthetic": "clay-squishy",
+    "techniques": [
+      "drag-physics",
+      "spring-press",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "retail-food"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff9ec4",
+    "theme": "light",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "memphis",
     "no": 30,
     "title": {
@@ -747,6 +1081,38 @@
     "accent": "#2bb1a8",
     "theme": "light",
     "published": "2026-07-18",
+    "featured": false
+  },
+  {
+    "slug": "mesh",
+    "no": 59,
+    "title": {
+      "en": "MESH — A Field of Color",
+      "ko": "메쉬 — 색의 장"
+    },
+    "description": {
+      "en": "A gradient studio. The signature is an animated CSS mesh — five large radial color blobs (coral, violet, teal, gold, magenta) that slowly drift and breathe behind a white wordmark with a stacked multi-color glow.",
+      "ko": "그라디언트 스튜디오. 시그니처는 애니메이션 CSS 메쉬 — 산호·바이올렛·티얼·골드·마젠타 다섯 개의 큰 방사 색 얼룩이 천천히 떠다니며 숨 쉬고, 그 앞에 스택된 다색 글로우를 가진 흰색 워드마크가 있다."
+    },
+    "aesthetic": "mesh-gradient",
+    "techniques": [
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff7a59",
+    "theme": "dark",
+    "published": "2026-08-06",
     "featured": false
   },
   {
@@ -815,6 +1181,72 @@
     "accent": "#4DA8FF",
     "theme": "dark",
     "published": "2026-07-17",
+    "featured": false
+  },
+  {
+    "slug": "morph",
+    "no": 66,
+    "title": {
+      "en": "MORPH — Letters That Transform",
+      "ko": "모프 — 변형하는 글자"
+    },
+    "description": {
+      "en": "A kinetic typography piece — the wordmark MORPH splits into glyphs that each rotate, skew, and scale in a staggered loop, so the letters never sit still. Purple fill, a soft purple glow, and a chromatic edge that splits the type into cyan and magenta ghosts. Letters that feel alive.",
+      "ko": "키네틱 타이포그래피 — 자형 MORPH가 글자별로 쪼개져 각자 회전하고 기울고 확대되며 엇갈리는 루프를 돌아, 글자들이 결코 가만히 있지 않는다. 보라색 채우기, 부드러운 보라 빛, 자형을 시안과 마젠타 고스트로 갈라놓는 색수차 엣지. 살아 있는 글자."
+    },
+    "aesthetic": "kinetic-variable",
+    "techniques": [
+      "char-split-reveal",
+      "flip-layout"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#c084fc",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
+    "slug": "nebula-warm",
+    "no": 60,
+    "title": {
+      "en": "NEBULA WARM — The Warm Spectrum",
+      "ko": "따뜻한 성운 — 온기의 스펙트럼"
+    },
+    "description": {
+      "en": "A warm-toned generative nebula. A canvas particle field in amber, coral, gold and rose breathes and drifts, with pointer parallax tilting the field. The wordmark carries the same warm spectrum as a clipped text gradient with a warm glow.",
+      "ko": "따뜻한 톤의 생성적 성운. 앰버·코랄·골드·로즈 색의 캔버스 파티클 장이 숨 쉬며 떠다니고, 포인터 패럴랙스가 장을 기울인다. 워드마크는 같은 따뜻한 스펙트럼을 클리핑된 텍스트 그라디언트와 따뜻한 글로우로 담는다."
+    },
+    "aesthetic": "mesh-gradient",
+    "techniques": [
+      "canvas-particles",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "entertainment"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ffb347",
+    "theme": "dark",
+    "published": "2026-08-06",
     "featured": false
   },
   {
@@ -1026,6 +1458,74 @@
     "featured": true
   },
   {
+    "slug": "paper-fold",
+    "no": 70,
+    "title": {
+      "en": "PAPER FOLD — Folding Hands",
+      "ko": "종이접기 — 접는 손"
+    },
+    "description": {
+      "en": "A papercraft atelier. An origami crane built from folded paper facets draws its crease lines into place, set on warm washi with a faint paper grain. Tactile, handmade — design that you can almost feel the fold of.",
+      "ko": "종이 공방. 접힌 종이 면으로 지은 종이학이 주름선을 따라 그려진다. 은은한 종결의 따뜻한 와시 위에. 손끝에 닿을 듯한 접기 — 만지고 싶은 디자인."
+    },
+    "aesthetic": "tactile-craft",
+    "techniques": [
+      "svg-line-draw",
+      "char-split-reveal",
+      "clip-path-reveal"
+    ],
+    "industry": [
+      "atelier",
+      "culture"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#d4571f",
+    "theme": "light",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
+    "slug": "perfume-deep",
+    "no": 69,
+    "title": {
+      "en": "PERFUME DEEP — A Deep Scent",
+      "ko": "퍼퓸 딥 — 깊은 향"
+    },
+    "description": {
+      "en": "A luxury perfume house. A hairline serif wordmark parts slowly on near-black, a feature panel wipes open in gold, and thin hairlines divide the silence. Expensive restraint — gold-on-dark, never loud.",
+      "ko": "사치 향수의 집. 흑에 가까운 밤 위로 가는 세리프 워드마크가 천천히 갈라지고, 특징 패널이 금빛으로 닦이며, 가는 선들이 정적을 나눈다. 금과 밤의 비밀 — 결코 크지 않은 사치."
+    },
+    "aesthetic": "luxury-fashion",
+    "techniques": [
+      "char-split-reveal",
+      "clip-path-reveal",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "fashion-beauty"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#c9a36a",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "pixel",
     "no": 29,
     "title": {
@@ -1159,6 +1659,40 @@
     "accent": "#06b6d4",
     "theme": "light",
     "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "prism-glaze",
+    "no": 53,
+    "title": {
+      "en": "PRISM GLAZE — Liquid Glass House",
+      "ko": "프리즘 글레이즈 — 액체 유리 하우스"
+    },
+    "description": {
+      "en": "A material studio that pours interface as glass. Panels refract a drifting aurora wash while a specular highlight tracks the pointer — every surface is a liquid lens.",
+      "ko": "인터페이스를 유리로 부어 내는 재료 스튜디오. 패널이 흐르는 오로라 빛을 굴절하고 하이라이트가 포인터를 따라간다 — 모든 면이 액체 렌즈다."
+    },
+    "aesthetic": "liquid-spatial",
+    "techniques": [
+      "glass-specular",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product",
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#7fdfff",
+    "theme": "dark",
+    "published": "2026-08-06",
     "featured": false
   },
   {
@@ -1437,6 +1971,40 @@
     "featured": false
   },
   {
+    "slug": "signal-noise",
+    "no": 71,
+    "title": {
+      "en": "SIGNAL NOISE — The Aesthetics of Noise",
+      "ko": "신호 잡음 — 노이즈의 미학"
+    },
+    "description": {
+      "en": "A signal-science terminal. Static grain washes over a green-phosphor display where log lines type themselves in, beside a live signal waveform. The noise is not the enemy — it is the texture of a living signal.",
+      "ko": "신호 과학의 터미널. 정적 노이즈가 녹색 형광 화면을 덮고, 로그 줄이 타이핑되며, 신호 파형이 산다. 잡음은 적이 아니라 — 살아 있는 신호의 결이다."
+    },
+    "aesthetic": "terminal-core",
+    "techniques": [
+      "feturbulence-texture",
+      "typewriter",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "science"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom",
+        "svg"
+      ]
+    },
+    "media": "code",
+    "accent": "#3effa0",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "sticker",
     "no": 23,
     "title": {
@@ -1540,6 +2108,41 @@
     "featured": false
   },
   {
+    "slug": "tide",
+    "no": 54,
+    "title": {
+      "en": "TIDE — Liquid Motion Studio",
+      "ko": "조류 — 액체 모션 스튜디오"
+    },
+    "description": {
+      "en": "A studio for things that flow. A canvas of metaballs merges and pulls apart to the pointer — liquid as a field you push through, not a surface you look at.",
+      "ko": "흐르는 것을 위한 스튜디오. 메타볼 캔버스가 포인터에 맞춰 합쳤다 벌어진다 — 들여다보는 표면이 아니라 밀고 지나가는 액체의 장."
+    },
+    "aesthetic": "liquid-spatial",
+    "techniques": [
+      "canvas-particles",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product",
+      "atelier"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "canvas",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#37e2c5",
+    "theme": "dark",
+    "published": "2026-08-06",
+    "featured": false
+  },
+  {
     "slug": "typewave",
     "no": 26,
     "title": {
@@ -1571,6 +2174,38 @@
     "accent": "#c6ff3a",
     "theme": "dark",
     "published": "2026-07-18",
+    "featured": false
+  },
+  {
+    "slug": "variflex",
+    "no": 65,
+    "title": {
+      "en": "VARIFLEX — Type That Stretches",
+      "ko": "바리플렉스 — 늘어나는 자형"
+    },
+    "description": {
+      "en": "A variable-font showcase — the wordmark VARIFLEX physically morphs as you move: font-weight and slant axes are driven by the pointer, so the type swings from thin and extended to bold and slanted in real time. Warm light ground, accent red, the axis is the interaction.",
+      "ko": "가변폰트 쇼케이스 — 움직임에 따라 자형 VARIFLEX가 물리적으로 변형한다. font-weight와 slant 축이 포인터로 구동되어, 자형이 얇고 늘어난 형태에서 굵고 기운 형태로 실시간으로 흔든다. 따뜻한 밝은 바탕, 액센트 레드, 축 자체가 인터랙션이다."
+    },
+    "aesthetic": "kinetic-variable",
+    "techniques": [
+      "char-split-reveal",
+      "pointer-parallax"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#ff4d6d",
+    "theme": "light",
+    "published": "2026-08-06",
     "featured": false
   },
   {
@@ -1639,6 +2274,40 @@
     "accent": "#6366f1",
     "theme": "dark",
     "published": "2026-07-27",
+    "featured": false
+  },
+  {
+    "slug": "wireframe",
+    "no": 62,
+    "title": {
+      "en": "WIREFRAME — A World Drawn in Lines",
+      "ko": "와이어프레임 — 선으로 그린 세계"
+    },
+    "description": {
+      "en": "A 3D wireframe studio — a rotating icosahedron drawn entirely in SVG strokes that draw themselves on like a CAD plotter, then turn slowly under your pointer. Green wire on near-black, outlined glyphs, and the engineering register of a viewport that never hides its polygons.",
+      "ko": "3D 와이어프레임 스튜디오 — 회전하는 이코사헤드론이 CAD 플로터처럼 선 하나씩 스스로 그려지고, 포인터를 따라 천천히 돈다. 거의 검은 배경 위 초록 선, 윤곽선 자형, 폴리곤을 숨기지 않는 뷰포트의 엔지니어링 어조."
+    },
+    "aesthetic": "cyber-future",
+    "techniques": [
+      "svg-line-draw",
+      "pointer-parallax",
+      "char-split-reveal"
+    ],
+    "industry": [
+      "product"
+    ],
+    "stack": {
+      "animation": "vanilla-js",
+      "styling": "vanilla-css",
+      "renderer": [
+        "svg",
+        "dom"
+      ]
+    },
+    "media": "code",
+    "accent": "#39ffa0",
+    "theme": "dark",
+    "published": "2026-08-06",
     "featured": false
   },
   {

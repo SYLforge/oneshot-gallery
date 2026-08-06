@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "magnet",
+  "no": 67,
+  "title": {
+    "en": "MAGNET — Things That Pull",
+    "ko": "마그넷 — 끌려오는 것"
+  },
+  "description": {
+    "en": "A magnetic interaction studio — as the pointer approaches, the wordmark glyphs and the pill buttons translate toward it, then spring back when you pull away. Bright pink ground, heavy black type, hot-pink fill, and the pull itself is the product: a field where everything leans in.",
+    "ko": "마그넷 인터랙션 스튜디오 — 포인터가 다가가면 자형 글자와 알약 버튼이 그쪽으로 끌려가고, 멀어지면 제자리로 돌아온다. 밝은 핑크 바탕, 무거운 검은 자형, 핫핑크 채우기, 끌어당김 자체가 곧 제품이다. 모든 것이 기울어 듯한 장(field)."
+  },
+  "aesthetic": "playful-pop",
+  "techniques": ["spring-press", "pointer-parallax", "char-split-reveal"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#ff3d77",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

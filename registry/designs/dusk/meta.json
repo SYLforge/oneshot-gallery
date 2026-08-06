@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "dusk",
+  "no": 72,
+  "title": {
+    "en": "DUSK — Between Day and Night",
+    "ko": "황혼 — 낮과 밤 사이"
+  },
+  "description": {
+    "en": "A cinematic dusk. A layered sky grades from peach to coral to violet to indigo, a silhouetted horizon holds the bottom, and a sun-glow descends with the scroll. Wide, letterboxed, moody — the title card of a film that never ends.",
+    "ko": "영화 같은 황혼. 복숭아에서 산호, 보라, 남색으로 물드는 하늘이 층을 이루고, 실루엣 지평이 아래를 잡으며, 해가 스크롤을 따라 진다. 넓고 레터박스된, 끝나지 않는 영화의 타이틀."
+  },
+  "aesthetic": "cinematic-dark",
+  "techniques": ["scroll-scrub-pinned", "char-split-reveal", "pointer-parallax"],
+  "industry": ["entertainment", "culture"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#ff7e5f",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

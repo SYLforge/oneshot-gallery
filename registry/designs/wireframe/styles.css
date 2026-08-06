@@ -1,0 +1,401 @@
+/* ==========================================================================
+   WIREFRAME 와이어프레임 — a 3D wireframe studio · no.062
+   cyber-future · deep-green-black / signal-green wire · SVG line-draw
+   Scoped by convention to .wireframe-root; classes prefixed wireframe- / wf-.
+   ========================================================================== */
+
+.wireframe-root {
+  --wf-bg: #02100a;
+  --wf-deep: #010a06;
+  --wf-grid: rgba(57, 255, 160, 0.06);
+  --wf-grid-strong: rgba(57, 255, 160, 0.12);
+  --wf-text: #d6ffe9;
+  --wf-mute: #5fae87;
+  --wf-quiet: #2c5e47;
+  --wf-green: #39ffa0;
+  --wf-green-soft: rgba(57, 255, 160, 0.55);
+  --wf-font-display: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+  --wf-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --wf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(57, 255, 160, 0.08), transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, rgba(57, 255, 160, 0.05), transparent 70%),
+    linear-gradient(180deg, var(--wf-deep) 0%, var(--wf-bg) 50%, var(--wf-deep) 100%);
+  color: var(--wf-text);
+  font-family: var(--wf-font-kr);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.wireframe-root :lang(ko) {
+  font-family: var(--wf-font-kr);
+}
+
+.wireframe-root ::selection {
+  background: var(--wf-green);
+  color: var(--wf-deep);
+}
+
+.wireframe-root :focus-visible {
+  outline: 2px solid var(--wf-green);
+  outline-offset: 3px;
+}
+
+.wireframe-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Atmospheric depth: a faint engineering grid that drifts behind all ---- */
+.wireframe-grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--wf-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--wf-grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(110% 90% at 50% 40%, #000 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(110% 90% at 50% 40%, #000 30%, transparent 85%);
+}
+
+.wireframe-scan {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(1, 10, 6, 0.7) 100%);
+}
+
+.wireframe-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.wireframe-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--wf-ease), transform 800ms var(--wf-ease);
+}
+.wireframe-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Hero ---- */
+.wireframe-hero {
+  padding: clamp(60px, 12vh, 120px) 0 clamp(30px, 5vh, 56px);
+  text-align: center;
+}
+.wireframe-kicker {
+  margin: 0 0 clamp(20px, 4vh, 36px);
+  font-family: var(--wf-font-display);
+  font-size: clamp(0.66rem, 0.9vw, 0.8rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--wf-green);
+  text-shadow: 0 0 10px var(--wf-green-soft);
+}
+.wireframe-title {
+  margin: 0 0 18px;
+  font-family: var(--wf-font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 11vw, 8.5rem);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+}
+.wireframe-title__row {
+  display: block;
+  /* The wordmark IS the concept: outlined glyphs — transparent fill, green
+     stroke — a literal wireframe of the letters, with a soft green bloom. */
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--wf-green);
+  text-stroke: 1.5px var(--wf-green);
+  filter: drop-shadow(0 0 14px rgba(57, 255, 160, 0.45));
+}
+.wireframe-title__kr {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--wf-font-kr);
+  font-weight: 500;
+  font-size: clamp(0.9rem, 2.6vw, 1.5rem);
+  letter-spacing: 0.32em;
+  color: var(--wf-mute);
+}
+.wireframe-sub {
+  margin: 0 auto;
+  max-width: 40ch;
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  color: var(--wf-mute);
+}
+.wireframe-sub :lang(ko) {
+  color: var(--wf-text);
+}
+
+/* ---- Glyph reveal (per-letter) ---- */
+.wireframe-glyph {
+  display: inline-block;
+}
+.wireframe-js .wireframe-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 700ms var(--wf-ease), transform 700ms var(--wf-ease);
+  transition-delay: calc(var(--wf-i) * 70ms + 150ms);
+}
+.wireframe-js.is-mounted .wireframe-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Stage — the rotating wire solid ---- */
+.wireframe-stage-sect {
+  padding: clamp(20px, 4vh, 40px) 0;
+}
+.wireframe-stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-width: 620px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--wf-grid-strong);
+  border-radius: 6px;
+  background:
+    radial-gradient(60% 60% at 50% 50%, rgba(57, 255, 160, 0.06), transparent 70%),
+    linear-gradient(180deg, rgba(2, 16, 10, 0.4), rgba(1, 10, 6, 0.6));
+}
+.wireframe-solid {
+  position: relative;
+  width: 78%;
+  height: 78%;
+  z-index: 2;
+  /* idle slow turn; pointer parallax nudges rotateX/Y via --wf-px/--wf-py */
+  --wf-px: 0;
+  --wf-py: 0;
+  transform: perspective(900px)
+    rotateX(calc(-12deg + var(--wf-py) * 14deg))
+    rotateY(calc(18deg + var(--wf-px) * 26deg));
+  transform-style: preserve-3d;
+  animation: wf-spin 26s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(57, 255, 160, 0.35));
+}
+@keyframes wf-spin {
+  from { transform: perspective(900px) rotateX(-12deg) rotateY(18deg); }
+  to   { transform: perspective(900px) rotateX(-12deg) rotateY(378deg); }
+}
+/* Keep the parallax tilt layered on top of the spin via a separate var on the
+   transform — but to honor the idle spin we let the keyframe own rotation and
+   apply parallax as a subtle translate on the parent stage instead. */
+.wireframe-stage {
+  transform: translate3d(
+    calc(var(--wf-px, 0) * 6px),
+    calc(var(--wf-py, 0) * 6px),
+    0
+  );
+  transition: transform 200ms var(--wf-ease);
+}
+
+.wf-edges line {
+  /* svg-line-draw: each edge draws itself on like a plotter. pathLength
+     normalized so the dash math is identical for every edge regardless of
+     length. */
+  pathLength: 100;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  filter: drop-shadow(0 0 4px rgba(57, 255, 160, 0.6));
+}
+.wireframe-js .wf-edges line {
+  animation: wf-draw 900ms var(--wf-ease) forwards;
+  animation-delay: calc(var(--wf-i, 0) * 40ms + 250ms);
+}
+/* stagger edges via nth-child for a plotter cadence */
+.wireframe-js .wf-edges line:nth-child(1)  { animation-delay: 250ms; }
+.wireframe-js .wf-edges line:nth-child(2)  { animation-delay: 300ms; }
+.wireframe-js .wf-edges line:nth-child(3)  { animation-delay: 360ms; }
+.wireframe-js .wf-edges line:nth-child(4)  { animation-delay: 420ms; }
+.wireframe-js .wf-edges line:nth-child(5)  { animation-delay: 470ms; }
+.wireframe-js .wf-edges line:nth-child(6)  { animation-delay: 540ms; }
+.wireframe-js .wf-edges line:nth-child(7)  { animation-delay: 600ms; }
+.wireframe-js .wf-edges line:nth-child(8)  { animation-delay: 660ms; }
+.wireframe-js .wf-edges line:nth-child(n + 9) { animation-delay: 740ms; }
+@keyframes wf-draw {
+  to { stroke-dashoffset: 0; }
+}
+.wf-verts circle {
+  fill: var(--wf-green);
+  opacity: 0;
+}
+.wireframe-js .wf-verts circle {
+  animation: wf-pop 400ms var(--wf-ease) forwards;
+  animation-delay: 1100ms;
+}
+@keyframes wf-pop {
+  from { opacity: 0; transform: scale(0.2); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.wf-core-glow { animation: wf-breathe 5s ease-in-out infinite; transform-origin: center; }
+@keyframes wf-breathe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* CAD-register corner ticks */
+.wf-tick {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--wf-green-soft);
+  opacity: 0.6;
+}
+.wf-tick--tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.wf-tick--tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.wf-tick--bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+.wf-tick--br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+.wf-stage-readout {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-family: var(--wf-font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--wf-mute);
+  white-space: nowrap;
+}
+
+/* ---- Approach cards ---- */
+.wireframe-cap {
+  padding: clamp(40px, 8vh, 80px) 0;
+}
+.wireframe-sechead {
+  text-align: center;
+  margin-bottom: clamp(28px, 5vh, 48px);
+}
+.wireframe-eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--wf-font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--wf-green);
+}
+.wireframe-secthead__title {
+  margin: 0 0 8px;
+  font-family: var(--wf-font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  text-transform: lowercase;
+  letter-spacing: -0.01em;
+  color: var(--wf-text);
+}
+.wireframe-secthead__kr {
+  margin: 0;
+  color: var(--wf-mute);
+  font-size: 0.98rem;
+}
+.wireframe-capgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.wireframe-card {
+  position: relative;
+  padding: 26px 22px 22px;
+  border: 1px solid var(--wf-grid-strong);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(57, 255, 160, 0.04), rgba(1, 10, 6, 0.5));
+  backdrop-filter: blur(2px);
+}
+.wireframe-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  pointer-events: none;
+  background: linear-gradient(135deg, var(--wf-green-soft), transparent 40%);
+  opacity: 0.12;
+}
+.wireframe-card__no {
+  margin: 0 0 14px;
+  font-family: var(--wf-font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--wf-green);
+}
+.wireframe-card__title {
+  margin: 0 0 10px;
+  font-family: var(--wf-font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--wf-text);
+}
+.wireframe-card__body {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--wf-mute);
+  line-height: 1.7;
+}
+.wireframe-card__body :lang(ko) {
+  color: var(--wf-text);
+}
+
+/* ---- Footer ---- */
+.wireframe-foot {
+  margin-top: clamp(40px, 8vh, 80px);
+  padding: clamp(28px, 5vh, 48px) 0;
+  border-top: 1px solid var(--wf-grid-strong);
+  text-align: center;
+}
+.wireframe-foot__brand {
+  margin: 0 0 6px;
+  font-family: var(--wf-font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wf-text);
+}
+.wireframe-foot__line {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--wf-quiet);
+}
+
+/* ---- Reduced motion: everything sits finished ---- */
+@media (prefers-reduced-motion: reduce) {
+  .wireframe-js [data-reveal],
+  .wireframe-js .wireframe-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .wireframe-solid { animation: none !important; }
+  .wireframe-js .wf-edges line { animation: none !important; stroke-dashoffset: 0; }
+  .wireframe-js .wf-verts circle { animation: none !important; opacity: 1; }
+  .wf-core-glow { animation: none !important; }
+}
+
+@media (max-width: 560px) {
+  .wireframe-title { letter-spacing: -0.01em; }
+  .wf-stage-readout { font-size: 0.55rem; }
+}

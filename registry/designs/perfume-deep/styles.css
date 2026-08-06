@@ -1,0 +1,297 @@
+.perfume-deep-root {
+  --pf-bg: #0a0806;
+  --pf-bg2: #14100b;
+  --pf-text: #ece4d6;
+  --pf-mute: #8a7e6c;
+  --pf-gold: #c9a36a;
+  --pf-gold2: #e6c896;
+  --pf-line: rgba(201, 163, 106, 0.28);
+  --pf-font-display: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
+  --pf-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --pf-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--pf-bg);
+  color: var(--pf-text);
+  font-family: var(--pf-font-display);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Atmospheric depth: warm vignette + a faint film of dust. */
+.perfume-deep-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 55% at 50% 8%, rgba(201, 163, 106, 0.10), transparent 70%),
+    radial-gradient(80% 70% at 50% 110%, rgba(0, 0, 0, 0.6), transparent 60%),
+    linear-gradient(180deg, var(--pf-bg2) 0%, var(--pf-bg) 60%, #050403 100%);
+}
+.perfume-deep-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  --pf-gx: 50%;
+  --pf-gy: 30%;
+  background: radial-gradient(
+    34% 42% at var(--pf-gx) var(--pf-gy),
+    rgba(201, 163, 106, 0.14),
+    transparent 70%
+  );
+  transition: background 600ms linear;
+}
+
+.perfume-deep-doc {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.perfume-deep-root ::selection {
+  background: var(--pf-gold);
+  color: var(--pf-bg);
+}
+
+/* ---- Hero ---- */
+.perfume-deep-hero {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(3rem, 10vh, 7rem) 0 2rem;
+}
+.perfume-deep-kicker {
+  margin: 0 0 2.6rem;
+  font-family: var(--pf-font-display);
+  font-size: clamp(0.66rem, 1vw, 0.78rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--pf-gold);
+}
+.perfume-deep-kicker span[lang="ko"] {
+  font-family: var(--pf-font-kr);
+  color: var(--pf-mute);
+  margin-right: 0.5rem;
+  letter-spacing: 0.2em;
+}
+.perfume-deep-title {
+  margin: 0;
+  font-family: var(--pf-font-display);
+  font-weight: 300;
+  font-size: clamp(3.4rem, 15vw, 12rem);
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pf-gold2);
+  text-indent: 0.22em; /* compensate trailing tracking so it stays centered */
+  text-shadow: 0 0 50px rgba(201, 163, 106, 0.22);
+}
+.perfume-deep-glyph { display: inline-block; }
+.perfume-deep-title__ko {
+  margin: 1.8rem 0 0;
+  font-family: var(--pf-font-kr);
+  font-weight: 300;
+  font-size: clamp(0.95rem, 2vw, 1.3rem);
+  letter-spacing: 0.7em;
+  color: var(--pf-mute);
+  text-indent: 0.7em;
+}
+.perfume-deep-sub {
+  margin: 2rem auto 0;
+  max-width: 44ch;
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+  font-weight: 300;
+  color: var(--pf-text);
+}
+.perfume-deep-sub span[lang="ko"] {
+  display: block;
+  font-style: normal;
+  font-family: var(--pf-font-kr);
+  color: var(--pf-mute);
+  font-size: 0.82em;
+  margin-bottom: 0.6em;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Hairline divider with a centered diamond dot ---- */
+.perfume-deep-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: clamp(1rem, 3vw, 2rem) auto;
+  max-width: 460px;
+}
+.perfume-deep-rule .pf-hair {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pf-line), transparent);
+}
+.perfume-deep-rule .pf-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--pf-gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px rgba(201, 163, 106, 0.7);
+}
+
+/* ---- Lead ---- */
+.perfume-deep-lead {
+  padding: clamp(2rem, 5vw, 3.5rem) 0;
+}
+.perfume-deep-lead__p {
+  margin: 0 auto;
+  max-width: 56ch;
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  line-height: 1.65;
+  text-align: center;
+  font-weight: 300;
+}
+.perfume-deep-lead__p span[lang="ko"] {
+  display: block;
+  font-family: var(--pf-font-kr);
+  color: var(--pf-mute);
+  font-size: 0.78em;
+  margin-bottom: 0.8em;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Feature panel: clip-path wipe reveal, gold-on-black ---- */
+.perfume-deep-panel {
+  position: relative;
+  margin: clamp(1.5rem, 4vw, 2.5rem) 0;
+  padding: clamp(2.2rem, 5vw, 3.4rem);
+  border: 1px solid var(--pf-line);
+  background: linear-gradient(150deg, rgba(20, 16, 11, 0.9), rgba(10, 8, 6, 0.6));
+  overflow: hidden;
+  text-align: center;
+}
+.pf-panel__in { position: relative; z-index: 1; }
+.pf-panel__n {
+  font-family: var(--pf-font-display);
+  font-style: italic;
+  color: var(--pf-gold);
+  letter-spacing: 0.3em;
+  font-size: 0.95rem;
+}
+.pf-panel__en {
+  margin: 0.6rem 0 0;
+  font-family: var(--pf-font-display);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  letter-spacing: 0.16em;
+  color: var(--pf-gold2);
+  text-transform: uppercase;
+}
+.pf-panel__ko {
+  margin: 0.5rem 0 1.6rem;
+  font-family: var(--pf-font-kr);
+  font-weight: 300;
+  letter-spacing: 0.4em;
+  color: var(--pf-mute);
+}
+.pf-panel__notes {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 40ch;
+  display: grid;
+  gap: 0.5rem;
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+  color: var(--pf-text);
+}
+.pf-panel__notes span[lang="ko"] {
+  font-family: var(--pf-font-kr);
+  color: var(--pf-gold);
+  margin-right: 0.4rem;
+}
+.pf-panel__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(50% 60% at 50% 120%, rgba(201, 163, 106, 0.22), transparent 70%);
+}
+/* clip-path wipe: the panel reveals left-to-right on intersect. */
+.perfume-deep-js [data-reveal].perfume-deep-panel { clip-path: inset(0 100% 0 0); }
+.perfume-deep-js [data-reveal].perfume-deep-panel.is-visible { clip-path: inset(0 0 0 0); }
+
+/* ---- Triptych ---- */
+.perfume-deep-triptych {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.8rem, 2vw, 1.6rem);
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+}
+.pf-tri {
+  position: relative;
+  padding: clamp(1.4rem, 2.6vw, 2rem) 0;
+  text-align: center;
+  border-top: 1px solid var(--pf-line);
+  border-bottom: 1px solid var(--pf-line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.pf-tri__n { font-family: var(--pf-font-display); font-style: italic; color: var(--pf-gold); letter-spacing: 0.2em; font-size: 0.85rem; }
+.pf-tri__en { font-family: var(--pf-font-display); font-size: clamp(1.2rem, 2.4vw, 1.7rem); letter-spacing: 0.1em; }
+.pf-tri__ko { font-family: var(--pf-font-kr); color: var(--pf-mute); letter-spacing: 0.3em; font-size: 0.95rem; }
+
+.perfume-deep-foot {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: clamp(1.8rem, 4vw, 2.6rem) 0;
+  border-top: 1px solid var(--pf-line);
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pf-mute);
+}
+.perfume-deep-foot span[lang="ko"] { font-family: var(--pf-font-kr); text-transform: none; letter-spacing: 0.1em; }
+
+/* ---- Reveal gating ---- */
+.perfume-deep-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 1200ms var(--pf-ease), transform 1200ms var(--pf-ease);
+}
+.perfume-deep-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.perfume-deep-js [data-reveal] { transition-delay: calc(var(--pf-d, 0) * 1ms); }
+.perfume-deep-js .perfume-deep-panel { transition: clip-path 1400ms var(--pf-ease), opacity 1200ms var(--pf-ease), transform 1200ms var(--pf-ease); }
+.perfume-deep-js .perfume-deep-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  display: inline-block;
+  transition: opacity 1000ms var(--pf-ease), transform 1000ms var(--pf-ease);
+  transition-delay: calc(var(--pf-i) * 130ms + 300ms);
+}
+.perfume-deep-js.is-mounted .perfume-deep-glyph { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .perfume-deep-js [data-reveal], .perfume-deep-js .perfume-deep-glyph {
+    opacity: 1 !important; transform: none !important; transition: none !important; clip-path: none !important;
+  }
+  .perfume-deep-js [data-reveal].perfume-deep-panel { clip-path: none !important; }
+  .perfume-deep-glow { display: none; }
+}
+
+.perfume-deep-root :focus-visible {
+  outline: 2px solid var(--pf-gold);
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .perfume-deep-triptych { grid-template-columns: 1fr; }
+}

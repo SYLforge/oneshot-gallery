@@ -1,0 +1,298 @@
+.prism-glaze-root {
+  --pg-bg: #060912;
+  --pg-deep: #02040a;
+  --pg-text: #eaf6ff;
+  --pg-mute: #8fb2c9;
+  --pg-cyan: #7fdfff;
+  --pg-violet: #b78bff;
+  --pg-aqua: #54f0d0;
+  --pg-font-display: var(--font-syne), "Syne", system-ui, sans-serif;
+  --pg-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --pg-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --pg-x: 0.3;
+  --pg-y: 0.25;
+
+  min-height: 100vh;
+  margin: 0;
+  background: var(--pg-bg);
+  color: var(--pg-text);
+  font-family: var(--pg-font-kr);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.prism-glaze-doc {
+  position: relative;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.prism-glaze-root ::selection {
+  background: var(--pg-cyan);
+  color: var(--pg-deep);
+}
+
+/* ---- Aurora wash (the field every panel refracts) ---- */
+.prism-glaze-aurora {
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 18% 28%, rgba(127, 223, 255, 0.42), transparent 70%),
+    radial-gradient(38% 46% at 82% 22%, rgba(183, 139, 255, 0.40), transparent 70%),
+    radial-gradient(46% 52% at 60% 82%, rgba(84, 240, 208, 0.34), transparent 72%),
+    radial-gradient(50% 60% at 12% 78%, rgba(255, 122, 196, 0.26), transparent 72%);
+  filter: blur(40px) saturate(1.2);
+  opacity: 0.9;
+  animation: pg-drift 26s var(--pg-ease) infinite alternate;
+}
+@keyframes pg-drift {
+  0% { transform: translate3d(-3%, -2%, 0) scale(1.05); }
+  100% { transform: translate3d(4%, 3%, 0) scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prism-glaze-aurora { animation: none; }
+}
+
+/* ---- Hero ---- */
+.prism-glaze-hero {
+  position: relative;
+  z-index: 1;
+  padding: clamp(4rem, 14vh, 10rem) 0 2rem;
+}
+.prism-glaze-kicker {
+  margin: 0 0 1.5rem;
+  font-family: var(--pg-font-display);
+  font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+  font-weight: 600;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--pg-cyan);
+}
+.prism-glaze-title {
+  margin: 0;
+  font-family: var(--pg-font-display);
+  font-weight: 800;
+  font-size: clamp(2.8rem, 11vw, 8.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  /* beveled glass cut: a bright top edge + a deep drop, like a cut crystal */
+  color: #f4fbff;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85),
+    0 -1px 0 rgba(127, 223, 255, 0.6),
+    0 6px 24px rgba(127, 223, 255, 0.28),
+    0 2px 4px rgba(2, 4, 10, 0.7);
+}
+.prism-glaze-glyph {
+  display: inline-block;
+}
+.prism-glaze-glyph--space { width: 0.28em; }
+.prism-glaze-title__ko {
+  margin: 0.5rem 0 0;
+  font-family: var(--pg-font-kr);
+  font-weight: 300;
+  font-size: clamp(1.1rem, 3vw, 2rem);
+  letter-spacing: 0.32em;
+  color: var(--pg-mute);
+}
+.prism-glaze-sub {
+  margin: 1.4rem 0 0;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  font-weight: 400;
+  color: var(--pg-text);
+}
+.prism-glaze-sub span[lang="ko"] { color: var(--pg-mute); margin-right: 0.5rem; }
+
+/* ---- Glass panel material ---- */
+.prism-glaze-panel {
+  position: relative;
+  z-index: 1;
+  border-radius: 22px;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: rgba(18, 30, 48, 0.34);
+  border: 1px solid rgba(180, 220, 255, 0.16);
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(127, 223, 255, 0.1),
+    0 30px 60px -28px rgba(2, 6, 16, 0.8);
+  overflow: hidden;
+}
+/* Specular highlight that tracks the pointer via --pg-x/--pg-y. */
+.prism-glaze-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    38% 60% at calc(var(--pg-x) * 100%) calc(var(--pg-y) * 100%),
+    rgba(255, 255, 255, 0.32),
+    rgba(127, 223, 255, 0.12) 38%,
+    transparent 70%
+  );
+  opacity: 0.85;
+  pointer-events: none;
+  transition: opacity 600ms var(--pg-ease);
+}
+/* A faint refraction edge that also drifts with the pointer. */
+.prism-glaze-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(127, 223, 255, 0.55),
+    transparent 40%,
+    transparent 60%,
+    rgba(183, 139, 255, 0.45)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.prism-glaze-stage {
+  position: relative;
+  z-index: 1;
+  margin: clamp(2.5rem, 6vw, 4.5rem) 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+.prism-glaze-panel--lg { min-height: 220px; }
+.prism-glaze-panel__h {
+  margin: 0 0 0.8rem;
+  font-family: var(--pg-font-display);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  letter-spacing: -0.01em;
+}
+.prism-glaze-panel__h span[lang="ko"] {
+  display: block;
+  font-family: var(--pg-font-kr);
+  font-weight: 500;
+  color: var(--pg-cyan);
+  font-size: 0.74em;
+  margin-bottom: 0.3em;
+}
+.prism-glaze-panel__p {
+  margin: 0;
+  max-width: 60ch;
+  color: var(--pg-mute);
+  font-size: clamp(0.96rem, 1.4vw, 1.1rem);
+}
+.prism-glaze-panel__p span[lang="ko"] { color: var(--pg-text); }
+
+.prism-glaze-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+}
+.prism-glaze-panel--chip {
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+.prism-glaze-chip__en {
+  font-family: var(--pg-font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--pg-text);
+}
+.prism-glaze-chip__ko {
+  font-size: 0.86rem;
+  color: var(--pg-mute);
+  letter-spacing: 0.04em;
+}
+
+.prism-glaze-lead {
+  position: relative;
+  z-index: 1;
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
+  border-top: 1px solid rgba(127, 223, 255, 0.14);
+}
+.prism-glaze-lead__p {
+  margin: 0 auto;
+  max-width: 64ch;
+  font-family: var(--pg-font-display);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--pg-text);
+}
+.prism-glaze-lead__p span[lang="ko"] {
+  display: block;
+  font-family: var(--pg-font-kr);
+  color: var(--pg-mute);
+  font-size: 0.72em;
+  margin-bottom: 0.6em;
+}
+
+.prism-glaze-foot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  border-top: 1px solid rgba(127, 223, 255, 0.14);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--pg-mute);
+  font-family: var(--pg-font-display);
+}
+
+/* ---- Reveal gating ---- */
+.prism-glaze-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--pg-ease), transform 800ms var(--pg-ease);
+}
+.prism-glaze-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* Glyph-by-glyph reveal of the wordmark. */
+.prism-glaze-js .prism-glaze-glyph {
+  opacity: 0;
+  transform: translateY(0.3em) rotate(4deg);
+  display: inline-block;
+  transition:
+    opacity 600ms var(--pg-ease),
+    transform 700ms var(--pg-ease);
+  transition-delay: calc(var(--pg-i) * 60ms + 200ms);
+}
+.prism-glaze-js.is-mounted .prism-glaze-glyph,
+.prism-glaze-js .prism-glaze-title.is-visible .prism-glaze-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prism-glaze-js [data-reveal],
+  .prism-glaze-js .prism-glaze-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.prism-glaze-root :focus-visible {
+  outline: 2px solid var(--pg-cyan);
+  outline-offset: 3px;
+}

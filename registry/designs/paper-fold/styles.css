@@ -1,0 +1,235 @@
+.paper-fold-root {
+  --fo-bg: #f6efe2;
+  --fo-bg2: #efe5d2;
+  --fo-ink: #3a2a18;
+  --fo-mute: #8a7457;
+  --fo-line: #d8c39a;
+  --fo-orange: #d4571f;
+  --fo-orange2: #b8430f;
+  --fo-paper: #fbf3e2;
+  --fo-font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --fo-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --fo-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--fo-bg);
+  color: var(--fo-ink);
+  font-family: var(--fo-font-kr);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Atmospheric depth: warm wash + soft corner shade, like light on paper. */
+.paper-fold-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 20% 0%, rgba(212, 87, 31, 0.07), transparent 70%),
+    radial-gradient(60% 60% at 100% 100%, rgba(120, 80, 30, 0.10), transparent 70%),
+    linear-gradient(160deg, var(--fo-paper) 0%, var(--fo-bg) 35%, var(--fo-bg2) 100%);
+}
+/* Static paper grain over everything. */
+.paper-fold-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+
+.paper-fold-doc {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(1.4rem, 4vw, 3rem);
+}
+
+.paper-fold-root ::selection {
+  background: var(--fo-orange);
+  color: #fff;
+}
+
+/* ---- Hero ---- */
+.paper-fold-hero {
+  padding: clamp(2.5rem, 8vh, 5rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+}
+.paper-fold-kicker {
+  margin: 0 0 1.2rem;
+  font-family: var(--fo-font-display);
+  font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--fo-orange);
+}
+.paper-fold-kicker span[lang="ko"] { color: var(--fo-mute); margin-right: 0.5rem; letter-spacing: 0.16em; font-family: var(--fo-font-kr); }
+.paper-fold-title {
+  margin: 0;
+  font-family: var(--fo-font-display);
+  font-weight: 900;
+  font-size: clamp(3rem, 13vw, 10rem);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  color: var(--fo-orange);
+  /* paper drop shadow: soft, warm, off-axis — like ink lifted off the page. */
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 255, 0.6),
+    2px 6px 0 rgba(184, 67, 15, 0.18),
+    0 18px 38px rgba(120, 80, 30, 0.22);
+}
+.paper-fold-glyph { display: inline-block; }
+.paper-fold-glyph--sp { width: 0.28em; }
+.paper-fold-title__ko {
+  margin: 0.8rem 0 0;
+  font-family: var(--fo-font-kr);
+  font-weight: 500;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  letter-spacing: 0.4em;
+  color: var(--fo-mute);
+}
+.paper-fold-sub {
+  margin: 1.4rem 0 0;
+  max-width: 50ch;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+}
+.paper-fold-sub span[lang="ko"] { display: block; color: var(--fo-mute); font-size: 0.84em; margin-bottom: 0.3rem; }
+
+/* ---- Crane stage ---- */
+.paper-fold-stage {
+  position: relative;
+  margin: clamp(1.5rem, 4vw, 2.5rem) 0;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+  background: rgba(251, 243, 226, 0.55);
+  border: 1px solid var(--fo-line);
+  border-radius: 6px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 24px 50px -34px rgba(120, 80, 30, 0.4);
+  text-align: center;
+  overflow: hidden;
+}
+.paper-fold-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(120, 80, 30, 0.06));
+  pointer-events: none;
+}
+.paper-fold-crane {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 14px 16px rgba(120, 80, 30, 0.22));
+}
+/* crease lines — invisible until measured, then drawn when .fo-drawn. */
+.fo-crease {
+  fill: none;
+  stroke: var(--fo-orange2);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--fo-len, 1);
+  stroke-dashoffset: var(--fo-len, 1);
+  transition: stroke-dashoffset 1400ms var(--fo-ease);
+}
+.paper-fold-crane.fo-drawn .fo-crease { stroke-dashoffset: 0; }
+
+/* ---- Lead ---- */
+.paper-fold-lead {
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+  border-top: 1px solid var(--fo-line);
+}
+.paper-fold-lead__p {
+  margin: 0 auto;
+  max-width: 60ch;
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  line-height: 1.6;
+}
+.paper-fold-lead__p span[lang="ko"] {
+  display: block;
+  color: var(--fo-mute);
+  font-size: 0.82em;
+  margin-bottom: 0.6em;
+}
+
+/* ---- Steps ---- */
+.paper-fold-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.7rem, 1.4vw, 1.1rem);
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+}
+.fo-step {
+  position: relative;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border-radius: 4px;
+  background: var(--fo-paper);
+  border: 1px solid var(--fo-line);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 12px 24px -22px rgba(120,80,30,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.fo-step__n { font-family: var(--fo-font-display); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--fo-orange); }
+.fo-step__en { font-family: var(--fo-font-display); font-weight: 600; font-size: 1.15rem; }
+.fo-step__ko { font-family: var(--fo-font-kr); color: var(--fo-mute); font-size: 0.9rem; }
+
+.paper-fold-foot {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+  border-top: 1px solid var(--fo-line);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--fo-mute);
+  font-family: var(--fo-font-display);
+}
+
+/* ---- Reveal gating ---- */
+.paper-fold-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--fo-ease), transform 800ms var(--fo-ease);
+}
+.paper-fold-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.paper-fold-js [data-reveal] { transition-delay: calc(var(--fo-d, 0) * 1ms); }
+.paper-fold-js .paper-fold-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  display: inline-block;
+  transition: opacity 700ms var(--fo-ease), transform 700ms var(--fo-ease);
+  transition-delay: calc(var(--fo-i) * 70ms + 150ms);
+}
+.paper-fold-js.is-mounted .paper-fold-glyph { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-fold-js [data-reveal], .paper-fold-js .paper-fold-glyph {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .fo-crease { stroke-dashoffset: 0 !important; transition: none !important; }
+}
+
+.paper-fold-root :focus-visible {
+  outline: 2px solid var(--fo-orange);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .paper-fold-steps { grid-template-columns: repeat(2, 1fr); }
+}

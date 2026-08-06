@@ -1,0 +1,317 @@
+/* ==========================================================================
+   VARIFLEX 바리플렉스 — type that stretches · no.065
+   kinetic-variable · warm-light / accent-red · variable font axis morph
+   Scoped by convention to .variflex-root; classes prefixed vf- / variflex-.
+   ========================================================================== */
+
+.variflex-root {
+  --vf-bg: #fbf3ee;
+  --vf-warm: #f4e6da;
+  --vf-deep: #efe0d2;
+  --vf-text: #2a1a14;
+  --vf-mute: #7a6457;
+  --vf-quiet: #b6a392;
+  --vf-red: #ff4d6d;
+  --vf-red-soft: rgba(255, 77, 109, 0.5);
+  --vf-font-display: var(--font-recursive), "Recursive", system-ui, sans-serif;
+  --vf-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --vf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 77, 109, 0.07), transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, rgba(255, 77, 109, 0.05), transparent 70%),
+    linear-gradient(180deg, var(--vf-warm) 0%, var(--vf-bg) 50%, var(--vf-warm) 100%);
+  color: var(--vf-text);
+  font-family: var(--vf-font-kr);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.variflex-root :lang(ko) {
+  font-family: var(--vf-font-kr);
+}
+
+.variflex-root ::selection {
+  background: var(--vf-red);
+  color: #fff;
+}
+
+.variflex-root :focus-visible {
+  outline: 2px solid var(--vf-red);
+  outline-offset: 3px;
+}
+
+/* ---- Atmospheric depth: warm paper grain behind all ---- */
+.variflex-paper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(122, 100, 87, 0.05) 1px, transparent 1px),
+    radial-gradient(rgba(122, 100, 87, 0.04) 1px, transparent 1px);
+  background-size: 22px 22px, 17px 17px;
+  background-position: 0 0, 11px 8px;
+  mask-image: radial-gradient(110% 90% at 50% 40%, #000 30%, transparent 90%);
+  -webkit-mask-image: radial-gradient(110% 90% at 50% 40%, #000 30%, transparent 90%);
+}
+
+.variflex-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.variflex-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--vf-ease), transform 800ms var(--vf-ease);
+}
+.variflex-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Hero / the morph stage ---- */
+.vf-hero {
+  padding: clamp(48px, 10vh, 96px) 0 clamp(28px, 5vh, 48px);
+  text-align: center;
+}
+.vf-kicker {
+  margin: 0 0 clamp(18px, 4vh, 32px);
+  font-family: var(--vf-font-display);
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--vf-red);
+}
+.vf-stage {
+  /* the axis morph: --vf-w drives font-weight, --vf-s drives slnt.
+     Defaults are a composed mid-axis pose so no-JS looks intentional. */
+  --vf-w: 600;
+  --vf-s: 0;
+  position: relative;
+  cursor: ew-resize;
+}
+.vf-title {
+  margin: 0;
+  font-family: var(--vf-font-display);
+  font-weight: var(--vf-w, 600);
+  font-size: clamp(3.4rem, 18vw, 16rem);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  /* The wordmark IS the concept: accent-red fill with a soft warm shadow
+     and a faint red ghost offset — the type feels pressed into warm paper. */
+  color: var(--vf-red);
+  font-variation-settings: "'MONO' 0, 'CASL' 0, 'CRSV' 0, 'slnt' var(--vf-s, 0)";
+  text-shadow:
+    0 4px 0 rgba(255, 77, 109, 0.12),
+    0 10px 30px rgba(255, 77, 109, 0.18);
+  transition: font-weight 80ms linear, font-variation-settings 80ms linear;
+}
+.vf-title__row {
+  display: block;
+}
+.vf-axis-readout {
+  margin: 14px 0 0;
+  font-family: var(--vf-font-display);
+  font-size: clamp(0.78rem, 1.2vw, 0.95rem);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--vf-mute);
+}
+.vf-axis-readout span:first-child {
+  color: var(--vf-red);
+  font-variant-numeric: tabular-nums;
+}
+.vf-axis-hint {
+  color: var(--vf-quiet);
+}
+.vf-sub {
+  margin: 22px auto 0;
+  max-width: 44ch;
+  font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  color: var(--vf-mute);
+}
+.vf-sub :lang(ko) {
+  color: var(--vf-text);
+  font-weight: 500;
+}
+
+/* ---- Glyph reveal (per-letter) ---- */
+.variflex-glyph {
+  display: inline-block;
+}
+.variflex-js .variflex-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 700ms var(--vf-ease), transform 700ms var(--vf-ease);
+  transition-delay: calc(var(--vf-i) * 70ms + 150ms);
+}
+.variflex-js.is-mounted .variflex-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Axes section ---- */
+.vf-axes {
+  padding: clamp(24px, 5vh, 48px) 0;
+}
+.vf-sechead {
+  text-align: center;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.vf-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--vf-font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--vf-red);
+}
+.vf-secthead__title {
+  margin: 0 0 8px;
+  font-family: var(--vf-font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  text-transform: lowercase;
+  letter-spacing: -0.01em;
+  color: var(--vf-text);
+}
+.vf-secthead__kr {
+  margin: 0;
+  color: var(--vf-mute);
+  font-size: 0.98rem;
+}
+.vf-axegrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.vf-axecard {
+  position: relative;
+  padding: 24px;
+  border: 1px solid rgba(255, 77, 109, 0.2);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(244, 230, 218, 0.5));
+  text-align: left;
+}
+.vf-axecard__no {
+  margin: 0 0 10px;
+  font-family: var(--vf-font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--vf-red);
+}
+.vf-axecard__demo {
+  margin: 0 0 14px;
+  font-family: var(--vf-font-display);
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  line-height: 1;
+  color: var(--vf-red);
+}
+.vf-axecard__demo--thin {
+  font-weight: 300;
+  background: linear-gradient(90deg, var(--vf-red), #c93551 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.vf-axecard__demo--slant {
+  font-weight: 700;
+  font-variation-settings: "'slnt' -12";
+}
+.vf-axecard__h {
+  margin: 0 0 8px;
+  font-family: var(--vf-font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--vf-text);
+}
+.vf-axecard__b {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--vf-mute);
+  line-height: 1.7;
+}
+.vf-axecard__b :lang(ko) {
+  color: var(--vf-text);
+}
+
+/* ---- Ramp / spectrum ---- */
+.vf-ramp {
+  padding: clamp(24px, 5vh, 48px) 0;
+}
+.vf-ramp-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(6px, 2vw, 22px);
+  max-width: 720px;
+  margin: 0 auto 18px;
+}
+.vf-ramp-ch {
+  font-family: var(--vf-font-display);
+  font-size: clamp(2.4rem, 9vw, 5rem);
+  line-height: 1;
+  color: var(--vf-red);
+  text-shadow: 0 6px 18px rgba(255, 77, 109, 0.18);
+}
+.vf-ramp-cap {
+  margin: 0 auto;
+  max-width: 44ch;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--vf-mute);
+}
+.vf-ramp-cap :lang(ko) {
+  color: var(--vf-text);
+}
+
+/* ---- Footer ---- */
+.vf-foot {
+  margin-top: clamp(40px, 8vh, 80px);
+  padding: clamp(28px, 5vh, 48px) 0;
+  border-top: 1px solid rgba(255, 77, 109, 0.2);
+  text-align: center;
+}
+.vf-foot__brand {
+  margin: 0 0 6px;
+  font-family: var(--vf-font-display);
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--vf-text);
+}
+.vf-foot__line {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--vf-quiet);
+}
+
+/* ---- Reduced motion: axis holds the composed mid pose ---- */
+@media (prefers-reduced-motion: reduce) {
+  .variflex-js [data-reveal],
+  .variflex-js .variflex-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .vf-title { transition: none !important; }
+}
+
+@media (max-width: 560px) {
+  .vf-stage { cursor: default; }
+}

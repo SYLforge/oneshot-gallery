@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "signal-noise",
+  "no": 71,
+  "title": {
+    "en": "SIGNAL NOISE — The Aesthetics of Noise",
+    "ko": "신호 잡음 — 노이즈의 미학"
+  },
+  "description": {
+    "en": "A signal-science terminal. Static grain washes over a green-phosphor display where log lines type themselves in, beside a live signal waveform. The noise is not the enemy — it is the texture of a living signal.",
+    "ko": "신호 과학의 터미널. 정적 노이즈가 녹색 형광 화면을 덮고, 로그 줄이 타이핑되며, 신호 파형이 산다. 잡음은 적이 아니라 — 살아 있는 신호의 결이다."
+  },
+  "aesthetic": "terminal-core",
+  "techniques": ["feturbulence-texture", "typewriter", "char-split-reveal"],
+  "industry": ["science"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#3effa0",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

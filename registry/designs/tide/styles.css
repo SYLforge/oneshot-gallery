@@ -1,0 +1,212 @@
+.tide-root {
+  --td-bg: #04101a;
+  --td-deep: #020a12;
+  --td-text: #e6fbff;
+  --td-mute: #7fa9b8;
+  --td-cyan: #37e2c5;
+  --td-blue: #2ec0ff;
+  --td-font-display: var(--font-unbounded), "Unbounded", system-ui, sans-serif;
+  --td-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --td-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--td-bg);
+  color: var(--td-text);
+  font-family: var(--td-font-kr);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* CSS understudy field, shown when JS/canvas is absent or still mounting. */
+.tide-field {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: block;
+  /* no-JS gradient understudy: a calm teal-blue pool. */
+  background:
+    radial-gradient(50% 60% at 30% 35%, rgba(55, 226, 197, 0.5), transparent 70%),
+    radial-gradient(48% 56% at 72% 60%, rgba(46, 192, 255, 0.45), transparent 72%),
+    radial-gradient(60% 70% at 50% 90%, rgba(91, 139, 255, 0.35), transparent 72%),
+    var(--td-bg);
+}
+.tide-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(4, 16, 26, 0.55) 0%, transparent 30%, transparent 60%, rgba(4, 16, 26, 0.8) 100%);
+}
+
+.tide-doc {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.tide-root ::selection {
+  background: var(--td-cyan);
+  color: var(--td-deep);
+}
+
+/* ---- Hero ---- */
+.tide-hero {
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(3rem, 10vh, 7rem) 0 2rem;
+}
+.tide-kicker {
+  margin: 0 0 1.4rem;
+  font-family: var(--td-font-display);
+  font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--td-cyan);
+}
+.tide-title {
+  margin: 0;
+  font-family: var(--td-font-display);
+  font-weight: 900;
+  font-size: clamp(4rem, 20vw, 16rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #f0feff;
+  /* liquid droplet: a wet highlight on top + a deep waterline drop. */
+  text-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.5),
+    0 14px 40px rgba(55, 226, 197, 0.4),
+    0 4px 10px rgba(2, 10, 18, 0.6);
+}
+.tide-glyph { display: inline-block; }
+.tide-title__ko {
+  margin: 0.6rem 0 0;
+  font-family: var(--td-font-kr);
+  font-weight: 300;
+  font-size: clamp(1rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.5em;
+  color: var(--td-mute);
+}
+.tide-sub {
+  margin: 1.6rem 0 0.5rem;
+  font-size: clamp(1.05rem, 1.9vw, 1.4rem);
+  font-weight: 400;
+}
+.tide-sub span[lang="ko"] { color: var(--td-mute); margin-right: 0.5rem; }
+.tide-hint {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--td-cyan);
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+
+/* ---- Lead ---- */
+.tide-lead {
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
+  border-top: 1px solid rgba(55, 226, 197, 0.16);
+}
+.tide-lead__p {
+  margin: 0 auto;
+  max-width: 62ch;
+  font-family: var(--td-font-display);
+  font-weight: 300;
+  font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  text-align: center;
+}
+.tide-lead__p span[lang="ko"] {
+  display: block;
+  font-family: var(--td-font-kr);
+  color: var(--td-mute);
+  font-size: 0.74em;
+  margin-bottom: 0.6em;
+}
+
+/* ---- Cards ---- */
+.tide-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(0.9rem, 1.6vw, 1.3rem);
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+}
+.tide-card {
+  position: relative;
+  padding: clamp(1.2rem, 2.4vw, 1.8rem);
+  border-radius: 18px;
+  background: rgba(8, 28, 40, 0.42);
+  border: 1px solid rgba(55, 226, 197, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 20px 40px -24px rgba(2, 10, 18, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-height: 150px;
+}
+.tide-card__n {
+  font-family: var(--td-font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--td-cyan);
+  letter-spacing: 0.2em;
+}
+.tide-card__en {
+  font-family: var(--td-font-display);
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+.tide-card__ko { font-size: 0.9rem; color: var(--td-mute); }
+
+.tide-foot {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  border-top: 1px solid rgba(55, 226, 197, 0.16);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--td-mute);
+  font-family: var(--td-font-display);
+}
+
+/* ---- Reveal gating ---- */
+.tide-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--td-ease), transform 800ms var(--td-ease);
+}
+.tide-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.tide-js [data-reveal] { transition-delay: calc(var(--td-d, 0) * 1ms); }
+.tide-js .tide-glyph {
+  opacity: 0;
+  transform: translateY(0.4em);
+  display: inline-block;
+  transition: opacity 600ms var(--td-ease), transform 700ms var(--td-ease);
+  transition-delay: calc(var(--td-i) * 90ms + 150ms);
+}
+.tide-js.is-mounted .tide-glyph { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tide-js [data-reveal], .tide-js .tide-glyph {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+}
+
+.tide-root :focus-visible {
+  outline: 2px solid var(--td-cyan);
+  outline-offset: 3px;
+}

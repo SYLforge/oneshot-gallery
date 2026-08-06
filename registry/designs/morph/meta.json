@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "morph",
+  "no": 66,
+  "title": {
+    "en": "MORPH — Letters That Transform",
+    "ko": "모프 — 변형하는 글자"
+  },
+  "description": {
+    "en": "A kinetic typography piece — the wordmark MORPH splits into glyphs that each rotate, skew, and scale in a staggered loop, so the letters never sit still. Purple fill, a soft purple glow, and a chromatic edge that splits the type into cyan and magenta ghosts. Letters that feel alive.",
+    "ko": "키네틱 타이포그래피 — 자형 MORPH가 글자별로 쪼개져 각자 회전하고 기울고 확대되며 엇갈리는 루프를 돌아, 글자들이 결코 가만히 있지 않는다. 보라색 채우기, 부드러운 보라 빛, 자형을 시안과 마젠타 고스트로 갈라놓는 색수차 엣지. 살아 있는 글자."
+  },
+  "aesthetic": "kinetic-variable",
+  "techniques": ["char-split-reveal", "flip-layout"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "dark",
+  "accent": "#c084fc",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

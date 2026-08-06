@@ -1,0 +1,380 @@
+/* ==========================================================================
+   MORPH 모프 — letters that transform · no.066
+   kinetic-variable · dark-purple / purple glow · per-glyph staggered morph
+   Scoped by convention to .morph-root; classes prefixed mp- / morph-.
+   ========================================================================== */
+
+.morph-root {
+  --mp-bg: #0c0614;
+  --mp-deep: #07030e;
+  --mp-night: #160a26;
+  --mp-text: #f0e6ff;
+  --mp-mute: #9a86b8;
+  --mp-quiet: #5a4878;
+  --mp-purple: #c084fc;
+  --mp-purple-soft: rgba(192, 132, 252, 0.55);
+  --mp-cyan: #5ee0ff;
+  --mp-mag: #ff5ed0;
+  --mp-font-display: var(--font-bricolage), "Bricolage Grotesque", system-ui, sans-serif;
+  --mp-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --mp-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(192, 132, 252, 0.12), transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, rgba(192, 132, 252, 0.07), transparent 70%),
+    linear-gradient(180deg, var(--mp-deep) 0%, var(--mp-bg) 50%, var(--mp-deep) 100%);
+  color: var(--mp-text);
+  font-family: var(--mp-font-kr);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.morph-root :lang(ko) {
+  font-family: var(--mp-font-kr);
+}
+
+.morph-root ::selection {
+  background: var(--mp-purple);
+  color: var(--mp-deep);
+}
+
+.morph-root :focus-visible {
+  outline: 2px solid var(--mp-purple);
+  outline-offset: 3px;
+}
+
+/* ---- Atmospheric depth: a slow aurora haze behind all ---- */
+.mp-aurora {
+  position: fixed;
+  inset: -20% -20% 0 -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 20% 30%, rgba(192, 132, 252, 0.22), transparent 70%),
+    radial-gradient(40% 50% at 80% 40%, rgba(94, 224, 255, 0.12), transparent 70%),
+    radial-gradient(40% 50% at 60% 80%, rgba(255, 94, 208, 0.12), transparent 70%);
+  filter: blur(40px);
+  animation: mp-drift 18s ease-in-out infinite alternate;
+}
+@keyframes mp-drift {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to   { transform: translate3d(4%, 3%, 0) scale(1.08); }
+}
+
+.mp-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.morph-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--mp-ease), transform 800ms var(--mp-ease);
+}
+.morph-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Hero ---- */
+.mp-hero {
+  padding: clamp(56px, 12vh, 120px) 0 clamp(28px, 5vh, 48px);
+  text-align: center;
+}
+.mp-kicker {
+  margin: 0 0 clamp(18px, 4vh, 32px);
+  font-family: var(--mp-font-display);
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--mp-purple);
+  text-shadow: 0 0 12px var(--mp-purple-soft);
+}
+.mp-title {
+  margin: 0 0 16px;
+  font-family: var(--mp-font-display);
+  font-weight: 800;
+  font-size: clamp(3.6rem, 20vw, 17rem);
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  perspective: 800px;
+}
+.mp-title__row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mp-title__kr {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--mp-font-kr);
+  font-weight: 500;
+  font-size: clamp(0.9rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: var(--mp-mute);
+}
+
+/* The wordmark IS the concept. Each glyph is a stack: two chromatic ghosts
+   (cyan + magenta, offset) beneath a purple core with a soft purple glow.
+   Each glyph morphs on its own clock — three motion flavors cycled by
+   --mp-n (0,1,2), staggered by --mp-i. */
+.morph-glyph {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+}
+.mp-glyph__core {
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  color: var(--mp-purple);
+  text-shadow:
+    0 0 8px var(--mp-purple),
+    0 0 22px var(--mp-purple-soft),
+    0 0 44px rgba(192, 132, 252, 0.4);
+}
+.mp-glyph__ghost {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: inline-block;
+  text-align: center;
+  opacity: 0.7;
+  mix-blend-mode: screen;
+}
+.mp-glyph__ghost--cyan { color: var(--mp-cyan); }
+.mp-glyph__ghost--mag { color: var(--mp-mag); }
+
+/* Glyph reveal (entrance) — then the morph loop takes over. */
+.morph-js .morph-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 700ms var(--mp-ease), transform 700ms var(--mp-ease);
+  transition-delay: calc(var(--mp-i) * 70ms + 150ms);
+}
+.morph-js.is-mounted .morph-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+/* The morph loops — gated behind .is-mounted so they only run after the
+   entrance reveal. Three motion flavors selected by --mp-n. */
+.morph-js.is-mounted .morph-glyph { animation: mp-morph 4.4s var(--mp-ease) infinite; }
+.morph-js.is-mounted .mp-glyph__ghost--cyan { animation: mp-ghost-cyan 4.4s var(--mp-ease) infinite; }
+.morph-js.is-mounted .mp-glyph__ghost--mag  { animation: mp-ghost-mag  4.4s var(--mp-ease) infinite; }
+
+@keyframes mp-morph {
+  0%, 100% {
+    transform: rotate(0deg) skew(0deg, 0deg) scale(1);
+  }
+  25% {
+    /* flavor by --mp-n: 0 rotate, 1 skew, 2 scale */
+    transform:
+      rotate(calc(var(--mp-n) * 1 * -6deg))
+      skew(calc((var(--mp-n) - 1) * 14deg), 0deg)
+      scale(calc(1 + (var(--mp-n) - 2) * -0.18));
+  }
+  50% {
+    transform:
+      rotate(calc(var(--mp-n) * 1 * 5deg))
+      skew(calc((var(--mp-n) - 1) * -10deg), 0deg)
+      scale(calc(1 + (var(--mp-n) - 2) * 0.14));
+  }
+  75% {
+    transform:
+      rotate(calc(var(--mp-n) * 1 * -3deg))
+      skew(calc((var(--mp-n) - 1) * 6deg), 0deg)
+      scale(1.04);
+  }
+}
+@keyframes mp-ghost-cyan {
+  0%, 100% { transform: translate(-3px, -1px); }
+  50% { transform: translate(-7px, 2px); }
+}
+@keyframes mp-ghost-mag {
+  0%, 100% { transform: translate(3px, 1px); }
+  50% { transform: translate(7px, -2px); }
+}
+
+.mp-sub {
+  margin: 22px auto 0;
+  max-width: 40ch;
+  font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+  color: var(--mp-mute);
+}
+.mp-sub :lang(ko) {
+  color: var(--mp-text);
+  font-weight: 500;
+}
+
+/* ---- Section headers ---- */
+.mp-sechead {
+  text-align: center;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.mp-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--mp-purple);
+}
+.mp-secthead__title {
+  margin: 0 0 8px;
+  font-family: var(--mp-font-display);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  text-transform: lowercase;
+  letter-spacing: -0.01em;
+  color: var(--mp-text);
+}
+.mp-secthead__kr {
+  margin: 0;
+  color: var(--mp-mute);
+  font-size: 0.98rem;
+}
+
+/* ---- Motions grid ---- */
+.mp-modes {
+  padding: clamp(20px, 4vh, 40px) 0;
+}
+.mp-modegrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.mp-modecard {
+  padding: 26px 22px;
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(192, 132, 252, 0.06), rgba(12, 6, 20, 0.6));
+  text-align: center;
+}
+.mp-modecard__demo {
+  margin: 0 0 16px;
+  font-family: var(--mp-font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 8vw, 4.5rem);
+  line-height: 1;
+  color: var(--mp-purple);
+  text-shadow: 0 0 18px var(--mp-purple-soft);
+  display: inline-block;
+}
+.morph-js.is-mounted .mp-modecard__demo--spin  { animation: mp-spin  3.6s linear infinite; }
+.morph-js.is-mounted .mp-modecard__demo--skew  { animation: mp-skew  3.2s var(--mp-ease) infinite; }
+.morph-js.is-mounted .mp-modecard__demo--scale { animation: mp-scale 4.4s var(--mp-ease) infinite; }
+@keyframes mp-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes mp-skew {
+  0%, 100% { transform: skew(0deg, 0deg); }
+  50% { transform: skew(18deg, 6deg); }
+}
+@keyframes mp-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.28); }
+}
+.mp-modecard__h {
+  margin: 0 0 8px;
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--mp-text);
+}
+.mp-modecard__b {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--mp-mute);
+  line-height: 1.7;
+}
+.mp-modecard__b :lang(ko) {
+  color: var(--mp-text);
+}
+
+/* ---- Chroma edge demo ---- */
+.mp-chroma {
+  padding: clamp(20px, 4vh, 40px) 0;
+}
+.mp-chroma-demo {
+  margin: 0 auto 18px;
+  text-align: center;
+  font-family: var(--mp-font-display);
+}
+.mp-chroma-glyph {
+  position: relative;
+  display: inline-block;
+  font-weight: 800;
+  font-size: clamp(6rem, 24vw, 16rem);
+  line-height: 1;
+}
+.mp-chroma-cap {
+  margin: 0 auto;
+  max-width: 42ch;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--mp-mute);
+}
+.mp-chroma-cap :lang(ko) {
+  color: var(--mp-text);
+}
+
+/* ---- Footer ---- */
+.mp-foot {
+  margin-top: clamp(40px, 8vh, 80px);
+  padding: clamp(28px, 5vh, 48px) 0;
+  border-top: 1px solid rgba(192, 132, 252, 0.2);
+  text-align: center;
+}
+.mp-foot__brand {
+  margin: 0 0 6px;
+  font-family: var(--mp-font-display);
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mp-text);
+}
+.mp-foot__line {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--mp-quiet);
+}
+
+/* ---- Reduced motion: morph paused at a composed readable frame ---- */
+@media (prefers-reduced-motion: reduce) {
+  .mp-aurora { animation: none !important; }
+  .morph-js [data-reveal],
+  .morph-js .morph-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .morph-js.is-mounted .morph-glyph,
+  .morph-js.is-mounted .mp-glyph__ghost--cyan,
+  .morph-js.is-mounted .mp-glyph__ghost--mag,
+  .morph-js.is-mounted .mp-modecard__demo--spin,
+  .morph-js.is-mounted .mp-modecard__demo--skew,
+  .morph-js.is-mounted .mp-modecard__demo--scale {
+    animation: none !important;
+  }
+  .mp-glyph__ghost--cyan { transform: translate(-2px, 0); }
+  .mp-glyph__ghost--mag { transform: translate(2px, 0); }
+}
+
+@media (max-width: 560px) {
+  .mp-title__row { gap: 0; }
+}

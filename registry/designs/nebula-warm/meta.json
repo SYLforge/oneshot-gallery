@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "nebula-warm",
+  "no": 60,
+  "title": {
+    "en": "NEBULA WARM — The Warm Spectrum",
+    "ko": "따뜻한 성운 — 온기의 스펙트럼"
+  },
+  "description": {
+    "en": "A warm-toned generative nebula. A canvas particle field in amber, coral, gold and rose breathes and drifts, with pointer parallax tilting the field. The wordmark carries the same warm spectrum as a clipped text gradient with a warm glow.",
+    "ko": "따뜻한 톤의 생성적 성운. 앰버·코랄·골드·로즈 색의 캔버스 파티클 장이 숨 쉬며 떠다니고, 포인터 패럴랙스가 장을 기울인다. 워드마크는 같은 따뜻한 스펙트럼을 클리핑된 텍스트 그라디언트와 따뜻한 글로우로 담는다."
+  },
+  "aesthetic": "mesh-gradient",
+  "techniques": ["canvas-particles", "pointer-parallax", "char-split-reveal"],
+  "industry": ["entertainment"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#ffb347",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

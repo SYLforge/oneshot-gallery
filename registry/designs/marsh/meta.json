@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "marsh",
+  "no": 58,
+  "title": {
+    "en": "MARSH — Squishy Marshmallow",
+    "ko": "마쉬 — 말랑한 마시멜로"
+  },
+  "description": {
+    "en": "A marshmallow confectionery on warm pinkish cream. The signature is a draggable marshmallow that follows your pointer with inertia and springs back with overshoot on release, squashing as it moves. The wordmark is white fill with a thick pink outline and soft pink drop shadows.",
+    "ko": "따뜻한 핑크빛 크림 위의 마시멜로 제과점. 시그니처는 끌어서 움직이면 관성으로 따라오고 놓으면 되튕기며 오버슈트하는 마시멜로 — 움직일 때 찌릿하게 찌린다. 워드마크는 흰색 채움에 두꺼운 핑크 외곽선과 부드러운 핑크 드롭 섀도우."
+  },
+  "aesthetic": "clay-squishy",
+  "techniques": ["drag-physics", "spring-press", "char-split-reveal"],
+  "industry": ["retail-food"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "light",
+  "accent": "#ff9ec4",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

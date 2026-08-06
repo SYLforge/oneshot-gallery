@@ -166,6 +166,62 @@ export const aesthetics: TaxonomyTerm[] = [
       ko: "꽃잎으로 피어나는 잉크 — 유동적, 생성적, 살아 있는.",
     },
   },
+  {
+    id: "liquid-spatial",
+    label: { en: "Liquid & Spatial", ko: "액체·스페이셜" },
+    blurb: {
+      en: "Glass that pours, light that bends — the spatial-OS material turn.",
+      ko: "흐르는 유리, 굽는 빛 — 공간 OS의 재료적 전환.",
+    },
+  },
+  {
+    id: "holographic-iridescent",
+    label: { en: "Holographic", ko: "홀로그래픽" },
+    blurb: {
+      en: "Iridescent foils and rainbow shifts — paint made of pure angle.",
+      ko: "무지개 빛 은박과 각도 — 순수한 각도로 만든 페인트.",
+    },
+  },
+  {
+    id: "clay-squishy",
+    label: { en: "Clay & Squishy", ko: "클레이·스퀴시" },
+    blurb: {
+      en: "Soft 3D volumes that squish, spring, and feel almost squeezable.",
+      ko: "누르면 말랑한, 스프링하는, 거의 쥐어짤 수 있는 부드러운 3D 볼륨.",
+    },
+  },
+  {
+    id: "mesh-gradient",
+    label: { en: "Mesh Gradient", ko: "메쉬 그라디언트" },
+    blurb: {
+      en: "Multi-point color fields that drift and breathe as one surface.",
+      ko: "하나의 면으로 흐르고 숨 쉬는 다중 점 색의 장.",
+    },
+  },
+  {
+    id: "cyber-future",
+    label: { en: "Cyber Future", ko: "사이버 퓨처" },
+    blurb: {
+      en: "HUDs, wireframes, and scan-locked neon — the future as interface.",
+      ko: "HUD, 와이어프레임, 주사에 잠긴 네온 — 인터페이스로서의 미래.",
+    },
+  },
+  {
+    id: "ascii-retrotech",
+    label: { en: "ASCII Retrotech", ko: "아스키 레트로테크" },
+    blurb: {
+      en: "Characters as pixels — the warm phosphor of code-as-image.",
+      ko: "문자가 곧 픽셀 — 이미지로서의 코드, 따뜻한 인광.",
+    },
+  },
+  {
+    id: "kinetic-variable",
+    label: { en: "Kinetic Variable", ko: "키네틱 가변" },
+    blurb: {
+      en: "Variable axes scrubbed by motion — type that morphs in your hand.",
+      ko: "모션으로 스크럽하는 가변 축 — 손에서 변형되는 자형.",
+    },
+  },
 ];
 
 /**

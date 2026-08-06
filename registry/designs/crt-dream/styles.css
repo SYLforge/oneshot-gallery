@@ -1,0 +1,355 @@
+/* ==========================================================================
+   CRT DREAM CRT 드림 — the warm light of 2003 · no.063
+   ascii-retrotech · warm-dark / amber phosphor · scanlines + vignette
+   Scoped by convention to .crt-dream-root; classes prefixed cd- / crt-dream-.
+   ========================================================================== */
+
+.crt-dream-root {
+  --cd-bg: #1a0e02;
+  --cd-deep: #0f0701;
+  --cd-warm: #2a1604;
+  --cd-amber: #ffb84d;
+  --cd-amber-bright: #ffd98a;
+  --cd-amber-soft: rgba(255, 184, 77, 0.55);
+  --cd-text: #ffd9a0;
+  --cd-mute: #b07d3a;
+  --cd-quiet: #6a4a22;
+  --cd-font-display: var(--font-vt323), "VT323", ui-monospace, monospace;
+  --cd-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --cd-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 184, 77, 0.1), transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, rgba(255, 184, 77, 0.06), transparent 70%),
+    linear-gradient(180deg, var(--cd-deep) 0%, var(--cd-bg) 50%, var(--cd-deep) 100%);
+  color: var(--cd-text);
+  font-family: var(--cd-font-kr);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  /* a faint global amber bloom — the tube is always a little lit */
+  text-shadow: 0 0 6px rgba(255, 184, 77, 0.25);
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.crt-dream-root :lang(ko) {
+  font-family: var(--cd-font-kr);
+  text-shadow: none;
+}
+
+.crt-dream-root ::selection {
+  background: var(--cd-amber);
+  color: var(--cd-deep);
+}
+
+.crt-dream-root :focus-visible {
+  outline: 2px solid var(--cd-amber);
+  outline-offset: 3px;
+}
+
+.cd-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.crt-dream-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.crt-dream-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--cd-ease), transform 800ms var(--cd-ease);
+}
+.crt-dream-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Hero ---- */
+.crt-dream-hero {
+  padding: clamp(56px, 11vh, 110px) 0 clamp(28px, 5vh, 48px);
+  text-align: center;
+}
+.cd-readout {
+  margin: 0 0 clamp(18px, 4vh, 32px);
+  font-family: var(--cd-font-display);
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cd-amber);
+}
+.cd-readout--top {
+  /* the channel readout at the top of the tube — amber phosphor, fuzzy */
+  text-shadow:
+    0 0 4px var(--cd-amber-soft),
+    0 0 12px rgba(255, 184, 77, 0.35);
+}
+.cd-title {
+  margin: 0 0 14px;
+  font-family: var(--cd-font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 13vw, 10rem);
+  line-height: 0.86;
+  letter-spacing: 0.02em;
+}
+.cd-title__row {
+  display: block;
+  /* The wordmark IS the concept: amber fill with stacked fuzzy amber
+     text-shadows — a real phosphor tube blooming past its own edge. */
+  color: var(--cd-amber-bright);
+  text-shadow:
+    0 0 6px var(--cd-amber),
+    0 0 14px var(--cd-amber-soft),
+    0 0 28px rgba(255, 184, 77, 0.4),
+    0 0 48px rgba(255, 184, 77, 0.25);
+}
+.cd-title__kr {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--cd-font-display);
+  font-size: clamp(1rem, 3vw, 1.8rem);
+  letter-spacing: 0.18em;
+  color: var(--cd-amber);
+  text-shadow: 0 0 10px var(--cd-amber-soft);
+}
+.cd-sub {
+  margin: 0 auto;
+  max-width: 40ch;
+  font-size: clamp(0.95rem, 1.2vw, 1.06rem);
+  color: var(--cd-mute);
+}
+.cd-sub :lang(ko) {
+  color: var(--cd-text);
+}
+
+/* ---- Glyph reveal (per-letter) ---- */
+.crt-dream-glyph {
+  display: inline-block;
+}
+.crt-dream-js .crt-dream-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 700ms var(--cd-ease), transform 700ms var(--cd-ease);
+  transition-delay: calc(var(--cd-i) * 70ms + 150ms);
+}
+.crt-dream-js.is-mounted .crt-dream-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- The CRT screen / bezel ---- */
+.cd-screen {
+  padding: clamp(20px, 4vh, 40px) 0;
+}
+.cd-sechead {
+  text-align: center;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.cd-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--cd-font-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cd-amber);
+}
+.cd-secthead__title {
+  margin: 0 0 8px;
+  font-family: var(--cd-font-display);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  text-transform: lowercase;
+  color: var(--cd-text);
+  text-shadow: 0 0 12px var(--cd-amber-soft);
+}
+.cd-secthead__kr {
+  margin: 0;
+  color: var(--cd-mute);
+  font-size: 0.98rem;
+}
+
+.cd-tube {
+  position: relative;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 22px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, #2a1a0a, #120902);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 184, 77, 0.12),
+    inset 0 0 40px rgba(0, 0, 0, 0.6),
+    0 18px 60px rgba(0, 0, 0, 0.6);
+}
+.cd-tube__glass {
+  position: relative;
+  padding: clamp(20px, 4vw, 34px);
+  border-radius: 10px;
+  background:
+    radial-gradient(80% 70% at 50% 45%, rgba(255, 184, 77, 0.1), transparent 70%),
+    linear-gradient(180deg, #1c0e02, #0c0501);
+  /* barrel distortion feel — corners pulled dark */
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 120px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+.cd-tube__ascii {
+  margin: 0 0 14px;
+  font-family: var(--cd-font-display);
+  font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+  line-height: 1.25;
+  color: var(--cd-amber-bright);
+  white-space: pre;
+  overflow-x: auto;
+  text-shadow:
+    0 0 4px var(--cd-amber),
+    0 0 12px var(--cd-amber-soft),
+    0 0 24px rgba(255, 184, 77, 0.35);
+}
+.cd-tube__line {
+  margin: 4px 0 0;
+  font-family: var(--cd-font-display);
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  color: var(--cd-amber);
+  text-shadow: 0 0 10px var(--cd-amber-soft);
+}
+.cd-tube__line--en {
+  color: var(--cd-mute);
+  text-shadow: none;
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+}
+
+/* ---- Notes grid ---- */
+.cd-notes {
+  padding: clamp(40px, 8vh, 80px) 0;
+}
+.cd-notegrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.cd-note {
+  padding: 22px;
+  border: 1px solid rgba(255, 184, 77, 0.18);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 184, 77, 0.05), rgba(15, 7, 1, 0.6));
+}
+.cd-note__h {
+  margin: 0 0 10px;
+  font-family: var(--cd-font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--cd-amber);
+  text-shadow: 0 0 8px var(--cd-amber-soft);
+}
+.cd-note__b {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--cd-mute);
+  line-height: 1.7;
+}
+.cd-note__b :lang(ko) {
+  color: var(--cd-text);
+}
+
+/* ---- Footer ---- */
+.cd-foot {
+  margin-top: clamp(40px, 8vh, 80px);
+  padding: clamp(28px, 5vh, 48px) 0;
+  border-top: 1px solid rgba(255, 184, 77, 0.18);
+  text-align: center;
+}
+.cd-foot__brand {
+  margin: 0 0 6px;
+  font-family: var(--cd-font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  color: var(--cd-text);
+  text-shadow: 0 0 10px var(--cd-amber-soft);
+}
+.cd-foot__line {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--cd-quiet);
+}
+
+/* ---- CRT overlays: scanlines + vignette + flicker (all aria-hidden) ---- */
+.cd-scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  /* horizontal scanline lines drifting down the glass */
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28) 0px,
+    rgba(0, 0, 0, 0.28) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: multiply;
+}
+.cd-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  /* barrel vignette — corners darkened like a real tube */
+  background: radial-gradient(
+    110% 100% at 50% 50%,
+    transparent 50%,
+    rgba(10, 5, 0, 0.5) 80%,
+    rgba(5, 2, 0, 0.85) 100%
+  );
+}
+.cd-flicker {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: rgba(255, 184, 77, 0.025);
+  opacity: 0.6;
+}
+.crt-dream-js .cd-flicker {
+  animation: cd-flick 6s steps(60, end) infinite;
+}
+@keyframes cd-flick {
+  0%, 100% { opacity: 0.6; }
+  3% { opacity: 0.78; }
+  6% { opacity: 0.55; }
+  47% { opacity: 0.62; }
+  50% { opacity: 0.8; }
+  53% { opacity: 0.58; }
+}
+
+/* ---- Reduced motion: scanlines rest, flicker stops, reveals sit ---- */
+@media (prefers-reduced-motion: reduce) {
+  .crt-dream-js [data-reveal],
+  .crt-dream-js .crt-dream-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .cd-flicker { animation: none !important; }
+}
+
+@media (max-width: 560px) {
+  .cd-scanlines { background-size: auto 5px; }
+}

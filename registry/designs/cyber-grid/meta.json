@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "cyber-grid",
+  "no": 61,
+  "title": {
+    "en": "CYBER GRID — The Future as HUD",
+    "ko": "사이버 그리드 — HUD 미래"
+  },
+  "description": {
+    "en": "A cyberpunk HUD interface. A perspective CSS grid floor of cyan and green lines recedes to a vanishing point, framed by HUD corner brackets and a CRT scan-line overlay. The wordmark is cyan with a cyan glow and a red/blue chromatic offset.",
+    "ko": "사이버펑크 HUD 인터페이스. 시안과 녹색 선의 원근 CSS 그리드 바닥이 소실점을 향해 멀어지고, HUD 모서리 괄호와 CRT 스캔라인 오버레이가 그 위를 덮는다. 워드마크는 시안 채움에 시안 글로우와 적/청 색수차 오프셋을 가진다."
+  },
+  "aesthetic": "cyber-future",
+  "techniques": ["pointer-parallax", "crt-scanline", "char-split-reveal"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom", "svg"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#00ffc8",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

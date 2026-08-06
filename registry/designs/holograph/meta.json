@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "holograph",
+  "no": 55,
+  "title": {
+    "en": "HOLOGRAPH — Foil Card House",
+    "ko": "홀로그래프 — 은박 카드 하우스"
+  },
+  "description": {
+    "en": "A studio for cards that shift color with angle. The wordmark is an iridescent foil whose rainbow spectrum tracks the pointer — paint made of pure viewing angle.",
+    "ko": "각도마다 색이 바뀌는 카드를 위한 스튜디오. 워드마크는 무지개 스펙트럼이 포인터를 따라가는 은박 — 순수한 관찰 각도로 만든 페인트."
+  },
+  "aesthetic": "holographic-iridescent",
+  "techniques": ["pointer-parallax", "glass-specular", "char-split-reveal"],
+  "industry": ["product", "atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#ff5edb",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "tide",
+  "no": 54,
+  "title": {
+    "en": "TIDE — Liquid Motion Studio",
+    "ko": "조류 — 액체 모션 스튜디오"
+  },
+  "description": {
+    "en": "A studio for things that flow. A canvas of metaballs merges and pulls apart to the pointer — liquid as a field you push through, not a surface you look at.",
+    "ko": "흐르는 것을 위한 스튜디오. 메타볼 캔버스가 포인터에 맞춰 합쳤다 벌어진다 — 들여다보는 표면이 아니라 밀고 지나가는 액체의 장."
+  },
+  "aesthetic": "liquid-spatial",
+  "techniques": ["canvas-particles", "pointer-parallax", "char-split-reveal"],
+  "industry": ["product", "atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#37e2c5",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

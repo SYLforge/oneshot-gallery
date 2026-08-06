@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "perfume-deep",
+  "no": 69,
+  "title": {
+    "en": "PERFUME DEEP — A Deep Scent",
+    "ko": "퍼퓸 딥 — 깊은 향"
+  },
+  "description": {
+    "en": "A luxury perfume house. A hairline serif wordmark parts slowly on near-black, a feature panel wipes open in gold, and thin hairlines divide the silence. Expensive restraint — gold-on-dark, never loud.",
+    "ko": "사치 향수의 집. 흑에 가까운 밤 위로 가는 세리프 워드마크가 천천히 갈라지고, 특징 패널이 금빛으로 닦이며, 가는 선들이 정적을 나눈다. 금과 밤의 비밀 — 결코 크지 않은 사치."
+  },
+  "aesthetic": "luxury-fashion",
+  "techniques": ["char-split-reveal", "clip-path-reveal", "pointer-parallax"],
+  "industry": ["fashion-beauty"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#c9a36a",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

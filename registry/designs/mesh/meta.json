@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "mesh",
+  "no": 59,
+  "title": {
+    "en": "MESH — A Field of Color",
+    "ko": "메쉬 — 색의 장"
+  },
+  "description": {
+    "en": "A gradient studio. The signature is an animated CSS mesh — five large radial color blobs (coral, violet, teal, gold, magenta) that slowly drift and breathe behind a white wordmark with a stacked multi-color glow.",
+    "ko": "그라디언트 스튜디오. 시그니처는 애니메이션 CSS 메쉬 — 산호·바이올렛·티얼·골드·마젠타 다섯 개의 큰 방사 색 얼룩이 천천히 떠다니며 숨 쉬고, 그 앞에 스택된 다색 글로우를 가진 흰색 워드마크가 있다."
+  },
+  "aesthetic": "mesh-gradient",
+  "techniques": ["pointer-parallax", "char-split-reveal"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#ff7a59",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

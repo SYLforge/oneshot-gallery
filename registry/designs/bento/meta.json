@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "bento",
+  "no": 68,
+  "title": {
+    "en": "BENTO — Design That Holds",
+    "ko": "벤토 — 담는 디자인"
+  },
+  "description": {
+    "en": "A bento-grid product showcase. An asymmetric field of rounded tiles — some spanning wide, some standing tall — that holds each feature in its own compartment. Design that holds, like a lunchbox.",
+    "ko": "벤토 그리드의 제품 쇼케이스. 넓게 자리하거나 곧게 선 둥근 타일들이 각 기능을 칸마다 담아낸다. 도시락처럼 담는 디자인."
+  },
+  "aesthetic": "bento-product",
+  "techniques": ["flip-layout", "char-split-reveal", "clip-path-reveal"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "light",
+  "accent": "#2563eb",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

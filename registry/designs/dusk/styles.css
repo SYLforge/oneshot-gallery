@@ -1,0 +1,348 @@
+.dusk-root {
+  --dk-bg: #0a0712;
+  --dk-text: #f6e6dc;
+  --dk-mute: #b89c97;
+  --dk-line: rgba(255, 126, 95, 0.22);
+  --dk-peach: #ffd6a8;
+  --dk-coral: #ff7e5f;
+  --dk-violet: #6a4d8c;
+  --dk-indigo: #1a1538;
+  --dk-font-display: var(--font-playfair-display), "Playfair Display", Georgia, serif;
+  --dk-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --dk-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--dk-bg);
+  color: var(--dk-text);
+  font-family: var(--dk-font-kr);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Letterbox bars — cinematic framing top & bottom. */
+.dusk-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: clamp(18px, 3.2vh, 38px);
+  z-index: 5;
+  background: #000;
+  pointer-events: none;
+}
+.dusk-bar--top { top: 0; }
+.dusk-bar--bottom { bottom: 0; }
+
+/* Layered gradient sky — fixed, behind everything, full depth. */
+.dusk-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #1a1538 0%,        /* indigo, top of sky */
+    #4a3568 16%,
+    #6a4d8c 32%,
+    #c4656f 52%,
+    #ff9a73 70%,
+    #ffd6a8 86%,       /* peach, just above horizon */
+    #ffe9cf 100%
+  );
+}
+/* The descending sun — a radial glow whose centre is driven by --dk-sun. */
+.dusk-sun {
+  position: absolute;
+  left: 50%;
+  top: var(--dk-sun, 22%);
+  transform: translate(-50%, -50%);
+  width: clamp(220px, 42vw, 560px);
+  height: clamp(220px, 42vw, 560px);
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 247, 220, 0.95) 0%,
+    rgba(255, 200, 150, 0.65) 18%,
+    rgba(255, 126, 95, 0.40) 42%,
+    rgba(255, 126, 95, 0) 72%
+  );
+  filter: blur(2px);
+  transition: top 120ms linear;
+  will-change: top;
+}
+/* Atmospheric haze band across the lower sky. */
+.dusk-haze {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 126, 95, 0) 0%,
+    rgba(255, 180, 130, 0.18) 40%,
+    rgba(120, 70, 90, 0.34) 100%
+  );
+  pointer-events: none;
+}
+
+/* Silhouetted horizon — a layered hill/buildings silhouette. */
+.dusk-horizon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: clamp(120px, 22vh, 240px);
+  transform: translateX(var(--dk-px, 0));
+  transition: transform 220ms linear;
+  pointer-events: none;
+  background:
+    /* distant ridge */
+    radial-gradient(120% 80% at 20% 100%, rgba(40, 22, 38, 0.85) 0 32%, transparent 33%),
+    radial-gradient(120% 80% at 70% 100%, rgba(40, 22, 38, 0.85) 0 28%, transparent 29%),
+    /* city teeth */
+    repeating-linear-gradient(90deg, transparent 0 14px, rgba(10,7,18,0.92) 14px 20px),
+    linear-gradient(180deg, transparent 0%, #0a0712 60%, #050308 100%);
+  background-size: auto, auto, auto, 100% 100%;
+  background-position: bottom, bottom, bottom, bottom;
+  background-repeat: no-repeat, no-repeat, repeat-x, no-repeat;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 100%);
+}
+
+.dusk-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1.4rem, 4vw, 3rem);
+}
+
+.dusk-root ::selection {
+  background: var(--dk-coral);
+  color: #1a0f12;
+}
+
+/* ---- Hero ---- */
+.dusk-hero {
+  min-height: 84vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: clamp(3rem, 10vh, 7rem) 0 2rem;
+}
+.dusk-kicker {
+  margin: 0 0 1.8rem;
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  font-size: clamp(0.72rem, 1.1vw, 0.86rem);
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(20, 8, 14, 0.7);
+  text-shadow: 0 1px 12px rgba(255, 214, 168, 0.6);
+}
+.dusk-kicker span[lang="ko"] {
+  font-family: var(--dk-font-kr);
+  color: rgba(20, 8, 14, 0.55);
+  margin-right: 0.5rem;
+  letter-spacing: 0.2em;
+}
+.dusk-title {
+  margin: 0;
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(4.5rem, 22vw, 18rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  /* sunset gradient clip-text + soft glow */
+  background: linear-gradient(180deg, #fff3df 0%, #ffd29a 38%, #ff7e5f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 6px 30px rgba(255, 126, 95, 0.5));
+}
+.dusk-glyph { display: inline-block; }
+.dusk-title__ko {
+  margin: 1rem 0 0;
+  font-family: var(--dk-font-kr);
+  font-weight: 300;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  letter-spacing: 0.6em;
+  color: rgba(20, 8, 14, 0.6);
+  text-indent: 0.6em;
+}
+.dusk-sub {
+  margin: 1.8rem auto 0;
+  max-width: 46ch;
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+  font-weight: 500;
+  color: rgba(20, 8, 14, 0.78);
+}
+.dusk-sub span[lang="ko"] {
+  display: block;
+  font-family: var(--dk-font-kr);
+  font-style: normal;
+  font-weight: 400;
+  color: rgba(20, 8, 14, 0.6);
+  font-size: 0.8em;
+  margin-bottom: 0.5em;
+}
+.dusk-hint {
+  margin: 1.4rem 0 0;
+  font-family: var(--dk-font-kr);
+  font-size: 0.86rem;
+  letter-spacing: 0.1em;
+  color: rgba(20, 8, 14, 0.5);
+}
+
+/* ---- Acts ---- */
+.dusk-act {
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
+  text-align: center;
+}
+.dusk-act__n {
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  color: var(--dk-peach);
+  text-shadow: 0 0 18px rgba(255, 126, 95, 0.5);
+}
+.dusk-act__p {
+  margin: 1.4rem auto 0;
+  max-width: 56ch;
+  font-size: clamp(1.1rem, 2.1vw, 1.55rem);
+  line-height: 1.6;
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  font-weight: 500;
+}
+.dusk-act__p span[lang="ko"] {
+  display: block;
+  font-family: var(--dk-font-kr);
+  font-style: normal;
+  font-weight: 400;
+  color: var(--dk-mute);
+  font-size: 0.78em;
+  margin-bottom: 0.8em;
+}
+
+/* ---- Cards (the colours of dusk) ---- */
+.dusk-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.7rem, 1.4vw, 1.1rem);
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+}
+.dk-card {
+  position: relative;
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border-radius: 10px;
+  background: rgba(20, 12, 28, 0.42);
+  border: 1px solid var(--dk-line);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255, 214, 168, 0.14), 0 18px 40px -28px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-height: 130px;
+  overflow: hidden;
+}
+.dk-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  z-index: -1;
+}
+.dk-card:nth-child(1)::before { background: linear-gradient(180deg, #ffd6a8, #ff9a73); }
+.dk-card:nth-child(2)::before { background: linear-gradient(180deg, #ff9a73, #ff7e5f); }
+.dk-card:nth-child(3)::before { background: linear-gradient(180deg, #c4656f, #6a4d8c); }
+.dk-card:nth-child(4)::before { background: linear-gradient(180deg, #4a3568, #1a1538); }
+.dk-card__n { font-family: var(--dk-font-display); font-style: italic; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.1em; color: rgba(255, 240, 224, 0.9); }
+.dk-card__en { font-family: var(--dk-font-display); font-style: italic; font-weight: 800; font-size: clamp(1.2rem, 2.2vw, 1.6rem); color: #fff; }
+.dk-card__ko { font-family: var(--dk-font-kr); font-size: 0.9rem; color: rgba(255, 240, 224, 0.85); letter-spacing: 0.06em; }
+
+/* ---- Quote ---- */
+.dusk-quote {
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+  text-align: center;
+}
+.dusk-quote__p {
+  margin: 0 auto 0.8rem;
+  max-width: 50ch;
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--dk-peach);
+}
+.dusk-quote__by {
+  font-family: var(--dk-font-display);
+  font-style: italic;
+  letter-spacing: 0.24em;
+  font-size: 0.82rem;
+  color: var(--dk-coral);
+}
+
+.dusk-foot {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: clamp(1.8rem, 4vw, 2.6rem) 0;
+  border-top: 1px solid var(--dk-line);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--dk-mute);
+  font-family: var(--dk-font-display);
+  font-style: italic;
+}
+.dusk-foot span[lang="ko"] { font-family: var(--dk-font-kr); font-style: normal; }
+
+/* ---- Reveal gating ---- */
+.dusk-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 900ms var(--dk-ease), transform 900ms var(--dk-ease);
+}
+.dusk-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.dusk-js [data-reveal] { transition-delay: calc(var(--dk-d, 0) * 1ms); }
+.dusk-js .dusk-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  display: inline-block;
+  transition: opacity 900ms var(--dk-ease), transform 900ms var(--dk-ease);
+  transition-delay: calc(var(--dk-i) * 90ms + 200ms);
+}
+.dusk-js.is-mounted .dusk-glyph { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dusk-js [data-reveal], .dusk-js .dusk-glyph {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .dusk-sun { top: 40% !important; transition: none !important; }
+  .dusk-horizon { transform: none !important; transition: none !important; }
+}
+
+.dusk-root :focus-visible {
+  outline: 2px solid var(--dk-peach);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .dusk-cards { grid-template-columns: repeat(2, 1fr); }
+}

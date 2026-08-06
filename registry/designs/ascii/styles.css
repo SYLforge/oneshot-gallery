@@ -1,0 +1,330 @@
+/* ==========================================================================
+   ASCII 아스키 — pictures drawn in characters · no.064
+   ascii-retrotech · terminal-black / phosphor-green · canvas density field
+   Scoped by convention to .ascii-root; classes prefixed as- / ascii-.
+   ========================================================================== */
+
+.ascii-root {
+  --as-bg: #020604;
+  --as-deep: #010403;
+  --as-panel: #04100a;
+  --as-grid: rgba(94, 255, 160, 0.06);
+  --as-grid-strong: rgba(94, 255, 160, 0.14);
+  --as-text: #c8ffd9;
+  --as-mute: #5e9e7a;
+  --as-quiet: #2e5240;
+  --as-green: #5effa0;
+  --as-green-soft: rgba(94, 255, 160, 0.55);
+  --as-font-display: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+  --as-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --as-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(94, 255, 160, 0.08), transparent 60%),
+    radial-gradient(80% 60% at 50% 100%, rgba(94, 255, 160, 0.05), transparent 70%),
+    linear-gradient(180deg, var(--as-deep) 0%, var(--as-bg) 50%, var(--as-deep) 100%);
+  color: var(--as-text);
+  font-family: var(--as-font-kr);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.ascii-root :lang(ko) {
+  font-family: var(--as-font-kr);
+}
+
+.ascii-root ::selection {
+  background: var(--as-green);
+  color: var(--as-deep);
+}
+
+.ascii-root :focus-visible {
+  outline: 2px solid var(--as-green);
+  outline-offset: 3px;
+}
+
+/* ---- Atmospheric depth: faint terminal grid behind all ---- */
+.ascii-grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--as-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--as-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(110% 90% at 50% 40%, #000 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(110% 90% at 50% 40%, #000 30%, transparent 85%);
+}
+
+.ascii-scan {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(1, 4, 3, 0.7) 100%);
+}
+
+.ascii-doc {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* ---- Reveal gating (JS-dependent pre-states) ---- */
+.ascii-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms var(--as-ease), transform 800ms var(--as-ease);
+}
+.ascii-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Hero ---- */
+.ascii-hero {
+  padding: clamp(56px, 11vh, 110px) 0 clamp(28px, 5vh, 48px);
+  text-align: center;
+}
+.as-kicker {
+  margin: 0 0 clamp(18px, 4vh, 32px);
+  font-family: var(--as-font-display);
+  font-size: clamp(0.66rem, 0.9vw, 0.8rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--as-green);
+  text-shadow: 0 0 10px var(--as-green-soft);
+}
+.as-title {
+  margin: 0 0 14px;
+  font-family: var(--as-font-display);
+  font-weight: 700;
+  font-size: clamp(3.2rem, 16vw, 13rem);
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+}
+.as-title__row {
+  display: block;
+  /* The wordmark IS the concept: green fill with stacked green phosphor
+     text-shadows — a real terminal tube blooming past its own edge. */
+  color: var(--as-green);
+  text-shadow:
+    0 0 6px var(--as-green),
+    0 0 16px var(--as-green-soft),
+    0 0 32px rgba(94, 255, 160, 0.4);
+}
+.as-title__kr {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--as-font-kr);
+  font-weight: 500;
+  font-size: clamp(0.9rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.3em;
+  color: var(--as-mute);
+}
+.as-sub {
+  margin: 0 auto;
+  max-width: 44ch;
+  font-size: clamp(0.95rem, 1.2vw, 1.06rem);
+  color: var(--as-mute);
+}
+.as-sub :lang(ko) {
+  color: var(--as-text);
+}
+.as-ramp {
+  font-family: var(--as-font-display);
+  color: var(--as-green);
+  background: rgba(94, 255, 160, 0.08);
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-shadow: 0 0 8px var(--as-green-soft);
+}
+
+/* ---- Glyph reveal (per-letter) ---- */
+.ascii-glyph {
+  display: inline-block;
+}
+.ascii-js .ascii-glyph {
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 700ms var(--as-ease), transform 700ms var(--as-ease);
+  transition-delay: calc(var(--as-i) * 70ms + 150ms);
+}
+.ascii-js.is-mounted .ascii-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Section headers ---- */
+.as-sechead {
+  text-align: center;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.as-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--as-font-display);
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--as-green);
+}
+.as-secthead__title {
+  margin: 0 0 8px;
+  font-family: var(--as-font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  text-transform: lowercase;
+  letter-spacing: -0.01em;
+  color: var(--as-text);
+}
+.as-secthead__kr {
+  margin: 0;
+  color: var(--as-mute);
+  font-size: 0.98rem;
+}
+
+/* ---- The ASCII frames ---- */
+.as-stage {
+  padding: clamp(20px, 4vh, 40px) 0;
+}
+.as-frame {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(14px, 2vw, 22px);
+  border: 1px solid var(--as-grid-strong);
+  border-radius: 6px;
+  background:
+    radial-gradient(60% 80% at 50% 40%, rgba(94, 255, 160, 0.06), transparent 70%),
+    linear-gradient(180deg, var(--as-panel), rgba(2, 6, 4, 0.8));
+  overflow: hidden;
+}
+/* No-JS understudy <pre>: shown by default, hidden once the canvas draws. */
+.as-understudy {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 10px;
+  font-family: var(--as-font-display);
+  font-size: clamp(0.5rem, 1.3vw, 0.82rem);
+  line-height: 1.15;
+  color: var(--as-green);
+  white-space: pre;
+  text-align: center;
+  text-shadow:
+    0 0 4px var(--as-green-soft),
+    0 0 14px rgba(94, 255, 160, 0.3);
+  opacity: 1;
+  transition: opacity 400ms var(--as-ease);
+}
+.ascii-js .as-understudy {
+  /* canvas takes over once JS is alive; understudy fades but stays in DOM as
+     an accessible static fallback for no-canvas environments. */
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+.as-canvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: clamp(180px, 32vh, 320px);
+  margin: 0 auto;
+}
+.ascii-js .as-canvas {
+  /* canvas sits on top of the faded understudy */
+  margin-top: -100%;
+}
+.as-readout {
+  position: relative;
+  z-index: 3;
+  margin: 12px 0 0;
+  text-align: center;
+  font-family: var(--as-font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--as-mute);
+}
+
+/* ---- The ramp explainer ---- */
+.as-how {
+  padding: clamp(20px, 4vh, 40px) 0;
+}
+.as-ramp-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(4px, 1.5vw, 16px);
+  max-width: 640px;
+  margin: 0 auto 18px;
+  font-family: var(--as-font-display);
+}
+.as-ramp-ch {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(34px, 8vw, 60px);
+  height: clamp(34px, 8vw, 60px);
+  border: 1px solid var(--as-grid-strong);
+  border-radius: 6px;
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  color: var(--as-green);
+  background: rgba(94, 255, 160, 0.05);
+  text-shadow: 0 0 10px var(--as-green-soft);
+}
+.as-ramp-cap {
+  margin: 0 auto;
+  max-width: 42ch;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--as-mute);
+}
+.as-ramp-cap :lang(ko) {
+  color: var(--as-text);
+}
+
+/* ---- Footer ---- */
+.as-foot {
+  margin-top: clamp(40px, 8vh, 80px);
+  padding: clamp(28px, 5vh, 48px) 0;
+  border-top: 1px solid var(--as-grid-strong);
+  text-align: center;
+}
+.as-foot__brand {
+  margin: 0 0 6px;
+  font-family: var(--as-font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--as-text);
+}
+.as-foot__line {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--as-quiet);
+}
+
+/* ---- Reduced motion: renders hold a composed still, reveals sit ---- */
+@media (prefers-reduced-motion: reduce) {
+  .ascii-js [data-reveal],
+  .ascii-js .ascii-glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .as-canvas { height: 200px; }
+  .as-understudy { font-size: 0.42rem; }
+}

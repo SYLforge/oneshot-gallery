@@ -1,0 +1,37 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "aurora-paint",
+  "no": 56,
+  "title": {
+    "en": "AURORA PAINT — A Studio of Light",
+    "ko": "오로라 페인트 — 빛의 스튜디오"
+  },
+  "description": {
+    "en": "A paint studio whose medium is light. The signature is a canvas aurora — soft flowing mint, violet and cyan ribbons of additive light, drawn with sine-driven curves and a brush that follows your pointer.",
+    "ko": "빛을 재료로 삼은 페인트 스튜디오. 시그니처는 캔버스 위의 오로라 — 첨가 합성으로 그려지는 민트·바이올렛·시안의 부드러운 빛의 띠가 사인 곡선으로 흐르고, 포인터를 따라 빛이 칠해진다."
+  },
+  "aesthetic": "holographic-iridescent",
+  "techniques": ["canvas-particles", "pointer-parallax", "char-split-reveal"],
+  "industry": ["atelier"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["canvas", "dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": { "source": "code", "budgetKB": 5120 },
+  "theme": "dark",
+  "accent": "#7ef9c4",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}

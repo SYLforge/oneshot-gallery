@@ -1,0 +1,40 @@
+{
+  "$schema": "https://oneshot.gallery/schema/entry.json",
+  "slug": "variflex",
+  "no": 65,
+  "title": {
+    "en": "VARIFLEX — Type That Stretches",
+    "ko": "바리플렉스 — 늘어나는 자형"
+  },
+  "description": {
+    "en": "A variable-font showcase — the wordmark VARIFLEX physically morphs as you move: font-weight and slant axes are driven by the pointer, so the type swings from thin and extended to bold and slanted in real time. Warm light ground, accent red, the axis is the interaction.",
+    "ko": "가변폰트 쇼케이스 — 움직임에 따라 자형 VARIFLEX가 물리적으로 변형한다. font-weight와 slant 축이 포인터로 구동되어, 자형이 얇고 늘어난 형태에서 굵고 기운 형태로 실시간으로 흔든다. 따뜻한 밝은 바탕, 액센트 레드, 축 자체가 인터랙션이다."
+  },
+  "aesthetic": "kinetic-variable",
+  "techniques": ["char-split-reveal", "pointer-parallax"],
+  "industry": ["product"],
+  "stack": {
+    "animation": "vanilla-js",
+    "styling": "vanilla-css",
+    "renderer": ["dom"]
+  },
+  "dependencies": [],
+  "prompt": {
+    "model": "builtin:zai-coding-plan/GLM-5.2",
+    "modelLabel": "GLM-5.2",
+    "tool": "zcode",
+    "date": "2026-08-06",
+    "oneshot": false,
+    "followUps": 0
+  },
+  "media": {
+    "source": "code",
+    "budgetKB": 5120
+  },
+  "theme": "light",
+  "accent": "#ff4d6d",
+  "credits": [],
+  "license": "MIT",
+  "published": "2026-08-06",
+  "featured": false
+}
