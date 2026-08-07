@@ -1,23 +1,20 @@
 name: Deploy
 
-# Build on GitHub Actions (whose runners can reach Google Fonts) and deploy
-# the result to Vercel. This bypasses Vercel's own build environment, which
-# is currently unable to reach fonts.gstatic.com (ETIMEDOUT/ENETUNREACH) and
-# fails every `next/font/google` build.
+# Build on GitHub Actions and deploy the result to Vercel, bypassing Vercel's
+# own build environment (which cannot currently reach fonts.gstatic.com).
 #
-# Prerequisite (one-time, repo owner): add these repository secrets —
-#   VERCEL_TOKEN       — a Vercel access token (vercel.com/account/tokens)
-#   VERCEL_ORG_ID      — team_BNoxNPXfIWFiwVokwLKP0ixI
-#   VERCEL_PROJECT_ID  — prj_sjLRsqizDxUZPjc8HOv9hi2WgvyC
-# Also disable "Vercel → Project → Git → Production Deploy Hooks" auto-deploy
-# so the failing Vercel-side build doesn't clobber this deploy.
+# Fonts: next/font/google fetches ~50 font families at build time. Each fetch
+# is retried up to 8× with backoff (scripts/font-fetch-retry.cjs preloaded via
+# NODE_OPTIONS), and successful downloads are cached in .next/cache so a retry
+# converges. We persist that cache across runs.
+#
+# Repo secrets required: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# Prevent racing Vercel-triggered and Actions deploys.
 concurrency:
   group: deploy-production
   cancel-in-progress: false
@@ -28,6 +25,9 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Preload the font-fetch retry shim so transient Google Fonts network
+      # errors are retried with exponential backoff before failing the build.
+      NODE_OPTIONS: "--require ./scripts/font-fetch-retry.cjs"
     steps:
       - uses: actions/checkout@v4
 
@@ -49,17 +49,29 @@ jobs:
       - name: Validate
         run: pnpm validate
 
-      - name: Build site (GitHub runners can reach Google Fonts)
-        # Retry converges: next/font caches each successful font download.
+      # Persist next/font's build-time font cache so a retried run does not
+      # re-download fonts that already succeeded.
+      - name: Restore font cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: next-fonts-${{ runner.os }}-${{ hashFiles('registry/designs/*/fonts.ts') }}
+          restore-keys: |
+            next-fonts-${{ runner.os }}-
+
+      - name: Build site
+        # Triple-retry: each attempt caches whatever fonts it fetched, so the
+        # next attempt only needs the ones that failed.
         run: pnpm build || pnpm build || pnpm build
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
 
+      - name: Pull Vercel project settings
+        run: vercel pull --yes --environment=production --token ${{ secrets.VERCEL_TOKEN }}
+
       - name: Build Vercel output
-        # Produce .vercel/output from the already-built .next, so we upload
-        # artifacts (not source) and skip Vercel's broken-font build entirely.
-        run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }} || vercel build --prod
+        run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel (prebuilt, production)
         run: vercel deploy --prebuilt --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
