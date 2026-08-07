@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import "./styles.css";
-import { baloo2, notoSansKR } from "./fonts";
+import { baloo2, gowunDodum } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 
@@ -57,7 +57,7 @@ export default function ClayPage() {
   }, [reduced]);
 
   return (
-    <div ref={rootRef} className={`${baloo2.variable} ${notoSansKR.variable} clay-root`}>
+    <div ref={rootRef} className={`${baloo2.variable} ${gowunDodum.variable} clay-root`}>
       <div className="clay-bg" aria-hidden="true" />
       <div ref={revealRef} className="clay-doc">
         <header ref={stageRef} className="clay-hero">
@@ -77,7 +77,7 @@ export default function ClayPage() {
           <p className="clay-sub">
             <span lang="ko">빚는 형태.</span> Shapes you sculpt.
           </p>
-          <p className="clay-hint" lang="ko">눌러 보세요 — 찌릿하게 눌립니다.</p>
+          <p className="clay-hint" lang="ko">눌러 보세요 — 쫀득하게 눌립니다.</p>
         </header>
 
         <main>
@@ -113,7 +113,7 @@ export default function ClayPage() {
             <p className="clay-lead__p">
               <span lang="ko">
                 우리는 형태를 만들지 않는다. 빚는다. 손끝의 힘으로 —
-                누르면 찌릿하고, 놓으면 도로 부풀어 오르는 부드러운 물질.
+                누르면 쫀득하고, 놓으면 도로 부풀어 오르는 부드러운 물질.
               </span>{" "}
               We don't make forms. We sculpt them. By the hand — a soft matter
               that squishes when pressed and puffs back when let go.

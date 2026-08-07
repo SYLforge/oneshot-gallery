@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import "./styles.css";
-import { inter, notoSansKR } from "./fonts";
+import { inter, notoSerifKR } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 import { useScrollProgress } from "./hooks/useScrollProgress";
@@ -33,7 +33,7 @@ export default function ChapterPage() {
   }, []);
 
   return (
-    <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} chapter-root`}>
+    <div ref={rootRef} className={`${inter.variable} ${notoSerifKR.variable} chapter-root`}>
       <div ref={revealRef} className="chapter-doc">
         {/* scroll-scrub-pinned: the title page */}
         <section ref={titleRef} className="chapter-titlepage">

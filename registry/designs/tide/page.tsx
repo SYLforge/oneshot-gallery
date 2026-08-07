@@ -9,7 +9,7 @@ import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 const TITLE = "TIDE";
 
 /**
- * TIDE 조류 — a liquid-motion studio. The signature is a metaball field drawn
+ * TIDE 물결 — a liquid-motion studio. The signature is a metaball field drawn
  * on canvas 2D: a handful of liquid blobs that orbit, merge, and pull toward
  * the pointer. The blobs are drawn as soft radial gradients over an additive
  * threshold, so overlaps bloom into one body of water. Under reduced motion
@@ -158,7 +158,7 @@ export default function TidePage() {
               </span>
             ))}
           </h1>
-          <p className="tide-title__ko" lang="ko">조류</p>
+          <p className="tide-title__ko" lang="ko">물결</p>
           <p className="tide-sub">
             <span lang="ko">흐르는 것을 위한 스튜디오.</span> A studio for things that flow.
           </p>
@@ -169,7 +169,7 @@ export default function TidePage() {
           <section className="tide-lead" data-reveal>
             <p className="tide-lead__p">
               <span lang="ko">
-                조류는 밀고 당기는 힘이다. 우리는 인터페이스를 액체로 생각한다 —
+                밀물과 썰물은 밀고 당기는 힘이다. 우리는 인터페이스를 액체로 생각한다 —
                 합쳤다가 갈라지고, 손가락을 따라 모이고, 멈추면 잔잔한 호수가 된다.
               </span>{" "}
               A tide is a push and pull. We think of interface as liquid — merging
@@ -195,7 +195,7 @@ export default function TidePage() {
 
         <footer className="tide-foot">
           <span>TIDE · 2026</span>
-          <span lang="ko">조류 — 부산 해운대</span>
+          <span lang="ko">물결 — 부산 해운대</span>
         </footer>
       </div>
     </div>

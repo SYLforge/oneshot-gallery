@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import "./styles.css";
-import { inter, notoSansKR } from "./fonts";
+import { inter, blackHanSans } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 
@@ -38,7 +38,7 @@ export default function BlockPage() {
   return (
     <div
       ref={rootRef}
-      className={`${inter.variable} ${notoSansKR.variable} block-root`}
+      className={`${inter.variable} ${blackHanSans.variable} block-root`}
       data-mode={mode}
     >
       <div ref={revealRef} className="block-doc">
@@ -51,7 +51,7 @@ export default function BlockPage() {
             <span lang="ko" className="block-title__ko">블록</span>
           </h1>
           <p className="block-sub">
-            <span lang="ko">단단한 그리드. 무거운 활자. 사과 없음.</span>
+            <span lang="ko">단단한 그리드. 무거운 활자. 타협 없음.</span>
           </p>
         </header>
 

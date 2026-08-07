@@ -41,7 +41,7 @@ export default function CrtDreamPage() {
         <header className="crt-dream-hero" data-reveal="">
           <p className="cd-readout cd-readout--top">
             <span lang="ko">주파수</span> CH 03 · 60Hz ·{" "}
-            <span lang="ko">호박색 인화관</span> AMBER PHOSPHOR
+            <span lang="ko">호박색 형광체</span> AMBER PHOSPHOR
           </p>
           <h1 className="cd-title" aria-label={TITLE}>
             <span aria-hidden="true" className="cd-title__row">

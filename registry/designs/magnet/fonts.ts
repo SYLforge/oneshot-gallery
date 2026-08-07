@@ -1,4 +1,4 @@
-import { Archivo_Black, Noto_Sans_KR } from "next/font/google";
+import { Archivo_Black, Do_Hyeon } from "next/font/google";
 
 /**
  * The two voices of MAGNET 마그넷 — things that pull.
@@ -7,11 +7,12 @@ import { Archivo_Black, Noto_Sans_KR } from "next/font/google";
  *   wordmark and the magnetic pill buttons sit at full saturation so each
  *   glyph reads as a solid block the pointer can pull on. Latin-only.
  *
- * Noto Sans KR — every Hangul glyph. A clean modern grotesque so the Korean
- *   sub-line reads clearly on the bright pink ground.
+ * Do Hyeon — every Hangul glyph. A heavy, wide Korean display so the Korean
+ *   sub-line matches Archivo Black's solid-block weight on the bright pink
+ *   ground.
  *
  * styles.css consumes these as var(--font-archivo-black) /
- * var(--font-noto-sans-kr); page.tsx applies the .variable classes on the
+ * var(--font-do-hyeon); page.tsx applies the .variable classes on the
  * entry root.
  */
 export const archivoBlack = Archivo_Black({
@@ -21,9 +22,9 @@ export const archivoBlack = Archivo_Black({
   display: "swap",
 });
 
-export const notoSansKR = Noto_Sans_KR({
-  weight: ["400", "500", "700"],
+export const doHyeon = Do_Hyeon({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-noto-sans-kr",
+  variable: "--font-do-hyeon",
   display: "swap",
 });

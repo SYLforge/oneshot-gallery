@@ -7,7 +7,7 @@
   --mh-pink-deep: #e85a8a;
   --mh-pink-soft: #ffc6dc;
   --mh-font-display: var(--font-fredoka), "Fredoka", system-ui, sans-serif;
-  --mh-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --mh-font-kr: var(--font-gaegu), "Gaegu", sans-serif;
   --mh-ease: cubic-bezier(0.34, 1.8, 0.5, 1);
 
   position: relative;

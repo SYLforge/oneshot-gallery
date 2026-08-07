@@ -4,7 +4,7 @@
   "no": 44,
   "title": {
     "en": "WAVE — Podcast Network Listening Deck",
-    "ko": "파동 — 팟캐스트 네트워크 청취 데크"
+    "ko": "파동 — 팟캐스트 네트워크 리스닝 데크"
   },
   "description": {
     "en": "A music and podcast network's analytics terminal whose signature is a live audio-spectrum analyzer rendered in box-character bars — a real equalizer drawn in text. Where PALE.SIGNAL keeps a log and GLITCH corrupts one, WAVE measures sound: calm, technical, beautiful data in a green-on-black dashboard.",

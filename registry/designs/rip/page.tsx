@@ -11,7 +11,7 @@ import { usePointerParallax } from "./hooks/usePointerParallax";
 const TITLE = "RIP";
 
 /**
- * RIP — 물방울, 잉크 물방울 연못. Ink-bloom entry where ink ripples expand
+ * RIP — 파문, 잉크 파문 연못. Ink-bloom entry where ink ripples expand
  * from pointer touches on a still pond surface. canvas-particles (the
  * ripple ring system), pointer-parallax (depth layers shift), scroll-scrub-
  * pinned (a verse section where ripples intensify with scroll).
@@ -100,13 +100,13 @@ export default function RipPage() {
     <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} rip-root`}>
       <div ref={revealRef} className="rip-doc">
         <header className="rip-hero">
-          <p className="rip-kicker"><span lang="ko">잉크 물방울 연못</span> · INK RIPPLE POND</p>
-          <h1 className="rip-title" aria-label="RIP 물방울">
+          <p className="rip-kicker"><span lang="ko">잉크 파문 연못</span> · INK RIPPLE POND</p>
+          <h1 className="rip-title" aria-label="RIP 파문">
             {TITLE.split("").map((ch, i) => (
               <span key={i} aria-hidden="true" className="rip-glyph" style={{ "--rip-i": i } as CSSProperties}>{ch}</span>
             ))}
           </h1>
-          <p className="rip-title__ko" lang="ko">물방울</p>
+          <p className="rip-title__ko" lang="ko">파문</p>
           <p className="rip-sub"><span lang="ko">손길에 잉크가 퍼진다. 연못을 건드려 보라.</span> Ink ripples from touch. Touch the pond.</p>
         </header>
 
@@ -124,7 +124,7 @@ export default function RipPage() {
         </section>
 
         <footer className="rip-foot" data-reveal="">
-          <p>© 2026 RIP · <span lang="ko">물방울</span> · MIT</p>
+          <p>© 2026 RIP · <span lang="ko">파문</span> · MIT</p>
           <p><span lang="ko">잔잔 — 코드로 그렸다.</span> still water — drawn in code.</p>
         </footer>
       </div>

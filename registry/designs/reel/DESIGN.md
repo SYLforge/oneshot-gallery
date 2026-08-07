@@ -1,7 +1,7 @@
 # REEL — design spec
 
 ## Identity
-아날로그 필름 릭 사진 — a wedding/film photographer's portfolio as a contact
+아날로그 빛샘 사진 — a wedding/film photographer's portfolio as a contact
 sheet come to life. Warm Kodak-toned CSS-gradient stills develop under scroll,
 light leaks sweep, grain overlays. Distinct from HALFLIGHT (cold procedural
 scrubbed reels): REEL is warm analog film — the editorial-photography look.

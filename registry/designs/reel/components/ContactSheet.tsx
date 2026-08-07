@@ -38,14 +38,14 @@ const STILLS: Still[] = [
     frame: "18",
     stock: "C",
     caption: "Vows. The minister's hand is blurred.",
-    ko: "서약. 주례의 손이 흐물어진다.",
+    ko: "서약. 주례의 손이 흔들려 번졌다.",
   },
   {
     roll: "031",
     frame: "23",
     stock: "D",
     caption: "Confetti against a low sun — the leak won.",
-    ko: "석양 속 쌀 — 라이트 릭이 이겼다.",
+    ko: "낮은 해를 향한 색종이 조각 — 빛샘이 이겼다.",
   },
   {
     roll: "031",
@@ -126,7 +126,7 @@ export default function ContactSheet() {
         <div
           className="reel-sheet__grid"
           role="img"
-          aria-label="A contact sheet of six warm-toned film stills — a backlit doorway, a dress on a latch, blurred vows, confetti in low sun, a first dance under sodium light, and a bride running out — developing under scroll one column at a time. 스크롤에 따라 한 단씩 현상되는, 따뜻한 톤의 필름 스틸 여섯 장이 깔린 밀착 인화지 — 역광 현관, 걸쇠에 걸린 드레스, 흐려진 서약, 석양 속 쌀, 나트륨등 아래 첫 춤, 뛰쳐나가는 신부."
+          aria-label="A contact sheet of six warm-toned film stills — a backlit doorway, a dress on a latch, blurred vows, confetti in low sun, a first dance under sodium light, and a bride running out — developing under scroll one column at a time. 스크롤에 따라 한 단씩 현상되는, 따뜻한 톤의 필름 스틸 여섯 장이 깔린 밀착 인화지 — 역광 현관, 걸쇠에 걸린 드레스, 흐려진 서약, 낮은 해를 향한 색종이 조각, 나트륨등 아래 첫 춤, 뛰쳐나가는 신부."
         >
           {STILLS.map((still, i) => (
             <figure

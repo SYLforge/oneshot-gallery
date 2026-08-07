@@ -42,3 +42,8 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# local session/audit scratch
+.zcode/
+_audit_*
+scripts/tmp-shot*.mjs

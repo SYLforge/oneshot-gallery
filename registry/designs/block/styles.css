@@ -14,7 +14,7 @@
   min-height: 100vh;
   background: var(--block-bg);
   color: var(--block-ink);
-  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  font-family: var(--font-inter), var(--font-black-han-sans), "Black Han Sans", sans-serif;
   font-weight: 500;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
   line-height: 1.6;
@@ -36,7 +36,7 @@
 }
 .block-doc { position: relative; z-index: 1; }
 
-.block-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
+.block-root :lang(ko) { font-family: var(--font-black-han-sans), "Black Han Sans", sans-serif; }
 .block-root ::selection { background: var(--block-green); color: #fff; }
 .block-root :focus-visible { outline: 3px solid var(--block-ink); outline-offset: 4px; }
 

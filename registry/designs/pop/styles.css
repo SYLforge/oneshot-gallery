@@ -14,7 +14,7 @@
   min-height: 100vh;
   background: var(--pop-bg);
   color: var(--pop-ink);
-  font-family: var(--font-fredoka), var(--font-noto-sans-kr), sans-serif;
+  font-family: var(--font-fredoka), var(--font-gaegu), sans-serif;
   font-weight: 500;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
   line-height: 1.6;
@@ -40,7 +40,7 @@
   background-size: 420px 420px;
 }
 
-.pop-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
+.pop-root :lang(ko) { font-family: var(--font-gaegu), sans-serif; }
 .pop-root ::selection { background: var(--pop-accent); color: #fff; }
 .pop-root :focus-visible { outline: 3px solid var(--pop-ink); outline-offset: 4px; }
 

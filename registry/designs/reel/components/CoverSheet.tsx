@@ -44,7 +44,7 @@ export default function CoverSheet() {
 
         <p className="reel-cover__sub">
           Wedding &amp; film photography, the long way round.{" "}
-          <span lang="ko">결혼과 필름 사진, 돌아가는 길로.</span>
+          <span lang="ko">웨딩과 필름 사진, 돌아가는 길로.</span>
         </p>
 
         <p className="reel-cover__lede">

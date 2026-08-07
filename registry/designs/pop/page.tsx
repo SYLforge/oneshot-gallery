@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import "./styles.css";
-import { fredoka, notoSansKR } from "./fonts";
+import { fredoka, gaegu } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 import { usePointerParallax } from "./hooks/usePointerParallax";
@@ -15,7 +15,7 @@ const COMICS = [
 ];
 
 /**
- * POP — 팝, 풍선 만화 가게. Playful-pop entry where bubbles pop on click
+ * POP — 팝, 버블 코믹스 가게. Playful-pop entry where bubbles pop on click
  * (spring-press), headlines bounce in (char-split-reveal), and floating
  * shapes drift toward the pointer (pointer-parallax).
  */
@@ -36,7 +36,7 @@ export default function PopPage() {
   };
 
   return (
-    <div ref={rootRef} className={`${fredoka.variable} ${notoSansKR.variable} pop-root`}>
+    <div ref={rootRef} className={`${fredoka.variable} ${gaegu.variable} pop-root`}>
       <div ref={revealRef} className="pop-doc">
         <header className="pop-hero">
           {/* A generated pop-art burst behind the title — the candy explosion
@@ -49,7 +49,7 @@ export default function PopPage() {
             aria-hidden="true"
             draggable="false"
           />
-          <p className="pop-kicker"><span lang="ko">풍선 만화 가게</span> · BUBBLE COMIC STORE</p>
+          <p className="pop-kicker"><span lang="ko">버블 코믹스 가게</span> · BUBBLE COMIC STORE</p>
           <h1 className="pop-title" aria-label="POP 팝">
             {TITLE.split("").map((ch, i) => (
               <span key={i} aria-hidden="true" className="pop-glyph" style={{ "--pop-i": i } as CSSProperties}>{ch}</span>

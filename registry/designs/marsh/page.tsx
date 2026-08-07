@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import "./styles.css";
-import { fredoka, notoSansKR } from "./fonts";
+import { fredoka, gaegu } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 
@@ -153,7 +153,7 @@ export default function MarshPage() {
   }, [reduced]);
 
   return (
-    <div ref={rootRef} className={`${fredoka.variable} ${notoSansKR.variable} marsh-root`}>
+    <div ref={rootRef} className={`${fredoka.variable} ${gaegu.variable} marsh-root`}>
       <div className="marsh-bg" aria-hidden="true" />
       <div ref={revealRef} className="marsh-doc">
         <header className="marsh-hero">

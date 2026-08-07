@@ -85,9 +85,6 @@ export default function OrbitFooter() {
 
       <p className="orbit-footer__copy" data-reveal>
         © 2026 ORBIT STUDIO — 한 번에 하나의 실루엣.
-        <span lang="ko" className="orbit-footer__ko">
-          one silhouette at a time.
-        </span>
       </p>
     </footer>
   );

@@ -1,4 +1,4 @@
-import { Inter, Noto_Sans_KR } from "next/font/google";
+import { Inter, Black_Han_Sans } from "next/font/google";
 
 export const inter = Inter({
   weight: ["400", "500", "600", "700"],
@@ -7,9 +7,9 @@ export const inter = Inter({
   display: "swap",
 });
 
-export const notoSansKR = Noto_Sans_KR({
-  weight: ["400", "500", "700"],
+export const blackHanSans = Black_Han_Sans({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-noto-sans-kr",
+  variable: "--font-black-han-sans",
   display: "swap",
 });

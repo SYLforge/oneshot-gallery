@@ -257,7 +257,7 @@ export default function AuroraPaintPage() {
           <section className="aurora-paint-lead" data-reveal>
             <p className="aurora-paint-lead__p">
               <span lang="ko">
-                우리는 페인트를 팔지 않는다. 빛을 칠한다. 첨가의 법칙으로 —
+                우리는 페인트를 팔지 않는다. 빛을 칠한다. 가산 혼합으로 —
                 겹치는 곳마다 밝아지고, 흐르는 곳마다 색이 된다.
               </span>{" "}
               We don't sell paint. We paint light. By the law of addition —

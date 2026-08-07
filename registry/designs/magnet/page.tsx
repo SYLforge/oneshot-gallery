@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import "./styles.css";
-import { archivoBlack, notoSansKR } from "./fonts";
+import { archivoBlack, doHyeon } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 
@@ -120,7 +120,7 @@ export default function MagnetPage() {
   return (
     <div
       ref={rootRef}
-      className={`${archivoBlack.variable} ${notoSansKR.variable} magnet-root`}
+      className={`${archivoBlack.variable} ${doHyeon.variable} magnet-root`}
     >
       <div className="mg-blobs" aria-hidden="true" />
       <div ref={revealRef} className="mg-doc">

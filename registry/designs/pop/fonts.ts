@@ -1,12 +1,12 @@
-import { Fredoka, Noto_Sans_KR } from "next/font/google";
+import { Fredoka, Gaegu } from "next/font/google";
 
 /**
  * POP 팝 — a bubble-comic store. The voice is round, chunky, friendly.
  * Fredoka — a soft geometric Latin display with rounded terminals; the
- * wordmark, kickers, and bubble labels. Noto Sans KR (700) — the chunkiest
- * Hangul in the stack so Korean keeps the same playful weight.
+ * wordmark, kickers, and bubble labels. Gaegu (400/700) — a round handwritten
+ * Hangul whose soft terminals match the bubble-comic voice.
  *
- * styles.css consumes these as var(--font-fredoka) / var(--font-noto-sans-kr);
+ * styles.css consumes these as var(--font-fredoka) / var(--font-gaegu);
  * page.tsx applies the .variable classes on the entry root.
  */
 export const fredoka = Fredoka({
@@ -16,9 +16,9 @@ export const fredoka = Fredoka({
   display: "swap",
 });
 
-export const notoSansKR = Noto_Sans_KR({
-  weight: ["400", "500", "700"],
+export const gaegu = Gaegu({
+  weight: ["400", "700"],
   subsets: ["latin"],
-  variable: "--font-noto-sans-kr",
+  variable: "--font-gaegu",
   display: "swap",
 });

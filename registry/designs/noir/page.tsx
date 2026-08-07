@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import "./styles.css";
-import { inter, notoSansKR } from "./fonts";
+import { inter, notoSerifKR } from "./fonts";
 import { useReveal } from "./hooks/useReveal";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 import { useScrollProgress } from "./hooks/useScrollProgress";
@@ -32,7 +32,7 @@ export default function NoirPage() {
   }, []);
 
   return (
-    <div ref={rootRef} className={`${inter.variable} ${notoSansKR.variable} noir-root`}>
+    <div ref={rootRef} className={`${inter.variable} ${notoSerifKR.variable} noir-root`}>
       {/* venetian-blind shadow overlay — clip-path-reveal signature */}
       <div className="noir-blinds" aria-hidden="true" />
 

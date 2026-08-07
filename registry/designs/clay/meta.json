@@ -8,7 +8,7 @@
   },
   "description": {
     "en": "A 3D-clay product studio on warm cream. Claymorphism surfaces with soft inset highlights and dark drops that squash to 0.96 with a spring on press. The wordmark is extruded clay — chunky offset shadows and an inset top highlight.",
-    "ko": "따뜻한 크림색 위의 3D 클레이 제품 스튜디오. 부드러운 인셋 하이라이트와 어두운 드롭 섀도우를 가진 클레이모피즘 표면이 누르면 스프링처럼 0.96으로 찌린다. 워드마크는 돌출된 클레이 — 덩치 큰 오프셋 섀도우와 인셋 상단 하이라이트."
+    "ko": "따뜻한 크림색 위의 3D 클레이 제품 스튜디오. 부드러운 인셋 하이라이트와 어두운 드롭 섀도우를 가진 클레이모피즘 표면이 누르면 스프링처럼 0.96으로 쫀득하게 눌린다. 워드마크는 돌출된 클레이 — 덩치 큰 오프셋 섀도우와 인셋 상단 하이라이트."
   },
   "aesthetic": "clay-squishy",
   "techniques": ["spring-press", "pointer-parallax", "char-split-reveal"],

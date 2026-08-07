@@ -73,9 +73,6 @@ export default function PulseFooter() {
 
       <p className="pulse-footer__copy" data-reveal>
         © 2026 PULSE RECORDS — 한 장의 앨범을 어둠 속에.
-        <span lang="ko" className="pulse-footer__ko">
-          one album dropped into the dark.
-        </span>
       </p>
     </footer>
   );

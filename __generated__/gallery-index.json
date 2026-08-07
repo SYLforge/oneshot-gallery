@@ -107,7 +107,7 @@
     },
     "description": {
       "en": "A paint studio whose medium is light. The signature is a canvas aurora — soft flowing mint, violet and cyan ribbons of additive light, drawn with sine-driven curves and a brush that follows your pointer.",
-      "ko": "빛을 재료로 삼은 페인트 스튜디오. 시그니처는 캔버스 위의 오로라 — 첨가 합성으로 그려지는 민트·바이올렛·시안의 부드러운 빛의 띠가 사인 곡선으로 흐르고, 포인터를 따라 빛이 칠해진다."
+      "ko": "빛을 재료로 삼은 페인트 스튜디오. 시그니처는 캔버스 위의 오로라 — 가산 혼합으로 그려지는 민트·바이올렛·시안의 부드러운 빛의 띠가 사인 곡선으로 흐르고, 포인터를 따라 빛이 칠해진다."
     },
     "aesthetic": "holographic-iridescent",
     "techniques": [
@@ -174,7 +174,7 @@
     },
     "description": {
       "en": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave.",
-      "ko": "An independent poetry press built from raw concrete blocks — stark grids, heavy type, zero apology. The third neo-brutalist, distinct from blunt and rave."
+      "ko": "가공하지 않은 콘크리트 블록으로 쌓은 독립 시 출판사 — 단단한 그리드, 무거운 활자, 타협 없음. blunt와 rave와 구분되는 세 번째 네오-브루탈리즘."
     },
     "aesthetic": "neo-brutalist",
     "techniques": [
@@ -414,7 +414,7 @@
     },
     "description": {
       "en": "A 3D-clay product studio on warm cream. Claymorphism surfaces with soft inset highlights and dark drops that squash to 0.96 with a spring on press. The wordmark is extruded clay — chunky offset shadows and an inset top highlight.",
-      "ko": "따뜻한 크림색 위의 3D 클레이 제품 스튜디오. 부드러운 인셋 하이라이트와 어두운 드롭 섀도우를 가진 클레이모피즘 표면이 누르면 스프링처럼 0.96으로 찌린다. 워드마크는 돌출된 클레이 — 덩치 큰 오프셋 섀도우와 인셋 상단 하이라이트."
+      "ko": "따뜻한 크림색 위의 3D 클레이 제품 스튜디오. 부드러운 인셋 하이라이트와 어두운 드롭 섀도우를 가진 클레이모피즘 표면이 누르면 스프링처럼 0.96으로 쫀득하게 눌린다. 워드마크는 돌출된 클레이 — 덩치 큰 오프셋 섀도우와 인셋 상단 하이라이트."
     },
     "aesthetic": "clay-squishy",
     "techniques": [
@@ -448,7 +448,7 @@
     },
     "description": {
       "en": "Retro CRT nostalgia — a warm amber phosphor tube. Scanlines drift down the glass, the corners darken with barrel vignette, and the wordmark glows fuzzy like a monitor left on at 3 AM. The soft, fuzzy warmth of a screen that never quite rendered a straight line.",
-      "ko": "레트로 CRT 향수 — 따뜻한 호박색 인화관. 주사선이 유리를 타고 내려오고, 모서리는 배럴 비네트로 어두워지며, 자형은 새벽 3시에 켜둔 모니터처럼 퍼지게 빛난다. 곧은 선을 결코 렌더링하지 못했던 화면의 부드럽고 퍼지는 따뜻함."
+      "ko": "레트로 CRT 향수 — 따뜻한 호박색 형광체. 주사선이 유리를 타고 내려오고, 모서리는 배럴 비네트로 어두워지며, 자형은 새벽 3시에 켜둔 모니터처럼 퍼지게 빛난다. 곧은 선을 결코 렌더링하지 못했던 화면의 부드럽고 퍼지는 따뜻함."
     },
     "aesthetic": "ascii-retrotech",
     "techniques": [
@@ -1563,7 +1563,7 @@
     "no": 51,
     "title": {
       "en": "POP — Bubble Comic Store",
-      "ko": "팝 — 풍선 만화 가게"
+      "ko": "팝 — 버블 코믹스 가게"
     },
     "description": {
       "en": "A comic-book store where every element is a bubble that pops on click — cheerful, saturated, cartoon outlines. The third playful-pop.",
@@ -1802,11 +1802,11 @@
     "no": 31,
     "title": {
       "en": "REEL — Analog Film-Leak Photography",
-      "ko": "릴 — 아날로그 필름 릭 사진"
+      "ko": "릴 — 아날로그 빛샘 사진"
     },
     "description": {
       "en": "A wedding and film photographer's portfolio as a contact sheet come to life: warm Kodak-toned stills that develop under scroll, light leaks that sweep the strip, sprocket-hole clip-path reveals, and grain laid down like Tri-X. Every still is a CSS gradient — no photograph is shipped.",
-      "ko": "결혼·필름 사진가의 포트폴리오가 살아 움직이는 밀착 인화지 — 스크롤 아래 현상되는 따뜻한 코닥 톤의 스틸, 스트립을 쓸고 지나가는 라이트 릭, 스프로켓 구멍 클립패스 리빌, Tri-X처럼 깔리는 그레인. 모든 스틸은 CSS 그라디언트다. 사진 파일은 한 장도 싣지 않는다."
+      "ko": "웨딩·필름 사진가의 포트폴리오가 살아 움직이는 밀착 인화지 — 스크롤 아래 현상되는 따뜻한 코닥 톤의 스틸, 스트립을 쓸고 지나가는 빛샘, 스프로켓 구멍 클립패스 리빌, Tri-X처럼 깔리는 그레인. 모든 스틸은 CSS 그라디언트다. 사진 파일은 한 장도 싣지 않는다."
     },
     "aesthetic": "cinematic-dark",
     "techniques": [
@@ -1836,7 +1836,7 @@
     "no": 52,
     "title": {
       "en": "RIP — Ink Ripple Pond",
-      "ko": "물방울 — 잉크 물방울 연못"
+      "ko": "파문 — 잉크 파문 연못"
     },
     "description": {
       "en": "An art-gallery site where ink ripples expand from pointer touches on a still pond surface — concentric generative rings. The third ink-bloom.",
@@ -2112,7 +2112,7 @@
     "no": 54,
     "title": {
       "en": "TIDE — Liquid Motion Studio",
-      "ko": "조류 — 액체 모션 스튜디오"
+      "ko": "물결 — 액체 모션 스튜디오"
     },
     "description": {
       "en": "A studio for things that flow. A canvas of metaballs merges and pulls apart to the pointer — liquid as a field you push through, not a surface you look at.",
@@ -2213,7 +2213,7 @@
     "no": 44,
     "title": {
       "en": "WAVE — Podcast Network Listening Deck",
-      "ko": "파동 — 팟캐스트 네트워크 청취 데크"
+      "ko": "파동 — 팟캐스트 네트워크 리스닝 데크"
     },
     "description": {
       "en": "A music and podcast network's analytics terminal whose signature is a live audio-spectrum analyzer rendered in box-character bars — a real equalizer drawn in text. Where PALE.SIGNAL keeps a log and GLITCH corrupts one, WAVE measures sound: calm, technical, beautiful data in a green-on-black dashboard.",
