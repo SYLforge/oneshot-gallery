@@ -4,11 +4,29 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Test Google Fonts IPv4 access
+      - name: Probe Google Fonts via node:https (next/font's actual method)
         run: |
-          echo "=== googleapis.com ==="
-          curl -s -o /dev/null -w "ipv4: %{http_code} time=%{time_total}s\n" --max-time 15 --ipv4 "https://fonts.googleapis.com/css2?family=Inter"
-          echo "=== gstatic.com (font file) ==="
-          curl -s -o /dev/null -w "ipv4: %{http_code} time=%{time_total}s\n" --max-time 15 --ipv4 "https://fonts.gstatic.com/"
-          echo "=== node fetch test ==="
-          node -e "fetch('https://fonts.googleapis.com/css2?family=Inter').then(r=>console.log('node fetch:',r.status)).catch(e=>console.log('node fetch ERR:',e.code))"
+          node -e '
+            const https = require("node:https");
+            const url = "https://fonts.googleapis.com/css2?family=Inter";
+            console.log("=== default (no NODE_OPTIONS) ===");
+            const req = https.request(url, {headers:{"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"}}, (res) => {
+              console.log("node:https status:", res.statusCode);
+              process.exit(0);
+            });
+            req.on("error", (e) => { console.log("node:https ERR:", e.code, e.address||""); process.exit(1); });
+            req.setTimeout(15000, () => { console.log("node:https TIMEOUT"); req.destroy(); process.exit(1); });
+            req.end();
+          '
+      - name: Probe with IPv4 disabled at OS level
+        run: |
+          echo "=== sysctl disable ipv6 ==="
+          sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1 || true
+          sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1 || true
+          node -e '
+            const https = require("node:https");
+            const req = https.request("https://fonts.googleapis.com/css2?family=Inter", {headers:{"User-Agent":"Mozilla/5.0"}}, (res) => { console.log("after ipv6 disable, status:", res.statusCode); process.exit(0); });
+            req.on("error", (e) => { console.log("ERR:", e.code); process.exit(1); });
+            req.setTimeout(15000, () => { req.destroy(); process.exit(1); });
+            req.end();
+          '
