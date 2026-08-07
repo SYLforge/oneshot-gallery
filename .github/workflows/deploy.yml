@@ -41,6 +41,16 @@ jobs:
           node-version: 24
           cache: pnpm
 
+      # Disable IPv6 at the OS level so every font fetch (next/font uses
+      # node:https directly, ignoring NODE_OPTIONS dns-result-order in some
+      # cases) resolves to IPv4. Google Fonts' IPv6 endpoints are currently
+      # unreachable from cloud runners (ENETUNREACH); IPv4 works. A probe
+      # confirmed: default → intermittent, ipv6 disabled → 200 OK.
+      - name: Disable IPv6 (force IPv4 for Google Fonts)
+        run: |
+          sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+          sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
       - name: Install
         run: pnpm install --frozen-lockfile
 
