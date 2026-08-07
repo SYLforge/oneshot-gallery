@@ -25,6 +25,10 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Force IPv4-first DNS resolution. GitHub/Vercel build runners default to
+      # trying IPv6 for fonts.gstatic.com, which times out (ENETUNREREACH);
+      # IPv4 succeeds. Applies to every Node step in the job.
+      NODE_OPTIONS: "--dns-result-order=ipv4first"
     steps:
       - uses: actions/checkout@v4
 
@@ -57,11 +61,11 @@ jobs:
             next-fonts-${{ runner.os }}-
 
       - name: Build site
-        # NODE_OPTIONS preloads the font-fetch retry shim (8× backoff).
-        # Triple-retry: each attempt caches whatever fonts it fetched, so the
-        # next attempt only needs the ones that failed.
+        # NODE_OPTIONS: ipv4first avoids IPv6 ENETUNREACH on fonts.gstatic.com;
+        # the retry shim adds 8× backoff for transient ETIMEDOUT.
+        # Triple-retry: each attempt caches whatever fonts it fetched.
         env:
-          NODE_OPTIONS: "--require ${{ github.workspace }}/scripts/font-fetch-retry.cjs"
+          NODE_OPTIONS: "--dns-result-order=ipv4first --require ${{ github.workspace }}/scripts/font-fetch-retry.cjs"
         run: pnpm build || pnpm build || pnpm build
 
       - name: Install Vercel CLI
@@ -72,7 +76,7 @@ jobs:
 
       - name: Build Vercel output
         env:
-          NODE_OPTIONS: "--require ${{ github.workspace }}/scripts/font-fetch-retry.cjs"
+          NODE_OPTIONS: "--dns-result-order=ipv4first --require ${{ github.workspace }}/scripts/font-fetch-retry.cjs"
         run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel (prebuilt, production)
