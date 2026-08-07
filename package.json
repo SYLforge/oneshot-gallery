@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --port 3939",
     "prebuild": "tsx scripts/build-registry.ts",
-    "build": "next build --webpack",
+    "build": "node --require ./scripts/font-fetch-retry.cjs node_modules/next/dist/bin/next build --webpack",
     "start": "next start --port 3939",
     "lint": "eslint",
     "registry:build": "tsx scripts/build-registry.ts",
