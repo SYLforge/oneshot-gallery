@@ -1,0 +1,65 @@
+name: Deploy
+
+# Build on GitHub Actions (whose runners can reach Google Fonts) and deploy
+# the result to Vercel. This bypasses Vercel's own build environment, which
+# is currently unable to reach fonts.gstatic.com (ETIMEDOUT/ENETUNREACH) and
+# fails every `next/font/google` build.
+#
+# Prerequisite (one-time, repo owner): add these repository secrets —
+#   VERCEL_TOKEN       — a Vercel access token (vercel.com/account/tokens)
+#   VERCEL_ORG_ID      — team_BNoxNPXfIWFiwVokwLKP0ixI
+#   VERCEL_PROJECT_ID  — prj_sjLRsqizDxUZPjc8HOv9hi2WgvyC
+# Also disable "Vercel → Project → Git → Production Deploy Hooks" auto-deploy
+# so the failing Vercel-side build doesn't clobber this deploy.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Prevent racing Vercel-triggered and Actions deploys.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build registry
+        run: pnpm registry:build
+
+      - name: Validate
+        run: pnpm validate
+
+      - name: Build site (GitHub runners can reach Google Fonts)
+        # Retry converges: next/font caches each successful font download.
+        run: pnpm build || pnpm build || pnpm build
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      - name: Build Vercel output
+        # Produce .vercel/output from the already-built .next, so we upload
+        # artifacts (not source) and skip Vercel's broken-font build entirely.
+        run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }} || vercel build --prod
+
+      - name: Deploy to Vercel (prebuilt, production)
+        run: vercel deploy --prebuilt --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
