@@ -21,13 +21,13 @@
 
   /* -- type -------------------------------------------------------------- */
   /* Hangul falls through the Latin faces into Noto Serif KR without markup */
-  --reel-font-display: var(--font-playfair), var(--font-noto-serif-kr),
+  --reel-font-display: var(--font-playfair), "Noto Serif KR",
     Georgia, serif;
-  --reel-font-body: var(--font-noto-serif-kr), var(--font-playfair), Georgia,
+  --reel-font-body: "Noto Serif KR", var(--font-playfair), Georgia,
     serif;
-  --reel-font-mono: var(--font-space-mono), var(--font-noto-serif-kr),
+  --reel-font-mono: "Space Mono", "Noto Serif KR",
     "Courier New", monospace;
-  --reel-font-ko: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --reel-font-ko: "Noto Serif KR", serif;
 
   /* -- motion ------------------------------------------------------------ */
   --reel-ease: cubic-bezier(0.22, 0.61, 0.36, 1); /* develop: fast then settle */

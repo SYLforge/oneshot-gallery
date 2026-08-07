@@ -16,7 +16,7 @@
   --mp-cyan: #5ee0ff;
   --mp-mag: #ff5ed0;
   --mp-font-display: var(--font-bricolage), "Bricolage Grotesque", system-ui, sans-serif;
-  --mp-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --mp-font-kr: "Noto Sans KR", sans-serif;
   --mp-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

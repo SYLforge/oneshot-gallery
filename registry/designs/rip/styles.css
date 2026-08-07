@@ -13,7 +13,7 @@
   min-height: 100vh;
   background: linear-gradient(180deg, var(--rip-bg) 0%, var(--rip-bg-deep) 100%);
   color: var(--rip-ink);
-  font-family: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  font-family: "Inter", "Noto Sans KR", sans-serif;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
   line-height: 1.75;
   overflow-x: hidden;
@@ -41,7 +41,7 @@
   .rip-root::before { animation: none; }
 }
 
-.rip-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
+.rip-root :lang(ko) { font-family: "Noto Sans KR", sans-serif; }
 .rip-root ::selection { background: var(--rip-violet); color: #fff; }
 .rip-root :focus-visible { outline: 2px solid var(--rip-violet); outline-offset: 4px; }
 

@@ -1,0 +1,824 @@
+{
+  "ascii": [
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "atelier": [
+    {
+      "cssVar": "--font-bodoni-moda",
+      "family": "Bodoni Moda"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "aurora": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-grotesk",
+      "family": "Space Grotesk"
+    }
+  ],
+  "aurora-paint": [
+    {
+      "cssVar": "--font-outfit",
+      "family": "Outfit"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "bento": [
+    {
+      "cssVar": "--font-plus-jakarta-sans",
+      "family": "Plus Jakarta Sans"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "block": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    }
+  ],
+  "bloom": [
+    {
+      "cssVar": "--font-cormorant-garamond",
+      "family": "Cormorant Garamond"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "blunt": [
+    {
+      "cssVar": "--font-archivo-black",
+      "family": "Archivo Black"
+    },
+    {
+      "cssVar": "--font-do-hyeon",
+      "family": "Do Hyeon"
+    },
+    {
+      "cssVar": "--font-ibm-plex-mono",
+      "family": "IBM Plex Mono"
+    }
+  ],
+  "bounce": [
+    {
+      "cssVar": "--font-fredoka",
+      "family": "Fredoka"
+    },
+    {
+      "cssVar": "--font-gaegu",
+      "family": "Gaegu"
+    }
+  ],
+  "chado": [
+    {
+      "cssVar": "--font-cormorant-garamond",
+      "family": "Cormorant Garamond"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-shippori-mincho",
+      "family": "Shippori Mincho"
+    }
+  ],
+  "chapter": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "chrome": [
+    {
+      "cssVar": "--font-syne",
+      "family": "Syne"
+    },
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-major-mono-display",
+      "family": "Major Mono Display"
+    }
+  ],
+  "crt-dream": [
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-vt323",
+      "family": "VT323"
+    }
+  ],
+  "cyber-grid": [
+    {
+      "cssVar": "--font-orbitron",
+      "family": "Orbitron"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "dream": [
+    {
+      "cssVar": "--font-gowun-dodum",
+      "family": "Gowun Dodum"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-quicksand",
+      "family": "Quicksand"
+    }
+  ],
+  "dusk": [
+    {
+      "cssVar": "--font-playfair-display",
+      "family": "Playfair Display"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "flow": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "forest": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "giwa": [
+    {
+      "cssVar": "--font-fraunces",
+      "family": "Fraunces"
+    },
+    {
+      "cssVar": "--font-gowun-batang",
+      "family": "Gowun Batang"
+    },
+    {
+      "cssVar": "--font-song-myung",
+      "family": "Song Myung"
+    }
+  ],
+  "glitch": [
+    {
+      "cssVar": "--font-major-mono-display",
+      "family": "Major Mono Display"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "gradient-plaza": [
+    {
+      "cssVar": "--font-azeret-mono",
+      "family": "Azeret Mono"
+    },
+    {
+      "cssVar": "--font-gugi",
+      "family": "Gugi"
+    },
+    {
+      "cssVar": "--font-monoton",
+      "family": "Monoton"
+    }
+  ],
+  "grid": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    }
+  ],
+  "halflight": [
+    {
+      "cssVar": "--font-anton",
+      "family": "Anton"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    },
+    {
+      "cssVar": "--font-spectral",
+      "family": "Spectral"
+    }
+  ],
+  "hanji-slate": [
+    {
+      "cssVar": "--font-hanken-grotesk",
+      "family": "Hanken Grotesk"
+    },
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "hanok": [
+    {
+      "cssVar": "--font-nanum-myeongjo",
+      "family": "Nanum Myeongjo"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    }
+  ],
+  "holograph": [
+    {
+      "cssVar": "--font-space-grotesk",
+      "family": "Space Grotesk"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "kemuri": [
+    {
+      "cssVar": "--font-eb-garamond",
+      "family": "EB Garamond"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-zen-old-mincho",
+      "family": "Zen Old Mincho"
+    }
+  ],
+  "lumen-nord": [
+    {
+      "cssVar": "--font-hahmlet",
+      "family": "Hahmlet"
+    },
+    {
+      "cssVar": "--font-sora",
+      "family": "Sora"
+    }
+  ],
+  "magnet": [
+    {
+      "cssVar": "--font-archivo-black",
+      "family": "Archivo Black"
+    },
+    {
+      "cssVar": "--font-do-hyeon",
+      "family": "Do Hyeon"
+    }
+  ],
+  "marsh": [
+    {
+      "cssVar": "--font-fredoka",
+      "family": "Fredoka"
+    },
+    {
+      "cssVar": "--font-gaegu",
+      "family": "Gaegu"
+    }
+  ],
+  "memphis": [
+    {
+      "cssVar": "--font-space-grotesk",
+      "family": "Space Grotesk"
+    },
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    }
+  ],
+  "mesh": [
+    {
+      "cssVar": "--font-sora",
+      "family": "Sora"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "minhwa": [
+    {
+      "cssVar": "--font-gaegu",
+      "family": "Gaegu"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-fraunces",
+      "family": "Fraunces"
+    }
+  ],
+  "moonlit": [
+    {
+      "cssVar": "--font-gugi",
+      "family": "Gugi"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-grotesk",
+      "family": "Space Grotesk"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "morph": [
+    {
+      "cssVar": "--font-bricolage-grotesque",
+      "family": "Bricolage Grotesque"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "nebula-warm": [
+    {
+      "cssVar": "--font-outfit",
+      "family": "Outfit"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "neon": [
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-orbitron",
+      "family": "Orbitron"
+    }
+  ],
+  "night-snack": [
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-gaegu",
+      "family": "Gaegu"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "noir": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "ondo": [
+    {
+      "cssVar": "--font-italiana",
+      "family": "Italiana"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "orbit": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-grotesk",
+      "family": "Space Grotesk"
+    }
+  ],
+  "pale-signal": [
+    {
+      "cssVar": "--font-nanum-gothic-coding",
+      "family": "Nanum Gothic Coding"
+    },
+    {
+      "cssVar": "--font-vt323",
+      "family": "VT323"
+    }
+  ],
+  "paper-fold": [
+    {
+      "cssVar": "--font-fraunces",
+      "family": "Fraunces"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "perfume-deep": [
+    {
+      "cssVar": "--font-cormorant-garamond",
+      "family": "Cormorant Garamond"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "pixel": [
+    {
+      "cssVar": "--font-gugi",
+      "family": "Gugi"
+    },
+    {
+      "cssVar": "--font-press-start-2p",
+      "family": "Press Start 2P"
+    },
+    {
+      "cssVar": "--font-vt323",
+      "family": "VT323"
+    }
+  ],
+  "pop": [
+    {
+      "cssVar": "--font-fredoka",
+      "family": "Fredoka"
+    },
+    {
+      "cssVar": "--font-gaegu",
+      "family": "Gaegu"
+    }
+  ],
+  "ppang": [
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-fraunces",
+      "family": "Fraunces"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "prism": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "prism-glaze": [
+    {
+      "cssVar": "--font-syne",
+      "family": "Syne"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "pulse": [
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-grotesk",
+      "family": "Space Grotesk"
+    }
+  ],
+  "raster": [
+    {
+      "cssVar": "--font-archivo",
+      "family": "Archivo"
+    },
+    {
+      "cssVar": "--font-ibm-plex-sans-kr",
+      "family": "IBM Plex Sans KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "rave": [
+    {
+      "cssVar": "--font-archivo-black",
+      "family": "Archivo Black"
+    },
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "reel": [
+    {
+      "cssVar": "--font-playfair-display",
+      "family": "Playfair Display"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "rip": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "riso": [
+    {
+      "cssVar": "--font-lora",
+      "family": "Lora"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "sakura": [
+    {
+      "cssVar": "--font-cormorant-garamond",
+      "family": "Cormorant Garamond"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-shippori-mincho",
+      "family": "Shippori Mincho"
+    }
+  ],
+  "shan-shui": [
+    {
+      "cssVar": "--font-cormorant-garamond",
+      "family": "Cormorant Garamond"
+    },
+    {
+      "cssVar": "--font-ma-shan-zheng",
+      "family": "Ma Shan Zheng"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-noto-serif-sc",
+      "family": "Noto Serif SC"
+    }
+  ],
+  "signal-noise": [
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "sticker": [
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-gaegu",
+      "family": "Gaegu"
+    },
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    }
+  ],
+  "stretch": [
+    {
+      "cssVar": "--font-cormorant-garamond",
+      "family": "Cormorant Garamond"
+    },
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    }
+  ],
+  "sup": [
+    {
+      "cssVar": "--font-gowun-dodum",
+      "family": "Gowun Dodum"
+    },
+    {
+      "cssVar": "--font-instrument-serif",
+      "family": "Instrument Serif"
+    }
+  ],
+  "tide": [
+    {
+      "cssVar": "--font-unbounded",
+      "family": "Unbounded"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "typewave": [
+    {
+      "cssVar": "--font-archivo",
+      "family": "Archivo"
+    },
+    {
+      "cssVar": "--font-black-han-sans",
+      "family": "Black Han Sans"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-space-mono",
+      "family": "Space Mono"
+    }
+  ],
+  "variflex": [
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    },
+    {
+      "cssVar": "--font-recursive",
+      "family": "Recursive"
+    }
+  ],
+  "wave": [
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "widget": [
+    {
+      "cssVar": "--font-inter",
+      "family": "Inter"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "wireframe": [
+    {
+      "cssVar": "--font-jetbrains-mono",
+      "family": "JetBrains Mono"
+    },
+    {
+      "cssVar": "--font-noto-sans-kr",
+      "family": "Noto Sans KR"
+    }
+  ],
+  "yeobaek": [
+    {
+      "cssVar": "--font-libre-caslon-text",
+      "family": "Libre Caslon Text"
+    },
+    {
+      "cssVar": "--font-nanum-myeongjo",
+      "family": "Nanum Myeongjo"
+    }
+  ],
+  "zine": [
+    {
+      "cssVar": "--font-noto-serif-kr",
+      "family": "Noto Serif KR"
+    },
+    {
+      "cssVar": "--font-oswald",
+      "family": "Oswald"
+    }
+  ]
+}

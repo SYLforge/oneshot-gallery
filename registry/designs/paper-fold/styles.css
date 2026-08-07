@@ -7,8 +7,8 @@
   --fo-orange: #d4571f;
   --fo-orange2: #b8430f;
   --fo-paper: #fbf3e2;
-  --fo-font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
-  --fo-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --fo-font-display: "Fraunces", Georgia, serif;
+  --fo-font-kr: "Noto Serif KR", serif;
   --fo-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

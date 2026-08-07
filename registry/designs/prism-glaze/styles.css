@@ -6,8 +6,8 @@
   --pg-cyan: #7fdfff;
   --pg-violet: #b78bff;
   --pg-aqua: #54f0d0;
-  --pg-font-display: var(--font-syne), "Syne", system-ui, sans-serif;
-  --pg-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --pg-font-display: "Syne", system-ui, sans-serif;
+  --pg-font-kr: "Noto Sans KR", sans-serif;
   --pg-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --pg-x: 0.3;
   --pg-y: 0.25;

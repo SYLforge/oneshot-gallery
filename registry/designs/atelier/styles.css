@@ -17,8 +17,8 @@
   --at-hairline-strong: rgba(248, 246, 242, 0.28);
 
   --at-font-latin: var(--font-bodoni), "Bodoni Moda", serif;
-  --at-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
-  --at-font-stack: var(--font-bodoni), var(--font-noto-serif-kr), serif;
+  --at-font-kr: "Noto Serif KR", serif;
+  --at-font-stack: var(--font-bodoni), "Noto Serif KR", serif;
 
   --at-ease-spread: cubic-bezier(0.7, 0, 0.2, 1);
   --at-ease-leaf: cubic-bezier(0.22, 1, 0.36, 1);

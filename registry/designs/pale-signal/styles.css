@@ -16,10 +16,10 @@
   --ps-scan-ink: rgba(3, 8, 4, 0.28);      /* derived: scanline ink */
 
   /* -- type -------------------------------------------------------------- */
-  --ps-font-crt: var(--font-vt323), "VT323", "Courier New", monospace;
+  --ps-font-crt: "VT323", "Courier New", monospace;
   --ps-font-ko: var(--font-nanum-coding), "Nanum Gothic Coding", monospace;
   /* Hangul falls through VT323 into Nanum Gothic Coding even without :lang */
-  --ps-font-stack: var(--font-vt323), var(--font-nanum-coding), monospace;
+  --ps-font-stack: "VT323", var(--font-nanum-coding), monospace;
 
   /* -- motion ------------------------------------------------------------ */
   --ps-ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* reveals: fast in, long tail */

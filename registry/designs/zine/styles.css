@@ -19,8 +19,8 @@
   --z-shadow: rgba(26, 26, 26, 0.18);     /* derived: photocopy contact shadow */
 
   /* -- type ---------------------------------------------------------------- */
-  --z-font-body: var(--font-noto-serif-kr), "Noto Serif KR", Georgia, serif;
-  --z-font-display: var(--font-oswald), "Oswald", "Noto Serif KR", Impact, sans-serif;
+  --z-font-body: "Noto Serif KR", Georgia, serif;
+  --z-font-display: "Oswald", "Noto Serif KR", Impact, sans-serif;
   /* Body stack is Noto Serif KR first: Hangul and Latin serif both resolve there;
      display elements get --z-font-display by class. */
 

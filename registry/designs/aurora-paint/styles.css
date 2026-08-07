@@ -6,8 +6,8 @@
   --ap-mint: #7ef9c4;
   --ap-violet: #b388ff;
   --ap-cyan: #5ee0ff;
-  --ap-font-display: var(--font-outfit), "Outfit", system-ui, sans-serif;
-  --ap-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --ap-font-display: "Outfit", system-ui, sans-serif;
+  --ap-font-kr: "Noto Sans KR", sans-serif;
   --ap-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

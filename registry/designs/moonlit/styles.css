@@ -22,15 +22,15 @@
   --ml-line-soft: rgba(77, 168, 255, 0.18); /* neon tube halo at rest */
 
   /* -- type -------------------------------------------------------------- */
-  --ml-font-display: var(--font-gugi), var(--font-noto-sans-kr),
-    var(--font-space-grotesk), system-ui, sans-serif;
+  --ml-font-display: "Gugi", "Noto Sans KR",
+    "Space Grotesk", system-ui, sans-serif;
   /* Hangul falls through the Latin face into Noto Sans KR, no markup needed */
-  --ml-font-body: var(--font-space-grotesk), var(--font-noto-sans-kr),
+  --ml-font-body: "Space Grotesk", "Noto Sans KR",
     system-ui, -apple-system, "Segoe UI", sans-serif;
-  --ml-font-mono: var(--font-space-mono), var(--font-noto-sans-kr),
+  --ml-font-mono: "Space Mono", "Noto Sans KR",
     "Courier New", monospace;
-  --ml-font-ko: var(--font-noto-sans-kr), "Noto Sans KR", system-ui, sans-serif;
-  --ml-font-splash: var(--font-gugi), "Gugi", var(--font-noto-sans-kr), cursive;
+  --ml-font-ko: "Noto Sans KR", system-ui, sans-serif;
+  --ml-font-splash: "Gugi", "Noto Sans KR", cursive;
 
   /* -- motion ------------------------------------------------------------ */
   --ml-ease: cubic-bezier(0.22, 1, 0.36, 1); /* night — settle as the eye adjusts */

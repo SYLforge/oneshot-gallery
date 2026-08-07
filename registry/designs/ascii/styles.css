@@ -15,8 +15,8 @@
   --as-quiet: #2e5240;
   --as-green: #5effa0;
   --as-green-soft: rgba(94, 255, 160, 0.55);
-  --as-font-display: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
-  --as-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --as-font-display: "JetBrains Mono", ui-monospace, monospace;
+  --as-font-kr: "Noto Sans KR", sans-serif;
   --as-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

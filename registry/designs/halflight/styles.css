@@ -15,13 +15,13 @@
   --hl-line: rgba(232, 228, 218, 0.14); /* hairlines, decorative */
 
   /* -- type -------------------------------------------------------------- */
-  --hl-font-display: var(--font-anton), "Anton", "Arial Narrow", sans-serif;
+  --hl-font-display: "Anton", "Arial Narrow", sans-serif;
   /* Hangul falls through the Latin faces into Noto Serif KR without markup */
-  --hl-font-body: var(--font-spectral), var(--font-noto-serif-kr), Georgia,
+  --hl-font-body: "Spectral", "Noto Serif KR", Georgia,
     serif;
-  --hl-font-mono: var(--font-space-mono), var(--font-noto-serif-kr),
+  --hl-font-mono: "Space Mono", "Noto Serif KR",
     "Courier New", monospace;
-  --hl-font-ko: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --hl-font-ko: "Noto Serif KR", serif;
 
   /* -- motion ------------------------------------------------------------ */
   --hl-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* reveals: fast in, long tail */

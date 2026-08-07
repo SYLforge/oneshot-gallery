@@ -6,8 +6,8 @@
   --pf-gold: #c9a36a;
   --pf-gold2: #e6c896;
   --pf-line: rgba(201, 163, 106, 0.28);
-  --pf-font-display: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
-  --pf-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --pf-font-display: "Cormorant Garamond", Georgia, serif;
+  --pf-font-kr: "Noto Serif KR", serif;
   --pf-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   position: relative;

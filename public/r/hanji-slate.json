@@ -43,7 +43,7 @@
     },
     {
       "path": "registry/designs/hanji-slate/fonts.ts",
-      "content": "import { Hanken_Grotesk, JetBrains_Mono, Noto_Sans_KR } from \"next/font/google\";\n\n/**\n * The three voices of the slate:\n * Hanken Grotesk — the product speaking Latin: calm, geometric, unhurried.\n * Noto Sans KR — every Hangul glyph on the page; Korean is first-class here.\n * JetBrains Mono — the spec readouts: figures, units, callout labels.\n *\n * styles.css consumes these as var(--font-hanken) / var(--font-noto-kr) /\n * var(--font-jbmono); page.tsx applies the .variable classes on the root.\n * All three are variable fonts, so no weight list is pinned.\n */\nexport const hankenGrotesk = Hanken_Grotesk({\n  subsets: [\"latin\"],\n  variable: \"--font-hanken\",\n  display: \"swap\",\n});\n\nexport const notoSansKr = Noto_Sans_KR({\n  subsets: [\"latin\"],\n  variable: \"--font-noto-kr\",\n  display: \"swap\",\n});\n\nexport const jetbrainsMono = JetBrains_Mono({\n  subsets: [\"latin\"],\n  variable: \"--font-jbmono\",\n  display: \"swap\",\n});\n",
+      "content": "// Self-hosted via @fontsource — no build-time Google Fonts fetch.\nimport \"@fontsource/hanken-grotesk\";\nimport \"@fontsource/jetbrains-mono\";\nimport \"@fontsource/noto-sans-kr\";\n\nexport const hankenGrotesk = { variable: \"\" };\nexport const jetbrainsMono = { variable: \"\" };\nexport const notoSansKr = { variable: \"\" };\n",
       "type": "registry:file",
       "target": "app/oneshot/hanji-slate/fonts.ts"
     },

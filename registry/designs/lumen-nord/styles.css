@@ -30,9 +30,9 @@
   --lumen-blend-soft: rgb(194 107 242 / 0.35);
 
   /* -- type -------------------------------------------------------------- */
-  --lumen-font-display: var(--font-hahmlet), "Hahmlet", georgia, serif;
+  --lumen-font-display: "Hahmlet", georgia, serif;
   /* Hangul falls through Sora into Hahmlet: Korean body text is serif on purpose */
-  --lumen-font-body: var(--font-sora), var(--font-hahmlet), sans-serif;
+  --lumen-font-body: "Sora", "Hahmlet", sans-serif;
 
   /* -- motion ------------------------------------------------------------ */
   --lumen-ease-out: cubic-bezier(0.22, 1, 0.36, 1);

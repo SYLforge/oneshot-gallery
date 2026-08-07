@@ -8,8 +8,8 @@
   --ms-teal: #2fe0c8;
   --ms-gold: #ffce4d;
   --ms-magenta: #ff5ec7;
-  --ms-font-display: var(--font-sora), "Sora", system-ui, sans-serif;
-  --ms-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --ms-font-display: "Sora", system-ui, sans-serif;
+  --ms-font-kr: "Noto Sans KR", sans-serif;
   --ms-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ms-px: 0vmax;
   --ms-py: 0vmax;

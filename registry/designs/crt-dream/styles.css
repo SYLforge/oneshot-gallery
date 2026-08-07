@@ -14,8 +14,8 @@
   --cd-text: #ffd9a0;
   --cd-mute: #b07d3a;
   --cd-quiet: #6a4a22;
-  --cd-font-display: var(--font-vt323), "VT323", ui-monospace, monospace;
-  --cd-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --cd-font-display: "VT323", ui-monospace, monospace;
+  --cd-font-kr: "Noto Sans KR", sans-serif;
   --cd-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

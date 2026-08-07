@@ -13,8 +13,8 @@
   --vf-quiet: #b6a392;
   --vf-red: #ff4d6d;
   --vf-red-soft: rgba(255, 77, 109, 0.5);
-  --vf-font-display: var(--font-recursive), "Recursive", system-ui, sans-serif;
-  --vf-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --vf-font-display: "Recursive", system-ui, sans-serif;
+  --vf-font-kr: "Noto Sans KR", sans-serif;
   --vf-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

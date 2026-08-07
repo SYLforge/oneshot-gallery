@@ -37,7 +37,7 @@
     },
     {
       "path": "registry/designs/blunt/fonts.ts",
-      "content": "import { Archivo_Black, Do_Hyeon, IBM_Plex_Mono } from \"next/font/google\";\n\n/**\n * The three voices of the shop:\n * Archivo Black — the wordmark shouting in Latin.\n * Do Hyeon — every Hangul glyph on the page, condensed and deadpan.\n * IBM Plex Mono — price tags, annotations, the co-op's ledger hand.\n *\n * styles.css consumes these as var(--font-archivo) / var(--font-dohyeon) /\n * var(--font-plex-mono); page.tsx applies the .variable classes on the root.\n */\nexport const archivoBlack = Archivo_Black({\n  weight: \"400\",\n  subsets: [\"latin\"],\n  variable: \"--font-archivo\",\n  display: \"swap\",\n});\n\nexport const doHyeon = Do_Hyeon({\n  weight: \"400\",\n  subsets: [\"latin\"],\n  variable: \"--font-dohyeon\",\n  display: \"swap\",\n});\n\nexport const ibmPlexMono = IBM_Plex_Mono({\n  weight: [\"400\", \"700\"],\n  subsets: [\"latin\"],\n  variable: \"--font-plex-mono\",\n  display: \"swap\",\n});\n",
+      "content": "// Self-hosted via @fontsource — no build-time Google Fonts fetch.\nimport \"@fontsource/archivo-black\";\nimport \"@fontsource/do-hyeon\";\nimport \"@fontsource/ibm-plex-mono\";\n\nexport const archivoBlack = { variable: \"\" };\nexport const doHyeon = { variable: \"\" };\nexport const ibmPlexMono = { variable: \"\" };\n",
       "type": "registry:file",
       "target": "app/oneshot/blunt/fonts.ts"
     },

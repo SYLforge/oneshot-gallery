@@ -37,7 +37,7 @@
     },
     {
       "path": "registry/designs/pulse/fonts.ts",
-      "content": "import { Noto_Sans_KR, Space_Grotesk } from \"next/font/google\";\n\n/**\n * The release page's two voices:\n * Space Grotesk — the technical display: the PULSE wordmark, track numbers,\n *   BPM readouts, timestamps. It carries the instrument/sequencer feel a\n *   music release page needs without going monospaced.\n * Noto Sans KR — every Korean line, and the bilingual body face. Korean is\n *   first-class body and subheads, never an afterthought; Hangul never\n *   falls through to the default sans stack. The body stack runs Noto Sans\n *   KR first so English set in Space Grotesk stays in display only, and all\n *   running text lands in Noto Sans KR's even, legible Korean.\n *\n * styles.css consumes these as var(--font-grotesk) / var(--font-noto-kr);\n * page.tsx applies the .variable classes on the entry root.\n */\nexport const spaceGrotesk = Space_Grotesk({\n  subsets: [\"latin\"],\n  weight: [\"400\", \"500\", \"600\", \"700\"],\n  variable: \"--font-grotesk\",\n  display: \"swap\",\n});\n\nexport const notoSansKR = Noto_Sans_KR({\n  subsets: [\"latin\"],\n  weight: [\"400\", \"500\", \"700\"],\n  variable: \"--font-noto-kr\",\n  display: \"swap\",\n});\n",
+      "content": "// Self-hosted via @fontsource — no build-time Google Fonts fetch.\nimport \"@fontsource/noto-sans-kr\";\nimport \"@fontsource/space-grotesk\";\n\nexport const notoSansKR = { variable: \"\" };\nexport const spaceGrotesk = { variable: \"\" };\n",
       "type": "registry:file",
       "target": "app/oneshot/pulse/fonts.ts"
     },

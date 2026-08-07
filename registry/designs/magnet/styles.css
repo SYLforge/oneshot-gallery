@@ -15,8 +15,8 @@
   --mg-pink-soft: rgba(255, 61, 119, 0.5);
   --mg-pink-faint: rgba(255, 61, 119, 0.14);
   --mg-ink: #160a10;
-  --mg-font-display: var(--font-archivo-black), "Archivo Black", system-ui, sans-serif;
-  --mg-font-kr: var(--font-do-hyeon), "Do Hyeon", sans-serif;
+  --mg-font-display: "Archivo Black", system-ui, sans-serif;
+  --mg-font-kr: "Do Hyeon", sans-serif;
   --mg-ease: cubic-bezier(0.18, 1.2, 0.4, 1); /* a slight overshoot spring */
 
   position: relative;

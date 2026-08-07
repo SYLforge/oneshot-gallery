@@ -1,31 +1,8 @@
-import { Archivo_Black, Do_Hyeon, IBM_Plex_Mono } from "next/font/google";
+// Self-hosted via @fontsource — no build-time Google Fonts fetch.
+import "@fontsource/archivo-black";
+import "@fontsource/do-hyeon";
+import "@fontsource/ibm-plex-mono";
 
-/**
- * The three voices of the shop:
- * Archivo Black — the wordmark shouting in Latin.
- * Do Hyeon — every Hangul glyph on the page, condensed and deadpan.
- * IBM Plex Mono — price tags, annotations, the co-op's ledger hand.
- *
- * styles.css consumes these as var(--font-archivo) / var(--font-dohyeon) /
- * var(--font-plex-mono); page.tsx applies the .variable classes on the root.
- */
-export const archivoBlack = Archivo_Black({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-archivo",
-  display: "swap",
-});
-
-export const doHyeon = Do_Hyeon({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-dohyeon",
-  display: "swap",
-});
-
-export const ibmPlexMono = IBM_Plex_Mono({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-plex-mono",
-  display: "swap",
-});
+export const archivoBlack = { variable: "" };
+export const doHyeon = { variable: "" };
+export const ibmPlexMono = { variable: "" };

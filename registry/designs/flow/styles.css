@@ -8,7 +8,7 @@
   --flow-ink-soft: #0369a1;
   --flow-accent: #0ea5e9;
   --flow-accent-soft: rgba(14, 165, 233, 0.15);
-  --flow-font: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  --flow-font: "Inter", "Noto Sans KR", sans-serif;
 
   position: relative;
   min-height: 100vh;
@@ -41,7 +41,7 @@
   .flow-root::before { animation: none; }
 }
 
-.flow-root :lang(ko) { font-family: var(--font-noto-sans-kr), sans-serif; }
+.flow-root :lang(ko) { font-family: "Noto Sans KR", sans-serif; }
 .flow-root ::selection { background: var(--flow-accent); color: #fff; }
 .flow-root :focus-visible { outline: 2px solid var(--flow-accent); outline-offset: 4px; }
 

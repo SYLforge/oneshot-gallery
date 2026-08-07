@@ -13,9 +13,9 @@
   --wave-dim: #6b806b;
   --wave-hairline: rgba(74, 222, 128, 0.2);
 
-  --wave-font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
-  --wave-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
-  --wave-font-stack: var(--font-jetbrains-mono), var(--font-noto-sans-kr),
+  --wave-font-mono: "JetBrains Mono", monospace;
+  --wave-font-kr: "Noto Sans KR", sans-serif;
+  --wave-font-stack: "JetBrains Mono", "Noto Sans KR",
     monospace;
 
   --wave-ease: cubic-bezier(0.16, 1, 0.3, 1);

@@ -33,10 +33,10 @@
   --chrome-py: 0;
 
   /* -- type -------------------------------------------------------------- */
-  --chrome-font-display: var(--font-syne), "Syne", var(--font-hangul), "Black Han Sans", sans-serif;
+  --chrome-font-display: "Syne", var(--font-hangul), "Black Han Sans", sans-serif;
   --chrome-font-hangul: var(--font-hangul), "Black Han Sans", sans-serif;
   --chrome-font-mono: var(--font-mono), "Major Mono Display", ui-monospace, monospace;
-  --chrome-font-body: var(--font-syne), "Syne", var(--font-hangul), "Black Han Sans", sans-serif;
+  --chrome-font-body: "Syne", var(--font-hangul), "Black Han Sans", sans-serif;
 
   /* -- motion ------------------------------------------------------------ */
   --chrome-ease-chrome: cubic-bezier(0.16, 1, 0.3, 1);   /* metallic sweep */

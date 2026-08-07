@@ -7,8 +7,8 @@
   --cg-green: #39ff9e;
   --cg-red: #ff2d55;
   --cg-blue: #2d7bff;
-  --cg-font-display: var(--font-orbitron), "Orbitron", system-ui, sans-serif;
-  --cg-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --cg-font-display: "Orbitron", system-ui, sans-serif;
+  --cg-font-kr: "Noto Sans KR", sans-serif;
   --cg-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --cg-rx: 0deg;
   --cg-ry: 0deg;

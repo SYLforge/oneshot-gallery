@@ -16,11 +16,11 @@
   --raster-ink-dim: rgba(17, 17, 17, 0.66);         /* ≈ #5f5f5e — 5.6:1, annotations */
 
   /* -- type -------------------------------------------------------------- */
-  --raster-font-main: var(--font-archivo), "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --raster-font-main: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --raster-font-ko: var(--font-plex-kr), "IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
   /* Hangul falls through Archivo into IBM Plex Sans KR even without :lang */
-  --raster-font-stack: var(--font-archivo), var(--font-plex-kr), "Helvetica Neue", Arial, sans-serif;
-  --raster-font-mono: var(--font-space-mono), var(--font-plex-kr), "Courier New", monospace;
+  --raster-font-stack: "Archivo", var(--font-plex-kr), "Helvetica Neue", Arial, sans-serif;
+  --raster-font-mono: "Space Mono", var(--font-plex-kr), "Courier New", monospace;
 
   /* -- the certified construction ---------------------------------------- */
   --raster-maxw: 1440px;

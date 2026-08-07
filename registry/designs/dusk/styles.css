@@ -7,8 +7,8 @@
   --dk-coral: #ff7e5f;
   --dk-violet: #6a4d8c;
   --dk-indigo: #1a1538;
-  --dk-font-display: var(--font-playfair-display), "Playfair Display", Georgia, serif;
-  --dk-font-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --dk-font-display: "Playfair Display", Georgia, serif;
+  --dk-font-kr: "Noto Serif KR", serif;
   --dk-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

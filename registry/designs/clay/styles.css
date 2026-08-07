@@ -6,8 +6,8 @@
   --cy-clay: #e0683a;
   --cy-clay-deep: #b94a22;
   --cy-clay-light: #f0916a;
-  --cy-font-display: var(--font-baloo), "Baloo 2", system-ui, sans-serif;
-  --cy-font-kr: var(--font-gowun-dodum), "Gowun Dodum", sans-serif;
+  --cy-font-display: "Baloo 2", system-ui, sans-serif;
+  --cy-font-kr: "Gowun Dodum", sans-serif;
   --cy-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
   --cy-px: 0px;
   --cy-py: 0px;

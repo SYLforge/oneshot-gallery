@@ -5,8 +5,8 @@
   --td-mute: #7fa9b8;
   --td-cyan: #37e2c5;
   --td-blue: #2ec0ff;
-  --td-font-display: var(--font-unbounded), "Unbounded", system-ui, sans-serif;
-  --td-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --td-font-display: "Unbounded", system-ui, sans-serif;
+  --td-font-kr: "Noto Sans KR", sans-serif;
   --td-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

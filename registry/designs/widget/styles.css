@@ -14,9 +14,9 @@
   --w-text: #f0f0ff;
   --w-text-dim: #a0a0c0;
 
-  --w-font-sans: var(--font-inter), "Inter", sans-serif;
-  --w-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
-  --w-font-stack: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+  --w-font-sans: "Inter", sans-serif;
+  --w-font-kr: "Noto Sans KR", sans-serif;
+  --w-font-stack: "Inter", "Noto Sans KR", sans-serif;
 
   --w-ease: cubic-bezier(0.16, 1, 0.3, 1);
 

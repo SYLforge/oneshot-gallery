@@ -14,8 +14,8 @@
   --wf-quiet: #2c5e47;
   --wf-green: #39ffa0;
   --wf-green-soft: rgba(57, 255, 160, 0.55);
-  --wf-font-display: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
-  --wf-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --wf-font-display: "JetBrains Mono", ui-monospace, monospace;
+  --wf-font-kr: "Noto Sans KR", sans-serif;
   --wf-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

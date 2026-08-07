@@ -18,9 +18,9 @@
 
   /* -- type ---------------------------------------------------------------- */
   --yb-font-latin: var(--font-libre-caslon), "Libre Caslon Text", Georgia, serif;
-  --yb-font-kr: var(--font-nanum-myeongjo), "Nanum Myeongjo", serif;
+  --yb-font-kr: "Nanum Myeongjo", serif;
   /* Caslon first: Latin resolves there, Hangul falls through into Myeongjo */
-  --yb-font-stack: var(--font-libre-caslon), var(--font-nanum-myeongjo),
+  --yb-font-stack: var(--font-libre-caslon), "Nanum Myeongjo",
     Georgia, serif;
 
   /* -- motion --------------------------------------------------------------- */

@@ -6,7 +6,7 @@
   --hg-pink: #ff5edb;
   --hg-cyan: #4be3ff;
   --hg-font-display: var(--font-space), "Space Grotesk", system-ui, sans-serif;
-  --hg-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --hg-font-kr: "Noto Sans KR", sans-serif;
   --hg-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --hg-angle: 200deg;
 

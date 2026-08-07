@@ -22,9 +22,9 @@
   --plaza-ghost: 0;
 
   /* -- type ---------------------------------------------------------------- */
-  --plaza-font-display: var(--font-monoton), var(--font-gugi), sans-serif;
-  --plaza-font-ko: var(--font-gugi), sans-serif;
-  --plaza-font-mono: var(--font-azeret), var(--font-gugi), monospace;
+  --plaza-font-display: "Monoton", "Gugi", sans-serif;
+  --plaza-font-ko: "Gugi", sans-serif;
+  --plaza-font-mono: var(--font-azeret), "Gugi", monospace;
 
   /* -- motion --------------------------------------------------------------- */
   --plaza-ease-out: cubic-bezier(0.16, 1, 0.3, 1);

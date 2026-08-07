@@ -25,8 +25,8 @@
   --drm-hairline-soft: rgba(167, 139, 217, 0.28);
 
   /* -- type ---------------------------------------------------------------- */
-  --drm-font-display: var(--font-noto-serif), var(--font-quicksand), "Noto Serif KR", serif;
-  --drm-font-body: var(--font-quicksand), var(--font-gowun), "Apple SD Gothic Neo", sans-serif;
+  --drm-font-display: var(--font-noto-serif), "Quicksand", "Noto Serif KR", serif;
+  --drm-font-body: "Quicksand", var(--font-gowun), "Apple SD Gothic Neo", sans-serif;
   --drm-font-ko: var(--font-gowun), "Gowun Dodum", "Apple SD Gothic Neo", sans-serif;
   --drm-font-ko-display: var(--font-noto-serif), "Noto Serif KR", serif;
 

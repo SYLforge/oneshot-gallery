@@ -8,7 +8,7 @@
   --ch-ink-soft: #525252;
   --ch-red: #dc2626;
   --ch-rule: rgba(26,26,26,0.12);
-  --ch-font: var(--font-inter), var(--font-noto-serif-kr), "Noto Serif KR", Georgia, serif;
+  --ch-font: "Inter", "Noto Serif KR", Georgia, serif;
 
   position: relative;
   min-height: 100vh;
@@ -34,7 +34,7 @@
   mix-blend-mode: multiply;
 }
 
-.chapter-root :lang(ko) { font-family: var(--font-noto-serif-kr), "Noto Serif KR", serif; }
+.chapter-root :lang(ko) { font-family: "Noto Serif KR", serif; }
 .chapter-root ::selection { background: var(--ch-red); color: var(--ch-bg); }
 .chapter-root :focus-visible { outline: 2px solid var(--ch-red); outline-offset: 4px; }
 
@@ -154,7 +154,7 @@
   font-weight: 700;
   color: var(--ch-red);
   margin: 8px 12px 0 0;
-  font-family: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  font-family: "Noto Serif KR", serif;
 }
 .chapter-marginalia {
   margin-top: 24px;

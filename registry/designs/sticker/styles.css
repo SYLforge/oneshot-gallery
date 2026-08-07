@@ -20,9 +20,9 @@
   /* -- type: three sticker-book voices ----------------------------------- */
   /* Korean faces listed first so Hangul never falls through to a default
      sans — the :lang(ko) rule below also pins them. */
-  --sticker-font-display: var(--font-display), var(--font-inter), "Arial Black", sans-serif;
-  --sticker-font-ko: var(--font-gaegu), var(--font-display), "Gaegu", cursive;
-  --sticker-font-en: var(--font-inter), var(--font-gaegu), "Inter", sans-serif;
+  --sticker-font-display: var(--font-display), "Inter", "Arial Black", sans-serif;
+  --sticker-font-ko: "Gaegu", var(--font-display), "Gaegu", cursive;
+  --sticker-font-en: "Inter", "Gaegu", "Inter", sans-serif;
 
   /* -- motion: spring + wobble + press ----------------------------------- */
   --sticker-press-in: 90ms;

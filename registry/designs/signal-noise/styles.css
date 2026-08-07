@@ -6,8 +6,8 @@
   --sn-green: #3effa0;
   --sn-green2: #6bffb8;
   --sn-line: rgba(62, 255, 160, 0.22);
-  --sn-font-display: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
-  --sn-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --sn-font-display: "JetBrains Mono", ui-monospace, monospace;
+  --sn-font-kr: "Noto Sans KR", sans-serif;
   --sn-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   position: relative;

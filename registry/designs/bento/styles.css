@@ -8,8 +8,8 @@
   --bt-blue: #2563eb;
   --bt-blue2: #1d4ed8;
   --bt-amber: #f59e0b;
-  --bt-font-display: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
-  --bt-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --bt-font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --bt-font-kr: "Noto Sans KR", sans-serif;
   --bt-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --bt-r: 24px;
 

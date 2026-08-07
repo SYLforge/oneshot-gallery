@@ -1,22 +1,8 @@
-import { Black_Han_Sans, Noto_Sans_KR, Orbitron } from "next/font/google";
+// Self-hosted via @fontsource — no build-time Google Fonts fetch.
+import "@fontsource/black-han-sans";
+import "@fontsource/noto-sans-kr";
+import "@fontsource/orbitron";
 
-export const blackHanSans = Black_Han_Sans({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-black-han",
-  display: "swap",
-});
-
-export const notoSansKR = Noto_Sans_KR({
-  weight: ["400", "500", "700"],
-  subsets: ["latin"],
-  variable: "--font-noto-sans-kr",
-  display: "swap",
-});
-
-export const orbitron = Orbitron({
-  weight: ["400", "700", "900"],
-  subsets: ["latin"],
-  variable: "--font-orbitron",
-  display: "swap",
-});
+export const blackHanSans = { variable: "" };
+export const notoSansKR = { variable: "" };
+export const orbitron = { variable: "" };

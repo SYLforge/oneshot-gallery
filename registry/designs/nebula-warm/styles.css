@@ -7,8 +7,8 @@
   --nw-coral: #ff6e5a;
   --nw-gold: #ffce54;
   --nw-rose: #ff82a0;
-  --nw-font-display: var(--font-outfit), "Outfit", system-ui, sans-serif;
-  --nw-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
+  --nw-font-display: "Outfit", system-ui, sans-serif;
+  --nw-font-kr: "Noto Sans KR", sans-serif;
   --nw-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --nw-rx: 0deg;
   --nw-ry: 0deg;

@@ -31,8 +31,8 @@
 
   /* -- type ------------------------------------------------------------- */
   --orbit-font-display: var(--font-grotesk), "Space Grotesk", sans-serif;
-  --orbit-font-body: var(--font-inter), var(--font-noto-kr), system-ui, sans-serif;
-  --orbit-font-ko: var(--font-noto-kr), var(--font-inter), sans-serif;
+  --orbit-font-body: "Inter", var(--font-noto-kr), system-ui, sans-serif;
+  --orbit-font-ko: var(--font-noto-kr), "Inter", sans-serif;
 
   /* -- motion ----------------------------------------------------------- */
   --orbit-ease: cubic-bezier(0.22, 1, 0.36, 1);

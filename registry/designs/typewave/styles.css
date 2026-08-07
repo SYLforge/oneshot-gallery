@@ -21,18 +21,18 @@
   /* The synthesizer: Archivo carries the Latin display + the wordmark; a
      Korean glyph in a display head falls through to Black Han Sans (heavy,
      blocky) rather than the default sans. */
-  --tw-font-display: var(--font-archivo), var(--font-black-han), "Archivo",
+  --tw-font-display: "Archivo", var(--font-black-han), "Archivo",
     "Helvetica Neue", Arial, sans-serif;
   /* Korean display: the heavy drum, used for the Korean wordmark lines. */
-  --tw-font-ko-display: var(--font-black-han), var(--font-archivo),
+  --tw-font-ko-display: var(--font-black-han), "Archivo",
     "Apple SD Gothic Neo", sans-serif;
   /* Body stack: Noto Sans KR carries every Hangul glyph in prose. */
-  --tw-font-body: var(--font-archivo), var(--font-noto-kr), "Archivo",
+  --tw-font-body: "Archivo", var(--font-noto-kr), "Archivo",
     "Helvetica Neue", Arial, sans-serif;
   --tw-font-ko: var(--font-noto-kr), "Noto Sans KR", "Apple SD Gothic Neo",
     sans-serif;
   /* The patch sheet: BPM, timecodes, track numbers. */
-  --tw-font-mono: var(--font-space-mono), var(--font-noto-kr), "Courier New",
+  --tw-font-mono: "Space Mono", var(--font-noto-kr), "Courier New",
     monospace;
 
   /* -- motion ------------------------------------------------------------ */

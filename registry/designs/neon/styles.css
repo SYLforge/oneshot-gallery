@@ -18,9 +18,9 @@
   --neon-quiet: #4a3357;
 
   --neon-font-display: var(--font-black-han), "Black Han Sans", sans-serif;
-  --neon-font-kr: var(--font-noto-sans-kr), "Noto Sans KR", sans-serif;
-  --neon-font-latin: var(--font-orbitron), "Orbitron", sans-serif;
-  --neon-font-stack: var(--font-orbitron), var(--font-noto-sans-kr), sans-serif;
+  --neon-font-kr: "Noto Sans KR", sans-serif;
+  --neon-font-latin: "Orbitron", sans-serif;
+  --neon-font-stack: "Orbitron", "Noto Sans KR", sans-serif;
 
   --neon-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --px: var(--neon-px, 0);

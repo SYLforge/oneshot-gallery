@@ -14,10 +14,10 @@
   --riso-violet: #2d175d;    /* pink×blue multiply overlap — decorative */
 
   /* -- type: a literary serif first -------------------------------------- */
-  --riso-font-ko: var(--font-noto-serif-kr), "Noto Serif KR", serif;
-  --riso-font-serif: var(--font-lora), var(--font-noto-serif-kr), Georgia, serif;
+  --riso-font-ko: "Noto Serif KR", serif;
+  --riso-font-serif: "Lora", "Noto Serif KR", Georgia, serif;
   /* Hangul falls through Lora into Noto Serif KR even without :lang */
-  --riso-font-mono: var(--font-space-mono), var(--font-noto-serif-kr), "Courier New", monospace;
+  --riso-font-mono: "Space Mono", "Noto Serif KR", "Courier New", monospace;
 
   /* -- motion ------------------------------------------------------------- */
   --riso-reveal-out: 520ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -291,7 +291,7 @@
 }
 
 .riso-link :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   text-transform: none;
   letter-spacing: 0;
 }
@@ -391,7 +391,7 @@
 }
 
 .riso-poster__cap :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   font-weight: 500;
 }
 
@@ -449,7 +449,7 @@
 }
 
 .riso-secnum__title :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   font-weight: 700;
   color: var(--riso-blue);
 }
@@ -463,7 +463,7 @@
 }
 
 .riso-press__instr :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   text-transform: none;
   letter-spacing: 0;
 }
@@ -606,7 +606,7 @@
 }
 
 .riso-press__drum-name :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   text-transform: none;
   letter-spacing: 0;
 }
@@ -672,7 +672,7 @@
 }
 
 .riso-secnum__note :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   text-transform: none;
   letter-spacing: 0;
 }
@@ -758,7 +758,7 @@
   position: relative;
   z-index: 1;
   margin: auto 0 0;
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   font-weight: 700;
   font-size: clamp(1.05rem, 2vw, 1.4rem);
   line-height: 1.2;
@@ -841,7 +841,7 @@
 .riso-overprint-word {
   position: relative;
   display: inline-block;
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   font-weight: 900;
   font-size: clamp(2.6rem, 12vw, 9rem);
   letter-spacing: -0.01em;
@@ -923,7 +923,7 @@
 }
 
 .riso-footer__mono :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
 }
 
 .riso-footer__legal {
@@ -937,7 +937,7 @@
 }
 
 .riso-footer__legal :lang(ko) {
-  font-family: var(--font-noto-serif-kr), serif;
+  font-family: "Noto Serif KR", serif;
   text-transform: none;
   letter-spacing: 0;
 }

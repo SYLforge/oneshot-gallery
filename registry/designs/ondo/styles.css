@@ -16,10 +16,10 @@
   --ondo-hairline-strong: rgba(216, 195, 154, 0.38);
 
   /* -- type -------------------------------------------------------------- */
-  --ondo-font-display: var(--font-italiana), "Italiana", serif;
-  --ondo-font-body: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --ondo-font-display: "Italiana", serif;
+  --ondo-font-body: "Noto Serif KR", serif;
   /* Hangul falls through Italiana into Noto Serif KR in display settings */
-  --ondo-font-stack: var(--font-noto-serif-kr), "Noto Serif KR", serif;
+  --ondo-font-stack: "Noto Serif KR", serif;
 
   /* -- motion ------------------------------------------------------------ */
   --ondo-ease-couture: cubic-bezier(0.77, 0, 0.18, 1); /* clip reveals */

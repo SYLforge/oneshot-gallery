@@ -23,9 +23,9 @@
   --giwa-accent-live: var(--giwa-seok);
 
   /* -- type ---------------------------------------------------------------- */
-  --giwa-font-display: var(--font-song-myung), "Song Myung", serif;
+  --giwa-font-display: "Song Myung", serif;
   --giwa-font-body: var(--font-gowun), "Gowun Batang", serif;
-  --giwa-font-latin: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --giwa-font-latin: "Fraunces", Georgia, serif;
 
   /* -- motion --------------------------------------------------------------- */
   --giwa-ease-out: cubic-bezier(0.16, 1, 0.3, 1);    /* reveals: fast in, long tail */
