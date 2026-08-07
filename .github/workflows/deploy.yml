@@ -25,9 +25,6 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      # Preload the font-fetch retry shim so transient Google Fonts network
-      # errors are retried with exponential backoff before failing the build.
-      NODE_OPTIONS: "--require ./scripts/font-fetch-retry.cjs"
     steps:
       - uses: actions/checkout@v4
 
@@ -60,8 +57,11 @@ jobs:
             next-fonts-${{ runner.os }}-
 
       - name: Build site
+        # NODE_OPTIONS preloads the font-fetch retry shim (8× backoff).
         # Triple-retry: each attempt caches whatever fonts it fetched, so the
         # next attempt only needs the ones that failed.
+        env:
+          NODE_OPTIONS: "--require ${{ github.workspace }}/scripts/font-fetch-retry.cjs"
         run: pnpm build || pnpm build || pnpm build
 
       - name: Install Vercel CLI
@@ -71,6 +71,8 @@ jobs:
         run: vercel pull --yes --environment=production --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Vercel output
+        env:
+          NODE_OPTIONS: "--require ${{ github.workspace }}/scripts/font-fetch-retry.cjs"
         run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel (prebuilt, production)
