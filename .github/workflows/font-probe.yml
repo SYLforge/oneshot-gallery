@@ -1,0 +1,14 @@
+name: Font Probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Google Fonts IPv4 access
+        run: |
+          echo "=== googleapis.com ==="
+          curl -s -o /dev/null -w "ipv4: %{http_code} time=%{time_total}s\n" --max-time 15 --ipv4 "https://fonts.googleapis.com/css2?family=Inter"
+          echo "=== gstatic.com (font file) ==="
+          curl -s -o /dev/null -w "ipv4: %{http_code} time=%{time_total}s\n" --max-time 15 --ipv4 "https://fonts.gstatic.com/"
+          echo "=== node fetch test ==="
+          node -e "fetch('https://fonts.googleapis.com/css2?family=Inter').then(r=>console.log('node fetch:',r.status)).catch(e=>console.log('node fetch ERR:',e.code))"
