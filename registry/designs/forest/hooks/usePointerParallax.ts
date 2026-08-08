@@ -6,14 +6,15 @@ import { useEffect, useRef } from "react";
 const PARALLAX_LERP = 0.045;
 
 /**
- * Drives `--drm-px` / `--drm-py` (each −1…1) on the referenced element — the
- * weightless depth of the cloud sky. styles.css multiplies these into
- * capped translations at three depths: the far sky barely moves, the middle
- * layer carries the drift, the nearest puffs read at arm's length. The lerp
- * is deliberately slower than a tracking parallax (0.045 vs the usual 0.08):
- * clouds do not chase the pointer, they settle after it.
+ * Drives `--forest-px` / `--forest-py` (each −1…1) on the referenced element —
+ * the layered depth of the canopy. styles.css multiplies these into capped
+ * translations at three depths: the far canopy barely sways, the mid layer
+ * carries the drift, the nearest leaves read at arm's length. The lerp is
+ * deliberately slower than a tracking parallax (0.045 vs the usual 0.08):
+ * leaves do not chase the pointer, they settle after it, as if in a slow
+ * breeze.
  *
- * Fine pointers only — on touch the layers simply rest (the ambient cloud-bob
+ * Fine pointers only — on touch the layers simply rest (the ambient sway
  * animation carries the life instead), and under reduced motion this hook
  * does nothing; the CSS fallback for both variables is 0.
  */
@@ -43,8 +44,8 @@ export function usePointerParallax<T extends HTMLElement>(disabled: boolean) {
       const k = PARALLAX_LERP * (dt / 16.7);
       x += (tx - x) * k;
       y += (ty - y) * k;
-      el.style.setProperty("--drm-px", x.toFixed(4));
-      el.style.setProperty("--drm-py", y.toFixed(4));
+      el.style.setProperty("--forest-px", x.toFixed(4));
+      el.style.setProperty("--forest-py", y.toFixed(4));
     };
 
     const start = () => {
@@ -90,8 +91,8 @@ export function usePointerParallax<T extends HTMLElement>(disabled: boolean) {
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
-      el.style.removeProperty("--drm-px");
-      el.style.removeProperty("--drm-py");
+      el.style.removeProperty("--forest-px");
+      el.style.removeProperty("--forest-py");
     };
   }, [disabled]);
 

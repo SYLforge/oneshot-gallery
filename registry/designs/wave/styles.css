@@ -1,85 +1,162 @@
 /* ==========================================================================
-   WAVE 파동 — audio network analytics · ASCII spectrum analyzer
+   WAVE 파동 — audio network analytics · spectrum analyzer dashboard
    terminal-core · terminal black / phosphor green / amber / soft white
    Scoped by convention to .wave-root; classes prefixed wave-.
+
+   Where GLITCH is corrupted signal and PALE.SIGNAL is poetry, WAVE is
+   functional data — a calm broadcast desk. Every readout is tabular,
+   every glow is a real 3-tier phosphor stack, and the spectrum is a true
+   SVG meter with peak-hold caps, not a single line of text-shadow.
    ========================================================================== */
 
 .wave-root {
-  --wave-bg: #0a0e0a;
-  --wave-bg-deep: #060906;
-  --wave-phosphor: #4ade80;
-  --wave-amber: #fbbf24;
-  --wave-soft: #e8f0e8;
-  --wave-dim: #6b806b;
-  --wave-hairline: rgba(74, 222, 128, 0.2);
+  /* -- palette ---------------------------------------------------------- */
+  /* All ratios measured against --wave-bg (#0a0e0a). */
+  --wave-bg: #0a0e0a;          /* ground — the CRT phosphor well, before power */
+  --wave-bg-deep: #060906;     /* recess — panel insets, the darker scan area */
+  --wave-phosphor: #4ade80;    /* primary ink + spectrum — the live signal (11.2:1, AAA) */
+  --wave-amber: #fbbf24;       /* tagline + focus + peaks — warm secondary (11.6:1, AAA) */
+  --wave-soft: #e8f0e8;        /* display + stat values — paper-white (16.7:1, AAA) */
+  --wave-dim: #6b806b;         /* kicker/tertiary — the operator muttering (4.56:1, AA) */
+  --wave-hairline: rgba(74, 222, 128, 0.20);
+                               /* decorative ONLY — rules, dividers (~1.4:1, no text) */
 
+  /* -- type ------------------------------------------------------------- */
   --wave-font-mono: "JetBrains Mono", monospace;
   --wave-font-kr: "Noto Sans KR", sans-serif;
-  --wave-font-stack: "JetBrains Mono", "Noto Sans KR",
-    monospace;
+  /* Hangul falls through the mono face into Noto Sans KR */
+  --wave-font-stack: "JetBrains Mono", "Noto Sans KR", monospace;
 
-  --wave-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* -- spacing — 4px baseline, no magic numbers ------------------------- */
+  --wave-s-1: 0.25rem;   /*  4px */
+  --wave-s-2: 0.5rem;    /*  8px — grid unit */
+  --wave-s-3: 0.75rem;   /* 12px */
+  --wave-s-4: 1rem;      /* 16px */
+  --wave-s-5: 1.25rem;   /* 20px */
+  --wave-s-6: 1.5rem;    /* 24px */
+  --wave-s-8: 2rem;      /* 32px */
+  --wave-s-10: 2.5rem;   /* 40px */
+  --wave-s-12: 3rem;     /* 48px */
+  --wave-s-pad: clamp(24px, 6vw, 80px);   /* section gutter */
+  --wave-s-pad-y: clamp(60px, 12vh, 120px);
+
+  /* -- motion — easing split by purpose --------------------------------- */
+  --wave-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);   /* reveal — strong ease-out */
+  --wave-ease-glow:  cubic-bezier(0.22, 1, 0.36, 1);  /* spectrum scrub — long tail */
+  --wave-ease-state: cubic-bezier(0.34, 1.56, 0.64, 1); /* hover — micro bounce */
   --wave-reveal-ms: 700ms;
+
+  /* -- phosphor glow stacks (terminal-core §3-tier) -------------------- */
+  --wave-glow-phosphor:
+    0 0 2px rgba(74, 222, 128, 0.90),
+    0 0 8px rgba(74, 222, 128, 0.55),
+    0 0 20px rgba(74, 222, 128, 0.30);
+  --wave-glow-amber:
+    0 0 2px rgba(251, 191, 36, 0.90),
+    0 0 10px rgba(251, 191, 36, 0.45),
+    0 0 24px rgba(251, 191, 36, 0.22);
+  --wave-glow-soft:
+    0 0 2px rgba(232, 240, 232, 0.55),
+    0 0 14px rgba(74, 222, 128, 0.32),
+    0 0 34px rgba(74, 222, 128, 0.16);
 
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   background: var(--wave-bg);
   color: var(--wave-phosphor);
   font-family: var(--wave-font-stack);
   font-weight: 400;
   font-size: clamp(14px, 0.4vw + 12px, 16px);
   line-height: 1.7;
+  font-variant-numeric: tabular-nums;   /* terminal readouts never jitter */
+  text-wrap: pretty;
   overflow-x: hidden;
   overflow-x: clip;
 }
 
-/* CRT atmosphere — a faint phosphor bloom at screen center + scanlines, the
-   glass face of an old monitor. The scanline overlay sits above content but
-   stays pointer-events-none and very subtle (AA contrast preserved).       */
+/* ==========================================================================
+   CRT atmosphere — phosphor bloom at screen center + scanline glass face.
+   The scanline overlay sits above content but stays pointer-events-none and
+   subtle enough that worst-case text contrast stays above AA.
+   ========================================================================== */
+
 .wave-root::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(100% 80% at 50% 40%, rgba(74,222,128,0.06), transparent 60%);
+  background: radial-gradient(
+    100% 80% at 50% 40%,
+    rgba(74, 222, 128, 0.06),
+    transparent 60%
+  );
 }
+
 .wave-root::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,0.10) 2px 3px);
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 2px,
+    rgba(0, 0, 0, 0.10) 2px 3px
+  );
   opacity: 0.6;
 }
-@media (prefers-reduced-motion: reduce) {
-  .wave-root::after { opacity: 0.4; }
+
+/* Slow scanline crawl — 3px over 9s (~0.33Hz), well under the 3Hz photo-
+   safety ceiling. Seamless because the gradient's period is 3px. */
+.wave-root.wave-js::after {
+  animation: wave-scan 9s linear infinite;
 }
+
+/* ==========================================================================
+   Korean — first-class voice. Never nest :lang(ko) inside :lang(ko).
+   Hangul needs more line-height and zero tracking.
+   ========================================================================== */
 
 .wave-root :lang(ko) {
   font-family: var(--wave-font-kr);
   letter-spacing: 0;
+  line-height: 1.9;
+  word-break: keep-all;
+  word-wrap: break-word;
 }
 
 .wave-root ::selection {
   background: var(--wave-phosphor);
   color: var(--wave-bg);
+  text-shadow: none;
 }
 
+/* Keyboard focus — amber ring with a phosphor halo, scoped to the entry. */
 .wave-root :focus-visible {
-  outline: 1px solid var(--wave-amber);
-  outline-offset: 4px;
+  outline: 2px solid var(--wave-amber);
+  outline-offset: 3px;
+  border-radius: 1px;
+  box-shadow:
+    0 0 0 1px rgba(74, 222, 128, 0.40),
+    0 0 14px rgba(251, 191, 36, 0.35);
 }
 
-/* Reveal gating */
+/* ==========================================================================
+   Reveal gating — entrance easing only. .wave-js is added on mount; without
+   it the dashboard simply stands finished (no pre-hidden content).
+   ========================================================================== */
+
 .wave-js [data-reveal] {
   opacity: 0;
   transform: translateY(18px);
   transition:
-    opacity var(--wave-reveal-ms) var(--wave-ease),
-    transform var(--wave-reveal-ms) var(--wave-ease);
+    opacity var(--wave-reveal-ms) var(--wave-ease-enter),
+    transform var(--wave-reveal-ms) var(--wave-ease-enter);
+  will-change: opacity, transform;
 }
+
 .wave-js [data-reveal].is-visible {
   opacity: 1;
   transform: none;
@@ -93,139 +170,316 @@
   }
 }
 
-/* Hero */
+/* ==========================================================================
+   01 · Hero — the wordmark (signature moment)
+   ========================================================================== */
+
 .wave-hero {
   position: relative;
   z-index: 2;
-  padding: clamp(80px, 18vh, 160px) clamp(24px, 6vw, 80px) clamp(40px, 8vh, 80px);
+  max-width: 92ch;
+  margin-inline: auto;
+  padding:
+    clamp(80px, 18vh, 160px) var(--wave-s-pad)
+    clamp(40px, 8vh, 80px);
   border-bottom: 1px solid var(--wave-hairline);
 }
+
 .wave-kicker {
+  margin: 0 0 var(--wave-s-6);
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: var(--wave-dim);
-  margin: 0 0 24px;
-}
-.wave-title {
-  font-size: clamp(3rem, 10vw, 7rem);
-  line-height: 1;
-  margin: 0 0 20px;
-  color: var(--wave-soft);
-  text-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
-}
-.wave-title :lang(ko) {
-  font-size: 0.5em;
-  color: var(--wave-phosphor);
-}
-.wave-tagline {
-  margin: 0;
-  color: var(--wave-amber);
-  font-size: clamp(0.9rem, 1.6vw, 1.1rem);
 }
 
-/* Spectrum — the signature */
+/* Display title: tight tracking for Latin, 3-tier soft/phosphor glow.
+   The Korean span resets tracking to 0 and glows phosphor. */
+.wave-title {
+  margin: 0 0 var(--wave-s-5);
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--wave-soft);
+  text-shadow: var(--wave-glow-soft);
+}
+
+.wave-title :lang(ko) {
+  margin-left: 0.2em;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--wave-phosphor);
+  text-shadow: var(--wave-glow-phosphor);
+}
+
+.wave-tagline {
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  letter-spacing: 0.01em;
+  color: var(--wave-amber);
+  text-shadow: var(--wave-glow-amber);
+}
+
+/* ==========================================================================
+   02 · Spectrum — the signature analyzer (SVG bars + peak-hold + ASCII)
+   ========================================================================== */
+
 .wave-spectrum-section {
   position: relative;
   z-index: 2;
-  padding: clamp(60px, 12vh, 120px) clamp(24px, 6vw, 80px);
+  padding: var(--wave-s-pad-y) var(--wave-s-pad);
   border-bottom: 1px solid var(--wave-hairline);
 }
+
 .wave-secthead {
+  margin: 0 0 var(--wave-s-10);
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: var(--wave-dim);
-  margin: 0 0 40px;
 }
+
+/* The analyzer frame — recessed panel with a 4-layer shadow stack:
+   inset top highlight + ambient contact + key + far diffuse. */
 .wave-spectrum {
+  position: relative;
+  margin: 0 0 var(--wave-s-6);
+  padding: var(--wave-s-4) var(--wave-s-4) var(--wave-s-3);
+  background: linear-gradient(
+    180deg,
+    rgba(74, 222, 128, 0.04),
+    rgba(6, 9, 6, 0) 70%
+  );
+  border: 1px solid var(--wave-hairline);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(74, 222, 128, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.03),
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 40px 80px rgba(0, 0, 0, 0.30);
+}
+
+.wave-spectrum__svg {
+  display: block;
+  width: 100%;
+  height: clamp(120px, 22vh, 200px);
+  overflow: visible;
+  /* One rasterized drop-shadow for the whole meter — cheap at 60fps, still
+     reads as a phosphor bloom hugging the bars. */
+  filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.45));
+}
+
+/* Bars use the userSpaceOnUse gradient defined in the SVG, so only the
+   loudest bands reach the amber zone — real LED-meter behaviour. */
+.wave-spectrum__bar {
+  fill: url(#wave-grad);
+}
+
+.wave-spectrum__peak {
+  fill: var(--wave-amber);
+}
+
+/* The ASCII channel — a secondary text readout under the meter, dimmer,
+   the "what the bars say in glyphs" companion strip. */
+.wave-spectrum__ascii {
+  margin: var(--wave-s-3) 0 0;
   font-family: var(--wave-font-mono);
-  font-size: clamp(1.6rem, 5vw, 3.5rem);
+  font-size: clamp(0.7rem, 1.4vw, 0.95rem);
   line-height: 1;
-  letter-spacing: 0.1em;
-  color: var(--wave-phosphor);
-  text-shadow:
-    0 0 6px var(--wave-phosphor),
-    0 0 16px rgba(74, 222, 128, 0.4);
-  margin: 0 0 24px;
+  letter-spacing: 0.08em;
   white-space: nowrap;
   overflow: hidden;
+  color: var(--wave-phosphor);
+  text-shadow:
+    0 0 2px rgba(74, 222, 128, 0.7),
+    0 0 6px rgba(74, 222, 128, 0.35);
 }
+
 .wave-spec-meta {
-  color: var(--wave-dim);
+  margin: 0;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  margin: 0;
+  color: var(--wave-dim);
 }
 
-/* Stats */
+/* ==========================================================================
+   03 · Stats — the ledger readout
+   ========================================================================== */
+
 .wave-stats {
   position: relative;
   z-index: 2;
-  padding: clamp(60px, 12vh, 120px) clamp(24px, 6vw, 80px);
+  padding: var(--wave-s-pad-y) var(--wave-s-pad);
   border-bottom: 1px solid var(--wave-hairline);
 }
+
 .wave-stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 40px;
+  grid-template-columns: 1fr;
+  gap: var(--wave-s-8) var(--wave-s-6);
   margin: 0;
 }
+
 .wave-stat-grid div {
+  padding: var(--wave-s-2) 0 var(--wave-s-2) var(--wave-s-5);
   border-left: 1px solid var(--wave-hairline);
-  padding-left: 20px;
+  transition:
+    transform 200ms var(--wave-ease-state),
+    box-shadow 200ms var(--wave-ease-state),
+    border-color 200ms var(--wave-ease-state);
 }
+
+/* Lift on hover — transform, not color, carries the depth (craft §7). */
+.wave-stat-grid div:hover {
+  transform: translateY(-2px);
+  border-left-color: var(--wave-phosphor);
+  box-shadow:
+    0 1px 0 rgba(74, 222, 128, 0.10),
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 24px 48px rgba(0, 0, 0, 0.30);
+}
+
 .wave-stat-grid dt {
+  margin: 0 0 var(--wave-s-2);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--wave-dim);
-  margin: 0 0 10px;
 }
+
 .wave-stat-grid dd {
   margin: 0;
   font-size: clamp(2rem, 5vw, 3rem);
   line-height: 1;
+  letter-spacing: -0.02em;
   color: var(--wave-soft);
+  text-shadow: var(--wave-glow-soft);
 }
 
-/* Marquee */
+/* ==========================================================================
+   04 · Marquee — the now-playing crawl
+   ========================================================================== */
+
 .wave-marquee {
   position: relative;
   z-index: 2;
+  padding: var(--wave-s-4) 0;
   overflow: hidden;
-  border-bottom: 1px solid var(--wave-hairline);
-  padding: 16px 0;
   white-space: nowrap;
+  border-bottom: 1px solid var(--wave-hairline);
 }
+
 .wave-marquee__track {
   display: inline-block;
-  color: var(--wave-phosphor);
-  font-size: 0.85rem;
-  animation: wave-marquee 40s linear infinite;
   padding-left: 100%;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: var(--wave-phosphor);
+  text-shadow:
+    0 0 2px rgba(74, 222, 128, 0.6),
+    0 0 8px rgba(74, 222, 128, 0.3);
+  animation: wave-marquee 40s linear infinite;
 }
+
 @keyframes wave-marquee {
   to {
     transform: translateX(-100%);
   }
 }
+
+/* ==========================================================================
+   05 · Footer — end of transmission
+   ========================================================================== */
+
+.wave-foot {
+  position: relative;
+  z-index: 2;
+  max-width: 92ch;
+  margin-inline: auto;
+  padding:
+    clamp(48px, 10vh, 96px) var(--wave-s-pad)
+    clamp(64px, 10vh, 120px);
+  font-size: 0.8rem;
+  color: var(--wave-dim);
+}
+
+.wave-foot p {
+  margin: 0 0 var(--wave-s-2);
+  max-width: 65ch;
+}
+
+/* ==========================================================================
+   Keyframes — transform / opacity / background-position only
+   ========================================================================== */
+
+@keyframes wave-scan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -3px;
+  }
+}
+
+/* ==========================================================================
+   Media queries — 720 / 900 / 1200
+   ========================================================================== */
+
+@media (min-width: 720px) {
+  .wave-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--wave-s-10) var(--wave-s-8);
+  }
+
+  .wave-secthead {
+    font-size: 1.05rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .wave-stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--wave-s-8);
+  }
+
+  /* Optical breathing room for the hero on wider screens. */
+  .wave-hero {
+    padding-top: clamp(96px, 20vh, 180px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .wave-hero,
+  .wave-spectrum-section,
+  .wave-stats,
+  .wave-foot {
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+
+  .wave-spectrum__svg {
+    height: clamp(160px, 24vh, 220px);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — instant everything, one beautiful static frame
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
+  .wave-root::after {
+    opacity: 0.4;
+  }
+
+  .wave-root.wave-js::after {
+    animation: none;
+  }
+
   .wave-marquee__track {
     animation: none;
     padding-left: 0;
   }
-}
-
-/* Footer */
-.wave-foot {
-  position: relative;
-  z-index: 2;
-  padding: clamp(48px, 10vh, 96px) clamp(24px, 6vw, 80px);
-  color: var(--wave-dim);
-  font-size: 0.8rem;
-}
-.wave-foot p {
-  margin: 0 0 8px;
 }

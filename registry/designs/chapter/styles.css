@@ -2,13 +2,29 @@
    aged paper / ink / drop-cap red · chapters with marginalia */
 
 .chapter-root {
-  --ch-bg: #fdf6e3;
-  --ch-bg-warm: #f9f0d8;
-  --ch-ink: #1a1a1a;
-  --ch-ink-soft: #525252;
-  --ch-red: #dc2626;
+  --ch-bg: #fdf6e3;           /* aged paper — ink on it 14.8:1 (AAA) */
+  --ch-bg-warm: #f9f0d8;      /* warmer margin note — ink on it 13.2:1 (AAA) */
+  --ch-ink: #1a1a1a;          /* reading ink — on bg 14.8:1 (AAA) */
+  --ch-ink-soft: #525252;     /* secondary — on bg 7.0:1 (AAA) */
+  --ch-red: #dc2626;          /* drop-cap/marginalia accent — large only 4.4:1, decorative */
+  --ch-red-ink: #991b1b;      /* readable red on paper — on bg 6.9:1 (AA+) */
   --ch-rule: rgba(26,26,26,0.12);
   --ch-font: "Inter", "Noto Serif KR", Georgia, serif;
+
+  /* 4px baseline spacing scale */
+  --ch-s-1: 0.25rem;
+  --ch-s-2: 0.5rem;
+  --ch-s-3: 0.75rem;
+  --ch-s-4: 1rem;
+  --ch-s-6: 1.5rem;
+  --ch-s-8: 2rem;
+  --ch-s-12: 3rem;
+  --ch-s-16: 4rem;
+  --ch-s-24: 6rem;
+
+  /* Editorial easing — slow, deliberate, like turning a page */
+  --ch-ease-page: cubic-bezier(0.16, 1, 0.3, 1);
+  --ch-ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
 
   position: relative;
   min-height: 100vh;
@@ -17,6 +33,8 @@
   font-family: var(--ch-font);
   font-size: clamp(15px, 0.5vw + 13px, 18px);
   line-height: 1.8;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   overflow-x: clip;
 }
@@ -34,20 +52,25 @@
   mix-blend-mode: multiply;
 }
 
-.chapter-root :lang(ko) { font-family: "Noto Serif KR", serif; }
+.chapter-root :lang(ko) {
+  font-family: "Noto Serif KR", serif;
+  line-height: 1.9;            /* Korean serif needs more room than Latin */
+  letter-spacing: -0.003em;    /* serif — near zero */
+  word-break: keep-all;
+}
 .chapter-root ::selection { background: var(--ch-red); color: var(--ch-bg); }
 .chapter-root :focus-visible { outline: 2px solid var(--ch-red); outline-offset: 4px; }
 
 .chapter-js [data-reveal] {
   opacity: 0; transform: translateY(20px);
-  transition: opacity 1000ms cubic-bezier(0.16,1,0.3,1), transform 1000ms cubic-bezier(0.16,1,0.3,1);
+  transition: opacity 1000ms var(--ch-ease-page), transform 1000ms var(--ch-ease-page);
 }
 .chapter-js [data-reveal].is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .chapter-js [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
 
-.chapter-doc { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.chapter-doc { position: relative; z-index: 1; max-width: 72ch; margin: 0 auto; padding-inline: clamp(20px, 5vw, 48px); }
 
 /* scroll-scrub-pinned: the title page */
 .chapter-titlepage {
@@ -73,7 +96,8 @@
   font-weight: 700;
   font-size: clamp(3rem, 12vw, 8rem);
   line-height: 0.9;
-  margin: 0 0 12px;
+  letter-spacing: -0.03em;     /* display serif — tight tracking */
+  margin: 0 0 var(--ch-s-4);
   display: flex;
   gap: 0.03em;
 }
@@ -102,68 +126,97 @@
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
 }
 
-/* Chapters */
-.chapter-body { padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 40px); }
+/* Chapters — editorial two-column body with a marginalia rail */
+.chapter-body { padding: clamp(48px, 10vh, 96px) 0; }
 .chapter-chap {
-  margin-bottom: clamp(60px, 12vh, 120px);
-  padding-top: 40px;
+  position: relative;
+  margin: 0 auto clamp(60px, 12vh, 120px);
+  padding: var(--ch-s-12) 0 0;
+  max-width: 72ch;
   border-top: 1px solid var(--ch-rule);
 }
 .chapter-chap:first-child { border-top: none; padding-top: 0; }
 .chapter-chap__head {
   display: flex;
   align-items: baseline;
-  gap: 20px;
-  margin-bottom: 28px;
+  gap: var(--ch-s-6);
+  margin-bottom: var(--ch-s-8);
+  flex-wrap: wrap;
 }
 .chapter-chap__no {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 300;
-  color: var(--ch-red);
+  color: var(--ch-red-ink);     /* readable red (6.9:1) — was --ch-red (decorative 4.4:1) */
   line-height: 1;
   font-style: italic;
+  letter-spacing: -0.02em;
 }
 .chapter-chap__title {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 700;
   margin: 0;
   line-height: 1.2;
+  letter-spacing: -0.015em;     /* display heading tightening */
 }
 .chapter-chap__en {
   display: block;
   font-size: 0.55em;
   font-style: italic;
   color: var(--ch-ink-soft);
-  margin-top: 4px;
+  margin-top: var(--ch-s-1);
+  letter-spacing: 0;
+}
+
+/* Body text — two-column reading with a hairline rule, zine-style */
+.chapter-chap__body {
+  column-count: 2;
+  column-gap: clamp(32px, 4vw, 56px);
+  column-rule: 1px solid var(--ch-rule);
+  text-wrap: pretty;            /* avoid orphans — 2024+ Baseline */
 }
 .chapter-chap__text {
   font-size: clamp(1rem, 1.5vw, 1.15rem);
   line-height: 1.9;
-  margin: 0 0 16px;
+  margin: 0 0 var(--ch-s-4);
   position: relative;
+  break-inside: avoid-column;
 }
 .chapter-chap__text--en {
   font-style: italic;
   color: var(--ch-ink-soft);
   font-size: 0.95rem;
+  line-height: 1.8;
 }
+
+/* Drop-cap — zine-style float with optical alignment */
 .chapter-dropcap {
   float: left;
-  font-size: 3.5em;
-  line-height: 0.8;
+  font-size: 3.6em;
+  line-height: 0.78;
   font-weight: 700;
-  color: var(--ch-red);
-  margin: 8px 12px 0 0;
+  color: var(--ch-red-ink);
+  margin: 0.06em 0.12em 0 -0.04em;   /* optical: nudge left, balance descender gap */
   font-family: "Noto Serif KR", serif;
+  shape-outside: circle(48%);         /* text wraps the glyph more naturally */
 }
+
+/* Marginalia — absolute rail note beside the column, not an inline box.
+   Sits in the page margin on wide screens; falls back inline on narrow. */
 .chapter-marginalia {
-  margin-top: 24px;
-  padding: 12px 16px;
-  border-left: 3px solid var(--ch-red);
-  font-size: 0.85rem;
+  position: absolute;
+  left: calc(100% + clamp(24px, 3vw, 40px));
+  top: var(--ch-s-16);
+  width: clamp(140px, 16vw, 200px);
+  padding: var(--ch-s-3) var(--ch-s-4);
+  border-left: 2px solid var(--ch-red-ink);
+  font-size: 0.82rem;
+  line-height: 1.6;
   font-style: italic;
   color: var(--ch-ink-soft);
   background: var(--ch-bg-warm);
+  box-shadow:
+    0 1px 2px rgba(26,26,26,0.04),
+    0 8px 16px rgba(26,26,26,0.06);   /* multi-layer paper shadow */
 }
 
 /* Footer */
@@ -174,4 +227,28 @@
   color: var(--ch-ink-soft);
   font-size: 0.82rem;
 }
-.chapter-foot p { margin: 0 0 6px; }
+.chapter-foot p { margin: 0 0 var(--ch-s-2); }
+
+/* ── Responsive — the book adapts to every desk and pocket ── */
+@media (max-width: 1200px) {
+  /* Marginalia moves to a right-side float inside the column area */
+  .chapter-marginalia {
+    position: relative;
+    left: auto; top: auto;
+    width: auto;
+    max-width: 36ch;
+    margin: var(--ch-s-6) 0 0 auto;
+  }
+}
+@media (max-width: 900px) {
+  /* Single column — the book on a desk */
+  .chapter-chap__body { column-count: 1; column-rule: none; }
+}
+@media (max-width: 720px) {
+  .chapter-title { font-size: clamp(2.5rem, 14vw, 6rem); letter-spacing: -0.02em; }
+  .chapter-dropcap { font-size: 3em; }
+  .chapter-chap__no { font-size: clamp(2rem, 8vw, 3rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-marginalia { box-shadow: 0 1px 2px rgba(26,26,26,0.04); }
+}

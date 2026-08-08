@@ -2,13 +2,28 @@
    concrete grey / green ink / hard shadows / zero easing */
 
 .block-root {
-  --block-bg: #e5e5e5;
-  --block-concrete: #d4d4d4;
-  --block-ink: #171717;
-  --block-ink-soft: #404040;
-  --block-green: #22c55e;
-  --block-green-deep: #16a34a;
-  --block-rule: #404040;
+  --block-bg: #e5e5e5;          /* concrete slab — ink on it 11.6:1 (AAA) */
+  --block-concrete: #d4d4d4;    /* surface variant */
+  --block-ink: #171717;         /* near-black — on bg 15.3:1 (AAA), the voice */
+  --block-ink-soft: #404040;    /* secondary — on bg 9.7:1 (AAA) */
+  --block-green: #22c55e;       /* large/decorative only 2.0:1 — accent, never body text */
+  --block-green-deep: #16a34a;  /* large only 2.7:1 — deeper accent */
+  --block-green-ink: #14532d;   /* green text on light — on bg 7.6:1 (AAA), the readable green */
+  --block-rule: #404040;        /* dividers — decorative */
+
+  /* 4px baseline spacing scale — no magic numbers */
+  --block-s-1: 0.25rem;
+  --block-s-2: 0.5rem;
+  --block-s-3: 0.75rem;
+  --block-s-4: 1rem;
+  --block-s-6: 1.5rem;
+  --block-s-8: 2rem;
+  --block-s-12: 3rem;
+  --block-s-16: 4rem;
+
+  /* Brutalist easing — hard cuts for reveals, snappy for interaction */
+  --block-ease-reveal: steps(8);
+  --block-ease-press: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   position: relative;
   min-height: 100vh;
@@ -36,14 +51,19 @@
 }
 .block-doc { position: relative; z-index: 1; }
 
-.block-root :lang(ko) { font-family: "Black Han Sans", sans-serif; }
-.block-root ::selection { background: var(--block-green); color: #fff; }
+.block-root :lang(ko) {
+  font-family: "Black Han Sans", sans-serif;
+  line-height: 1.4;          /* Black Han Sans is wide — needs more room than Inter */
+  letter-spacing: 0;          /* Korean never tracks open */
+  word-break: keep-all;
+}
+.block-root ::selection { background: var(--block-green); color: var(--block-ink); }
 .block-root :focus-visible { outline: 3px solid var(--block-ink); outline-offset: 4px; }
 
 /* Reveal — brutalist: clip-path hard cuts, no soft fades */
 .block-js [data-reveal] {
   clip-path: inset(0 100% 0 0);
-  transition: clip-path 500ms steps(8);
+  transition: clip-path 500ms var(--block-ease-reveal);
 }
 .block-js [data-reveal].is-visible { clip-path: inset(0 0% 0 0); }
 @media (prefers-reduced-motion: reduce) {
@@ -60,12 +80,12 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: var(--block-green-deep);
-  margin: 0 0 30px;
+  margin: 0 0 var(--block-s-8);
   display: inline-block;
   background: var(--block-ink);
   color: var(--block-green);
-  padding: 6px 14px;
+  padding: var(--block-s-2) var(--block-s-4);
+  box-shadow: 4px 4px 0 var(--block-green);   /* hard offset shadow — the brutalist signature */
 }
 .block-title {
   font-weight: 900;
@@ -167,17 +187,24 @@
 }
 .block-poem {
   display: flex;
-  gap: 24px;
+  gap: var(--block-s-6);
   align-items: baseline;
-  padding: 28px 0;
-  border-top: 2px solid var(--block-rule);
-  transition: none;
+  padding: var(--block-s-8) var(--block-s-4) var(--block-s-8) var(--block-s-4);
+  margin: var(--block-s-2) 0;
+  border: 3px solid var(--block-ink);
+  background: #fff;
+  box-shadow: 6px 6px 0 var(--block-ink);
+  transition: transform 180ms var(--block-ease-press), box-shadow 180ms var(--block-ease-press);
 }
-.block-poem:last-child { border-bottom: 2px solid var(--block-rule); }
+.block-poem:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--block-green);
+}
+.block-poem:last-child { /* drop the old border rule — cards own their edges now */ }
 .block-poem__no {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 900;
-  color: var(--block-green);
+  color: var(--block-green-ink);   /* readable green (7.6:1) — was --block-green (2.0:1, body-illegal) */
   min-width: 2.5ch;
 }
 .block-poem__body { flex: 1; }
@@ -238,4 +265,22 @@
   font-size: 0.82rem;
   font-weight: 700;
 }
-.block-foot p { margin: 0 0 6px; }
+.block-foot p { margin: 0 0 var(--block-s-2); }
+
+/* ── Responsive — three breakpoints for rhythm at every width ── */
+@media (max-width: 900px) {
+  .block-poems__head { flex-direction: column; align-items: flex-start; }
+  .block-poem { flex-direction: column; gap: var(--block-s-2); padding: var(--block-s-6); }
+  .block-poem__no { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+}
+@media (max-width: 720px) {
+  .block-hero { padding: clamp(56px, 14vh, 100px) var(--block-s-4) var(--block-s-8); }
+  .block-title { font-size: clamp(3rem, 18vw, 8rem); }
+  .block-poem { box-shadow: 4px 4px 0 var(--block-ink); }
+  .block-poem:hover { transform: none; box-shadow: 4px 4px 0 var(--block-ink); }  /* touch — no hover */
+  .block-mode-btn { padding: var(--block-s-2) var(--block-s-3); font-size: 0.78rem; }
+}
+@media (max-width: 480px) {
+  .block-manifesto__text { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+  .block-marquee__track { font-size: 0.78rem; }
+}

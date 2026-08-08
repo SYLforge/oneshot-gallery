@@ -30,9 +30,9 @@
   --orbit-explode-unit: 1.4px;     /* multiplied by per-part max in calc() */
 
   /* -- type ------------------------------------------------------------- */
-  --orbit-font-display: var(--font-grotesk), "Space Grotesk", sans-serif;
-  --orbit-font-body: "Inter", var(--font-noto-kr), system-ui, sans-serif;
-  --orbit-font-ko: var(--font-noto-kr), "Inter", sans-serif;
+  --orbit-font-display: "Space Grotesk", sans-serif;
+  --orbit-font-body: "Inter", "Noto Sans KR", system-ui, sans-serif;
+  --orbit-font-ko: "Noto Sans KR", "Inter", sans-serif;
 
   /* -- motion ----------------------------------------------------------- */
   --orbit-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -170,7 +170,7 @@
 
 .orbit-kicker {
   margin: 0 0 clamp(0.8rem, 2vh, 1.4rem);
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.74rem;
   font-weight: 500;
   letter-spacing: 0.24em;
@@ -227,7 +227,7 @@
   border-top: 1px solid var(--orbit-hairline);
 }
 .orbit-spec dt {
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -339,7 +339,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.66rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -381,7 +381,7 @@
 }
 .orbit-section__no {
   margin: 0 0 0.4rem;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.74rem;
   font-weight: 500;
   letter-spacing: 0.24em;
@@ -404,7 +404,7 @@
 }
 .orbit-section__meta {
   margin: 0.8rem 0 0;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.2em;
@@ -518,7 +518,7 @@
   opacity: calc(0.35 + 0.65 * var(--orbit-build));
 }
 .orbit-build__part-en {
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -534,7 +534,7 @@
   letter-spacing: 0.08em;
   color: var(--orbit-frost-dim);
   text-transform: uppercase;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 /* Narrower explode travel on small screens so the diagram stays composed */
@@ -630,7 +630,7 @@
   gap: 0.6em;
 }
 .orbit-colorway__name-en {
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -652,7 +652,7 @@
 .orbit-colorway__hex {
   margin-top: auto;
   padding-top: 0.8rem;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.7rem;
   letter-spacing: 0.16em;
   color: var(--orbit-frost-dim);
@@ -672,7 +672,7 @@
 }
 .orbit-footer__signoff {
   margin: 0 0 2.4rem;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: clamp(1.1rem, 2vw, 1.45rem);
   line-height: 1.5;
   color: var(--orbit-frost);
@@ -697,7 +697,7 @@
 }
 .orbit-footer__spec dt {
   flex: 0 0 5.5rem;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -716,7 +716,7 @@
 }
 .orbit-footer__cal-title {
   margin: 0 0 1.2rem;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: clamp(1.1rem, 2vw, 1.4rem);
   color: var(--orbit-frost);
 }
@@ -736,7 +736,7 @@
   border-bottom: 1px solid var(--orbit-hairline);
 }
 .orbit-footer__cal-date {
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -757,7 +757,7 @@
 }
 .orbit-footer__copy {
   margin: 0;
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 0.9rem;
   color: var(--orbit-frost-dim);
 }

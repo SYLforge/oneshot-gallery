@@ -24,6 +24,12 @@ export default function WavePage() {
   const [spectrum, setSpectrum] = useState<number[]>(
     () => Array.from({ length: BARS }, () => 0.2),
   );
+  // Peak-hold caps — the slow-decaying amber markers above each bar that make
+  // the meter read as a real LED analyzer, not a single line of text-shadow.
+  const [peaks, setPeaks] = useState<number[]>(
+    () => Array.from({ length: BARS }, () => 0.2),
+  );
+  const peaksRef = useRef<number[]>(Array.from({ length: BARS }, () => 0.2));
   const raf = useRef(0);
   const phase = useRef(0);
 
@@ -37,18 +43,24 @@ export default function WavePage() {
       raf.current = requestAnimationFrame(tick);
       phase.current += 0.04;
       const t = phase.current;
-      setSpectrum(
-        Array.from({ length: BARS }, (_, i) => {
-          const center = BARS / 2;
-          const dist = Math.abs(i - center) / center;
-          const env = Math.max(0.08, 1 - dist * 0.7);
-          const beat =
-            0.5 +
-            0.3 * Math.sin(t * 2.0 + i * 0.3) +
-            0.2 * Math.sin(t * 5.0 + i * 0.7);
-          return Math.max(0.05, Math.min(1, beat * env));
-        }),
+      const next = Array.from({ length: BARS }, (_, i) => {
+        const center = BARS / 2;
+        const dist = Math.abs(i - center) / center;
+        const env = Math.max(0.08, 1 - dist * 0.7);
+        const beat =
+          0.5 +
+          0.3 * Math.sin(t * 2.0 + i * 0.3) +
+          0.2 * Math.sin(t * 5.0 + i * 0.7);
+        return Math.max(0.05, Math.min(1, beat * env));
+      });
+      setSpectrum(next);
+      // Peak-hold: grab the new high, otherwise decay slowly. The 0.985 factor
+      // + 0.001 floor gives a graceful LED-meter fall, ~1.5s from full.
+      const nextPeaks = next.map((v, i) =>
+        Math.max(peaksRef.current[i] * 0.985 - 0.001, v),
       );
+      peaksRef.current = nextPeaks;
+      setPeaks(nextPeaks);
     };
     raf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf.current);
@@ -79,11 +91,67 @@ export default function WavePage() {
         <h2 id="wave-spec-title" className="wave-secthead" data-reveal="">
           <span lang="ko">스펙트럼</span> · spectrum
         </h2>
-        <pre className="wave-spectrum" aria-label="Live ASCII spectrum analyzer">
-          {spectrum
-            .map((v) => GLYPHS[Math.min(7, Math.floor(v * 8))])
-            .join("")}
-        </pre>
+        {/* The SVG meter is the signature: real bars, real peak-hold caps,
+            a phosphor→amber gradient so loud bands glow warm. Hidden from
+            AT behind the labeled ASCII strip below. */}
+        <div
+          className="wave-spectrum"
+          role="img"
+          aria-hidden="true"
+          data-reveal=""
+        >
+          <svg
+            className="wave-spectrum__svg"
+            viewBox="0 0 480 200"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              {/* Vertical meter gradient: green bed → amber head, applied in
+                  userSpaceOnUse so tall bars literally climb into the warm. */}
+              <linearGradient id="wave-grad" x1="0" y1="200" x2="0" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stopColor="#4ade80" />
+                <stop offset="0.62" stopColor="#4ade80" />
+                <stop offset="0.82" stopColor="#a3e635" />
+                <stop offset="0.95" stopColor="#fbbf24" />
+                <stop offset="1" stopColor="#fb923c" />
+              </linearGradient>
+            </defs>
+            {spectrum.map((v, i) => {
+              const gap = 2;
+              const w = (480 - gap * (BARS - 1)) / BARS;
+              const x = i * (w + gap);
+              const h = Math.max(2, v * 200);
+              const y = 200 - h;
+              const pkY = 200 - Math.max(2, peaks[i] * 200) - 2;
+              return (
+                <g key={i}>
+                  <rect
+                    className="wave-spectrum__bar"
+                    x={x}
+                    y={y}
+                    width={w}
+                    height={h}
+                  />
+                  {/* Peak-hold cap — a thin amber tick that lingers at the
+                      loudest recent level, then decays. */}
+                  <rect
+                    className="wave-spectrum__peak"
+                    x={x}
+                    y={pkY}
+                    width={w}
+                    height={2}
+                  />
+                </g>
+              );
+            })}
+          </svg>
+          {/* The ASCII channel keeps the original charm as a secondary strip. */}
+          <pre className="wave-spectrum__ascii">
+            {spectrum
+              .map((v) => GLYPHS[Math.min(7, Math.floor(v * 8))])
+              .join("")}
+          </pre>
+        </div>
         <p className="wave-spec-meta" data-reveal="">
           <span lang="ko">48 밴드 · 60fps · 시뮬레이션</span> · 48 bands · 60fps
           · simulated

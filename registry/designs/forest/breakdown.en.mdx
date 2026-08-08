@@ -9,22 +9,26 @@ visually distinct from SUP (water surface) and DREAM (soft pastel haze).
 ## The page, top to bottom
 The hero under a drifting canopy; the descent — a sticky section that
 darkens with scroll progress, three lines of Korean marking the deepening
-(Light thins · moss thickens · breath deepens); the dappled-leaf overlay
-across everything; and the darkened footer where the forest holds its breath.
+(Light thins · moss thickens · breath deepens); the layers of the canopy —
+a section naming the three depths (far / mid / near); the understory —
+quiet cards for moss, fern, and fungi; the dappled-leaf overlay across
+everything; and the darkened footer where the forest holds its breath.
 
 ## Techniques
 1. **scroll-scrub-pinned** — the descent. A sticky inner reads
    `--forest-scrub` (0→1, lerp-bypassed under reduced motion) and composes
-   its background and text color from it via `color-mix`: the further you
-   scroll, the deeper the canopy becomes.
+   its background and text color from it via `color-mix(in oklab)`: the
+   further you scroll, the deeper the canopy becomes.
 2. **feturbulence-texture** — a full-bleed SVG `feTurbulence` fractalNoise
    pass, low-frequency, masked into a leaf-dapple color matrix and laid over
    the page with `mix-blend-mode: multiply`. It is the moving light through
-   leaves.
-3. **pointer-parallax** — the canopy layers drift toward the pointer at
-   different depths (the photograph most, the near CSS shapes least), driven
-   by `--drm-px` / `--drm-py`. Pure input→style; under reduced motion the
-   layers simply sit.
+   leaves, and it retreats as you descend.
+3. **pointer-parallax** — three canopy depths drift toward the pointer at
+   different magnitudes (the far photograph barely sways, the mid clusters
+   carry the drift, the near leaves move most), driven by `--forest-px` /
+   `--forest-py`. Each depth also sways on its own mutually-prime period
+   (13s / 17s / 23s) so the canopy never loops. Pure input→style; under
+   reduced motion the layers simply sit.
 
 ## The canopy photograph
 The far layer is a single generated image (ComfyUI, Illustrious

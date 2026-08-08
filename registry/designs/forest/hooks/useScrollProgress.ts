@@ -3,26 +3,23 @@
 import { useEffect, useRef } from "react";
 
 /** Per-frame lerp toward the scroll target, normalized to 60fps. */
-const OPEN_LERP = 0.14;
+const DESCENT_LERP = 0.08;
 
 /**
- * Drives `--bloom-open` (0 → 1) on the referenced element based on how far
+ * Drives `--forest-scrub` (0 → 1) on the referenced element based on how far
  * the viewport has scrolled through the element's own height — the pinned
- * "the bloom" section. As you scroll the pinned flower stays put while
- * `--bloom-open` rises from 0 (a closed bud, petals scaled to 0.42 and
- * rotated -8°) to 1 (fully open, petals at scale 1, rotation 0°). The
- * section's height in CSS is taller than the viewport on purpose (a sticky
- * inner), so the progress maps cleanly onto a few screens of scroll.
+ * "descent" section of the forest. As you scroll the pinned inner stays put
+ * while `--forest-scrub` rises from 0 (the bright canopy, light filtering
+ * through) to 1 (the deep floor, moss-thick and breath-slow). One value
+ * drives every visual: the sky color lerps from forest-light toward
+ * forest-deep, the leaves darken, the dappled light retreats.
  *
- * The CSS fallback is `var(--bloom-open, 1)` — fully open — so without
- * JavaScript, and under reduced motion (where this hook does nothing), the
- * signature flower simply stands open. The lerp makes it scrubbable without
- * jitter: scrolling fast opens fast, scrolling slow opens slow, and
- * scrolling back up closes the flower again.
- *
- * The scroll handler is passive and only writes to a CSS custom property
- * (no layout work); the rAF loop runs only while the section is on screen
- * and the tab is visible.
+ * The CSS fallback is `var(--forest-scrub, 0)` — fully lit canopy — so
+ * without JavaScript, and under reduced motion (where this hook does
+ * nothing), the section simply shows its daylit composition. The lerp makes
+ * it scrubbable without jitter. The scroll handler is passive and only
+ * writes to a CSS custom property (no layout work); the rAF loop runs only
+ * while the section is on screen and the tab is visible.
  */
 export function useScrollProgress<T extends HTMLElement>(disabled: boolean) {
   const ref = useRef<T | null>(null);
@@ -31,7 +28,7 @@ export function useScrollProgress<T extends HTMLElement>(disabled: boolean) {
     const el = ref.current;
     if (!el || disabled) return;
 
-    el.style.setProperty("--bloom-open", "0");
+    el.style.setProperty("--forest-scrub", "0");
 
     let raf = 0;
     let running = false;
@@ -61,10 +58,10 @@ export function useScrollProgress<T extends HTMLElement>(disabled: boolean) {
       raf = requestAnimationFrame(step);
       const dt = Math.min(now - last, 48);
       last = now;
-      const next = value + (target - value) * OPEN_LERP * (dt / 16.7);
+      const next = value + (target - value) * DESCENT_LERP * (dt / 16.7);
       if (Math.abs(next - value) < 0.0002) return;
       value = next;
-      el.style.setProperty("--bloom-open", value.toFixed(4));
+      el.style.setProperty("--forest-scrub", value.toFixed(4));
     };
 
     const start = () => {
@@ -104,8 +101,8 @@ export function useScrollProgress<T extends HTMLElement>(disabled: boolean) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       document.removeEventListener("visibilitychange", onVisibility);
-      // hand the element back to the CSS fallback (fully open)
-      el.style.removeProperty("--bloom-open");
+      // hand the element back to the CSS fallback (fully lit canopy)
+      el.style.removeProperty("--forest-scrub");
     };
   }, [disabled]);
 

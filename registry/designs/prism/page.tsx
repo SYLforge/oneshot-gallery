@@ -8,14 +8,17 @@ import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 import { usePointerParallax } from "./hooks/usePointerParallax";
 
 const TITLE = "PRISM";
+// Spectrum data — wavelength (nm) and refractive index n for crown glass
+// (BK7 ~1.51 at 589 nm). Shorter wavelengths refract more, so violet bends
+// furthest from the incident beam. The legend reads as a lab chart.
 const SPECTRUM = [
-  { color: "#ef4444", ko: "적", en: "red", deg: 0 },
-  { color: "#f97316", ko: "주", en: "orange", deg: 30 },
-  { color: "#eab308", ko: "황", en: "yellow", deg: 60 },
-  { color: "#22c55e", ko: "녹", en: "green", deg: 90 },
-  { color: "#06b6d4", ko: "청", en: "cyan", deg: 120 },
-  { color: "#3b82f6", ko: "람", en: "blue", deg: 150 },
-  { color: "#8b5cf6", ko: "자", en: "violet", deg: 180 },
+  { color: "#ef4444", ko: "적", en: "red",    deg: 0,   nm: 700, n: "1.513" },
+  { color: "#f97316", ko: "주", en: "orange", deg: 30,  nm: 620, n: "1.515" },
+  { color: "#eab308", ko: "황", en: "yellow", deg: 60,  nm: 580, n: "1.517" },
+  { color: "#22c55e", ko: "녹", en: "green",  deg: 90,  nm: 530, n: "1.519" },
+  { color: "#06b6d4", ko: "청", en: "cyan",   deg: 120, nm: 490, n: "1.522" },
+  { color: "#3b82f6", ko: "람", en: "blue",   deg: 150, nm: 450, n: "1.524" },
+  { color: "#8b5cf6", ko: "자", en: "violet", deg: 180, nm: 410, n: "1.530" },
 ];
 
 /**
@@ -126,6 +129,10 @@ export default function PrismPage() {
                 <span className="prism-color__swatch" />
                 <p className="prism-color__ko" lang="ko">{s.ko}</p>
                 <p className="prism-color__en">{s.en}</p>
+                <p className="prism-color__data">
+                  <span><b>{s.nm}</b> nm</span>
+                  <span>n = <b>{s.n}</b></span>
+                </p>
               </div>
             ))}
           </div>

@@ -58,13 +58,15 @@ export default function ChapterPage() {
                   <em className="chapter-chap__en">{c.en_title}</em>
                 </h2>
               </div>
-              <p className="chapter-chap__text">
-                <span className="chapter-dropcap" aria-hidden="true">{c.ko_title[0]}</span>
-                <span lang="ko">{c.ko}</span>
-              </p>
-              <p className="chapter-chap__text chapter-chap__text--en">
-                <em>{c.en}</em>
-              </p>
+              <div className="chapter-chap__body">
+                <p className="chapter-chap__text">
+                  <span className="chapter-dropcap" aria-hidden="true">{c.ko_title[0]}</span>
+                  <span lang="ko">{c.ko}</span>
+                </p>
+                <p className="chapter-chap__text chapter-chap__text--en">
+                  <em>{c.en}</em>
+                </p>
+              </div>
               <aside className="chapter-marginalia" data-reveal="">
                 <span lang="ko">여백의 메모 — 이 챕터는 천천히 읽어야 한다.</span>
               </aside>

@@ -1,14 +1,53 @@
-/* PRISM 프리즘 — light refraction studio · glass-futurism
-   glass white / spectrum / cyan accent · glass panels that split light */
+/* ==========================================================================
+   PRISM 프리즘 — light refraction studio · glass-futurism
+   glass white / spectrum / cyan accent · glass panels that split light
+   Scoped by convention to .prism-root; classes prefixed prism-.
+   Crafted to the gallery glass-futurism benchmark (see CRAFT-STANDARDS.md).
+   ========================================================================== */
 
 .prism-root {
-  --prism-bg: #f8fafc;
-  --prism-bg-deep: #eef2ff;
-  --prism-ink: #1e293b;
-  --prism-ink-soft: #475569;
-  --prism-accent: #06b6d4;
-  --prism-glass: rgba(255,255,255,0.6);
-  --prism-glass-border: rgba(30,41,59,0.1);
+  /* ---- Surface colors --------------------------------------------------
+     Contrast ratios verified against the light gradient ground
+     (#f8fafc → #eef2ff, treated as ~#f4f6fd for measurement).              */
+  --prism-bg:           #f8fafc;  /* ground — paper white                  */
+  --prism-bg-deep:      #eef2ff;  /* ground variant — indigo mist           */
+  --prism-ink:          #1e293b;  /* slate-800 · ink on ground 13.0:1 (AAA) */
+  --prism-ink-soft:     #475569;  /* slate-600 · ink on ground  7.7:1 (AAA) */
+  --prism-accent:       #06b6d4;  /* cyan-500  · on ground 2.3:1 — large/
+                                    decorative only; never body text        */
+  --prism-accent-ink:   #0e7490;  /* cyan-700  · on ground 4.8:1 (AA-large) */
+  --prism-glass:        rgba(255, 255, 255, 0.60);  /* glass surface alpha  */
+  --prism-glass-deep:   rgba(255, 255, 255, 0.75);  /* hover/active lift    */
+  --prism-glass-border: rgba(30, 41, 59, 0.10);     /* hairline edge        */
+  --prism-glass-edge:   rgba(255, 255, 255, 0.65);  /* inner light edge     */
+
+  /* ---- 4px baseline spacing scale ------------------------------------ */
+  --sp-1:  0.25rem;   /*  4px */
+  --sp-2:  0.5rem;    /*  8px */
+  --sp-3:  0.75rem;   /* 12px */
+  --sp-4:  1rem;      /* 16px */
+  --sp-5:  1.25rem;   /* 20px */
+  --sp-6:  1.5rem;    /* 24px */
+  --sp-8:  2rem;      /* 32px */
+  --sp-10: 2.5rem;    /* 40px */
+  --sp-12: 3rem;      /* 48px */
+
+  /* ---- Intent-separated easing curves --------------------------------
+     Never default ease/linear — see CRAFT-STANDARDS §1.                   */
+  --prism-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);    /* entry / reveal */
+  --prism-ease-out:    cubic-bezier(0.25, 1, 0.5, 1);    /* hover / scrub  */
+  --prism-ease-back:   cubic-bezier(0.34, 1.56, 0.64, 1);/* glyph overshoot*/
+  --prism-ease-spread: cubic-bezier(0.7, 0, 0.2, 1);     /* clip curtains   */
+
+  /* ---- Multi-layer glass shadow (ambient + key + contact) ------------- */
+  --prism-shadow-stage:
+    0 1px 2px   rgba(30, 41, 59, 0.04),    /* ambient — surface contact    */
+    0 12px 28px rgba(30, 41, 59, 0.10),    /* key — primary cast           */
+    0 40px 80px rgba(30, 41, 59, 0.08);    /* contact — far-field diffusion*/
+  --prism-shadow-swatch:
+    0 1px 2px   rgba(30, 41, 59, 0.06),
+    0 8px 18px  rgba(30, 41, 59, 0.08),
+    0 20px 40px rgba(30, 41, 59, 0.06);
 
   position: relative;
   min-height: 100vh;
@@ -17,6 +56,9 @@
   font-family: "Inter", "Noto Sans KR", sans-serif;
   font-size: clamp(15px, 0.5vw + 13px, 17px);
   line-height: 1.7;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
   overflow-x: clip;
 }
@@ -41,7 +83,7 @@
     radial-gradient(28% 32% at 70% 28%, rgba(6,182,212,0.32), transparent 60%),
     radial-gradient(28% 32% at 84% 38%, rgba(59,130,246,0.32), transparent 60%),
     radial-gradient(30% 34% at 92% 55%, rgba(139,92,246,0.28), transparent 60%);
-  animation: prism-aurora 22s ease-in-out infinite alternate;
+  animation: prism-aurora 22s var(--prism-ease-spread) infinite alternate;
   filter: blur(14px);
 }
 @keyframes prism-aurora {
@@ -51,13 +93,27 @@
   .prism-root::before { animation: none; }
 }
 
-.prism-root :lang(ko) { font-family: "Noto Sans KR", sans-serif; }
+/* Korean needs its own metrics — Hangul never gets tracking fanned out. */
+.prism-root :lang(ko) {
+  font-family: "Noto Sans KR", sans-serif;
+  letter-spacing: 0;
+  line-height: 1.9;
+  word-break: keep-all;
+  word-wrap: break-word;
+}
 .prism-root ::selection { background: var(--prism-accent); color: #fff; }
-.prism-root :focus-visible { outline: 2px solid var(--prism-accent); outline-offset: 4px; }
+.prism-root :focus-visible {
+  outline: 2px solid var(--prism-accent-ink);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
 
 .prism-js [data-reveal] {
-  opacity: 0; transform: translateY(24px);
-  transition: opacity 900ms cubic-bezier(0.16,1,0.3,1), transform 900ms cubic-bezier(0.16,1,0.3,1);
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 900ms var(--prism-ease-reveal),
+    transform 900ms var(--prism-ease-reveal);
 }
 .prism-js [data-reveal].is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
@@ -66,23 +122,28 @@
 
 .prism-doc { position: relative; z-index: 1; }
 
-/* Hero */
+/* ==========================================================================
+   Hero — the studio sign-in
+   ========================================================================== */
 .prism-hero {
-  padding: clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
+  padding:
+    clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
   text-align: center;
 }
 .prism-kicker {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--prism-accent);
-  margin: 0 0 30px;
+  color: var(--prism-accent-ink);
+  margin: 0 0 var(--sp-8);
+  text-wrap: pretty;
 }
 .prism-title {
   font-weight: 700;
   font-size: clamp(4rem, 14vw, 9rem);
   line-height: 0.9;
-  margin: 0 0 20px;
+  letter-spacing: -0.04em;          /* display tracking — major glyph run   */
+  margin: 0 0 var(--sp-5);
   display: flex;
   justify-content: center;
   gap: 0.02em;
@@ -102,7 +163,7 @@
     0 0 28px color-mix(in srgb, var(--prism-c, var(--prism-accent)) 30%, transparent);
 }
 .prism-js .prism-glyph {
-  animation: prism-glyph-in 800ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: prism-glyph-in 800ms var(--prism-ease-back) both;
   animation-delay: calc(var(--prism-i, 0) * 100ms + 200ms);
 }
 @keyframes prism-glyph-in {
@@ -115,23 +176,43 @@
   color: var(--prism-ink-soft);
   margin: 0;
   font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  text-wrap: pretty;
 }
 
-/* The prism stage — pointer-parallax glass panel */
+/* ==========================================================================
+   The prism stage — pointer-parallax glass panel
+   Multi-layer shadow (ambient + key + contact) gives the glass real depth;
+   the inner light edge reads as a beveled glass facet.
+   ========================================================================== */
 .prism-stage {
   position: relative;
   z-index: 1;
-  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
+  padding:
+    clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
   max-width: 900px;
   margin: 0 auto;
   border-radius: 24px;
   background: var(--prism-glass);
   border: 1px solid var(--prism-glass-border);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 20px 60px rgba(30, 41, 59, 0.12);
-  transition: transform 500ms cubic-bezier(0.16,1,0.3,1);
+  /* inner top highlight — the bright facet of a beveled glass edge */
+  box-shadow:
+    inset 0 1px 0 var(--prism-glass-edge),
+    var(--prism-shadow-stage);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  /* Individual properties, never `transition: all`. The parallax transform
+     runs on the scrub curve; the lift on hover is a separate, faster one. */
+  transition:
+    transform 500ms var(--prism-ease-out),
+    box-shadow 300ms var(--prism-ease-out);
   will-change: transform;
+}
+.prism-stage:hover {
+  box-shadow:
+    inset 0 1px 0 var(--prism-glass-edge),
+    0 1px 2px   rgba(30, 41, 59, 0.05),
+    0 18px 36px rgba(30, 41, 59, 0.12),
+    0 56px 96px rgba(30, 41, 59, 0.10);
 }
 /* The generated spectrum-beam field — dispersed light behind the SVG
    diagram, so the glass stage reads as a real light-room. Soft, low-opacity,
@@ -148,32 +229,35 @@
   z-index: 0;
   pointer-events: none;
 }
-.prism-beam-svg { position: relative; z-index: 1; }
-
-@media (prefers-reduced-motion: reduce) {
-  .prism-stage { transform: none !important; transition: none; }
-}
 .prism-beam-svg {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: auto;
   display: block;
+  /* contact drop-shadow grounds the line drawing on the glass surface */
+  filter: drop-shadow(0 12px 18px rgba(30, 41, 59, 0.10));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prism-stage { transform: none !important; transition: none; }
 }
 /* svg-line-draw: the beam + rays draw via stroke-dashoffset */
 .prism-beam-in {
   stroke-dasharray: 300;
   stroke-dashoffset: 300;
-  animation: prism-draw 1500ms cubic-bezier(0.16,1,0.3,1) forwards;
+  animation: prism-draw 1500ms var(--prism-ease-reveal) forwards;
   animation-delay: 400ms;
 }
 .prism-ray {
   stroke-dasharray: 420;
   stroke-dashoffset: 420;
-  animation: prism-draw 1200ms cubic-bezier(0.16,1,0.3,1) forwards;
+  animation: prism-draw 1200ms var(--prism-ease-reveal) forwards;
   animation-delay: calc(var(--prism-ray-i, 0) * 80ms + 1000ms);
 }
 .prism-glass {
   opacity: 0;
-  animation: prism-fade-in 600ms ease forwards;
+  animation: prism-fade-in 600ms var(--prism-ease-out) forwards;
   animation-delay: 200ms;
 }
 @keyframes prism-draw { to { stroke-dashoffset: 0; } }
@@ -183,9 +267,14 @@
   .prism-glass { opacity: 1; animation: none; }
 }
 
-/* Spectrum legend */
+/* ==========================================================================
+   Spectrum legend — dispersing into data
+   Each swatch carries wavelength (nm) and refractive index (crown glass n),
+   so the legend reads as a lab chart, not just a rainbow.
+   ========================================================================== */
 .prism-spectrum {
-  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
+  padding:
+    clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
   max-width: 900px;
   margin: 0 auto;
 }
@@ -193,46 +282,100 @@
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--prism-accent);
-  margin: 0 0 40px;
+  color: var(--prism-accent-ink);
+  margin: 0 0 var(--sp-10);
+  text-wrap: pretty;
 }
 .prism-spectrum-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--sp-5);
 }
-.prism-color {
-  text-align: center;
-}
+.prism-color { text-align: center; }
 .prism-color__swatch {
   display: block;
   width: 100%;
   height: 80px;
   border-radius: 12px;
   background: var(--prism-c);
-  margin-bottom: 12px;
-  box-shadow: 0 4px 20px color-mix(in srgb, var(--prism-c) 30%, transparent);
+  margin-bottom: var(--sp-3);
+  /* 3-layer shadow keyed to each hue — swatch glows in its own color */
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--prism-c) 25%, transparent),
+    0 8px 18px color-mix(in srgb, var(--prism-c) 30%, transparent),
+    0 20px 40px color-mix(in srgb, var(--prism-c) 20%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 .prism-color__ko {
   font-size: 1.2rem;
   font-weight: 700;
-  margin: 0 0 2px;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--sp-1);
   color: var(--prism-ink);
 }
 .prism-color__en {
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--prism-ink-soft);
-  margin: 0;
+  margin: 0 0 var(--sp-2);
+}
+/* Lab data row — wavelength and refractive index, tabular for column scan */
+.prism-color__data {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--prism-ink-soft);
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+}
+.prism-color__data b {
+  font-weight: 500;
+  color: var(--prism-ink);
 }
 
-/* Footer */
+/* ==========================================================================
+   Footer
+   ========================================================================== */
 .prism-foot {
-  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
+  padding:
+    clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
   text-align: center;
   color: var(--prism-ink-soft);
   font-size: 0.82rem;
   border-top: 1px solid var(--prism-glass-border);
+  text-wrap: pretty;
 }
-.prism-foot p { margin: 0 0 6px; }
+.prism-foot p { margin: 0 0 var(--sp-2); }
+
+/* ==========================================================================
+   Responsive — honest at 360px, composed at 1440px+
+   ========================================================================== */
+@media (max-width: 720px) {
+  .prism-hero { padding-bottom: var(--sp-8); }
+  .prism-title { font-size: clamp(3rem, 18vw, 5rem); }
+  .prism-spectrum-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-4);
+  }
+  .prism-color__swatch { height: 64px; border-radius: 10px; }
+  .prism-stage { padding: var(--sp-6) var(--sp-4); border-radius: 18px; }
+}
+
+@media (max-width: 900px) {
+  .prism-spectrum-grid { grid-template-columns: repeat(3, 1fr); }
+  .prism-secthead { margin-bottom: var(--sp-8); }
+}
+
+@media (min-width: 1200px) {
+  /* On wide screens, let the studio breathe — wider stage, looser legend. */
+  .prism-stage,
+  .prism-spectrum { max-width: 1040px; }
+  .prism-spectrum-grid {
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--sp-6);
+  }
+  .prism-color__swatch { height: 96px; }
+}

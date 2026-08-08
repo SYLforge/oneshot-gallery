@@ -42,6 +42,7 @@ export default function OrbitPage() {
     <div
       id="orbit-top"
       ref={rootRef}
+      className="orbit-root"
       // `orbit-js` is NOT in the className on purpose: it is added on mount
       // by the effect above so the SSR/ no-JS markup is the completed page,
       // and every reveal pre-state (gated behind .orbit-js) stays hidden only
