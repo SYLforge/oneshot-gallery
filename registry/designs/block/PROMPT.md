@@ -18,4 +18,9 @@ orchestrator as part of the gallery's 50-entry milestone. Pure code, no images,
 Korean-first bilingual.
 
 ## Known deviations
-Built directly by orchestrator (batch 4). Hooks copied from rave (standard).
+Remade from scratch (batch 5): original was 4 poems / 286-line CSS / single
+page.tsx (no components). Remake expands to 8 poems, an orchestrator + 6
+components (ConcreteHero, PoemFlipGrid, Manifesto, ManifestoMarquee,
+BlockFooter, poems.ts, Motifs.tsx), and ~1270-line CSS. FLIP pattern adopted
+from memphis (ProjectFlipGrid). char-split-reveal is new to this entry.
+Hooks (useReveal, usePrefersReducedMotion) kept; meta.json and fonts.ts kept.

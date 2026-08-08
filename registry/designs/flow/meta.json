@@ -7,11 +7,12 @@
     "ko": "흐름 — 글자의 강"
   },
   "description": {
-    "en": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream.",
-    "ko": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream."
+    "en": "A journaling app whose whole identity is that letters flow like water. A canvas river carries thirty words in three planes of depth — far, faint, slow; near, crisp, fast — and a pointer parts them like a stone in the current. A pinned verse section holds while four stanzas flow past with the scroll, and a feature section names five laws of liquid and reads each as a law of writing.",
+    "ko": "글자가 강물처럼 흐르는 일기장. 캔버스 위로 서른 개의 단어가 세 겹의 깊이로 흐른다 — 멀리는 작고 흐리고 느리게, 가까이는 크고 선명하고 빠르게 — 그리고 포인터가 다가가면 강물의 돌처럼 단어들이 갈라진다. 고정된 시(section) 섹션에서는 네 편의 시가 스크롤을 따라 흘러가고, 특징(feature) 섹션에서는 액체의 다섯 가지 법칙을 글쓰기의 법칙으로 읽어낸다."
   },
   "aesthetic": "kinetic-typography",
   "techniques": [
+    "canvas-particles",
     "char-split-reveal",
     "scroll-scrub-pinned",
     "pointer-parallax"
@@ -23,8 +24,8 @@
     "animation": "vanilla-js",
     "styling": "vanilla-css",
     "renderer": [
-      "dom",
-      "svg"
+      "canvas",
+      "dom"
     ]
   },
   "dependencies": [],
@@ -32,7 +33,7 @@
     "model": "builtin:zai-coding-plan/GLM-5.2",
     "modelLabel": "GLM-5.2",
     "tool": "zcode-cli",
-    "date": "2026-07-27",
+    "date": "2026-08-06",
     "oneshot": false,
     "followUps": 0
   },

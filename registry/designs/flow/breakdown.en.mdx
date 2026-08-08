@@ -1,8 +1,54 @@
 # FLOW — breakdown
 
 ## The hook
-a journaling app where typography flows like water. The third kinetic-typography entry, visually distinct from TYPEWAVE, STRETCH. Part of the gallery's
-50-entry milestone.
+
+A journaling app whose whole identity is that *letters flow like water*. The
+page's signature is a canvas river: thirty words — 새벽, 비, 창문, 종이, 잉크,
+강, 바다 and the seasons, hours, and sensations a journal actually holds —
+drift across the frame along sine waves, in three planes of depth. The far
+plane is small, faint, and slow; the near plane is large, crisp, and fast.
+A pointer parts them like a stone in the current — a soft radial nudge that
+lerps back to rest when the hand leaves. This is the same three-depth
+composition the dream entry uses for its clouds, restated for type.
+
+A pinned verse section holds while four stanzas flow past with the scroll.
+Each stanza owns a quarter of the scroll; they crossfade rather than cut, so
+the verses read as one river, four readings. And a feature section names
+five real laws of liquid — rheology, surface tension, laminar flow,
+turbulence, viscosity — with their real constants and the Reynolds-number
+threshold where flow turns turbulent, and reads each as a law of writing.
+
+## Techniques
+
+1. **canvas-particles** — the WordRiver. A DPR-capped canvas draws a few
+   dozen words along sine waves in three depth bands. The simulation is a
+   pure function of (state, dt): phases advance, x wraps, the pointer push
+   lerps back to the sine baseline. NaN discipline carried over from pulse
+   — every measured value is guarded with `Number.isFinite`.
+2. **char-split-reveal** — the hero wordmark drifts in glyph by glyph, each
+   letter settling sideways from a skew.
+3. **scroll-scrub-pinned** — the verse section. A 400vh outer section, a
+   sticky inner stage, one `--flow-scrub` value (0→1) drives every stanza's
+   dissolve via pure `calc()`/`max()`/`clamp()` arithmetic.
+4. **pointer-parallax** — the hero copy leans gently toward the cursor at
+   three depths: the kicker barely moves, the title carries the drift, the
+   nearest glyphs read at arm's length.
 
 ## Accessibility
-Reduced motion: static. No-JS: fully readable. AA contrast. Korean-first bilingual.
+
+Reduced motion: the canvas composes a single still frame at its seed
+composition; the wordmark does not drift in; the pointer parallax never
+writes its variables; the verses show their last stanza ("all into the same
+sea"). No-JS: the full page is readable — the river replaced by the CSS sky
+wash, the verses stacked, the laws a static list. AA contrast on every body
+token; the bright cyans are decorative (large/glyph) only. Korean-first
+bilingual throughout, with `:lang(ko)` line-height/letter-spacing rules.
+
+## Why canvas, not CSS gradients
+
+The first version of this entry tried to fake a river with a
+`repeating-linear-gradient` of diagonal stripes. It read as static stripes,
+not flowing water, and the "flowing verse" was seven words in a flex row.
+The canvas river fixes both: the words actually move along sines, the
+pointer actually pushes them, and the verse section carries four full
+stanzas. The water is drawn in code, every frame.

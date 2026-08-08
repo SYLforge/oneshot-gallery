@@ -1,18 +1,46 @@
 # WIDGET — 기법 해설
 
 ## 핵심
-비전OS 공간 글래스 스타일의 생산성 앱 대시보드. 깊이 그라데이션 위에 떠 있는
-반투명 위젯. 한지슬레이트가 단일 전자잉크 기기가 분해되는 것이라면, 위젯은
-깊이 속에 떠 있는 글래스 대시보드 위젯의 별자리다. 순수 코드, 이미지 없음.
+비전OS 글래스 퓨처리즘 스타일의 공간 대시보드. 오로라 빛이 도는 깊이 바탕 위에
+여덟 개의 반투명 글래스 위젯이 서로 다른 깊이에 떠 있고, 포인터를 향해 잡은 유리처럼
+기운다. 한지슬레이트가 단일 전자잉크 기기가 분해되는 것이라면, 위젯은 3D 공간에
+부유하는 글래스 위젯의 장이다. 순수 코드, 이미지 없음.
+
+## 페이지의 구조, 위에서 아래로
+히어로(깊이 그라데이션 위, 디스플레이 타이틀과 한국어 부제); 공간 무대(시그니처 —
+여덟 위젯이 깊이에 따라 포인터를 향해 기울고, 오로라가 뒤에서 미세하게 흐른다);
+그리고 판권.
+
+## 시그니처 — 3D 공간 위젯 스테이지
+`usePointerParallax`가 스테이지에 붙어, 각 `[data-tilt]` 위젯을 포인터를 향해 3D로
+기울인다. rAF로 보간(lerp 0.12)하는 단일 루프가 매 프레임 네 개의 커스텀 프로퍼티
+(`--w-rx/--w-ry/--w-lift`)를 카드에 직접 기록한다. 각 카드는 `data-depth`
+∈ {near, mid, far}를 선언하고 — 가까운 카드는 가장 크게 기울고 가장 멀리 떠오르며,
+먼 카드는 거의 움직이지 않는다. 그래서 장(field)은 진짜 시차 깊이로 읽힌다.
+`perspective: 1200px` + `transform-style: preserve-3d`가 깊이를 담고, 각 카드의
+contact drop-shadow가 공간 중의 부양으로 읽히게 한다(평면 translateZ가 아니라).
+정지하면 루프는 스스로 멈춰 비용이 0.
 
 ## 기법
-1. **pointer-parallax** — 위젯이 서로 다른 깊이에서 포인터를 향해 기운다(하나의
-   pointermove 리스너가 쓰는 CSS 커스텀 프로퍼티 --widget-px/py로 구동되는 3D
-   transform).
-2. **flip-layout** — 아침/집중 모드 토글이 위젯 그리드를 재배열한다(data-mode
-   속성 + CSS grid로 구현 — 측정된 FLIP과 같은 UX 의도, 더 단순하고 신뢰 가능).
-3. **clip-path-reveal** — 위젯이 스크롤 시 부드러운 clip-path로 등장.
+1. **pointer-parallax** — 위젯이 깊이에 따라 다른 비율로 포인터를 향해 기운다
+   (rAF lerp 루프가 카드별 getBoundingClientRect로 방향을 재고, 깊이 계수로
+   조절해 `--w-rx/ry/lift`에 기록 — aurora의 검증된 패턴을 포팅).
+2. **spatial-depth** — `data-depth` near/mid/far 3단계가 기울임·떠오름·contact
+   shadow의 강도를 모두 결정. visionOS 공간 큐.
+3. **glass-surface** — `backdrop-filter: blur(12px) saturate(160%)`,
+   `rgba(255,255,255,0.12)` 표면, 다층 box-shadow(bevel + ambient + key +
+   contact)와 별도의 contact drop-shadow.
+4. **clip-path-reveal** — 위젯이 스크롤 시 부드러운 clip-path로 등장하고,
+   깊이 순(far → near)으로 70ms 간격 stagger.
+
+## 여덟 위젯의 깊이
+날씨·활동은 near(크게 떠오름), 일정·재생 중·타이머는 mid, 주간 차트·공기·메시지는
+far로 멀리 떠 있다. 각 위젯은 한국어+영어 이중 데이터를 가지고, 모든 수치는
+`font-variant-numeric: tabular-nums`로 열이 정렬된다.
 
 ## 접근성
-동작 감소: 위젯 정지, 시차 기울임 없음. 자바스크립트 없음: 모든 위젯이 보이는
-완전히 읽기 가능한 대시보드. 글래스 표면에서 AA 대비. 한국어 우선 이중언어.
+동작 감소: 패럴랙스 훅이 시작조차 하지 않는다 — 모든 위젯이 평면으로 완전히 읽히는
+정지 대시보드. 자바스크립트 없음: `.widget-js`가 없으면 리빌 숨김 상태도 없고,
+여덟 위젯 모두 소스 순서대로 읽기 가능한 완성된 대시보드. 글래스 표면 위 AA/AAA
+대비(본문 15.4:1, 보조 8.4:1; iris 액센트는 큰 타입/장식 전용이라 명시됨).
+한국어 우선 이중언어 — `:lang(ko)`로 별도 line-height/letter-spacing.

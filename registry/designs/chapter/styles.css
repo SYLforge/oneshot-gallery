@@ -1,38 +1,69 @@
-/* CHAPTER 챕터 — the book of hours · editorial-serif
-   aged paper / ink / drop-cap red · chapters with marginalia */
+/* ==========================================================================
+   CHAPTER 챕터 — 시간의 책 · The Book of Hours
+   editorial-serif · aged paper / ink / drop-cap red · a day set as a book
+   Scoped by convention to .chapter-root; classes prefixed chapter-.
+   ========================================================================== */
 
 .chapter-root {
-  --ch-bg: #fdf6e3;           /* aged paper — ink on it 14.8:1 (AAA) */
-  --ch-bg-warm: #f9f0d8;      /* warmer margin note — ink on it 13.2:1 (AAA) */
-  --ch-ink: #1a1a1a;          /* reading ink — on bg 14.8:1 (AAA) */
-  --ch-ink-soft: #525252;     /* secondary — on bg 7.0:1 (AAA) */
-  --ch-red: #dc2626;          /* drop-cap/marginalia accent — large only 4.4:1, decorative */
-  --ch-red-ink: #991b1b;      /* readable red on paper — on bg 6.9:1 (AA+) */
-  --ch-rule: rgba(26,26,26,0.12);
-  --ch-font: "Inter", "Noto Serif KR", Georgia, serif;
+  /* -- palette ------------------------------------------------------------ */
+  /* Every token carries its contrast on the ground, so the choice is
+     intentional — never an accident, never a guess. */
+  --ch-bg: #fdf6e3;          /* aged paper, the sheet — text on it 14.8:1 (AAA) */
+  --ch-bg-warm: #f9efd6;     /* warmer note paper for marginalia — ink on it 13.1:1 (AAA) */
+  --ch-ink: #1a1a1a;         /* reading ink — on bg 14.8:1 (AAA) */
+  --ch-ink-soft: #525252;    /* secondary ink, captions — on bg 7.0:1 (AAA) */
+  --ch-ink-quiet: #6f6a5c;   /* quietest ink, folio chrome — on bg 4.9:1 (AA, large) */
+  --ch-red: #dc2626;         /* drop-cap accent — large/decorative only, 4.4:1 — never body */
+  --ch-red-ink: #991b1b;     /* readable red on paper — on bg 6.9:1 (AA+), body-safe */
+  --ch-gold: #8a6f2a;        /* gilt edge, the leaf's rule — on bg 5.1:1 (AA, large) */
+  --ch-rule: rgba(26, 26, 26, 0.14);   /* hairline rules — derived from ink */
+  --ch-rule-strong: rgba(26, 26, 26, 0.28);
 
-  /* 4px baseline spacing scale */
-  --ch-s-1: 0.25rem;
-  --ch-s-2: 0.5rem;
-  --ch-s-3: 0.75rem;
-  --ch-s-4: 1rem;
-  --ch-s-6: 1.5rem;
-  --ch-s-8: 2rem;
-  --ch-s-12: 3rem;
-  --ch-s-16: 4rem;
-  --ch-s-24: 6rem;
+  /* -- type ---------------------------------------------------------------- */
+  /* Body stack resolves Noto Serif KR first (Hangul and Latin serif both
+     live there); display elements get the Latin emphasis by class. */
+  --ch-font-body: "Noto Serif KR", Georgia, "Times New Roman", serif;
+  --ch-font-latin: "Inter", Georgia, serif;
 
-  /* Editorial easing — slow, deliberate, like turning a page */
-  --ch-ease-page: cubic-bezier(0.16, 1, 0.3, 1);
-  --ch-ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
+  /* Fluid type scale — Major-Third-ish, clamp() so the book breathes
+     between desk and pocket with no media-query jumps. */
+  --ch-step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.94rem);  /* caption */
+  --ch-step-0:  clamp(1.00rem, 0.95rem + 0.25vw, 1.19rem);  /* body     */
+  --ch-step-1:  clamp(1.32rem, 1.24rem + 0.40vw, 1.56rem);  /* h4       */
+  --ch-step-2:  clamp(1.74rem, 1.61rem + 0.65vw, 2.13rem);  /* h3       */
+  --ch-step-3:  clamp(2.30rem, 2.10rem + 1.02vw, 2.94rem);  /* h2       */
+  --ch-step-4:  clamp(3.04rem, 2.74rem + 1.54vw, 4.06rem);  /* h1       */
+  --ch-step-5:  clamp(4.01rem, 3.57rem + 2.27vw, 5.61rem);  /* display  */
+
+  /* -- spacing (4px baseline) --------------------------------------------- */
+  --ch-s-1:  0.25rem;   /*  4px */
+  --ch-s-2:  0.5rem;    /*  8px — the book's basic unit */
+  --ch-s-3:  0.75rem;   /* 12px */
+  --ch-s-4:  1rem;      /* 16px */
+  --ch-s-6:  1.5rem;    /* 24px */
+  --ch-s-8:  2rem;      /* 32px */
+  --ch-s-12: 3rem;      /* 48px */
+  --ch-s-16: 4rem;      /* 64px */
+  --ch-s-24: 6rem;      /* 96px */
+
+  /* -- motion -------------------------------------------------------------- */
+  /* Two easings by purpose: the slow turn of a page, and the quick settle
+     of a marginal note or a hover. */
+  --ch-ease-page:   cubic-bezier(0.16, 1, 0.3, 1);   /* page turn — strong ease-out */
+  --ch-ease-turn:   cubic-bezier(0.85, 0, 0.15, 1);  /* crossfade — symmetric */
+  --ch-ease-settle: cubic-bezier(0.25, 1, 0.5, 1);   /* reveals, micro */
+  --ch-ease-hover:  cubic-bezier(0.34, 1.56, 0.64, 1); /* nudge with a hair of overshoot */
+
+  --ch-reveal-ms: 760ms;
 
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   background: var(--ch-bg);
   color: var(--ch-ink);
-  font-family: var(--ch-font);
-  font-size: clamp(15px, 0.5vw + 13px, 18px);
-  line-height: 1.8;
+  font-family: var(--ch-font-body);
+  font-size: var(--ch-step-0);
+  line-height: 1.7;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -52,30 +83,86 @@
   mix-blend-mode: multiply;
 }
 
+/* Korean is the book's first language: Noto Serif KR, keep-all line
+   breaking, a touch of negative tracking, and the roomy line-height a
+   Hangul text block needs. */
 .chapter-root :lang(ko) {
-  font-family: "Noto Serif KR", serif;
+  font-family: var(--ch-font-body);
   line-height: 1.9;            /* Korean serif needs more room than Latin */
   letter-spacing: -0.003em;    /* serif — near zero */
   word-break: keep-all;
-}
-.chapter-root ::selection { background: var(--ch-red); color: var(--ch-bg); }
-.chapter-root :focus-visible { outline: 2px solid var(--ch-red); outline-offset: 4px; }
-
-.chapter-js [data-reveal] {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 1000ms var(--ch-ease-page), transform 1000ms var(--ch-ease-page);
-}
-.chapter-js [data-reveal].is-visible { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  .chapter-js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  word-wrap: break-word;
 }
 
-.chapter-doc { position: relative; z-index: 1; max-width: 72ch; margin: 0 auto; padding-inline: clamp(20px, 5vw, 48px); }
+/* Drop-cap-red selection, scoped to the entry root (paper on red) */
+.chapter-root ::selection {
+  background: var(--ch-red);
+  color: var(--ch-bg);
+}
 
-/* scroll-scrub-pinned: the title page */
+/* Keyboard focus: a red ring, offset like a registration mark */
+.chapter-root :focus-visible {
+  outline: 2px solid var(--ch-red-ink);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* Visually hidden — carries section titles for assistive tech */
+.chapter-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.chapter-doc {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Kicker — the book's recurring ornament: an ink rule, then a small-tracked
+   bilingual label.
+   ========================================================================== */
+
+.chapter-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 var(--ch-s-6);
+  font-family: var(--ch-font-latin);
+  font-weight: 600;
+  font-size: var(--ch-step--1);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ch-red-ink);
+}
+
+.chapter-kicker::before {
+  content: "";
+  display: block;
+  width: 2.4rem;
+  height: 2px;
+  background: var(--ch-red-ink);
+}
+
+.chapter-kicker :lang(ko) {
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Title page — the frontispiece, the first leaf (scroll-scrub-pinned cover)
+   ========================================================================== */
+
 .chapter-titlepage {
-  position: sticky;
-  top: 0;
+  position: relative;
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
@@ -83,172 +170,642 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 40px);
+  padding: clamp(56px, 12vh, 120px) clamp(20px, 5vw, 48px);
 }
-.chapter-kicker {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  color: var(--ch-red);
-  margin: 0 0 30px;
+
+.chapter-titlepage .chapter-kicker {
+  justify-content: center;
 }
+
 .chapter-title {
-  font-weight: 700;
-  font-size: clamp(3rem, 12vw, 8rem);
-  line-height: 0.9;
-  letter-spacing: -0.03em;     /* display serif — tight tracking */
-  margin: 0 0 var(--ch-s-4);
   display: flex;
   gap: 0.03em;
+  margin: 0 0 var(--ch-s-4);
+  font-family: var(--ch-font-latin);
+  font-weight: 700;
+  font-size: clamp(3rem, 14vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;     /* display serif — tight tracking */
 }
+
+/* char-split-reveal: each glyph drops in on its own delay. The pre-state is
+   gated behind .chapter-js so the no-JS cover is simply complete. */
 .chapter-glyph {
   display: inline-block;
   opacity: 0;
   transform: translateY(40px) rotate(-5deg);
 }
+
 .chapter-js .chapter-glyph {
-  animation: ch-glyph 900ms cubic-bezier(0.16,1,0.3,1) both;
+  animation: ch-glyph 900ms var(--ch-ease-page) both;
   animation-delay: calc(var(--ch-i, 0) * 120ms + 300ms);
 }
-@keyframes ch-glyph { to { opacity: 1; transform: translateY(0) rotate(0); } }
-@media (prefers-reduced-motion: reduce) {
-  .chapter-glyph { opacity: 1; transform: none; animation: none; }
-}
-.chapter-title__ko {
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  color: var(--ch-ink-soft);
-  margin: 0 0 40px;
-}
-.chapter-titlepage__line {
-  color: var(--ch-ink-soft);
-  font-style: italic;
-  margin: 0;
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+
+@keyframes ch-glyph {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
 }
 
-/* Chapters — editorial two-column body with a marginalia rail */
-.chapter-body { padding: clamp(48px, 10vh, 96px) 0; }
-.chapter-chap {
+.chapter-title__ko {
+  margin: 0 0 var(--ch-s-8);
+  font-family: var(--ch-font-body);
+  font-size: var(--ch-step-1);
+  color: var(--ch-ink-soft);
+  letter-spacing: 0;
+}
+
+/* The frontispiece rule — a gilt hairline beneath the title */
+.chapter-rule {
+  width: clamp(48px, 8vw, 96px);
+  height: 1px;
+  margin: 0 0 var(--ch-s-6);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ch-gold) 30%,
+    var(--ch-gold) 70%,
+    transparent
+  );
+}
+
+.chapter-title__line {
+  margin: 0;
+  font-size: var(--ch-step-0);
+  line-height: 1.6;
+  color: var(--ch-ink-soft);
+}
+
+.chapter-title__line em {
+  display: block;
+  margin-top: var(--ch-s-1);
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: var(--ch-step--1);
+  color: var(--ch-ink-quiet);
+}
+
+.chapter-title__hint {
+  margin: clamp(48px, 8vh, 80px) 0 0;
+  font-family: var(--ch-font-latin);
+  font-size: var(--ch-step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ch-ink-quiet);
+}
+
+/* ==========================================================================
+   Pinned spreads — the signature moment. The book held open and turned.
+   Section height = (SPREADS + 1) × 100vh; inner sticky pinned 100vh.
+   --chapter-spread (0 → 1) + data-spreadstate drive the crossfade.
+   ========================================================================== */
+
+.chapter-spreads {
   position: relative;
-  margin: 0 auto clamp(60px, 12vh, 120px);
-  padding: var(--ch-s-12) 0 0;
-  max-width: 72ch;
+  /* (6 spreads + 1 closing beat) × 100vh — one viewport of runway each. */
+  height: 700vh;
+  background: var(--ch-bg);
   border-top: 1px solid var(--ch-rule);
 }
-.chapter-chap:first-child { border-top: none; padding-top: 0; }
-.chapter-chap__head {
+
+.chapter-spreads__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top chrome — the folio counter, like a book's running head */
+.chapter-spreads__chrome {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding: clamp(20px, 3vh, 32px) clamp(20px, 4vw, 48px);
+  border-bottom: 1px solid var(--ch-rule);
+}
+
+.chapter-folio {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
+  font-family: var(--ch-font-latin);
+  font-weight: 600;
+  font-size: var(--ch-step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ch-ink-quiet);
+}
+
+.chapter-spreads__counter {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--ch-red-ink);
+  min-width: 1.6em;
+  text-align: right;
+}
+
+/* The book itself — a single grid cell that every spread stacks into */
+.chapter-spreads__book {
+  position: relative;
+  flex: 1;
+  display: grid;
+  min-height: 0;
+}
+
+.chapter-spread {
+  grid-area: 1 / 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* default: hidden; only the active spread (by data-spreadstate) shows */
+  opacity: 0;
+  transform: scale(1.015);
+  transition:
+    opacity 700ms var(--ch-ease-turn),
+    transform 700ms var(--ch-ease-turn);
+  pointer-events: none;
+}
+
+/* The sticky stage carries data-spreadstate="0".."5" (written by JS from
+   scroll). Exactly one spread matches at a time — a clean crossfade with no
+   fragile float math. */
+.chapter-spreads__sticky[data-spreadstate="0"] .chapter-spread[data-spread="I"],
+.chapter-spreads__sticky[data-spreadstate="1"] .chapter-spread[data-spread="II"],
+.chapter-spreads__sticky[data-spreadstate="2"] .chapter-spread[data-spread="III"],
+.chapter-spreads__sticky[data-spreadstate="3"] .chapter-spread[data-spread="IV"],
+.chapter-spreads__sticky[data-spreadstate="4"] .chapter-spread[data-spread="V"],
+.chapter-spreads__sticky[data-spreadstate="5"] .chapter-spread[data-spread="VI"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* No-JS fallback: the stage has no data-spreadstate → show the first spread,
+   the rest stay readable in source order as a static list. */
+.chapter-spreads__sticky:not([data-spreadstate]) .chapter-spread[data-spread="I"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Per-spread chrome — the hour clock + chapter label, a running head */
+.chapter-spread__chrome {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ch-s-4);
+  padding: var(--ch-s-3) clamp(48px, 8vw, 120px) 0;
+  font-family: var(--ch-font-latin);
+  font-size: var(--ch-step--1);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ch-ink-quiet);
+}
+
+.chapter-spread__hour {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ch-red-ink);
+}
+
+.chapter-spread__chrome-mid {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.chapter-spread__dot {
+  color: var(--ch-ink-quiet);
+}
+
+/* The leaf — the reading surface, a centred sheet with a measured measure */
+.chapter-spread__leaf {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 72ch;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(24px, 4vh, 48px) clamp(48px, 8vw, 120px) clamp(32px, 5vh, 56px);
+  min-height: 0;
+}
+
+.chapter-spread__head {
   display: flex;
   align-items: baseline;
   gap: var(--ch-s-6);
   margin-bottom: var(--ch-s-8);
   flex-wrap: wrap;
 }
-.chapter-chap__no {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+
+.chapter-spread__no {
+  font-family: var(--ch-font-latin);
   font-weight: 300;
-  color: var(--ch-red-ink);     /* readable red (6.9:1) — was --ch-red (decorative 4.4:1) */
-  line-height: 1;
   font-style: italic;
+  font-size: var(--ch-step-4);
+  line-height: 1;
+  letter-spacing: -0.03em;       /* display numerals — tight */
+  color: var(--ch-red-ink);      /* readable red (6.9:1) — not the decorative red */
+}
+
+.chapter-spread__title {
+  margin: 0;
+  font-family: var(--ch-font-body);
+  font-weight: 700;
+  font-size: var(--ch-step-3);
+  line-height: 1.15;
   letter-spacing: -0.02em;
 }
-.chapter-chap__title {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 700;
-  margin: 0;
-  line-height: 1.2;
-  letter-spacing: -0.015em;     /* display heading tightening */
-}
-.chapter-chap__en {
+
+.chapter-spread__title :lang(ko) {
   display: block;
-  font-size: 0.55em;
-  font-style: italic;
-  color: var(--ch-ink-soft);
+}
+
+.chapter-spread__en {
+  display: block;
   margin-top: var(--ch-s-1);
-  letter-spacing: 0;
-}
-
-/* Body text — two-column reading with a hairline rule, zine-style */
-.chapter-chap__body {
-  column-count: 2;
-  column-gap: clamp(32px, 4vw, 56px);
-  column-rule: 1px solid var(--ch-rule);
-  text-wrap: pretty;            /* avoid orphans — 2024+ Baseline */
-}
-.chapter-chap__text {
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  line-height: 1.9;
-  margin: 0 0 var(--ch-s-4);
-  position: relative;
-  break-inside: avoid-column;
-}
-.chapter-chap__text--en {
+  font-family: var(--ch-font-latin);
   font-style: italic;
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0.06em;
   color: var(--ch-ink-soft);
-  font-size: 0.95rem;
-  line-height: 1.8;
 }
 
-/* Drop-cap — zine-style float with optical alignment */
+/* Body prose — a single measure, set with the room a serif needs */
+.chapter-spread__body {
+  max-width: 60ch;
+  text-wrap: pretty;             /* avoid orphans — 2024+ Baseline */
+}
+
+.chapter-spread__text {
+  margin: 0 0 var(--ch-s-4);
+  font-size: var(--ch-step-0);
+  line-height: 1.9;
+  position: relative;
+}
+
+.chapter-spread__text--en {
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: var(--ch-step--1);
+  line-height: 1.7;
+  color: var(--ch-ink-soft);
+}
+
+/* Drop-cap — a floated glyph that the prose wraps, optically nudged.
+   The Korean title's first letter becomes the cap, oversized in red ink. */
 .chapter-dropcap {
   float: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ch-font-body);
+  font-weight: 700;
   font-size: 3.6em;
   line-height: 0.78;
-  font-weight: 700;
   color: var(--ch-red-ink);
-  margin: 0.06em 0.12em 0 -0.04em;   /* optical: nudge left, balance descender gap */
-  font-family: "Noto Serif KR", serif;
+  margin: 0.06em 0.14em 0 -0.04em;   /* optical: nudge left, balance the gap */
   shape-outside: circle(48%);         /* text wraps the glyph more naturally */
 }
 
-/* Marginalia — absolute rail note beside the column, not an inline box.
-   Sits in the page margin on wide screens; falls back inline on narrow. */
+/* Marginalia — a pinned margin note, the reader's annotation. A warm slip
+   of paper with a red rule, set in small italic ink. Sits as an inline
+   block beneath the prose (within the sticky leaf) so it crossfades with the
+   spread; at very tall viewports it could sit in the gutter, but the inline
+   reading position keeps it legible on every desk. */
 .chapter-marginalia {
-  position: absolute;
-  left: calc(100% + clamp(24px, 3vw, 40px));
-  top: var(--ch-s-16);
-  width: clamp(140px, 16vw, 200px);
-  padding: var(--ch-s-3) var(--ch-s-4);
+  position: relative;
+  margin: var(--ch-s-8) 0 0;
+  max-width: 38ch;
+  padding: var(--ch-s-3) var(--ch-s-4) var(--ch-s-3) var(--ch-s-8);
   border-left: 2px solid var(--ch-red-ink);
-  font-size: 0.82rem;
-  line-height: 1.6;
+  background: var(--ch-bg-warm);
+  font-size: var(--ch-step--1);
+  line-height: 1.65;
   font-style: italic;
   color: var(--ch-ink-soft);
-  background: var(--ch-bg-warm);
   box-shadow:
-    0 1px 2px rgba(26,26,26,0.04),
-    0 8px 16px rgba(26,26,26,0.06);   /* multi-layer paper shadow */
+    0 1px 2px rgba(26, 26, 26, 0.04),   /* ambient — surface contact */
+    0 8px 16px rgba(26, 26, 26, 0.06),  /* key — the slip's shadow     */
+    0 24px 40px rgba(26, 26, 26, 0.04); /* contact — far diffusion      */
 }
 
-/* Footer */
-.chapter-foot {
-  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 40px);
-  text-align: center;
+.chapter-marginalia__star {
+  position: absolute;
+  left: 0.45rem;
+  top: 0.55rem;
+  color: var(--ch-red-ink);
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* Bottom hint — names the gesture (scroll to turn) */
+.chapter-spreads__hint {
+  flex: none;
+  padding: clamp(14px, 2.4vh, 24px) clamp(20px, 4vw, 48px);
   border-top: 1px solid var(--ch-rule);
-  color: var(--ch-ink-soft);
-  font-size: 0.82rem;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-size: var(--ch-step--1);
+  letter-spacing: 0.14em;
+  color: var(--ch-ink-quiet);
+  text-align: center;
 }
-.chapter-foot p { margin: 0 0 var(--ch-s-2); }
 
-/* ── Responsive — the book adapts to every desk and pocket ── */
-@media (max-width: 1200px) {
-  /* Marginalia moves to a right-side float inside the column area */
-  .chapter-marginalia {
-    position: relative;
-    left: auto; top: auto;
-    width: auto;
-    max-width: 36ch;
-    margin: var(--ch-s-6) 0 0 auto;
+/* Hour moods — each spread carries a hairline tint at its leaf's foot, so
+   the day warms and cools as the pages turn. Decorative only; the ink stays
+   the same readable colour on every leaf. */
+.chapter-spread[data-spread="I"] .chapter-spread__leaf::after,
+.chapter-spread[data-spread="II"] .chapter-spread__leaf::after,
+.chapter-spread[data-spread="III"] .chapter-spread__leaf::after,
+.chapter-spread[data-spread="IV"] .chapter-spread__leaf::after,
+.chapter-spread[data-spread="V"] .chapter-spread__leaf::after,
+.chapter-spread[data-spread="VI"] .chapter-spread__leaf::after {
+  content: "";
+  position: absolute;
+  left: clamp(48px, 8vw, 120px);
+  right: clamp(48px, 8vw, 120px);
+  bottom: clamp(16px, 3vh, 32px);
+  height: 1px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.chapter-spread[data-spread="I"] .chapter-spread__leaf::after {
+  background: linear-gradient(90deg, transparent, var(--ch-gold), transparent);
+}
+.chapter-spread[data-spread="II"] .chapter-spread__leaf::after {
+  background: linear-gradient(90deg, transparent, var(--ch-red-ink), transparent);
+}
+.chapter-spread[data-spread="III"] .chapter-spread__leaf::after {
+  background: linear-gradient(90deg, transparent, var(--ch-gold), transparent);
+}
+.chapter-spread[data-spread="IV"] .chapter-spread__leaf::after {
+  background: linear-gradient(90deg, transparent, var(--ch-red-ink), transparent);
+}
+.chapter-spread[data-spread="V"] .chapter-spread__leaf::after {
+  background: linear-gradient(90deg, transparent, var(--ch-ink-quiet), transparent);
+}
+.chapter-spread[data-spread="VI"] .chapter-spread__leaf::after {
+  background: linear-gradient(90deg, transparent, var(--ch-ink), transparent);
+}
+
+/* Folio progress rail — a thin line beneath the chrome that fills with the
+   page-turn. Driven by the same --chapter-spread (0 → 1) the crossfade uses. */
+.chapter-spreads__progress {
+  flex: none;
+  height: 2px;
+  background: var(--ch-rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter-spreads__progress::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--chapter-spread, 0) * 100%);
+  background: var(--ch-red-ink);
+  transform-origin: left center;
+  transition: width 120ms linear;
+}
+
+/* Hover micro-interaction on the marginalia — a hair of lift, as if the slip
+   of paper were picked up. transform only, ease with a touch of overshoot. */
+.chapter-marginalia {
+  transition:
+    transform 220ms var(--ch-ease-hover),
+    box-shadow 220ms var(--ch-ease-settle);
+}
+
+.chapter-marginalia:hover,
+.chapter-marginalia:focus-within {
+  transform: translateY(-2px);
+  box-shadow:
+    0 2px 4px rgba(26, 26, 26, 0.05),
+    0 12px 24px rgba(26, 26, 26, 0.08),
+    0 32px 56px rgba(26, 26, 26, 0.05);
+}
+
+/* ==========================================================================
+   Colophon — the book's last leaf
+   ========================================================================== */
+
+.chapter-colophon {
+  position: relative;
+  padding: clamp(72px, 14vh, 160px) clamp(20px, 5vw, 48px)
+    clamp(64px, 12vh, 128px);
+  border-top: 2px solid var(--ch-ink);
+  background: var(--ch-bg);
+}
+
+.chapter-colophon__inner {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.chapter-colophon__head {
+  margin: 0 0 clamp(2rem, 5vh, 3rem);
+}
+
+.chapter-kicker--colophon {
+  margin-bottom: var(--ch-s-3);
+}
+
+.chapter-colophon__title {
+  margin: 0 0 var(--ch-s-1);
+  font-family: var(--ch-font-body);
+  font-weight: 700;
+  font-size: var(--ch-step-4);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.chapter-colophon__title-en {
+  margin: 0;
+  font-family: var(--ch-font-latin);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--ch-step-1);
+  letter-spacing: 0.04em;
+  color: var(--ch-ink-soft);
+}
+
+.chapter-colophon__statement {
+  margin: 0 0 clamp(2rem, 5vh, 3rem);
+  max-width: 36rem;
+  font-size: var(--ch-step-0);
+  line-height: 1.8;
+  font-weight: 500;
+}
+
+/* The ledger — a dense publisher's definition list */
+.chapter-colophon__ledger {
+  margin: 0 0 clamp(2rem, 5vh, 3rem);
+}
+
+.chapter-colophon__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ch-s-1);
+  padding: var(--ch-s-3) 0;
+  border-bottom: 1px solid var(--ch-rule);
+}
+
+.chapter-colophon__row dt {
+  font-family: var(--ch-font-latin);
+  font-weight: 600;
+  font-size: var(--ch-step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ch-red-ink);
+}
+
+.chapter-colophon__row dd {
+  margin: 0;
+  font-size: var(--ch-step-0);
+  line-height: 1.6;
+}
+
+.chapter-colophon__end {
+  padding-top: var(--ch-s-4);
+  border-top: 2px solid var(--ch-ink);
+}
+
+.chapter-colophon__legal {
+  margin: 0 0 var(--ch-s-3);
+  font-size: var(--ch-step--1);
+  line-height: 1.5;
+  color: var(--ch-ink-soft);
+}
+
+.chapter-colophon__closing {
+  margin: 0;
+  font-family: var(--ch-font-body);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--ch-step-1);
+  line-height: 1.5;
+  color: var(--ch-ink);
+}
+
+/* ==========================================================================
+   Scroll reveals — JS-gated pre-state, transform/opacity only
+   ========================================================================== */
+
+.chapter-js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--ch-reveal-ms) var(--ch-ease-settle),
+    transform var(--ch-reveal-ms) var(--ch-ease-settle);
+  transition-delay: var(--ch-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.chapter-js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Reduced motion — one composed, static book
+   - cover glyphs: present, no choreography
+   - reveals: present, no motion
+   - spreads: the crossfade stays live (it tracks the wheel 1:1; the hook
+     only bypasses the lerp). Each spread is already in the DOM, fully
+     readable in source order, so the book is complete without motion.
+   - marginalia shadows: kept (art direction, not motion)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-js .chapter-glyph {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .chapter-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
+
+/* ==========================================================================
+   Responsive — the book adapts to every desk and pocket (720 / 900 / 1200)
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+  /* Tighter margins on the leaf when the gutter narrows */
+  .chapter-spread__leaf {
+    padding-inline: clamp(32px, 6vw, 72px);
+  }
+  .chapter-spread__chrome {
+    padding-inline: clamp(32px, 6vw, 72px);
+  }
+}
+
 @media (max-width: 900px) {
-  /* Single column — the book on a desk */
-  .chapter-chap__body { column-count: 1; column-rule: none; }
+  /* The head stacks: numeral above title */
+  .chapter-spread__head {
+    flex-direction: column;
+    gap: var(--ch-s-2);
+    align-items: flex-start;
+  }
+  .chapter-spread__no {
+    font-size: var(--ch-step-3);
+  }
+  .chapter-spread__title {
+    font-size: var(--ch-step-2);
+  }
+  /* A smaller drop-cap so the prose still breathes on a narrow sheet */
+  .chapter-dropcap {
+    font-size: 3em;
+  }
+  .chapter-colophon__row {
+    grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    gap: var(--ch-s-4);
+    align-items: baseline;
+  }
 }
+
 @media (max-width: 720px) {
-  .chapter-title { font-size: clamp(2.5rem, 14vw, 6rem); letter-spacing: -0.02em; }
-  .chapter-dropcap { font-size: 3em; }
-  .chapter-chap__no { font-size: clamp(2rem, 8vw, 3rem); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .chapter-marginalia { box-shadow: 0 1px 2px rgba(26,26,26,0.04); }
+  /* The cover shrinks so the whole title reads at once */
+  .chapter-title {
+    font-size: clamp(2.5rem, 14vw, 6rem);
+    letter-spacing: -0.03em;
+  }
+  .chapter-titlepage {
+    padding-inline: clamp(20px, 6vw, 32px);
+  }
+  /* Marginalia spans the leaf width — no gutter to sit in */
+  .chapter-marginalia {
+    max-width: none;
+  }
+  /* Leaf padding tightens to give the prose its full measure */
+  .chapter-spread__leaf {
+    padding-inline: clamp(20px, 5vw, 32px);
+  }
+  .chapter-spread__chrome {
+    padding-inline: clamp(20px, 5vw, 32px);
+  }
+  .chapter-spread__body {
+    max-width: none;
+  }
+  /* The ledger stacks label over value on a phone */
+  .chapter-colophon__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ch-s-1);
+  }
 }

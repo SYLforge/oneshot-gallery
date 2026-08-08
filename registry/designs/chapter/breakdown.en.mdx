@@ -1,8 +1,39 @@
 # CHAPTER — breakdown
 
 ## The hook
-a digital book publisher with drop caps, marginalia, sticky footnotes. The third editorial-serif entry, visually distinct from YEOBAEK, ZINE. Part of the gallery's
-50-entry milestone.
+The Book of Hours — a digital book that sets a day as six hours, each hour a
+chapter. The third editorial-serif entry, built as the book-as-object: a
+frontispiece, six pinned spreads that crossfade like turning a page as you
+scroll, and a publisher's colophon. Visually distinct from YEOBAEK (the quiet
+airy literary voice) and ZINE (the loud photocopied collage).
+
+## Signature moment
+The page genuinely *turns*. The spreads section is `(CHAPTERS + 1) × 100vh`
+tall; its inner sticky stage holds the book open while you scroll. As you
+scroll, the hook writes `data-spreadstate` (0..5) and a smoothed
+`--chapter-spread` (0→1); exactly one spread matches the state at a time, so
+the crossfade is a clean opacity + hairline-scale dissolve — never a layout
+property, never fragile float math. The editorial frame never moves; only the
+leaf changes.
+
+## Content
+Six chapters — 새벽(Dawn), 아침(Morning), 정오(Noon), 오후(Afternoon),
+황혼(Dusk), 밤(Night) — each 4–6 sentences of literary Korean prose with a
+drop-cap lead and a unique marginalia note (the reader's annotation, no
+longer identical across chapters).
 
 ## Accessibility
-Reduced motion: static. No-JS: fully readable. AA contrast. Korean-first bilingual.
+Reduced motion: static (the crossfade stays live — it tracks the wheel 1:1;
+only the smoothing is bypassed, because it is a reveal of already-present
+content, not motion). No-JS: fully readable — every spread, marginalia, and
+the colophon are in the DOM in source order. AA contrast on every ink token;
+the decorative red is large/ornamental only. Korean-first bilingual;
+`:lang(ko)` gets its own line-height (1.9) and keep-all breaking.
+
+## Craft
+All 12 checklist items applied: per-token contrast comments, display
+`letter-spacing: -0.04em`, `:lang(ko)` line-height 1.9, two+ purpose-baked
+easings (page-turn / hover), `clamp()` type scale, 4px spacing tokens,
+multi-layer box-shadow on the marginalia, three media queries (720/900/1200),
+reduced-motion fallbacks, no `transition: all`, `:focus-visible`, and
+`text-wrap: pretty` on the prose.

@@ -1,8 +1,133 @@
-# BLOCK — 기법 해설
+# 블록 — 제작기
 
-## 핵심
-an independent poetry press built from raw concrete blocks. neo-brutalist 패밀리의 세 번째 엔트리로, BLUNT, RAVE와 시각적으로 구별됨. 갤러리
-50개 마일스톤의 일부.
+## 훅: 콘크리트로 지은 시집
+
+이 출판은 부드러움을 거부한다. 시 한 편이 곧 벽돌이고, 시집 한 권이
+콘크리트 벽이 된다. 네오-브루탈리즘의 세 번째 엔트리로, BLUNT의
+riso-종이-노랑과 RAVE의 암흑-스트로보-파랑과 선명하게 갈린다 — BLOCK은
+회색 슬래브, 녹색 잉크, hard offset shadow. 그림자에 blur가 없다.
+모서리가 둥글지 않다. 그라데이션은 한 번도 등장하지 않는다. 이것이
+설정이 아니라 방법론이다: 질감은 3px 선에서 오고, 깊이는 6px 오프셋
+그림자에서 온다.
+
+여덟 편의 시가 네 카테고리(구조/태도/재료/방법론)에 걸쳐 한 권을 이루고,
+필터를 고르면 그리드가 FLIP으로 미끄러져 재배열된다. 그 위로 두 줄
+선언문 티커가 반대 방향으로 흐르고, 잉크 바탕의 대형 선언문 섹션이
+출판의 신조 다섯 줄을 세운다. 기법 셋, 색 네 톤, 선 3px — 각 기법은
+한 섹션의 머리. 할 일 없는 그림자는 지워진다.
+
+## 아트 디렉션
+
+팔레트는 네 토큰으로 쓴 선언문이다. 콘크리트 회색(#e5e5e5) 슬래브,
+near-black 잉크(#171717), 그리고 녹색 드럼 셋 — 읽을 수 있는 녹색
+(#14532d), 장식 녹색(#22c55e), 깊은 녹색(#16a34a). 이 팔레트를 정직하게
+지키는 건 분위기가 아니라 대비 지도다. 잉크는 콘크리트 위에서 15.3:1
+(AAA)을 유지하고, 이차 잉크(#404040)는 9.7:1이다. 그래서 모든 본문이
+AAA를 넘는다.
+
+녹색이 까다롭다. #22c55e는 콘크리트 위에서 2.0:1로 본문이 불가능하다.
+그래서 이 녹색은 *장식 전용* — 킥커 칩의 글자(잉크 위 5.7:1), 마퀴
+티커, 활성 필터, 하이라이트. 녹색이 *글자로* 쓰이는 유일한 자리는
+#14532d(콘크리트 위 7.6:1, AAA)이고, 그래서 모든 "녹색 텍스트"는 이
+깊은 녹색이다: 시 번호, 섹션 번호, 카운터. 회색 영역(#737373)은
+캡션/라벨에만, 4.6:1(AA large)으로 제한된다. 타일은 카테고리 색을
+종이 바탕에 4–10% 섞어(`color-mix`) 표시한다 — 타일은 그 카테고리의
+무게로 읽히되 글자는 AA를 넘긴다.
+
+서체 둘. Inter는 모든 로마자 글리프(디스플레이·본문·라벨, 굵기 전
+영역)를 맡고, 검은고딕(Black Han Sans)은 모든 한글을 맡는다. 한국어
+서체가 하나뿐이라는 사실 — 그게 "출판의 한국어 목소리는 로마자만큼
+크고 각지다"는 설정의 증거다. `:lang(ko)`이 한글의 line-height를 1.4로,
+letter-spacing을 0으로 고정한다. 디스플레이는 letter-spacing -0.04em으로
+타이트하게 — 클수록 더 단단해 보인다.
+
+## 기법 1 — 클립패스 리빌 + char-split: 벽이 세워지는 소리
+
+히어로의 워드마크가 페이드인하지 않는다. *잘려서* 드러난다. 그리고
+단일 블록이 아니라 — "BLOCK"의 각 글자가 위에서 뚝 떨어지듯 잘려
+내려온다:
+
+```css
+/* styles.css — 리빌 전 상태는 .block-js로 게이트. JS가 없으면 완성된 포스터. */
+.block-js .bk-char {
+  clip-path: inset(0 0 100% 0);            /* 위에서 아래로 잘림 */
+  transition: clip-path 380ms steps(8);    /* brutalist hard cut */
+  transition-delay: calc(var(--bk-char-i) * 70ms);  /* 글자별 stagger */
+}
+.block-js .is-revealed .bk-char {
+  clip-path: inset(0 0 0% 0);              /* 드러남 */
+}
+```
+
+각 글자는 인라인 `--bk-char-i`(인덱스)를 달고 있어 70ms씩 stagger된다.
+이징이 `steps(8)`인 게 핵심이다 — 부드러운 cubic-bezier이 아니라 8단계
+계단 잘림. 벽돌이 차례로 쌓이는 것처럼, 글자가 딱딱 끊기며 나타난다.
+이것이 브루탈리즘의 리빌 어휘다. `ease`/`linear`는 이 출판에 없다.
+
+섹션 리빌도 같은 패턴: `[data-reveal]`이 좌→우로 와이프 잘림(520ms,
+steps(8))으로 드러난다. `useReveal` 훅이 루트(.bk-doc)에 `is-revealed`를
+붙이면, CSS가 자손 선택자로 모든 리빌을 구동한다. 리빌 전 상태는 전부
+`.block-js` 뒤에 있어 — 자바스크립트가 꺼져 있거나 모션 최소화 설정에서는
+모든 섹션이 정지 상태로, 페이지는 완성된 시집이다.
+
+## 기법 2 — 마퀴: 흐르는 선언문
+
+히어로와 시 그리드 사이에 두 줄 티커가 있다. 위 줄은 잉크 바탕에 녹색
+글자로 오른쪽으로 흐르고, 아래 줄은 깊은 녹색 바탕에 흰 글자로 왼쪽으로
+흐른다. 둘 다 같은 속도(~52px/s)지만 반대 방향 — 시선이 양쪽으로
+판독된다. 출판의 선언이 움직이는 활자가 된다.
+
+```ts
+// ManifestoMarquee.tsx — rAF 루프, IntersectionObserver로 화면 밖 정지.
+const tick = (t) => {
+  offA = wrap(offA - SPEED * dt, wA);   // 위 줄: −
+  offB = wrap(offB + SPEED * dt, wB);   // 아래 줄: +
+  ta.style.transform = `translate3d(${offA}px, 0, 0)`;
+  ...
+};
+```
+
+`wrap()`이 오프셋을 (-w, 0]에 묶어 네 개 복제 그룹이 매끄럽게 이어진다.
+ResizeObserver가 폭 변화를 잡고, IntersectionObserver가 화면 밖이면 rAF를
+취소한다. 모션 최소화 설정에서는 transform을 비우고 정지. 움직이는 줄은
+aria-hidden이고, 모든 슬로건은 그 앞의 visually-hidden 단락에 한 번
+전달된다 — 스크린 리더가 같은 문장을 두 번 읽지 않는다.
+
+## 기법 3 — FLIP 시 그리드: 서명 모멘트
+
+필터(전체/구조/태도/재료/방법론)를 고르면 시 카드들이 FLIP으로
+재배열된다. DOM이 바뀌기 전에 각 카드의 bounding rect를 찍고(First),
+바뀐 뒤 새 rect를 재고(Last), 역델타를 transform으로 붙인 뒤(Invert)
+0으로 애니메이션한다(Play) — 카드가 새 자리로 미끄러진다.
+
+```ts
+// PoemFlipGrid.tsx — useLayoutEffect에서 First/Last를 같은 페인트에 측정.
+for (const li of tiles) first.set(key, li.getBoundingClientRect());  // First
+// ... React가 DOM을 업데이트한 뒤 (Last = 현재 layout) ...
+el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;  // Invert
+void grid.getBoundingClientRect();                          // reflow 강제
+el.style.transition = `transform 480ms cubic-bezier(0.22,1,0.36,1)`;
+el.style.transform = "";                                    // Play
+```
+
+나가는 카드는 CSS `@keyframes bk-tile-in`의 역으로 fade out, 들어오는
+카드는 같은 창에서 fade in(인덱스 × 50ms stagger). 모션 최소화 설정에서는
+play 단계를 생략 — 그리드가 즉시 바뀐다. 각 카드는 neo-brutalist
+서명을 단다: hard offset shadow(6px 6px 0, blur 0), hover 시
+translate(-3px,-3px) + 그림자 확대(9px 9px 0, 깊은 녹색). 누르면 spring
+overshoot — `cubic-bezier(0.34, 1.56, 0.64, 1)`의 y>1이 카드를 살짝
+튀어오르게 한다.
 
 ## 접근성
-동작 감소: 정지. 자바스크립트 없음: 완전히 읽기 가능. AA 대비. 한국어 우선 이중언어.
+
+- **모션 최소화**: 모든 리빌/마퀴/FLIP 정지. 그리드 즉시 재배치, 티커 정지.
+- **자바스크립트 없음**: 완전히 읽기 가능. `.block-js` 게이트 덕에 SSR
+  마크업이 완성된 시집.
+- **대비**: 본문 AAA(15.3:1), 이차 AAA(9.7:1), 캡션 AA large(4.6:1).
+  녹색 본문은 깊은 녹색(7.6:1, AAA)으로만.
+- **한국어 우선 이중언어**: `:lang(ko)` 별도 line-height/letter-spacing.
+  한국어가 원문, 영어는 복각.
+- **포커스**: `:focus-visible` 3px 깊은 녹색 아웃라인. 각 시 카드 focusable.
+- **의미**: 그리드는 진짜 `<ul>/<li>`, 필터는 `aria-pressed`.
+
+이 출판은 타협하지 않는다 — 코드로 지었고, 이미지는 한 장도 없다.

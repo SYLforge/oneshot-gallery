@@ -1,48 +1,48 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 /**
- * Direction-aware clip-path reveal.
+ * Reveals descendants marked with [data-reveal] as they enter the viewport,
+ * by adding an `is-in` class. The pre-reveal state (opacity/translate) lives
+ * in styles.css and is gated behind the `.flow-js` root class, so the
+ * content is fully visible when JavaScript never runs.
  *
- * Attach the returned ref to a block you want wiped in by a hard geometric
- * cut (the brutalist equivalent of a fade). When the block enters the
- * viewport, `is-revealed` is added to it; `styles.css` drives the
- * inset/polygon clip from `--rave-reveal-dir`. The reveal happens once and
- * the observer disconnects — a section does not get to re-wipe every time
- * it scrolls back into frame.
- *
- * No-JS / SSR: the page ships already visible (`rave-reveal` with no
- * `rave-js` ancestor is static, clip-path: none). The pre-reveal hidden
- * state is gated behind `.rave-js .rave-reveal` so the SSR markup is the
- * completed flyer.
+ * Elements that intersect in the same observer batch are staggered 90ms
+ * apart via transition-delay — the page drifts in, it does not pop.
  */
-export function useReveal<T extends HTMLElement = HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const reduced = usePrefersReducedMotion();
+export function useReveal<T extends HTMLElement>(disabled: boolean) {
+  const rootRef = useRef<T | null>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const root = rootRef.current;
+    if (!root) return;
+    const targets = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-reveal]"),
+    );
 
-    // Reduced motion: leave the SSR-visible state alone. No wipe.
-    if (reduced) return;
+    if (disabled || !("IntersectionObserver" in window)) {
+      for (const el of targets) el.classList.add("is-in");
+      return;
+    }
 
     const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-revealed");
-            io.unobserve(entry.target);
-          }
+      (hits) => {
+        let batch = 0;
+        for (const hit of hits) {
+          if (!hit.isIntersecting) continue;
+          const el = hit.target as HTMLElement;
+          el.style.transitionDelay = `${batch * 90}ms`;
+          el.classList.add("is-in");
+          io.unobserve(el);
+          batch += 1;
         }
       },
-      { rootMargin: "-8% 0px -8% 0px", threshold: 0.12 },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
-    io.observe(el);
+    for (const el of targets) io.observe(el);
     return () => io.disconnect();
-  }, [reduced]);
+  }, [disabled]);
 
-  return ref;
+  return rootRef;
 }

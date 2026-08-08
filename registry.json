@@ -376,6 +376,41 @@
       ],
       "files": [
         {
+          "path": "registry/designs/block/components/BlockFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/BlockFooter.tsx"
+        },
+        {
+          "path": "registry/designs/block/components/ConcreteHero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/ConcreteHero.tsx"
+        },
+        {
+          "path": "registry/designs/block/components/Manifesto.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/Manifesto.tsx"
+        },
+        {
+          "path": "registry/designs/block/components/ManifestoMarquee.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/ManifestoMarquee.tsx"
+        },
+        {
+          "path": "registry/designs/block/components/Motifs.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/Motifs.tsx"
+        },
+        {
+          "path": "registry/designs/block/components/PoemFlipGrid.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/PoemFlipGrid.tsx"
+        },
+        {
+          "path": "registry/designs/block/components/poems.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/block/components/poems.ts"
+        },
+        {
           "path": "registry/designs/block/fonts.ts",
           "type": "registry:file",
           "target": "app/oneshot/block/fonts.ts"
@@ -822,9 +857,39 @@
       ],
       "files": [
         {
+          "path": "registry/designs/chapter/components/chapters.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/chapter/components/chapters.ts"
+        },
+        {
+          "path": "registry/designs/chapter/components/ChapterSpread.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chapter/components/ChapterSpread.tsx"
+        },
+        {
+          "path": "registry/designs/chapter/components/ChapterSpreads.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chapter/components/ChapterSpreads.tsx"
+        },
+        {
+          "path": "registry/designs/chapter/components/Colophon.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chapter/components/Colophon.tsx"
+        },
+        {
+          "path": "registry/designs/chapter/components/TitlePage.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/chapter/components/TitlePage.tsx"
+        },
+        {
           "path": "registry/designs/chapter/fonts.ts",
           "type": "registry:file",
           "target": "app/oneshot/chapter/fonts.ts"
+        },
+        {
+          "path": "registry/designs/chapter/hooks/useChapterProgress.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/chapter/hooks/useChapterProgress.ts"
         },
         {
           "path": "registry/designs/chapter/hooks/usePointerParallax.ts",
@@ -840,11 +905,6 @@
           "path": "registry/designs/chapter/hooks/useReveal.ts",
           "type": "registry:hook",
           "target": "app/oneshot/chapter/hooks/useReveal.ts"
-        },
-        {
-          "path": "registry/designs/chapter/hooks/useScrollProgress.ts",
-          "type": "registry:hook",
-          "target": "app/oneshot/chapter/hooks/useScrollProgress.ts"
         },
         {
           "path": "registry/designs/chapter/page.tsx",
@@ -1321,15 +1381,51 @@
       "name": "flow",
       "type": "registry:block",
       "title": "FLOW — River of Words",
-      "description": "A journaling app where typography flows like water — letters drift and settle as you scroll, the kinetic calm of a stream.",
+      "description": "A journaling app whose whole identity is that letters flow like water. A canvas river carries thirty words in three planes of depth — far, faint, slow; near, crisp, fast — and a pointer parts them like a stone in the current. A pinned verse section holds while four stanzas flow past with the scroll, and a feature section names five laws of liquid and reads each as a law of writing.",
       "dependencies": [],
       "categories": [
         "kinetic-typography",
+        "canvas-particles",
         "char-split-reveal",
         "scroll-scrub-pinned",
         "pointer-parallax"
       ],
       "files": [
+        {
+          "path": "registry/designs/flow/components/FlowFooter.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/FlowFooter.tsx"
+        },
+        {
+          "path": "registry/designs/flow/components/FlowHero.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/FlowHero.tsx"
+        },
+        {
+          "path": "registry/designs/flow/components/FlowingVerse.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/FlowingVerse.tsx"
+        },
+        {
+          "path": "registry/designs/flow/components/FlowLaws.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/FlowLaws.tsx"
+        },
+        {
+          "path": "registry/designs/flow/components/riverSim.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/riverSim.ts"
+        },
+        {
+          "path": "registry/designs/flow/components/WordRiver.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/WordRiver.tsx"
+        },
+        {
+          "path": "registry/designs/flow/components/words.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/flow/components/words.ts"
+        },
         {
           "path": "registry/designs/flow/fonts.ts",
           "type": "registry:file",
@@ -1380,7 +1476,7 @@
           "model": "builtin:zai-coding-plan/GLM-5.2",
           "modelLabel": "GLM-5.2",
           "tool": "zcode-cli",
-          "date": "2026-07-27",
+          "date": "2026-08-06",
           "oneshot": false,
           "followUps": 0
         },
@@ -5400,19 +5496,40 @@
       "name": "widget",
       "type": "registry:block",
       "title": "WIDGET — Spatial Glass Dashboard",
-      "description": "A productivity-app dashboard landing in visionOS spatial-glass style — floating translucent widgets over a depth gradient, the spatial OS look. Where HANJI SLATE is a single e-ink device exploding, WIDGET is a constellation of glass dashboard widgets floating in depth.",
+      "description": "A spatial dashboard in visionOS glass-futurism style — a constellation of translucent widgets floating at different depths over an aurora ground, tilting toward the pointer like held glass. Where HANJI SLATE is a single e-ink device exploding, WIDGET is a field of glass dashboard widgets suspended in 3D space.",
       "dependencies": [],
       "categories": [
-        "bento-product",
+        "glass-futurism",
         "pointer-parallax",
-        "flip-layout",
+        "glass-specular",
+        "scroll-scrub-pinned",
         "clip-path-reveal"
       ],
       "files": [
         {
+          "path": "registry/designs/widget/components/SpatialStage.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/widget/components/SpatialStage.tsx"
+        },
+        {
+          "path": "registry/designs/widget/components/WidgetCard.tsx",
+          "type": "registry:component",
+          "target": "app/oneshot/widget/components/WidgetCard.tsx"
+        },
+        {
+          "path": "registry/designs/widget/components/widgets.ts",
+          "type": "registry:component",
+          "target": "app/oneshot/widget/components/widgets.ts"
+        },
+        {
           "path": "registry/designs/widget/fonts.ts",
           "type": "registry:file",
           "target": "app/oneshot/widget/fonts.ts"
+        },
+        {
+          "path": "registry/designs/widget/hooks/usePointerParallax.ts",
+          "type": "registry:hook",
+          "target": "app/oneshot/widget/hooks/usePointerParallax.ts"
         },
         {
           "path": "registry/designs/widget/hooks/usePrefersReducedMotion.ts",
@@ -5449,9 +5566,9 @@
           "model": "builtin:zai-coding-plan/GLM-5.2",
           "modelLabel": "GLM-5.2",
           "tool": "zcode-cli",
-          "date": "2026-07-27",
+          "date": "2026-08-06",
           "oneshot": false,
-          "followUps": 0
+          "followUps": 1
         },
         "media": "code"
       }

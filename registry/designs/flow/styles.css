@@ -1,28 +1,48 @@
 /* ==========================================================================
-   FLOW 흐름 — river of words · kinetic-typography
-   sky / paper / drift · letters flow like water
+   FLOW 흐름 — 글자의 강 · river of words
+   liquid / organic · sky / paper / drift · letters flow like water
    Scoped by convention to .flow-root; classes prefixed flow-.
+   The water is drawn in code: a canvas river carries the words, a pinned
+   verse section holds while stanzas flow past, and a feature section names
+   the laws of liquid. No images, no audio, no dependencies.
    ========================================================================== */
 
 .flow-root {
-  /* -- palette ---------------------------------------------------------------
-     A sky-and-paper palette. The accent is bright but low-contrast against
-     the pale sky, so it is decorative-only for text; body copy stays on the
-     deep ink tones which clear AA comfortably. */
-  --flow-bg: #f0f9ff;          /* sky at rest — page surface */
-  --flow-bg-deep: #e0f2fe;     /* paper at depth — verse well */
-  --flow-ink: #0c4a6e;         /* primary text — 8.87:1 on sky (AAA) */
-  --flow-ink-soft: #0369a1;    /* secondary text — 5.57:1 on sky (AA), 5.17:1 on paper (AA) */
-  --flow-accent: #0ea5e9;      /* accent — DECORATIVE ONLY (2.60:1 on sky), large/glyph use */
-  --flow-accent-press: #075985;/* solid fills, ink-on-accent: 7.09:1 on sky (AAA), white-on-it 7.74:1 */
-  --flow-accent-soft: rgba(14, 165, 233, 0.15);  /* hairlines, never text */
+  /* ==========================================================================
+     -- palette ---------------------------------------------------------------
+     A sky-and-paper palette tuned to liquid. The bright cyans are
+     decorative (large/glyph use only — they fail AA against the pale sky);
+     body copy stays on the deep navy inks, which clear AAA. Every token
+     carries its contrast ratio and its role, the gallery rule.
+     ========================================================================== */
+  --flow-bg: #f0f9ff;            /* sky at rest — page surface */
+  --flow-bg-deep: #e0f2fe;       /* paper at depth — verse well */
+  --flow-bg-darker: #bae6fd;     /* the deeper current — section wash */
+  --flow-ink: #0c4a6e;           /* primary text — 8.87:1 on sky (AAA) */
+  --flow-ink-soft: #0369a1;      /* secondary text — 5.57:1 on sky (AA), 5.17:1 on paper (AA) */
+  --flow-ink-faint: #7dd3fc;     /* decorative far-band ink — 1.78:1 on sky, LARGE/GLYPH ONLY */
+  --flow-accent: #0ea5e9;        /* accent — DECORATIVE ONLY (2.60:1 on sky), large/glyph use */
+  --flow-accent-press: #075985;  /* solid fills, ink-on-accent: 7.09:1 on sky (AAA), white-on-it 7.74:1 (AAA) */
+  --flow-accent-deep: #0c4a6e;   /* near-band canvas ink — same as primary, AAA on sky */
+  --flow-accent-soft: rgba(14, 165, 233, 0.18);  /* hairlines, never text */
   --flow-accent-glass: rgba(14, 165, 233, 0.06); /* card surface wash */
+  --flow-paper-wash: rgba(255, 255, 255, 0.62);  /* glass card fill over sky */
+  --flow-paper-wash-deep: rgba(240, 249, 255, 0.5); /* glass card fill over paper */
+
+  /* -- canvas palette (read by wordRiver.ts via readPalette) -------------- */
+  --flow-canvas-sky: #f0f9ff;    /* the river's surface — matches the page */
+  --flow-canvas-far: #7dd3fc;    /* far-band words — faint cool (DECORATIVE) */
+  --flow-canvas-mid: #0284c7;    /* mid-band words — readable teal (3.86:1 on sky, LARGE) */
+  --flow-canvas-near: #0c4a6e;   /* near-band words — crisp navy (8.87:1 on sky AAA) */
+
+  /* -- type ---------------------------------------------------------------- */
   --flow-font: "Inter", "Noto Sans KR", sans-serif;
   --flow-font-ko: "Noto Sans KR", "Inter", sans-serif;
+  --flow-font-display: "Inter", "Noto Sans KR", sans-serif;
 
-  /* -- spacing (4px baseline) ---------------------------------------------- */
+  /* -- spacing (4px baseline) --------------------------------------------- */
   --flow-space-1: 0.25rem;   /*  4px */
-  --flow-space-2: 0.5rem;    /*  8px */
+  --flow-space-2: 0.5rem;    /*  8px — base unit */
   --flow-space-3: 0.75rem;   /* 12px */
   --flow-space-4: 1rem;      /* 16px */
   --flow-space-6: 1.5rem;    /* 24px */
@@ -32,14 +52,22 @@
   --flow-space-24: 6rem;     /* 96px */
 
   /* -- motion ---------------------------------------------------------------
-     Two curves: drift for the slow entrance/reveal of letters, spring for the
-     snappy micro-interactions on cards and words. */
-  --flow-ease-drift:  cubic-bezier(0.16, 1, 0.3, 1);   /* strong ease-out — entrance */
-  --flow-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* soft back — hover/press */
+     Three curves: drift for the slow entrance/reveal of letters (strong
+     ease-out), current for the long horizontal drift of the verses, spring
+     for the snappy micro-interactions on cards and words (soft back). */
+  --flow-ease-drift:   cubic-bezier(0.16, 1, 0.3, 1);     /* strong ease-out — entrance/reveal */
+  --flow-ease-current: cubic-bezier(0.25, 1, 0.5, 1);     /* ease-out-quart — long horizontal drift */
+  --flow-ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1); /* soft back — hover/press */
+
+  /* -- shared radii -------------------------------------------------------- */
+  --flow-radius: 18px;
+  --flow-radius-lg: 24px;
 
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--flow-bg) 0%, var(--flow-bg-deep) 100%);
+  min-height: 100svh;
+  background:
+    linear-gradient(180deg, var(--flow-bg) 0%, var(--flow-bg-deep) 100%);
   color: var(--flow-ink);
   font-family: var(--flow-font);
   font-size: clamp(15px, 0.5vw + 13px, 17px);
@@ -60,17 +88,34 @@
 .flow-root h1,
 .flow-root h2,
 .flow-root h3,
-.flow-root p {
+.flow-root h4,
+.flow-root p,
+.flow-root ol,
+.flow-root ul {
   margin: 0;
 }
 
-/* Korean is first-class: its own typeface and rhythm, words kept whole. */
+.flow-root ol,
+.flow-root ul {
+  padding: 0;
+  list-style: none;
+}
+
+/* Korean is first-class: its own typeface and rhythm, words kept whole.
+   The gallery rule — line-height 1.9 (vs Latin 1.7), letter-spacing 0
+   (no tracking), word-break keep-all (no mid-word breaks). */
 .flow-root :lang(ko) {
   font-family: var(--flow-font-ko);
   letter-spacing: 0;
-  line-height: 1.8;
+  line-height: 1.9;
   word-break: keep-all;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.flow-root em {
+  font-family: var(--flow-font-display);
+  font-style: italic;
+  letter-spacing: 0.01em;
 }
 
 .flow-root ::selection {
@@ -85,11 +130,16 @@
   box-shadow: 0 0 0 6px rgba(7, 89, 133, 0.15);
 }
 
+.flow-sky {
+  position: relative;
+}
+
 /* ==========================================================================
-   Water surface — three layered ambient textures, all pure CSS:
-   1. slow-drifting SVG wave lines (the current, set in feTurbulence-free CSS)
-   2. two concentric caustic blooms that breathe at different rates
-   3. a vertical depth wash that holds the whole sky together
+   Water surface — two layered ambient textures, both pure CSS:
+   1. two concentric caustic blooms that breathe at different rates
+   2. a slow vertical depth wash that holds the whole sky together
+   The canvas river paints its own surface, so this is only the ambient
+   wash that sits behind everything (the river's deeper current).
    ========================================================================== */
 
 .flow-root::before {
@@ -105,42 +155,20 @@
   animation: flow-surface 18s var(--flow-ease-drift) infinite alternate;
 }
 
-/* a second, slower current at a different period so the surface never loops */
-.flow-root::after {
-  content: "";
-  position: fixed;
-  inset: -25%;
-  z-index: 0;
-  pointer-events: none;
-  /* repeating horizontal wave lines — the implied current of the river */
-  background-image: repeating-linear-gradient(
-    91deg,
-    transparent 0px,
-    transparent 38px,
-    rgba(14, 165, 233, 0.04) 39px,
-    rgba(14, 165, 233, 0.04) 40px,
-    transparent 41px,
-    transparent 90px
-  );
-  background-size: 320px 320px;
-  opacity: 0.7;
-  animation: flow-current 23s var(--flow-ease-drift) infinite alternate;
-}
-
 @keyframes flow-surface {
   to { transform: translate3d(2%, -1%, 0) scale(1.04); }
 }
-@keyframes flow-current {
-  to { transform: translate3d(-3%, 1.5%, 0) scale(1.05); }
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-root::before,
-  .flow-root::after { animation: none; }
+  .flow-root::before { animation: none; }
 }
 
 /* ==========================================================================
    Reveal gating
+   --------------------------------------------------------------------------
+   Pre-reveal state exists only when JS is alive (gated behind .flow-js),
+   so the SSR / no-JS markup is the finished, readable journal. Stagger is
+   applied per-batch in the hook via transition-delay.
    ========================================================================== */
 
 .flow-js [data-reveal] {
@@ -149,52 +177,104 @@
   transition:
     opacity 900ms var(--flow-ease-drift),
     transform 900ms var(--flow-ease-drift);
+  will-change: opacity, transform;
 }
-.flow-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.flow-js [data-reveal].is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
 @media (prefers-reduced-motion: reduce) {
-  .flow-js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .flow-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ==========================================================================
-   Pointer-parallax layer — the whole hero leans gently toward the cursor
+   Shared kicker — the bilingual section label
    ========================================================================== */
-
-.flow-parallax {
-  position: relative;
-  z-index: 1;
-  transition: transform 600ms var(--flow-ease-drift);
-  will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .flow-parallax { transform: none !important; transition: none; }
-}
-
-/* ==========================================================================
-   Hero — the arrival; letters drift in like a current
-   ========================================================================== */
-
-.flow-hero {
-  position: relative;
-  z-index: 1;
-  padding:
-    clamp(80px, 18vh, 160px)
-    clamp(20px, 5vw, 60px)
-    clamp(40px, 8vh, 80px);
-  text-align: center;
-}
 
 .flow-kicker {
-  font-size: 0.72rem;
+  font-size: clamp(0.66rem, 0.9vw, 0.74rem);
   text-transform: uppercase;
   letter-spacing: 0.24em;
   color: var(--flow-accent-press);
-  margin: 0 0 var(--flow-space-8);
+  margin: 0 0 var(--flow-space-6);
+  font-weight: 500;
 }
 .flow-kicker :lang(ko) {
   text-transform: none;
   letter-spacing: 0;
+  font-weight: 600;
 }
 
+/* ==========================================================================
+   Hero — the arrival; the river carries the wordmark
+   --------------------------------------------------------------------------
+   The hero is the river's frame. The canvas fills it as a living backdrop;
+   a soft sky veil keeps the wordmark's negative space readable regardless
+   of which words drift past; and the title floats over the top at three
+   depths of its own via the pointer-parallax hook.
+   ========================================================================== */
+
+.flow-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The canvas river fills the hero as a living backdrop. */
+.flow-hero__river {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none; /* the canvas listens on window; the hero stays scrollable */
+}
+
+/* A soft sky wash over the river's top and bottom so the wordmark always
+   has readable negative space. Decorative only. */
+.flow-hero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      var(--flow-bg) 0%,
+      rgba(240, 249, 255, 0.55) 18%,
+      transparent 38%,
+      transparent 62%,
+      rgba(224, 242, 254, 0.55) 82%,
+      var(--flow-bg-deep) 100%);
+}
+
+/* The hero copy sits above the river and veil. The whole block leans with
+   the pointer (three depths, multiplied below). */
+.flow-hero__copy {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding:
+    clamp(80px, 18vh, 160px)
+    clamp(20px, 5vw, 60px)
+    clamp(60px, 12vh, 120px);
+  max-width: 1100px;
+  /* the lerp-driven depth translate, plus a settle transition */
+  transition: transform 600ms var(--flow-ease-drift);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-hero__copy { transform: none !important; transition: none; }
+}
+
+/* The wordmark — giant FLOW that drifts in glyph by glyph. */
 .flow-title {
   font-weight: 700;
   font-size: clamp(4rem, 14vw, 10rem);
@@ -206,9 +286,16 @@
   flex-wrap: wrap;
   gap: 0.02em;
   text-wrap: balance;
+  color: var(--flow-ink);
+  /* the wordmark carries the most pointer drift — the nearest layer */
+  transform: translate3d(
+    calc(var(--flow-px, 0) * 18px),
+    calc(var(--flow-py, 0) * 10px),
+    0
+  );
 }
 
-/* char-split-reveal: each glyph drifts in from the side, staggered */
+/* char-split-reveal: each glyph drifts in from the side, staggered. */
 .flow-glyph {
   display: inline-block;
   opacity: 0;
@@ -225,133 +312,328 @@
   .flow-glyph { opacity: 1; transform: none; animation: none; }
 }
 
+/* The Korean subtitle beneath the wordmark — a quiet second voice. */
 .flow-title__ko {
   display: block;
   width: 100%;
-  font-size: 0.32em;
+  font-size: 0.3em;
   color: var(--flow-ink-soft);
   margin-top: var(--flow-space-2);
   font-weight: 500;
-  letter-spacing: 0;                /* Korean: no tightened tracking */
+  letter-spacing: 0.08em;           /* Korean subtitle: gentle spacing, not tracked */
+  /* the subtitle drifts less than the wordmark — the mid layer */
+  transform: translate3d(
+    calc(var(--flow-px, 0) * 8px),
+    calc(var(--flow-py, 0) * 5px),
+    0
+  );
 }
 
+/* The lede — the page's thesis, held at the centre. */
 .flow-sub {
   max-width: 540px;
-  margin: 0 auto;
+  margin: 0 auto var(--flow-space-6);
   color: var(--flow-ink-soft);
   font-size: clamp(0.95rem, 1.6vw, 1.15rem);
   line-height: 1.7;
   text-wrap: pretty;
+  /* the lede barely moves — the far layer */
+  transform: translate3d(
+    calc(var(--flow-px, 0) * 4px),
+    calc(var(--flow-py, 0) * 2px),
+    0
+  );
+}
+.flow-sub__en {
+  display: block;
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+/* The pointer hint — the only instruction the hero gives. */
+.flow-hero__hint {
+  font-size: 0.78rem;
+  color: var(--flow-ink-soft);
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+.flow-hero__hint-en {
+  font-style: italic;
 }
 
 /* ==========================================================================
-   scroll-scrub-pinned: the verse section
+   The canvas river
+   --------------------------------------------------------------------------
+   The wrapper is positioned by its parent (.flow-hero__river); it just
+   needs to fill it and own its backing store. The canvas reads its palette
+   from the .flow-river host (see readPalette in wordRiver.ts).
+   ========================================================================== */
+
+.flow-river {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.flow-river__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   흐르는 시 · FlowingVerse — the pinned verse where stanzas flow past
+   --------------------------------------------------------------------------
+   scroll-scrub-pinned. The outer section is tall (400vh — one viewport per
+   stanza plus margin); the inner stage is sticky, so the visitor scrolls
+   through four verse-heights of the same scene. One value, --flow-scrub
+   (0→1), drives every stanza's dissolve. Each stanza owns a quarter of the
+   scroll; its dissolve window is centred on its quarter (--flow-c) with a
+   soft half-width (--flow-h), so stanzas crossfade rather than cut.
    ========================================================================== */
 
 .flow-verse {
-  position: sticky;
-  top: 0;
-  min-height: 100vh;
-  min-height: 100svh;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
+  position: relative;
+  /* tall so there is scroll-room to scrub through all four stanzas */
+  height: 400vh;
   background:
-    radial-gradient(80% 60% at 50% 50%, rgba(14, 165, 233, 0.08), transparent 70%),
-    radial-gradient(60% 50% at 50% 100%, rgba(7, 89, 133, 0.06), transparent 70%),
+    radial-gradient(80% 60% at 50% 30%, rgba(14, 165, 233, 0.08), transparent 70%),
+    radial-gradient(60% 50% at 50% 100%, rgba(7, 89, 133, 0.07), transparent 70%),
     var(--flow-bg-deep);
   border-top: 1px solid var(--flow-accent-soft);
   border-bottom: 1px solid var(--flow-accent-soft);
+  isolation: isolate;
 }
 
-.flow-verse__inner {
-  max-width: 680px;
+.flow-verse__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 56px);
+}
+
+/* The head — kicker, title, lede. Sits above the stanzas. */
+.flow-verse__head {
   text-align: center;
+  margin-bottom: clamp(1.6rem, 4vh, 2.6rem);
 }
 
 .flow-verse__title {
-  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.02em;          /* large display heading */
-  margin: var(--flow-space-12) 0;
+  margin: 0 0 var(--flow-space-4);
   color: var(--flow-ink);
   text-wrap: balance;
 }
 
-/* The stream of words flows horizontally, driven by --flow-scrub */
-.flow-verse__stream {
-  display: flex;
-  gap: clamp(16px, 3vw, 32px);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: var(--flow-space-12);
-}
-
-.flow-verse__word {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 500;
-  color: var(--flow-accent-press);
-  margin: 0;
-  letter-spacing: 0;
-  opacity: calc(0.3 + var(--flow-scrub, 0.5) * 0.7);
-  transform: translateY(calc((1 - var(--flow-scrub, 0.5)) * 20px));
-  transition:
-    opacity 200ms var(--flow-ease-drift),
-    transform 200ms var(--flow-ease-drift);
-}
-
-.flow-verse__en {
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+.flow-verse__lede {
+  font-size: clamp(0.92rem, 1.4vw, 1.05rem);
   color: var(--flow-ink-soft);
-  margin: 0;
-  line-height: 1.6;
-  text-wrap: pretty;
+  max-width: 36rem;
+  margin-inline: auto;
 }
-.flow-verse__en em {
+.flow-verse__lede em {
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 0.35rem;
+}
+.flow-verse__lede span {
+  display: block;
+  color: var(--flow-ink-soft);
+  opacity: 0.85;
+  font-size: 0.92rem;
+}
+
+/* The four stanzas stacked in the same stage; each dissolves with scroll.
+   The stage list is relative so all four stanzas occupy the same space. */
+.flow-verse__stages {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flow-verse__stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--flow-space-4);
+  /* dissolve: opacity is 1 inside the stanza's window, fading at the edges.
+     We compute the scroll's signed distance from the window centre and clamp
+     it into a 0..1 alpha. The absolute distance is max(d, -d) — supported
+     wherever calc()/max()/clamp() are, which is everywhere. The ramp is 1 at
+     |d| ≤ h·0.4 and reaches 0 at |d| = h, a soft crossfade, not a cut. */
+  --flow-d: calc(var(--flow-scrub, 1) - var(--flow-c, 0.5));
+  --flow-ad: max(var(--flow-d), calc(-1 * var(--flow-d)));
+  opacity: clamp(
+    0,
+    calc(1 - (var(--flow-ad) - var(--flow-h, 0.1) * 0.4) / (var(--flow-h, 0.1) * 0.6)),
+    1
+  );
+  transform: translateY(
+    calc(var(--flow-d, 0) * 60px)
+  );
+  transition: opacity 200ms var(--flow-ease-current);
+}
+
+/* the small bilingual number above each stanza */
+.flow-verse__no {
+  font-size: 0.74rem;
+  letter-spacing: 0.22em;
+  color: var(--flow-accent-press);
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.flow-verse__no :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+.flow-verse__no-en {
   font-style: italic;
+  letter-spacing: 0.06em;
+}
+
+/* the lines of a stanza */
+.flow-verse__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flow-space-3);
+  max-width: 32rem;
+}
+
+.flow-verse__line {
+  font-size: clamp(1.1rem, 2.6vw, 1.6rem);
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--flow-ink);
+  text-wrap: balance;
+}
+.flow-verse__ko {
+  display: block;
+}
+.flow-verse__en {
+  display: block;
+  margin-top: 0.2rem;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.72em;
+  color: var(--flow-ink-soft);
   letter-spacing: 0.01em;
 }
 
-/* ==========================================================================
-   Features — cards with visual hierarchy, not bare text columns
-   Each card: a soft accent wash, layered shadow, and a spring lift on hover.
-   ========================================================================== */
-
-.flow-features {
-  position: relative;
-  z-index: 1;
-  padding: clamp(60px, 12vh, 120px) clamp(20px, 5vw, 60px);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: clamp(24px, 4vw, 40px);
-  max-width: 1000px;
-  margin: 0 auto;
+.flow-verse__caption {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--flow-ink-soft);
+  margin-top: clamp(1.4rem, 3vh, 2.4rem);
+  opacity: 0.85;
+}
+.flow-verse__caption em {
+  display: block;
+  margin-top: 0.2rem;
 }
 
-.flow-feature {
+/* ==========================================================================
+   흐름의 법칙 · FlowLaws — the laws of liquid
+   --------------------------------------------------------------------------
+   Five cards, one per law (rheology, surface tension, laminar, turbulence,
+   viscosity). Each is a glass surface over the sky with a layered shadow
+   (ambient + key + contact), a thin accent hairline along the top that
+   brightens on hover, and a spring lift on hover. The grid is responsive:
+   one column on phones, two on tablets, three on desktops.
+   ========================================================================== */
+
+.flow-laws {
   position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 140px) clamp(20px, 5vw, 56px);
+}
+
+.flow-laws__head {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 5vh, 3.2rem);
+}
+
+.flow-laws__title {
+  font-size: clamp(1.8rem, 4.4vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;          /* large display heading */
+  margin: 0 0 var(--flow-space-6);
+  color: var(--flow-ink);
+  text-wrap: balance;
+}
+
+.flow-laws__lede {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: var(--flow-ink-soft);
+  line-height: 1.7;
+  max-width: 38rem;
+  text-wrap: pretty;
+}
+.flow-laws__lede em {
+  display: block;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  margin-bottom: 0.4rem;
+  color: var(--flow-ink);
+}
+.flow-laws__lede span {
+  display: block;
+  opacity: 0.9;
+}
+
+.flow-laws__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(20px, 3vw, 32px);
+}
+
+/* a single law card — the glass surface */
+.flow-law {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--flow-space-4);
   padding: var(--flow-space-8) var(--flow-space-6) var(--flow-space-6);
-  border-radius: 18px;
+  border-radius: var(--flow-radius-lg);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(240, 249, 255, 0.55) 100%);
+    linear-gradient(180deg, var(--flow-paper-wash) 0%, var(--flow-paper-wash-deep) 100%);
   border: 1px solid var(--flow-accent-soft);
   backdrop-filter: blur(8px) saturate(140%);
   -webkit-backdrop-filter: blur(8px) saturate(140%);
   box-shadow:
-    0 1px 2px  rgba(7, 89, 133, 0.05),   /* ambient — surface contact */
-    0 8px 18px rgba(7, 89, 133, 0.08),   /* key — primary cast */
-    0 24px 48px rgba(7, 89, 133, 0.06);  /* contact — far diffusion */
+    0 1px 2px  rgba(7, 89, 133, 0.05),    /* ambient — surface contact */
+    0 8px 18px rgba(7, 89, 133, 0.08),    /* key — primary cast */
+    0 24px 48px rgba(7, 89, 133, 0.06);   /* contact — far diffusion */
   transition:
     transform 280ms var(--flow-ease-spring),
     box-shadow 280ms var(--flow-ease-drift),
     border-color 200ms var(--flow-ease-drift);
 }
 
-/* a soft accent wash behind the heading — the implied light source */
-.flow-feature::before {
+/* a soft accent wash along the top — the implied light source */
+.flow-law::before {
   content: "";
   position: absolute;
   top: -1px;
@@ -370,64 +652,221 @@
   transition: opacity 280ms var(--flow-ease-drift);
 }
 
-.flow-feature:hover {
+.flow-law:hover {
   transform: translateY(-4px);
-  border-color: rgba(14, 165, 233, 0.32);
+  border-color: rgba(14, 165, 233, 0.34);
   box-shadow:
     0 2px 4px  rgba(7, 89, 133, 0.06),
     0 14px 28px rgba(7, 89, 133, 0.12),
     0 36px 64px rgba(7, 89, 133, 0.08);
 }
-.flow-feature:hover::before { opacity: 1; }
-
-.flow-feature:focus-within {
-  border-color: rgba(14, 165, 233, 0.36);
+.flow-law:hover::before { opacity: 1; }
+.flow-law:focus-within {
+  border-color: rgba(14, 165, 233, 0.38);
 }
 
-.flow-feature__h {
-  font-size: 1.1rem;
+/* the card head — number + name */
+.flow-law__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--flow-space-4);
+}
+
+.flow-law__no {
+  flex: none;
+  font-family: var(--flow-font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  color: var(--flow-accent);
   font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  margin: 0 0 var(--flow-space-3);
-  color: var(--flow-ink);
 }
-.flow-feature__h :lang(ko) {
+
+.flow-law__name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.flow-law__ko {
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: 0;                /* Korean: no tracking */
+  line-height: 1.2;
+  color: var(--flow-ink);
+  margin: 0;
+}
+
+.flow-law__en {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--flow-ink-soft);
+  margin: 0.2rem 0 0;
+}
+.flow-law__en-term {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.flow-law__rom {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* the one-line aphorism — the card's emotional centre */
+.flow-law__aphorism {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--flow-accent-press);
   letter-spacing: 0;
+  text-wrap: balance;
+}
+.flow-law__aphorism-en {
+  font-style: italic;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--flow-ink-soft);
+  margin: calc(-1 * var(--flow-space-1)) 0 0; /* tuck under the Korean aphorism */
 }
 
-.flow-feature__p {
-  margin: 0;
-  color: var(--flow-ink-soft);
-  font-size: 0.95rem;
+/* the body copy — the science and the image */
+.flow-law__body {
+  flex: 1 1 auto;
+}
+.flow-law__body-ko {
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--flow-ink);
+  margin: 0 0 var(--flow-space-3);
+  text-wrap: pretty;
+}
+.flow-law__body-en {
+  font-size: 0.9rem;
   line-height: 1.65;
+  color: var(--flow-ink-soft);
+  margin: 0;
   text-wrap: pretty;
 }
 
+/* the detail row — the constant or unit, set in mono numerals */
+.flow-law__detail {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--flow-space-3);
+  margin-top: var(--flow-space-2);
+  padding-top: var(--flow-space-3);
+  border-top: 1px solid var(--flow-accent-soft);
+  font-size: 0.82rem;
+}
+.flow-law__detail-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.66rem;
+  color: var(--flow-ink-soft);
+  font-weight: 500;
+}
+.flow-law__detail-label :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0.06em;
+}
+.flow-law__detail-value {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--flow-accent-press);
+  font-weight: 500;
+}
+
+.flow-laws__caption {
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-top: clamp(2rem, 5vh, 3.2rem);
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--flow-ink-soft);
+  line-height: 1.7;
+}
+.flow-laws__caption span {
+  display: block;
+}
+.flow-laws__caption em {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.88rem;
+}
+
 /* ==========================================================================
-   Footer
+   Footer — the river reaches the sea
    ========================================================================== */
 
 .flow-foot {
   position: relative;
   z-index: 1;
-  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
+  max-width: 880px;
+  margin-inline: auto;
+  padding: clamp(72px, 12vh, 130px) clamp(20px, 5vw, 56px) clamp(48px, 8vh, 80px);
   text-align: center;
   border-top: 1px solid var(--flow-accent-soft);
-  color: var(--flow-ink-soft);
-  font-size: 0.82rem;
-  line-height: 1.7;
+  background: linear-gradient(180deg, var(--flow-bg-deep) 0%, var(--flow-bg) 100%);
 }
-.flow-foot p { margin: 0 0 var(--flow-space-2); }
+
+.flow-foot__call {
+  font-family: var(--flow-font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 4.2vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: 0;                /* Korean: no tracking */
+  color: var(--flow-ink);
+  margin-bottom: var(--flow-space-4);
+  text-wrap: balance;
+}
+
+.flow-foot__sub {
+  font-size: 1rem;
+  color: var(--flow-ink-soft);
+  margin-bottom: clamp(2rem, 5vh, 2.8rem);
+}
+
+.flow-foot__legal {
+  font-size: 0.82rem;
+  color: var(--flow-ink-soft);
+  letter-spacing: 0.04em;
+  margin-bottom: var(--flow-space-2);
+}
+
+.flow-foot__colophon {
+  font-size: 0.82rem;
+  color: var(--flow-ink-soft);
+  line-height: 1.7;
+  opacity: 0.9;
+}
+.flow-foot__colophon em {
+  display: block;
+  margin-top: 0.2rem;
+}
 
 /* ==========================================================================
    Composition — responsive drifts at three breakpoints
+   --------------------------------------------------------------------------
+   The gallery rule: at least three media queries (720 / 900 / 1200). Phones
+   collapse the law grid to one column, the title shrinks, and the hero's
+   pointer hint hides to reclaim vertical space.
    ========================================================================== */
 
+@media (max-width: 1200px) {
+  .flow-laws__grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
-  .flow-features {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  .flow-verse {
+    height: 360vh;
+  }
+  .flow-law {
+    padding: var(--flow-space-6) var(--flow-space-4);
+  }
+  .flow-law::before {
+    left: var(--flow-space-4);
+    right: var(--flow-space-4);
   }
   .flow-title {
     letter-spacing: -0.02em;
@@ -435,15 +874,20 @@
 }
 
 @media (max-width: 720px) {
-  .flow-feature {
-    padding: var(--flow-space-6) var(--flow-space-4);
+  .flow-verse {
+    height: 320vh;
   }
-  .flow-feature::before {
-    left: var(--flow-space-4);
-    right: var(--flow-space-4);
+  .flow-verse__pin {
+    padding: clamp(32px, 8vh, 64px) var(--flow-space-4);
   }
-  .flow-verse__stream {
-    gap: clamp(12px, 2.5vw, 20px);
+  .flow-laws {
+    padding: clamp(56px, 10vh, 96px) var(--flow-space-4);
+  }
+  .flow-laws__grid {
+    grid-template-columns: 1fr;
+  }
+  .flow-verse__line {
+    font-size: clamp(1rem, 4vw, 1.3rem);
   }
 }
 
@@ -455,8 +899,51 @@
   }
   .flow-title__ko {
     margin-top: var(--flow-space-1);
+    font-size: 0.28em;
   }
-  .flow-feature:hover {
-    transform: translateY(-2px);
+  .flow-hero__hint {
+    font-size: 0.72rem;
+  }
+  .flow-law:hover {
+    transform: translateY(-2px); /* gentler lift on a small target */
   }
 }
+
+/* ==========================================================================
+   Reduced motion — the river, already still.
+   --------------------------------------------------------------------------
+   Under prefers-reduced-motion: the canvas river composes a single still
+   frame (WordRiver draws once at the seed composition), the wordmark does
+   not drift in glyph by glyph, the pointer parallax never writes its
+   variables (so the title rests at the centre), and the reveal hook adds
+   is-in to everything immediately. The verses show their last stanza
+   (--flow-scrub defaults to 1 — "all into the same sea").
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .flow-glyph { opacity: 1; transform: none; animation: none; }
+  .flow-title,
+  .flow-title__ko,
+  .flow-sub,
+  .flow-hero__copy {
+    transform: none !important;
+  }
+  .flow-verse__stage {
+    transition: none;
+    transform: none;
+  }
+  /* keep all four stanzas readable in the reduced still — stack them */
+  .flow-verse__stage:nth-child(n+2) {
+    position: relative;
+    inset: auto;
+  }
+}
+
+/* ==========================================================================
+   End of FLOW styles
+   ========================================================================== */

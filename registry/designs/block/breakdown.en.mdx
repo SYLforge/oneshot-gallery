@@ -1,8 +1,139 @@
 # BLOCK — breakdown
 
-## The hook
-an independent poetry press built from raw concrete blocks. The third neo-brutalist entry, visually distinct from BLUNT, RAVE. Part of the gallery's
-50-entry milestone.
+## The hook: a poetry press cast in concrete
+
+This press rejects softness. Each poem is a brick; one collection is a
+concrete wall. The third neo-brutalist entry, it sits apart from BLUNT's
+riso-paper-yellow and RAVE's dark-strobe-blue — BLOCK is grey slab, green
+ink, hard offset shadow. The shadows carry no blur. The corners carry no
+radius. A gradient never appears. This is method, not mood: texture comes
+from the 3px stroke, depth from the 6px offset.
+
+Eight poems span four categories (structure / attitude / material /
+method); choosing a filter FLIP-rearranges the grid into a new wall.
+Above it, a two-row manifesto ticker scrolls in opposite directions, and
+an ink-grounded manifesto section sets out the press's five tenets. Three
+techniques, four color tokens, a 3px stroke — each technique heads one
+section. A shadow with no job is deleted.
+
+## Art direction
+
+The palette is a four-token manifesto. Concrete grey (#e5e5e5) slab,
+near-black ink (#171717), and three green drums — a readable green
+(#14532d), a decorative green (#22c55e), a deep green (#16a34a). Holding
+it honest is a contrast map, not a vibe. Ink holds 15.3:1 (AAA) on
+concrete; the secondary ink (#404040) holds 9.7:1. So all body text clears
+AAA.
+
+Green is the hard one. #22c55e drops to 2.0:1 on concrete — illegible as
+body. So that green is *decoration only* — the kicker chip text (5.7:1 on
+ink), the marquee ticker, the active filter, the highlight. The only place
+green is *text* is #14532d (7.6:1 on concrete, AAA) — and so every "green
+text" is that deep green: poem numbers, section numbers, counters. The
+grey (#737373) stays confined to captions/labels at 4.6:1 (AA large). Tiles
+tint their category color into paper at 4–10% (`color-mix`) — the tile
+reads as its category's weight while text clears AA.
+
+Two typefaces. Inter carries every Latin glyph (display, body, label — the
+full weight range); Black Han Sans carries every Korean glyph. The single
+Korean face is the proof of the premise — "the press's Korean voice is as
+big and angular as its Latin one." `:lang(ko)` pins Korean line-height to
+1.4 and letter-spacing to 0. Display tracks tight at -0.04em — tighter
+reads more solid.
+
+## Technique 1 — clip-path reveal + char-split: the sound of a wall going up
+
+The hero wordmark doesn't fade in. It *gets cut open*. And not as one
+block — each letter of "BLOCK" drops in, sliced from above:
+
+```css
+/* styles.css — pre-reveal is JS-gated via .block-js. No JS = finished book. */
+.block-js .bk-char {
+  clip-path: inset(0 0 100% 0);            /* slice from top */
+  transition: clip-path 380ms steps(8);    /* brutalist hard cut */
+  transition-delay: calc(var(--bk-char-i) * 70ms);  /* per-char stagger */
+}
+.block-js .is-revealed .bk-char {
+  clip-path: inset(0 0 0% 0);              /* revealed */
+}
+```
+
+Each letter carries an inline `--bk-char-i` (index), so they stagger by
+70ms. The easing is `steps(8)` — not a smooth cubic-bezier but an 8-step
+staircase cut. Letters appear in hard snaps, like bricks stacking. That is
+the brutalist reveal vocabulary. There is no `ease` or `linear` in this
+press.
+
+Section reveals use the same pattern: `[data-reveal]` wipes open
+left-to-right (520ms, steps(8)). The `useReveal` hook adds `is-revealed`
+to the root (.bk-doc); CSS drives every reveal via descendant selectors.
+The entire pre-reveal state lives behind `.block-js` — with JS off or
+reduced motion, every section sits at rest and the page is a finished
+book.
+
+## Technique 2 — marquee: the manifesto, in motion
+
+Between the hero and the grid sits a two-row ticker. The top row runs ink-
+on-green drifting right; the bottom runs paper-on-deep-green drifting
+left. Both at the same pace (~52px/s) but opposite directions — the eye
+reads both ways. The press's declaration becomes moving type.
+
+```ts
+// ManifestoMarquee.tsx — rAF loop, IntersectionObserver pauses off-screen.
+const tick = (t) => {
+  offA = wrap(offA - SPEED * dt, wA);   // top row: −
+  offB = wrap(offB + SPEED * dt, wB);   // bottom row: +
+  ta.style.transform = `translate3d(${offA}px, 0, 0)`;
+  ...
+};
+```
+
+`wrap()` keeps the offset in (-w, 0] so four duplicated groups tile
+seamlessly. A ResizeObserver catches width changes; an IntersectionObserver
+cancels the rAF when off-screen. Under reduced motion the transform is
+cleared and the rows stand. The moving rows are aria-hidden; every slogan
+is delivered once in a visually-hidden paragraph before them — so a screen
+reader never hears the same line twice.
+
+## Technique 3 — FLIP poem grid: the signature
+
+Choosing a filter (all / structure / attitude / material / method) FLIP-
+rearranges the poem cards. Before the DOM mutates each card's bounding rect
+is snapshotted (First); after mutation the new rect is measured (Last); the
+inverse delta is applied as a transform (Invert) then animated to zero
+(Play) — the cards glide to their new homes.
+
+```ts
+// PoemFlipGrid.tsx — useLayoutEffect measures First/Last in the same paint.
+for (const li of tiles) first.set(key, li.getBoundingClientRect());  // First
+// ... React updates DOM (Last = current layout) ...
+el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;  // Invert
+void grid.getBoundingClientRect();                          // force reflow
+el.style.transition = `transform 480ms cubic-bezier(0.22,1,0.36,1)`;
+el.style.transform = "";                                    // Play
+```
+
+Outgoing cards fade out via the reverse of CSS `@keyframes bk-tile-in`;
+incoming cards fade in over the same window (index × 50ms stagger). Under
+reduced motion the play step is skipped — the grid swaps instantly. Each
+card wears the neo-brutalist signature: hard offset shadow (6px 6px 0,
+blur 0), hover lifts translate(-3px,-3px) and grows the shadow (9px 9px 0,
+deep green). A press triggers a spring overshoot — the y>1 of
+`cubic-bezier(0.34, 1.56, 0.64, 1)` bounces the card slightly.
 
 ## Accessibility
-Reduced motion: static. No-JS: fully readable. AA contrast. Korean-first bilingual.
+
+- **Reduced motion**: every reveal / marquee / FLIP stops. Grid rearranges
+  instantly; ticker stands still.
+- **No JavaScript**: fully readable. The `.block-js` gate means the SSR
+  markup is the finished book.
+- **Contrast**: body AAA (15.3:1), secondary AAA (9.7:1), caption AA large
+  (4.6:1). Green body text only ever uses the deep green (7.6:1, AAA).
+- **Korean-first bilingual**: `:lang(ko)` gets its own line-height and
+  letter-spacing. Korean is the original; English is the echo.
+- **Focus**: `:focus-visible` gives a 3px deep-green outline. Each poem
+  card is focusable.
+- **Semantics**: the grid is a real `<ul>/<li>`; filters carry `aria-
+  pressed`.
+
+This press does not compromise — built in code, with no images at all.

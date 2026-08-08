@@ -6,16 +6,17 @@ import { useEffect, useRef } from "react";
 const PARALLAX_LERP = 0.045;
 
 /**
- * Drives `--drm-px` / `--drm-py` (each −1…1) on the referenced element — the
- * weightless depth of the cloud sky. styles.css multiplies these into
- * capped translations at three depths: the far sky barely moves, the middle
- * layer carries the drift, the nearest puffs read at arm's length. The lerp
- * is deliberately slower than a tracking parallax (0.045 vs the usual 0.08):
- * clouds do not chase the pointer, they settle after it.
+ * Drives `--flow-px` / `--flow-py` (each −1…1) on the referenced element —
+ * the weightless depth of the hero wordmark over the river. styles.css
+ * multiplies these into capped translations at three depths: the far kicker
+ * barely moves, the title carries the drift, the nearest glyphs read at
+ * arm's length. The lerp is deliberately slower than a tracking parallax
+ * (0.045 vs the usual 0.08): the title does not chase the pointer, it
+ * settles after it — the same weightless read as drift on water.
  *
- * Fine pointers only — on touch the layers simply rest (the ambient cloud-bob
- * animation carries the life instead), and under reduced motion this hook
- * does nothing; the CSS fallback for both variables is 0.
+ * Fine pointers only — on touch the layers simply rest (the canvas river
+ * carries the motion instead), and under reduced motion this hook does
+ * nothing; the CSS fallback for both variables is 0.
  */
 export function usePointerParallax<T extends HTMLElement>(disabled: boolean) {
   const ref = useRef<T | null>(null);
@@ -43,8 +44,8 @@ export function usePointerParallax<T extends HTMLElement>(disabled: boolean) {
       const k = PARALLAX_LERP * (dt / 16.7);
       x += (tx - x) * k;
       y += (ty - y) * k;
-      el.style.setProperty("--drm-px", x.toFixed(4));
-      el.style.setProperty("--drm-py", y.toFixed(4));
+      el.style.setProperty("--flow-px", x.toFixed(4));
+      el.style.setProperty("--flow-py", y.toFixed(4));
     };
 
     const start = () => {
@@ -61,8 +62,12 @@ export function usePointerParallax<T extends HTMLElement>(disabled: boolean) {
     const onMove = (ev: PointerEvent) => {
       if (ev.pointerType !== "mouse" && ev.pointerType !== "pen") return;
       const r = el.getBoundingClientRect();
-      tx = Math.max(-1, Math.min(1, ((ev.clientX - r.left) / r.width) * 2 - 1));
-      ty = Math.max(-1, Math.min(1, ((ev.clientY - r.top) / r.height) * 2 - 1));
+      // Guard: a zero-size rect would divide to Infinity; bail to neutral.
+      if (r.width < 1 || r.height < 1) return;
+      const nx = ((ev.clientX - r.left) / r.width) * 2 - 1;
+      const ny = ((ev.clientY - r.top) / r.height) * 2 - 1;
+      tx = Number.isFinite(nx) ? Math.max(-1, Math.min(1, nx)) : 0;
+      ty = Number.isFinite(ny) ? Math.max(-1, Math.min(1, ny)) : 0;
     };
     const onLeave = () => {
       tx = 0;
@@ -90,8 +95,8 @@ export function usePointerParallax<T extends HTMLElement>(disabled: boolean) {
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
-      el.style.removeProperty("--drm-px");
-      el.style.removeProperty("--drm-py");
+      el.style.removeProperty("--flow-px");
+      el.style.removeProperty("--flow-py");
     };
   }, [disabled]);
 

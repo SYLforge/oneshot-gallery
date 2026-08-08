@@ -1,21 +1,49 @@
 # WIDGET — breakdown
 
 ## The hook
-A productivity-app dashboard in visionOS spatial-glass style. Floating
-translucent widgets over a depth gradient. Where HANJI SLATE is a single e-ink
-device exploding, WIDGET is a constellation of glass dashboard widgets floating
-in depth. Pure code, no images.
+A spatial dashboard in visionOS glass-futurism style — a constellation of eight
+translucent widgets floating at different depths over an aurora ground, tilting
+toward the pointer like held glass. Where HANJI SLATE is a single e-ink device
+exploding, WIDGET is a field of glass suspended in 3D space. Pure code, no
+images.
+
+## Page structure, top to bottom
+Hero (display title and Korean subtitle over the depth gradient); the spatial
+stage (the signature — eight widgets lean toward the pointer by depth, an
+aurora drifting subtly behind); and the colophon.
+
+## Signature — the 3D widget stage
+`usePointerParallax` attaches to the stage and leans each `[data-tilt]` widget
+in 3D toward the pointer. A single rAF-coalesced loop lerps (0.12) every card
+each frame and writes four custom properties (`--w-rx/--w-ry/--w-lift`) straight
+onto it. Each card declares `data-depth` ∈ {near, mid, far} — a near card tilts
+most and lifts furthest, a far card barely moves, so the field reads as real
+parallax depth. `perspective: 1200px` + `transform-style: preserve-3d` carry
+the depth; a contact drop-shadow on each card grounds the float as suspension
+in space, not flat translateZ. At rest the loop parks itself — zero cost.
 
 ## Techniques
-1. **pointer-parallax** — widgets tilt toward the pointer at different depths
-   (3D transform driven by CSS custom properties --widget-px/py, written by one
-   pointermove listener).
-2. **flip-layout** — a Morning/Focus mode toggle rearranges the widget grid
-   (implemented via a data-mode attribute + CSS grid — the same UX intent as a
-   measured FLIP, simpler and reliable).
-3. **clip-path-reveal** — widgets reveal with soft clip-path on scroll.
+1. **pointer-parallax** — widgets lean toward the pointer at depth-scaled rates
+   (a single rAF lerp loop measures each card's rect, scales by a depth
+   multiplier, and writes `--w-rx/ry/lift` — ported from aurora's proven hook).
+2. **spatial-depth** — `data-depth` near/mid/far decides tilt, lift, and contact
+   shadow strength together. The visionOS spatial cue.
+3. **glass-surface** — `backdrop-filter: blur(12px) saturate(160%)`,
+   `rgba(255,255,255,0.12)` surface, multi-layer box-shadow (bevel + ambient +
+   key + contact) plus a separate contact drop-shadow.
+4. **clip-path-reveal** — widgets wipe in by clip-path on scroll, staggered 70ms
+   in depth order (far → near).
+
+## The eight widgets, by depth
+Weather and Activity float near (lift most); Schedule, Now-playing, and Timer
+ride mid; Weekly-chart, Air & sun, and Messages sit far. Each carries bilingual
+Korean + English data, and every figure uses `font-variant-numeric: tabular-nums`
+so columns align.
 
 ## Accessibility
-Reduced motion: widgets static, no parallax tilt. No-JS: fully readable
-dashboard with all widgets visible. AA contrast on glass surfaces. Korean-first
-bilingual.
+Reduced motion: the parallax hook never starts — every widget stands flat as a
+complete, readable dashboard. No-JS: without `.widget-js` the pre-reveal hidden
+state never applies, so all eight widgets ship as a finished, source-ordered
+dashboard. AA/AAA contrast over glass (body 15.4:1, secondary 8.4:1; the iris
+accent is large/decorative only and annotated as such). Korean-first bilingual,
+with `:lang(ko)` carrying its own line-height and letter-spacing.

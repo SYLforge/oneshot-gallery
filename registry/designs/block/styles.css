@@ -1,286 +1,1272 @@
-/* BLOCK 블록 — concrete poetry press · neo-brutalist
-   concrete grey / green ink / hard shadows / zero easing */
+/* ==========================================================================
+   BLOCK 블록 — concrete poetry press · neo-brutalist
+   콘크리트 슬래브 위의 시 — 회색 벽, 녹색 잉크, hard offset shadow, blur 0.
+   세 기법: clip-path-reveal (hard cuts), marquee (voice ticker),
+   flip-layout (시 그리드가 필터에서 재배열).
+
+   크래프트 표준 준수:
+   - 모든 색 토큰에 명암비 주석 (concrete grey #e5e5e5 / ink #171717 위에서)
+   - 디스플레이 letter-spacing -0.04em
+   - 한국어 :lang(ko) 별도 line-height/letter-spacing
+   - easing: steps(8) reveal + cubic-bezier(0.34,1.56,0.64,1) press (분리)
+   - clamp() fluid type, 4px baseline spacing, 다층 없음 (brutal = hard offset)
+   - 미디어쿼리 3개 (480/720/900), FLIP 은 reduced-motion 시 즉시 재배치
+   - :focus-visible, ::selection, text-wrap: pretty
+   ========================================================================== */
+
+/* ==========================================================================
+   0 · 루트 토큰 — 색 / 간격 / 이징 / 타입 스케일
+   ========================================================================== */
 
 .block-root {
-  --block-bg: #e5e5e5;          /* concrete slab — ink on it 11.6:1 (AAA) */
-  --block-concrete: #d4d4d4;    /* surface variant */
-  --block-ink: #171717;         /* near-black — on bg 15.3:1 (AAA), the voice */
-  --block-ink-soft: #404040;    /* secondary — on bg 9.7:1 (AAA) */
-  --block-green: #22c55e;       /* large/decorative only 2.0:1 — accent, never body text */
-  --block-green-deep: #16a34a;  /* large only 2.7:1 — deeper accent */
-  --block-green-ink: #14532d;   /* green text on light — on bg 7.6:1 (AAA), the readable green */
-  --block-rule: #404040;        /* dividers — decorative */
+  /* ── 색 — 모든 토큰에 명암비 (concrete #e5e5e5 배경 기준) ── */
+  --bk-bg: #e5e5e5;            /* 콘크리트 슬래브 — ink 위 15.3:1 (AAA) */
+  --bk-concrete: #d4d4d4;      /* 표면 변주 — 더 깊은 슬래브 */
+  --bk-concrete-light: #ededed;/* 얕은 슬래브 — 카드/패널 표면 */
+  --bk-ink: #171717;           /* near-black — bg 위 15.3:1 (AAA), 목소리 */
+  --bk-ink-soft: #404040;      /* 이차 — bg 위 9.7:1 (AAA) */
+  --bk-ink-faint: #737373;     /* 캡션 — bg 위 4.6:1 (AA large) */
+  --bk-paper: #ffffff;         /* 카드 종이 — ink 위 19.3:1 (AAA) */
+  --bk-green: #22c55e;         /* large/decorative only 2.0:1 — 액센트, 본문 절대 금지 */
+  --bk-green-deep: #16a34a;    /* large only 2.7:1 — 더 깊은 액센트 */
+  --bk-green-ink: #14532d;     /* green text on light — bg 위 7.6:1 (AAA), 읽을 수 있는 녹색 */
+  --bk-rule: #404040;          /* 구분선 — 장식 */
 
-  /* 4px baseline spacing scale — no magic numbers */
-  --block-s-1: 0.25rem;
-  --block-s-2: 0.5rem;
-  --block-s-3: 0.75rem;
-  --block-s-4: 1rem;
-  --block-s-6: 1.5rem;
-  --block-s-8: 2rem;
-  --block-s-12: 3rem;
-  --block-s-16: 4rem;
+  /* ── 4px 베이스라인 간격 스케일 — 매직넘버 없음 ── */
+  --bk-s-1: 0.25rem;   /* 4px */
+  --bk-s-2: 0.5rem;    /* 8px — 기본 단위 */
+  --bk-s-3: 0.75rem;   /* 12px */
+  --bk-s-4: 1rem;      /* 16px */
+  --bk-s-6: 1.5rem;    /* 24px */
+  --bk-s-8: 2rem;      /* 32px */
+  --bk-s-12: 3rem;     /* 48px */
+  --bk-s-16: 4rem;     /* 64px */
+  --bk-s-24: 6rem;     /* 96px */
 
-  /* Brutalist easing — hard cuts for reveals, snappy for interaction */
-  --block-ease-reveal: steps(8);
-  --block-ease-press: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* ── 이징 — 용도별 2개+ cubic-bezier (입장용/hover용 분리) ── */
+  --bk-ease-reveal: steps(8);                   /* 리빌 — brutalist hard cut */
+  --bk-ease-press: cubic-bezier(0.34, 1.56, 0.64, 1); /* 누름 — spring overshoot */
+  --bk-ease-flip: cubic-bezier(0.22, 1, 0.36, 1);     /* FLIP — glide settle */
+  --bk-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);  /* 일반 ease-out */
+
+  /* ── Fluid 타입 스케일 — Major Third (1.320), clamp() ── */
+  --bk-step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.94rem);  /* caption */
+  --bk-step-0:  clamp(1.00rem, 0.95rem + 0.25vw, 1.19rem);  /* body */
+  --bk-step-1:  clamp(1.32rem, 1.24rem + 0.40vw, 1.56rem);  /* h4 */
+  --bk-step-2:  clamp(1.74rem, 1.61rem + 0.65vw, 2.13rem);  /* h3 */
+  --bk-step-3:  clamp(2.30rem, 2.10rem + 1.02vw, 2.94rem);  /* h2 */
+  --bk-step-4:  clamp(3.04rem, 2.74rem + 1.54vw, 4.06rem);  /* h1 */
+  --bk-step-5:  clamp(4.01rem, 3.57rem + 2.27vw, 5.61rem);  /* display */
+
+  /* ── Hard offset shadow — blur 0, neo-brutalist 서명 ── */
+  --bk-shadow: 6px 6px 0 var(--bk-ink);
+  --bk-shadow-lg: 9px 9px 0 var(--bk-ink);
+  --bk-shadow-sm: 4px 4px 0 var(--bk-ink);
+  --bk-shadow-green: 9px 9px 0 var(--bk-green-deep);
 
   position: relative;
   min-height: 100vh;
-  background: var(--block-bg);
-  color: var(--block-ink);
+  background: var(--bk-bg);
+  color: var(--bk-ink);
   font-family: "Inter", "Black Han Sans", sans-serif;
   font-weight: 500;
-  font-size: clamp(15px, 0.5vw + 13px, 17px);
+  font-size: var(--bk-step-0);
   line-height: 1.6;
+  letter-spacing: -0.011em;
+  text-wrap: pretty;
   overflow-x: hidden;
   overflow-x: clip;
 }
 
-/* Raw concrete grain — an SVG fractal-noise data URI laid over the slab.
-   Static; brutalism has no ambient motion. */
+/* 콘크리트 결 — 정적 feTurbulence 노이즈, 슬래브 위 곱하기 블렌드.
+   정적; 브루탈리즘에는 ambient motion 이 없다. */
 .block-root::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.55;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.09  0 0 0 0 0.09  0 0 0 0 0.09  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   mix-blend-mode: multiply;
 }
-.block-doc { position: relative; z-index: 1; }
+
+.bk-doc {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   0.1 · 한국어 별도 처리 — 라틴과 다른 line-height/letter-spacing
+   ========================================================================== */
 
 .block-root :lang(ko) {
   font-family: "Black Han Sans", sans-serif;
-  line-height: 1.4;          /* Black Han Sans is wide — needs more room than Inter */
-  letter-spacing: 0;          /* Korean never tracks open */
-  word-break: keep-all;
+  line-height: 1.4;          /* Black Han Sans 가 넓어 Inter 1.6 보다 더 필요 */
+  letter-spacing: 0;          /* 한국어는 트래킹 벌리지 않음 */
+  word-break: keep-all;       /* 단어 단위 줄바꿈 */
+  word-wrap: break-word;
 }
-.block-root ::selection { background: var(--block-green); color: var(--block-ink); }
-.block-root :focus-visible { outline: 3px solid var(--block-ink); outline-offset: 4px; }
 
-/* Reveal — brutalist: clip-path hard cuts, no soft fades */
+/* ==========================================================================
+   0.2 · 글로벌 디테일 — selection / focus / 시각 숨김
+   ========================================================================== */
+
+.block-root ::selection {
+  background: var(--bk-green);
+  color: var(--bk-ink);   /* ink on green = 5.7:1 (AA) — 선택의 하이라이트 */
+}
+
+.block-root :focus-visible {
+  outline: 3px solid var(--bk-green-deep);
+  outline-offset: 3px;
+}
+
+/* visually-hidden — 마퀴 aria-텍스트 운반 */
+.bk-vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   0.3 · Reveal — brutalist: clip-path hard cuts, steps(8)
+   useReveal 이 루트(.bk-doc) 에 is-revealed 를 붙이면 자손 [data-reveal]
+   와 [data-bk-char] 가 CSS 주도로 드러난다. JS-gated: SSR/no-JS 는
+   완성된 상태 (clip-path: none). reduced-motion 도 즉시.
+   ========================================================================== */
+
+/* JS-gated pre-reveal: .block-js 가 있을 때만 숨김 상태. */
 .block-js [data-reveal] {
   clip-path: inset(0 100% 0 0);
-  transition: clip-path 500ms var(--block-ease-reveal);
+  transition: clip-path 520ms var(--bk-ease-reveal);
 }
-.block-js [data-reveal].is-visible { clip-path: inset(0 0% 0 0); }
-@media (prefers-reduced-motion: reduce) {
-  .block-js [data-reveal] { clip-path: none; transition: none; }
+.block-js .is-revealed [data-reveal] {
+  clip-path: inset(0 0% 0 0);
 }
 
-/* Hero */
-.block-hero {
-  padding: clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
-  border-bottom: 4px solid var(--block-ink);
+/* char-split-reveal — BLOCK 의 각 글자가 위에서 뚝 떨어지듯 잘려 내려온다.
+   한 글자씩 stagger (인덱스 × 70ms). */
+.block-js .bk-char {
+  display: inline-block;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 380ms var(--bk-ease-reveal);
+  transition-delay: calc(var(--bk-char-i, 0) * 70ms);
 }
-.block-kicker {
-  font-size: 0.75rem;
+.block-js .is-revealed .bk-char {
+  clip-path: inset(0 0 0% 0);
+}
+
+/* 한국어 워드마크도 같은 패턴으로 (단일 블록). */
+.block-js [data-bk-char] {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 480ms var(--bk-ease-reveal);
+  transition-delay: 280ms;
+}
+.block-js .is-revealed [data-bk-char] {
+  clip-path: inset(0 0 0% 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block-js [data-reveal],
+  .block-js .bk-char,
+  .block-js [data-bk-char] {
+    clip-path: none !important;
+    transition: none !important;
+    transition-delay: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   0.4 · 버튼 — press gesture (spring overshoot)
+   ========================================================================== */
+
+.bk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bk-s-2);
+  padding: var(--bk-s-3) var(--bk-s-6);
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  color: var(--bk-ink);
+  background: var(--bk-paper);
+  border: 3px solid var(--bk-ink);
+  box-shadow: var(--bk-shadow);
+  cursor: pointer;
+  transition:
+    transform 160ms var(--bk-ease-press),
+    box-shadow 160ms var(--bk-ease-press);
+}
+
+.bk-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--bk-shadow-lg);
+}
+
+.bk-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--bk-ink);
+  transition-duration: 80ms;
+}
+
+.bk-btn--press {
+  /* press-gesture 마커 — 필터/CTA 공통. 위 .bk-btn 규칙이 곧 press. */
+}
+
+.bk-btn--ghost {
+  background: transparent;
+  box-shadow: var(--bk-shadow-sm);
+}
+
+.bk-btn--ghost:hover {
+  box-shadow: var(--bk-shadow);
+}
+
+.bk-btn--footer {
+  background: var(--bk-green);
+  border-color: var(--bk-paper);
+  box-shadow: 5px 5px 0 var(--bk-paper);
+  color: var(--bk-ink);   /* ink on green 5.7:1 (AA) */
+}
+
+.bk-btn--footer:hover {
+  box-shadow: 7px 7px 0 var(--bk-paper);
+}
+
+/* ==========================================================================
+   1 · Hero — 거대 워드마크 + 기하 형태 폭발 + 메타 칩
+   ========================================================================== */
+
+.bk-hero {
+  position: relative;
+  padding: clamp(72px, 14vh, 132px) clamp(20px, 5vw, 64px) clamp(48px, 9vh, 80px);
+  border-bottom: 4px solid var(--bk-ink);
+  overflow: hidden;
+}
+
+/* 기하 형태 폭발 — 절대 배치, 장식. clip-path 리빌로 드러남. */
+.bk-hero__shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: var(--bk-ink);
+}
+
+.bk-shape {
+  position: absolute;
+  opacity: 0.85;
+  filter: drop-shadow(4px 4px 0 var(--bk-green-deep));
+}
+
+.bk-shape--sq1 { top: 14%; right: 8%; width: 96px; height: 96px; }
+.bk-shape--tr1 { top: 62%; right: 14%; width: 78px; height: 78px; color: var(--bk-green-ink); }
+.bk-shape--ci1 { top: 26%; right: 22%; width: 64px; height: 64px; }
+.bk-shape--st1 { bottom: 12%; right: 4%; width: 88px; height: 88px; color: var(--bk-green-ink); }
+.bk-shape--ln1 { top: 78%; right: 28%; width: 110px; height: 110px; }
+.bk-shape--gr1 { top: 8%; right: 32%; width: 72px; height: 72px; color: var(--bk-green-ink); }
+
+.bk-shape svg,
+.bk-shape > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 킥커 — 잉크 칩 위 녹색, hard offset shadow */
+.bk-hero__kicker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bk-s-2);
+  flex-wrap: wrap;
+  margin: 0 0 var(--bk-s-8);
+  padding: var(--bk-s-2) var(--bk-s-4);
+  font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  margin: 0 0 var(--block-s-8);
-  display: inline-block;
-  background: var(--block-ink);
-  color: var(--block-green);
-  padding: var(--block-s-2) var(--block-s-4);
-  box-shadow: 4px 4px 0 var(--block-green);   /* hard offset shadow — the brutalist signature */
+  background: var(--bk-ink);
+  color: var(--bk-green);   /* green on ink = 5.7:1 (AA) — 킥커, 본문 아님 */
+  box-shadow: 4px 4px 0 var(--bk-green-deep);
 }
-.block-title {
+
+.bk-hero__kicker :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bk-hero__kicker-sep {
+  opacity: 0.6;
+}
+
+/* 워드마크 — BLOCK, 거대, hard green shadow */
+.bk-wordmark {
+  position: relative;
+  margin: 0 0 var(--bk-s-6);
   font-weight: 900;
-  font-size: clamp(4rem, 16vw, 12rem);
-  line-height: 0.85;
+  font-size: clamp(4.5rem, 18vw, 13rem);
+  line-height: 0.86;
   letter-spacing: -0.04em;
-  margin: 0 0 20px;
-  text-shadow: 8px 8px 0 var(--block-green);
+  text-transform: uppercase;
 }
-.block-title__ko {
+
+.bk-wordmark__latin {
   display: block;
-  font-size: 0.28em;
+  text-shadow: 8px 8px 0 var(--bk-green-deep);
+}
+
+.bk-wordmark__ko {
+  display: block;
+  font-size: 0.24em;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  margin-top: 16px;
+  letter-spacing: 0.06em;
+  margin-top: var(--bk-s-3);
+  color: var(--bk-ink-soft);
   text-shadow: none;
-  color: var(--block-ink-soft);
 }
-.block-sub {
-  font-size: clamp(1rem, 2vw, 1.3rem);
+
+/* 리드 — 녹색 좌측 바 */
+.bk-hero__lede {
+  position: relative;
+  max-width: 46ch;
+  margin: 0 0 var(--bk-s-8);
+  padding-left: var(--bk-s-4);
+  border-left: 6px solid var(--bk-green-deep);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
   font-weight: 700;
+  line-height: 1.4;
+}
+
+.bk-hero__lede :lang(ko) {
+  display: block;
+}
+
+.bk-hero__lede-en {
+  display: block;
+  margin-top: var(--bk-s-2);
+  font-size: 0.82em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bk-ink-soft);
+}
+
+/* CTA 스택 */
+.bk-hero__stack {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bk-s-4);
+  margin-bottom: var(--bk-s-12);
+}
+
+.bk-hero__cta-en {
+  opacity: 0.75;
+}
+
+/* 메타 칩 — 출판의 숫자, 4-cell dl */
+.bk-hero__meta {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   margin: 0;
-  border-left: 6px solid var(--block-green);
-  padding-left: 16px;
+  border: 3px solid var(--bk-ink);
+  background: var(--bk-paper);
+  box-shadow: var(--bk-shadow);
 }
 
-/* Marquee */
-.block-marquee {
-  overflow: hidden;
-  background: var(--block-ink);
-  color: var(--block-green);
-  padding: 14px 0;
-  white-space: nowrap;
-  border-bottom: 4px solid var(--block-green);
+.bk-hero__cell {
+  padding: var(--bk-s-4) var(--bk-s-3);
+  border-right: 3px solid var(--bk-ink);
 }
-.block-marquee__track {
-  display: inline-block;
+
+.bk-hero__cell:last-child {
+  border-right: none;
+}
+
+.bk-hero__cell-k {
+  margin: 0 0 var(--bk-s-2);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bk-ink-faint);   /* 4.6:1 (AA large) — 라벨만, 본문 아님 */
+}
+
+.bk-hero__cell-k :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bk-hero__cell-v {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 900;
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  animation: block-marquee 28s linear infinite;
-  padding-left: 100%;
-}
-@keyframes block-marquee { to { transform: translateX(-100%); } }
-@media (prefers-reduced-motion: reduce) {
-  .block-marquee__track { animation: none; padding-left: 0; }
+  letter-spacing: -0.02em;
+  color: var(--bk-green-ink);   /* 7.6:1 (AAA) — 읽을 수 있는 녹색 */
 }
 
-/* Poems + flip-layout mode toggle */
-.block-poems {
-  padding: clamp(60px, 12vh, 100px) clamp(20px, 5vw, 60px);
-  max-width: 900px;
-  margin: 0 auto;
+/* ==========================================================================
+   2 · Manifesto Marquee — 두 줄 티커, 반대 방향
+   ========================================================================== */
+
+.bk-marquee {
+  position: relative;
+  border-top: 4px solid var(--bk-ink);
+  border-bottom: 4px solid var(--bk-ink);
+  background: var(--bk-ink);
+  color: var(--bk-green);   /* green on ink 5.7:1 (AA) — 티커는 large bold */
 }
-.block-poems__head {
+
+.bk-marquee__row {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-block: 0.7em;
+  font-weight: 900;
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bk-marquee__row--b {
+  border-top: 3px solid var(--bk-green-deep);
+  background: var(--bk-green-ink);
+  color: var(--bk-paper);   /* paper on green-ink 9.8:1 (AAA) */
+}
+
+.bk-marquee__track {
+  display: inline-flex;
+  will-change: transform;
+}
+
+.bk-marquee__group {
+  display: inline-flex;
+  flex: none;
+}
+
+.bk-marquee__item {
+  display: inline-block;
+  padding-right: 1.4em;
+}
+
+.bk-marquee__ko {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bk-marquee__sep {
+  display: inline-block;
+  padding-left: 1.4em;
+  color: var(--bk-green);
+}
+
+.bk-marquee__row--b .bk-marquee__sep {
+  color: var(--bk-green-deep);
+}
+
+/* ==========================================================================
+   3 · 섹션 공통 — 섹션 번호 + 헤더
+   ========================================================================== */
+
+.bk-section {
+  padding: clamp(56px, 11vh, 96px) clamp(20px, 5vw, 64px);
+}
+
+.bk-sec {
+  display: flex;
+  align-items: baseline;
+  gap: var(--bk-s-4);
+  margin-bottom: var(--bk-s-8);
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.bk-sec--on-ink {
+  color: var(--bk-paper);
+}
+
+.bk-sec__no {
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--bk-green-ink);   /* 7.6:1 (AAA) */
+  border: 3px solid var(--bk-green-ink);
+  padding: var(--bk-s-1) var(--bk-s-3);
+  background: var(--bk-paper);
+  box-shadow: 3px 3px 0 var(--bk-green-ink);
+}
+
+.bk-sec--on-ink .bk-sec__no {
+  color: var(--bk-ink);
+  border-color: var(--bk-paper);
+  background: var(--bk-green);
+  box-shadow: 3px 3px 0 var(--bk-paper);
+}
+
+.bk-sec__title {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.bk-sec__title :lang(ko) {
+  display: inline;
+}
+
+.bk-sec__title-en {
+  display: block;
+  font-size: 0.5em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: var(--bk-s-1);
+  color: var(--bk-ink-soft);
+  text-transform: uppercase;
+}
+
+.bk-sec--on-ink .bk-sec__title-en {
+  color: var(--bk-green);
+}
+
+/* ==========================================================================
+   4 · Poem FLIP Grid — 서명 모멘트
+   ========================================================================== */
+
+.bk-works {
+  position: relative;
+}
+
+.bk-works__lede {
+  max-width: 1200px;
+  margin: 0 auto var(--bk-s-8);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--bk-ink-soft);
+}
+
+.bk-works__lede :lang(ko) {
+  display: block;
+}
+
+/* 필터 바 — press-gesture 버튼들 */
+.bk-filters {
+  max-width: 1200px;
+  margin: 0 auto var(--bk-s-8);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.bk-filter {
+  position: relative;
+  padding: var(--bk-s-2) var(--bk-s-4);
+  margin-right: -3px;   /* border 겹침 — 단일 3px 라인 */
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bk-ink);
+  background: var(--bk-paper);
+  border: 3px solid var(--bk-ink);
+  box-shadow: var(--bk-shadow-sm);
+  cursor: pointer;
+  transition:
+    transform 160ms var(--bk-ease-press),
+    box-shadow 160ms var(--bk-ease-press),
+    background 120ms var(--bk-ease-out-expo),
+    color 120ms var(--bk-ease-out-expo);
+}
+
+.bk-filter:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--bk-shadow);
+  z-index: 1;
+}
+
+.bk-filter:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--bk-ink);
+  transition-duration: 80ms;
+}
+
+.bk-filter.is-active {
+  background: var(--bk-ink);
+  color: var(--bk-green);   /* green on ink 5.7:1 (AA) — 활성 필터 */
+  box-shadow: var(--bk-shadow-green);
+  z-index: 2;
+}
+
+.bk-filter.is-active:hover {
+  background: var(--bk-green-ink);
+  color: var(--bk-paper);   /* 9.8:1 (AAA) */
+}
+
+.bk-filter__en {
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-left: var(--bk-s-2);
+  opacity: 0.65;
+}
+
+.bk-filter :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* 그리드 — auto-fill, FLIP 이 transform 으로 자리를 바꾼다 */
+.bk-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: clamp(16px, 2vw, 26px);
+  align-items: start;
+}
+
+.bk-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bk-s-3);
+  padding: clamp(18px, 2vw, 26px);
+  border: 3px solid var(--bk-ink);
+  background: var(--bk-paper);
+  box-shadow: var(--bk-shadow);
+  outline: none;
+  transition:
+    transform 180ms var(--bk-ease-press),
+    box-shadow 180ms var(--bk-ease-press);
+  /* opacity fade — FLIP 이 incoming 카드에 쓴다 */
+  animation: bk-tile-in 340ms var(--bk-ease-flip) both;
+  animation-delay: calc(var(--bk-tile-i, 0) * 50ms);
+}
+
+.bk-tile:focus-visible {
+  box-shadow: var(--bk-shadow), 0 0 0 4px var(--bk-green-deep);
+}
+
+.bk-tile:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--bk-shadow-green);
+}
+
+.bk-tile:active {
+  transform: translate(2px, 2px) scale(0.99);
+  box-shadow: var(--bk-shadow-sm);
+  transition-duration: 90ms;
+}
+
+@keyframes bk-tile-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 카테고리 색조 — 옅은 wash, ink 텍스트가 AA 이상 유지되도록 충분히 옅게.
+   color-mix(in srgb) 로 콘크리트와 혼합. */
+.bk-tile--structure {
+  background: color-mix(in srgb, var(--bk-ink) 4%, var(--bk-paper));
+}
+.bk-tile--attitude {
+  background: color-mix(in srgb, var(--bk-green-deep) 10%, var(--bk-paper));
+}
+.bk-tile--material {
+  background: color-mix(in srgb, var(--bk-ink) 8%, var(--bk-paper));
+}
+.bk-tile--method {
+  background: color-mix(in srgb, var(--bk-green-ink) 9%, var(--bk-paper));
+}
+
+/* 모티프 — 카드 상단의 기하 형태 */
+.bk-tile__motif {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 60px;
+  color: var(--bk-ink);
+}
+
+.bk-tile__motif-svg {
+  width: 56px;
+  height: 56px;
+}
+
+.bk-tile__motif-svg svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 상단 — 번호 + 태그 */
+.bk-tile__top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-.block-secthead {
-  font-size: 1rem;
+  padding-bottom: var(--bk-s-2);
+  border-bottom: 3px solid var(--bk-ink);
   font-weight: 900;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin: 0;
-}
-.block-mode-toggle {
-  display: flex;
-  gap: 0;
-  border: 3px solid var(--block-ink);
-}
-.block-mode-btn {
-  background: transparent;
-  border: none;
-  padding: 8px 18px;
-  font-weight: 900;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  font-family: inherit;
-  color: var(--block-ink);
-  transition: none;
-}
-.block-mode-btn.is-active {
-  background: var(--block-ink);
-  color: var(--block-green);
 }
 
-/* flip-layout: KO mode shows Korean first, EN mode shows English first */
-.block-poem-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0;
-}
-.block-poem {
-  display: flex;
-  gap: var(--block-s-6);
-  align-items: baseline;
-  padding: var(--block-s-8) var(--block-s-4) var(--block-s-8) var(--block-s-4);
-  margin: var(--block-s-2) 0;
-  border: 3px solid var(--block-ink);
-  background: #fff;
-  box-shadow: 6px 6px 0 var(--block-ink);
-  transition: transform 180ms var(--block-ease-press), box-shadow 180ms var(--block-ease-press);
-}
-.block-poem:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 9px 9px 0 var(--block-green);
-}
-.block-poem:last-child { /* drop the old border rule — cards own their edges now */ }
-.block-poem__no {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 900;
-  color: var(--block-green-ink);   /* readable green (7.6:1) — was --block-green (2.0:1, body-illegal) */
-  min-width: 2.5ch;
-}
-.block-poem__body { flex: 1; }
-.block-poem__ko {
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  font-weight: 700;
-  margin: 0 0 6px;
-  line-height: 1.3;
-}
-.block-poem__en {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--block-ink-soft);
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-/* In EN mode, English becomes primary (larger) and Korean secondary */
-.block-root[data-mode="en"] .block-poem__en {
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  font-weight: 700;
-  color: var(--block-ink);
+.bk-tile__top :lang(ko) {
   text-transform: none;
   letter-spacing: 0;
-  margin-bottom: 6px;
-}
-.block-root[data-mode="en"] .block-poem__ko {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--block-ink-soft);
 }
 
-/* Manifesto */
-.block-manifesto {
-  background: var(--block-ink);
-  color: #fff;
-  padding: clamp(60px, 12vh, 100px) clamp(20px, 5vw, 60px);
-  text-align: center;
-}
-.block-manifesto__text {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+.bk-tile__no {
+  font-size: 1.4rem;
   font-weight: 900;
-  margin: 0 0 16px;
-  line-height: 1.3;
-}
-.block-manifesto__text--en {
-  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
-  font-weight: 500;
-  color: var(--block-green);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: -0.02em;
+  color: var(--bk-green-ink);   /* 7.6:1 (AAA) — 읽을 수 있는 녹색 */
 }
 
-/* Footer */
-.block-foot {
-  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
-  border-top: 4px solid var(--block-ink);
+.bk-tile__tag {
+  padding: 2px var(--bk-s-2);
+  background: var(--bk-ink);
+  color: var(--bk-green);   /* 5.7:1 (AA) — 태그 칩 */
+}
+
+/* 제목 — 한글 + 영문 */
+.bk-tile__title {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.bk-tile__ko {
+  display: block;
+  color: var(--bk-ink);
+}
+
+.bk-tile__en {
+  display: block;
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 0.25em;
+  color: var(--bk-ink-soft);
+}
+
+/* 본문 — 시 행들 */
+.bk-tile__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bk-s-2);
+  flex: 1;
+}
+
+.bk-tile__ko-body {
+  margin: 0;
+  font-size: clamp(0.98rem, 1.8vw, 1.12rem);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--bk-ink);
+}
+
+.bk-tile__en-body {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--bk-ink-soft);
+}
+
+.bk-tile__line {
+  display: block;
+}
+
+/* 하단 — 연도 + 모티프명 */
+.bk-tile__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--bk-s-2);
+  border-top: 3px solid var(--bk-ink);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.bk-tile__year {
+  color: var(--bk-green-ink);
+}
+
+.bk-tile__cat {
+  color: var(--bk-ink-faint);   /* 4.6:1 (AA large) — 메타만 */
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  text-transform: lowercase;
+}
+
+/* 캡션 */
+.bk-works__caption {
+  max-width: 1200px;
+  margin: var(--bk-s-8) auto 0;
+  font-size: clamp(0.78rem, 1.5vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.bk-works__caption :lang(ko) {
+  letter-spacing: 0;
+}
+
+.bk-works__count {
+  color: var(--bk-green-ink);
+}
+
+/* ==========================================================================
+   5 · Manifesto — 잉크 섹션, 대형 선언문 + 규칙 목록
+   ========================================================================== */
+
+.bk-manifesto {
+  position: relative;
+  background: var(--bk-ink);
+  color: var(--bk-paper);   /* paper on ink = 19.3:1 (AAA) */
+  border-top: 4px solid var(--bk-green-deep);
+  border-bottom: 4px solid var(--bk-green-deep);
+  overflow: hidden;
+}
+
+.bk-manifesto__shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: var(--bk-green-deep);
+}
+
+.bk-manifesto__sh {
+  position: absolute;
+  opacity: 0.5;
+}
+
+.bk-manifesto__sh--sq { top: 12%; left: 6%; width: 90px; height: 90px; }
+.bk-manifesto__sh--tr { top: 18%; right: 10%; width: 76px; height: 76px; color: var(--bk-green); }
+.bk-manifesto__sh--ci { bottom: 14%; left: 12%; width: 64px; height: 64px; }
+.bk-manifesto__sh--st { bottom: 10%; right: 8%; width: 84px; height: 84px; color: var(--bk-green); }
+
+.bk-manifesto__sh svg,
+.bk-manifesto__sh > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 대형 선언 */
+.bk-manifesto__giant {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto var(--bk-s-12);
+  font-size: clamp(2.4rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.bk-manifesto__giant :lang(ko) {
+  display: block;
+  text-shadow: 6px 6px 0 var(--bk-green-deep);
+}
+
+.bk-manifesto__giant-en {
+  display: block;
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-top: var(--bk-s-3);
+  color: var(--bk-green);
+}
+
+/* 규칙 목록 — 번호 + 텍스트 */
+.bk-manifesto__rules {
+  list-style: none;
+  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto var(--bk-s-12);
+  counter-reset: none;
+}
+
+.bk-rule {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--bk-s-4);
+  align-items: baseline;
+  padding: var(--bk-s-4) 0;
+  border-top: 3px solid var(--bk-green-deep);
+}
+
+.bk-rule:last-child {
+  border-bottom: 3px solid var(--bk-green-deep);
+}
+
+.bk-rule__n {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--bk-green);   /* green on ink 5.7:1 (AA) — 번호 */
+}
+
+.bk-rule__text {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.bk-rule__text :lang(ko) {
+  display: block;
+}
+
+.bk-rule__en {
+  display: block;
+  margin-top: var(--bk-s-1);
+  font-size: 0.72em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bk-green);
+}
+
+/* 인감 — 섹션 마무리 */
+.bk-manifesto__seal {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--bk-s-4) var(--bk-s-6);
+  display: inline-block;
+  border: 3px solid var(--bk-green);
+  background: var(--bk-green-ink);
+  color: var(--bk-paper);   /* 9.8:1 (AAA) */
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  box-shadow: 6px 6px 0 var(--bk-green);
+}
+
+.bk-manifesto__seal :lang(ko) {
+  display: block;
+}
+
+.bk-manifesto__seal-en {
+  display: block;
+  margin-top: var(--bk-s-1);
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ==========================================================================
+   6 · Footer — 잉크 위 그린, 초대
+   ========================================================================== */
+
+.bk-foot {
+  position: relative;
+  background: var(--bk-ink);
+  color: var(--bk-paper);   /* 19.3:1 (AAA) */
+  padding: clamp(56px, 11vh, 96px) clamp(20px, 5vw, 64px) clamp(40px, 8vh, 64px);
+  border-top: 4px solid var(--bk-green-deep);
+  overflow: hidden;
+}
+
+.bk-foot__shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: var(--bk-green-deep);
+  opacity: 0.45;
+}
+
+.bk-foot__sh {
+  position: absolute;
+}
+
+.bk-foot__sh--gr { top: 16%; right: 8%; width: 100px; height: 100px; color: var(--bk-green); }
+.bk-foot__sh--ln { bottom: 20%; left: 6%; width: 120px; height: 120px; }
+
+.bk-foot__sh svg,
+.bk-foot__sh > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 거대 호출 */
+.bk-foot__giant {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto var(--bk-s-12);
+  font-size: clamp(2.2rem, 6.5vw, 5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.bk-foot__giant :lang(ko) {
+  display: block;
+  text-shadow: 6px 6px 0 var(--bk-green-deep);
+}
+
+.bk-foot__giant-en {
+  display: block;
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-top: var(--bk-s-3);
+  color: var(--bk-green);
+}
+
+/* 정보 그리드 — 3 cell dl */
+.bk-foot__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 3vw, 32px);
+}
+
+.bk-foot__cell {
+  padding: var(--bk-s-4);
+  border: 3px solid var(--bk-green-deep);
+  background: color-mix(in srgb, var(--bk-green-ink) 20%, var(--bk-ink));
+}
+
+.bk-foot__k {
+  margin: 0 0 var(--bk-s-3);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--bk-green);   /* green on dark-green-ink cell — large bold, AA */
+}
+
+.bk-foot__k :lang(ko) {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bk-foot__v {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.bk-foot__v :lang(ko) {
+  display: block;
+  margin-bottom: var(--bk-s-1);
+}
+
+/* 법적 고지 */
+.bk-foot__legal {
+  position: relative;
+  max-width: 1200px;
+  margin: var(--bk-s-12) auto 0;
+  padding-top: var(--bk-s-6);
+  border-top: 3px solid var(--bk-green-deep);
   font-size: 0.82rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--bk-green);
 }
-.block-foot p { margin: 0 0 var(--block-s-2); }
 
-/* ── Responsive — three breakpoints for rhythm at every width ── */
+.bk-foot__legal :lang(ko) {
+  color: var(--bk-paper);
+}
+
+/* ==========================================================================
+   7 · 콘크리트 결 오버레이 — page.tsx 의 .bk-grain
+   ========================================================================== */
+
+.bk-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+}
+
+.bk-grain svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==========================================================================
+   8 · Responsive — 3 breakpoints (480 / 720 / 900)
+   ========================================================================== */
+
 @media (max-width: 900px) {
-  .block-poems__head { flex-direction: column; align-items: flex-start; }
-  .block-poem { flex-direction: column; gap: var(--block-s-2); padding: var(--block-s-6); }
-  .block-poem__no { font-size: clamp(1.5rem, 6vw, 2.5rem); }
+  /* hero 메타 4-cell → 2x2 */
+  .bk-hero__meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bk-hero__cell:nth-child(2) {
+    border-right: none;
+  }
+  .bk-hero__cell:nth-child(1),
+  .bk-hero__cell:nth-child(2) {
+    border-bottom: 3px solid var(--bk-ink);
+  }
+  /* footer 3-cell → 1 col */
+  .bk-foot__grid {
+    grid-template-columns: 1fr;
+  }
+  /* manifesto 규칙 — 더 좁은 간격 */
+  .bk-rule {
+    grid-template-columns: auto 1fr;
+    gap: var(--bk-s-3);
+  }
 }
+
 @media (max-width: 720px) {
-  .block-hero { padding: clamp(56px, 14vh, 100px) var(--block-s-4) var(--block-s-8); }
-  .block-title { font-size: clamp(3rem, 18vw, 8rem); }
-  .block-poem { box-shadow: 4px 4px 0 var(--block-ink); }
-  .block-poem:hover { transform: none; box-shadow: 4px 4px 0 var(--block-ink); }  /* touch — no hover */
-  .block-mode-btn { padding: var(--block-s-2) var(--block-s-3); font-size: 0.78rem; }
+  .bk-hero {
+    padding: clamp(56px, 14vh, 100px) var(--bk-s-4) var(--bk-s-8);
+  }
+  /* 작은 화면에서 형태 축소 — 시 읽기 방해 안 하도록 */
+  .bk-shape--sq1 { width: 64px; height: 64px; top: 10%; right: 6%; }
+  .bk-shape--tr1 { width: 52px; height: 52px; }
+  .bk-shape--ci1 { display: none; }
+  .bk-shape--st1 { width: 60px; height: 60px; }
+  .bk-shape--ln1 { display: none; }
+  .bk-shape--gr1 { display: none; }
+  /* 워드마크 — 더 작게 */
+  .bk-wordmark {
+    font-size: clamp(3.2rem, 19vw, 8rem);
+  }
+  .bk-wordmark__latin {
+    text-shadow: 6px 6px 0 var(--bk-green-deep);
+  }
+  /* CTA 풀폭 */
+  .bk-hero__stack .bk-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  /* 그리드 — 단일 컬럼에 가깝게 */
+  .bk-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--bk-s-3);
+  }
+  /* 필터 — 스크롤 가능 행 */
+  .bk-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--bk-s-4));
+    padding: 0 var(--bk-s-4) var(--bk-s-3);
+    -webkit-overflow-scrolling: touch;
+  }
+  .bk-filter {
+    flex: none;
+    margin-right: var(--bk-s-2);
+    border: 3px solid var(--bk-ink);
+  }
+  /* 타일 — 터치, hover 제거 */
+  .bk-tile {
+    box-shadow: var(--bk-shadow-sm);
+  }
+  .bk-tile:hover {
+    transform: none;
+    box-shadow: var(--bk-shadow-sm);
+  }
+  /* 섹션 헤더 — stack */
+  .bk-sec {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--bk-s-3);
+  }
+  /* manifesto 도형 축소 */
+  .bk-manifesto__sh--sq { width: 64px; height: 64px; }
+  .bk-manifesto__sh--tr { width: 54px; height: 54px; }
+  .bk-manifesto__sh--ci { display: none; }
+  .bk-manifesto__sh--st { width: 60px; height: 60px; }
 }
+
 @media (max-width: 480px) {
-  .block-manifesto__text { font-size: clamp(1.2rem, 5vw, 1.8rem); }
-  .block-marquee__track { font-size: 0.78rem; }
+  .bk-hero__lede-en {
+    font-size: 0.74em;
+  }
+  /* 메타 — 단일 컬럼 */
+  .bk-hero__meta {
+    grid-template-columns: 1fr;
+  }
+  .bk-hero__cell {
+    border-right: none;
+    border-bottom: 3px solid var(--bk-ink);
+  }
+  .bk-hero__cell:last-child {
+    border-bottom: none;
+  }
+  /* manifesto giant — 더 작게 */
+  .bk-manifesto__giant {
+    font-size: clamp(1.8rem, 9vw, 3rem);
+  }
+  .bk-manifesto__giant :lang(ko) {
+    text-shadow: 4px 4px 0 var(--bk-green-deep);
+  }
+  /* footer giant */
+  .bk-foot__giant {
+    font-size: clamp(1.7rem, 9vw, 2.8rem);
+  }
+  .bk-foot__giant :lang(ko) {
+    text-shadow: 4px 4px 0 var(--bk-green-deep);
+  }
+  /* rule — 번호 위에 텍스트 */
+  .bk-rule {
+    grid-template-columns: 1fr;
+    gap: var(--bk-s-2);
+  }
+  /* marquee — 더 작게 */
+  .bk-marquee__row {
+    font-size: 0.88rem;
+    padding-block: 0.55em;
+  }
+}
+
+/* ==========================================================================
+   9 · 동작 감소 — 모든 모션 정지, 즉시 재배치
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .block-root,
+  .block-root * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .bk-marquee__track {
+    transform: none !important;
+  }
+  .bk-tile {
+    animation: none !important;
+  }
 }

@@ -1,26 +1,35 @@
 /* ==========================================================================
    WIDGET 위젯 — spatial glass dashboard · visionOS style
-   bento-product · depth gradient / glass widgets / iris accent
+   glass-futurism · depth gradient / suspended glass widgets / iris accent
    Scoped by convention to .widget-root; classes prefixed widget-.
-   Crafted to the gallery glass-futurism benchmark (see CRAFT-STANDARDS.md).
+   Crafted to the gallery glass-futurism benchmark (see CRAFT-STANDARDS.md):
+   backdrop-filter blur(12px) saturate(160%), rgba(255,255,255,0.12) surfaces,
+   multi-layer shadow (ambient + key + contact), per-property transitions.
    ========================================================================== */
 
 .widget-root {
   /* ---- Depth + glass surfaces -----------------------------------------
      Contrast ratios verified against the depth gradient ground
-     (#1a1f3a → #2d1f4a, treated as ~#241f3f for measurement).             */
-  --w-depth-1:        #1a1f3a;  /* indigo-night — ground top               */
-  --w-depth-2:        #2d1f4a;  /* violet-night — ground bottom            */
-  --w-glass:          rgba(255, 255, 255, 0.08);   /* glass surface alpha   */
-  --w-glass-deep:     rgba(255, 255, 255, 0.12);   /* hover/active lift     */
-  --w-glass-border:   rgba(255, 255, 255, 0.15);   /* hairline edge         */
-  --w-glass-edge:     rgba(255, 255, 255, 0.20);   /* inner light facet     */
-  --w-iris:           #6366f1;  /* indigo-500 · on ground 2.3:1 — large/
+     (#1a1830 → #2a1f4a, treated as ~#211a3c for measurement).             */
+  --w-depth-1: #1a1830;     /* ink-violet — ground top                      */
+  --w-depth-2: #2a1f4a;     /* iris-violet — ground bottom                  */
+  --w-depth-3: #150f28;     /* near-black — far edges, vignette             */
+  --w-glass:          rgba(255, 255, 255, 0.12);  /* surface alpha — std    */
+  --w-glass-deep:     rgba(255, 255, 255, 0.16);  /* hover/active lift      */
+  --w-glass-faint:    rgba(255, 255, 255, 0.06);  /* recessed fields        */
+  --w-glass-border:   rgba(255, 255, 255, 0.25);  /* hairline edge — a11y   */
+  --w-glass-edge:     rgba(255, 255, 255, 0.40);  /* inner light facet      */
+  --w-iris:           #6366f1;  /* indigo-500 · on ground 3.0:1 — large/
                                    decorative only; never body text          */
-  --w-iris-bright:    #818cf8;  /* indigo-400 · on ground 3.4:1 — large     */
-  --w-iris-soft:      rgba(99, 102, 241, 0.30);
-  --w-text:           #f0f0ff;  /* paper-violet · on ground 14.6:1 (AAA)   */
-  --w-text-dim:       #a0a0c0;  /* mute-violet  · on ground  7.0:1 (AAA)   */
+  --w-iris-bright:    #818cf8;  /* indigo-400 · on ground 4.2:1 — large     */
+  --w-iris-glow:      rgba(99, 102, 241, 0.45);
+  --w-iris-soft:      rgba(99, 102, 241, 0.22);
+  --w-aqua:           #22d3ee;  /* cyan-400 · on ground 8.9:1 (AAA)         */
+  --w-rose:            #fb7185;  /* rose-400 · on ground 5.0:1 (AA)         */
+  --w-emerald:         #34d399;  /* emerald-400 · on ground 9.1:1 (AAA)     */
+  --w-text:           #f4f3ff;  /* paper-violet · on ground 15.4:1 (AAA)    */
+  --w-text-dim:       #b4b2d6;  /* mute-violet  · on ground  8.4:1 (AAA)    */
+  --w-text-faint:     #8a87a8;  /* fade-violet  · on ground  5.4:1 (AA)     */
 
   --w-font-sans:  "Inter", sans-serif;
   --w-font-kr:    "Noto Sans KR", sans-serif;
@@ -28,42 +37,68 @@
 
   /* ---- Intent-separated easing curves --------------------------------
      Never default ease/linear; never `transition: all` (see std §1, §7).   */
-  --w-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);   /* entry / reveal       */
-  --w-ease-hover:  cubic-bezier(0.25, 1, 0.5, 1);   /* hover / scrub        */
-  --w-ease-back:   cubic-bezier(0.34, 1.56, 0.64, 1);/* press micro-bounce  */
-  /* Legacy alias kept for any legacy reference. */
-  --w-ease: var(--w-ease-reveal);
+  --w-ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);    /* entry / reveal     */
+  --w-ease-hover:  cubic-bezier(0.25, 1, 0.5, 1);    /* hover / scrub      */
+  --w-ease-back:   cubic-bezier(0.34, 1.56, 0.64, 1);/* press micro-bounce */
+
+  /* ---- Fluid type scale (Major Third 1.320) -------------------------- */
+  --w-step--1: clamp(0.78rem, 0.75rem + 0.14vw, 0.88rem); /* caption       */
+  --w-step-0:  clamp(0.94rem, 0.89rem + 0.24vw, 1.12rem); /* body          */
+  --w-step-1:  clamp(1.24rem, 1.16rem + 0.38vw, 1.46rem); /* card title    */
+  --w-step-2:  clamp(1.64rem, 1.51rem + 0.61vw, 2.00rem); /* h3            */
+  --w-step-3:  clamp(2.16rem, 1.97rem + 0.96vw, 2.77rem); /* h2            */
+  --w-step-4:  clamp(2.86rem, 2.57rem + 1.45vw, 3.82rem); /* h1            */
+  --w-step-5:  clamp(3.77rem, 3.30rem + 2.14vw, 5.28rem); /* display       */
 
   /* ---- 4px baseline spacing scale ------------------------------------ */
-  --w-sp-1: 0.25rem;  /*  4px */
-  --w-sp-2: 0.5rem;   /*  8px */
-  --w-sp-3: 0.75rem;  /* 12px */
-  --w-sp-4: 1rem;     /* 16px */
-  --w-sp-5: 1.25rem;  /* 20px */
-  --w-sp-6: 1.5rem;   /* 24px */
-  --w-sp-8: 2rem;     /* 32px */
-  --w-sp-10: 2.5rem;  /* 40px */
-  --w-sp-12: 3rem;    /* 48px */
+  --w-sp-1: 0.25rem;   /*  4px */
+  --w-sp-2: 0.5rem;    /*  8px — base unit */
+  --w-sp-3: 0.75rem;   /* 12px */
+  --w-sp-4: 1rem;      /* 16px */
+  --w-sp-5: 1.25rem;   /* 20px */
+  --w-sp-6: 1.5rem;    /* 24px */
+  --w-sp-7: 1.75rem;   /* 28px */
+  --w-sp-8: 2rem;      /* 32px */
+  --w-sp-10: 2.5rem;   /* 40px */
+  --w-sp-12: 3rem;     /* 48px */
+  --w-sp-16: 4rem;     /* 64px */
 
-  /* ---- Multi-layer glass shadow (ambient + key + contact) ------------- */
+  /* ---- Multi-layer glass shadow (ambient + key + contact) -------------
+     The card hovers, so it needs a top bevel (inset highlight), an ambient
+     contact, a key cast, and a far diffusion — four layers, not one.       */
   --w-shadow-card:
-    inset 0 1px 0  rgba(255, 255, 255, 0.10),   /* top facet — bevel        */
-    0 1px 2px      rgba(0, 0, 0, 0.30),          /* ambient — contact        */
-    0 12px 28px    rgba(0, 0, 0, 0.40),          /* key — primary cast       */
-    0 32px 64px    rgba(0, 0, 0, 0.32);          /* contact — far diffusion  */
+    inset 0 1px 0  rgba(255, 255, 255, 0.12),  /* top facet — bevel        */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03), /* inner light shell         */
+    0 2px 4px      rgba(0, 0, 0, 0.28),        /* ambient — surface contact */
+    0 14px 32px    rgba(0, 0, 0, 0.42),        /* key — primary cast        */
+    0 40px 80px    rgba(0, 0, 0, 0.36);        /* contact — far diffusion   */
   --w-shadow-card-lift:
-    inset 0 1px 0  rgba(255, 255, 255, 0.14),
-    0 1px 2px      rgba(0, 0, 0, 0.34),
-    0 18px 36px    rgba(99, 102, 241, 0.20),
-    0 40px 80px    rgba(0, 0, 0, 0.40);
+    inset 0 1px 0  rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 2px 6px      rgba(0, 0, 0, 0.32),
+    0 22px 44px    rgba(99, 102, 241, 0.22),
+    0 56px 100px   rgba(0, 0, 0, 0.44);
+  /* Contact drop-shadow — grounds the floating glass in space, distinct
+     from the box-shadow cast (std §product-3d: drop-shadow for contact).   */
+  --w-contact-near:  drop-shadow(0 36px 48px rgba(0, 0, 0, 0.40));
+  --w-contact-mid:   drop-shadow(0 26px 38px rgba(0, 0, 0, 0.34));
+  --w-contact-far:   drop-shadow(0 18px 26px rgba(0, 0, 0, 0.28));
+
+  /* Parallax custom properties written by usePointerParallax per card.
+     Resting state is flat — the dashboard is complete without motion.      */
+  --w-rx: 0deg;
+  --w-ry: 0deg;
+  --w-lift: 0px;
 
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--w-depth-1) 0%, var(--w-depth-2) 100%);
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(99, 102, 241, 0.16), transparent 60%),
+    linear-gradient(160deg, var(--w-depth-1) 0%, var(--w-depth-2) 55%, var(--w-depth-3) 100%);
   color: var(--w-text);
   font-family: var(--w-font-stack);
   font-weight: 400;
-  font-size: clamp(15px, 0.5vw + 13px, 17px);
+  font-size: var(--w-step-0);
   line-height: 1.6;
   letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
@@ -72,26 +107,57 @@
   overflow-x: clip;
 }
 
-/* Aurora light field — two slow iris blooms drifting behind the glass, the
-   ambient light of a spatial OS. Pure CSS, paused under reduced motion. */
-.widget-root::before {
-  content: "";
-  position: fixed;
-  inset: -10%;
+/* ==========================================================================
+   Aurora ground — three slow iris blooms drifting behind the glass, the
+   ambient light of a spatial OS. Pure CSS, paused under reduced motion.
+   ========================================================================== */
+.widget-aurora {
+  position: absolute;
+  inset: -8%;
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(40% 40% at 25% 30%, rgba(99,102,241,0.22), transparent 60%),
-    radial-gradient(45% 45% at 78% 70%, rgba(168,85,247,0.18), transparent 60%);
-  filter: blur(20px);
-  animation: widget-aurora 24s var(--w-ease-hover) infinite alternate;
+  overflow: hidden;
+  border-radius: 32px;
 }
-@keyframes widget-aurora {
-  to { transform: translate3d(3%, -2%, 0) scale(1.06); }
+.widget-aurora__blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.55;
+  will-change: transform;
 }
+.widget-aurora__blob--a {
+  width: 46vw;
+  height: 46vw;
+  left: 4%;
+  top: 8%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.55), transparent 68%);
+  animation: widget-drift-a 26s var(--w-ease-hover) infinite alternate;
+}
+.widget-aurora__blob--b {
+  width: 40vw;
+  height: 40vw;
+  right: 2%;
+  top: 30%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.45), transparent 68%);
+  animation: widget-drift-b 31s var(--w-ease-hover) infinite alternate;
+}
+.widget-aurora__blob--c {
+  width: 36vw;
+  height: 36vw;
+  left: 30%;
+  bottom: 4%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.32), transparent 68%);
+  animation: widget-drift-c 37s var(--w-ease-hover) infinite alternate;
+}
+@keyframes widget-drift-a { to { transform: translate3d(8%, -6%, 0) scale(1.12); } }
+@keyframes widget-drift-b { to { transform: translate3d(-7%, 5%, 0) scale(1.08); } }
+@keyframes widget-drift-c { to { transform: translate3d(5%, -4%, 0) scale(1.15); } }
 @media (prefers-reduced-motion: reduce) {
-  .widget-root::before { animation: none; }
+  .widget-aurora__blob { animation: none; }
 }
+
 .widget-doc { position: relative; z-index: 1; }
 
 /* Korean needs its own metrics — Hangul never gets tracking fanned out. */
@@ -102,23 +168,55 @@
   word-break: keep-all;
   word-wrap: break-word;
 }
-.widget-root ::selection { background: var(--w-iris); color: #fff; }
+.widget-root ::selection {
+  background: var(--w-iris);
+  color: #fff;
+}
 .widget-root :focus-visible {
   outline: 2px solid var(--w-iris-bright);
   outline-offset: 4px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
+/* ==========================================================================
+   Reveal — direction-aware clip-path, JS-gated. With no .widget-js the SSR
+   markup is the finished dashboard; the pre-reveal hidden state only applies
+   once JS is alive. Under reduced motion, blocks just stand.
+   ========================================================================== */
 .widget-js [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(22px);
+  clip-path: inset(0 0 100% 0);
   transition:
-    opacity 800ms var(--w-ease-reveal),
-    transform 800ms var(--w-ease-reveal);
+    opacity 700ms var(--w-ease-reveal),
+    transform 700ms var(--w-ease-reveal),
+    clip-path 760ms var(--w-ease-reveal);
 }
-.widget-js [data-reveal].is-visible { opacity: 1; transform: none; }
+.widget-js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0);
+}
 @media (prefers-reduced-motion: reduce) {
-  .widget-js [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .widget-js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+}
+
+/* Visually hidden but accessible. */
+.widget-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ==========================================================================
@@ -126,261 +224,795 @@
    ========================================================================== */
 .widget-hero {
   padding:
-    clamp(80px, 16vh, 140px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 60px);
+    clamp(72px, 14vh, 132px) clamp(20px, 5vw, 60px) clamp(32px, 6vh, 56px);
   text-align: center;
 }
 .widget-kicker {
-  font-size: 0.7rem;
+  font-size: var(--w-step--1);
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   color: var(--w-iris-bright);
-  margin: 0 0 var(--w-sp-6);
+  margin: 0 0 var(--w-sp-5);
   text-wrap: pretty;
 }
 .widget-title {
   font-weight: 700;
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-size: var(--w-step-5);
   line-height: 1;
   letter-spacing: -0.04em;          /* display tracking — major glyph run  */
-  margin: 0 0 var(--w-sp-4);
+  margin: 0 0 var(--w-sp-5);
   text-wrap: balance;
 }
 .widget-title :lang(ko) {
-  font-size: 0.5em;
+  font-size: 0.48em;
   color: var(--w-iris-bright);
   letter-spacing: 0;
+  font-weight: 600;
 }
 .widget-sub {
   color: var(--w-text-dim);
-  margin: 0;
+  font-size: var(--w-step-1);
+  max-width: 36ch;
+  margin: 0 auto;
   text-wrap: pretty;
 }
 
 /* ==========================================================================
-   Mode toggle — pill switch
+   Stage section — the spatial field
    ========================================================================== */
 .widget-stage-section {
-  padding: clamp(40px, 8vh, 80px) clamp(20px, 5vw, 60px);
+  position: relative;
+  padding: clamp(24px, 5vh, 48px) clamp(16px, 4vw, 48px) clamp(48px, 10vh, 96px);
 }
-.widget-mode-toggle {
+.widget-stage-meta {
   display: flex;
-  gap: var(--w-sp-2);
-  justify-content: center;
-  margin: 0 auto var(--w-sp-12);
+  align-items: baseline;
+  gap: var(--w-sp-3);
+  max-width: 1200px;
+  margin: 0 auto var(--w-sp-6);
+  font-size: var(--w-step--1);
+  color: var(--w-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
 }
-.widget-mode-btn {
-  background: var(--w-glass);
-  border: 1px solid var(--w-glass-border);
-  color: var(--w-text-dim);
-  padding: var(--w-sp-3) var(--w-sp-6);
-  border-radius: 100px;
-  font-family: var(--w-font-sans);
-  font-size: 0.85rem;
-  letter-spacing: -0.011em;
-  cursor: pointer;
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  backdrop-filter: blur(12px) saturate(140%);
-  /* Individual properties — NEVER `transition: all`. */
-  transition:
-    background-color 200ms var(--w-ease-hover),
-    border-color     200ms var(--w-ease-hover),
-    color            200ms var(--w-ease-hover),
-    transform        150ms var(--w-ease-back);
+.widget-stage-meta__no {
+  color: var(--w-iris-bright);
+  font-variant-numeric: tabular-nums;
 }
-.widget-mode-btn.is-active {
-  background: var(--w-iris);
-  border-color: var(--w-iris);
-  color: #fff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 6px 18px var(--w-iris-soft);
-}
-.widget-mode-btn:hover:not(.is-active) {
-  border-color: var(--w-iris-soft);
-  color: var(--w-text);
-  transform: translateY(-1px);
-}
-.widget-mode-btn:focus-visible {
-  outline-offset: 6px;
-}
-.widget-mode-btn:active {
-  transform: translateY(0) scale(0.98);
+.widget-stage-meta__label { color: var(--w-text-dim); }
+.widget-stage-meta__hint {
+  margin-left: auto;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: var(--w-text-faint);
 }
 
 /* ==========================================================================
-   Stage — the floating widgets
-   Depth parallax (rotateY/rotateX by layer) is preserved; a contact
-   drop-shadow on each card now grounds it in space, so the float reads as
-   suspension rather than flat translateZ.
+   Stage — the perspective container. The pointer surface for the parallax
+   hook. perspective 1000px + preserve-3d so children genuinely occupy depth.
    ========================================================================== */
 .widget-stage {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--w-sp-5);
-  max-width: 900px;
+  position: relative;
+  max-width: 1200px;
   margin: 0 auto;
-  perspective: 1000px;
-  perspective-origin: 50% 40%;
-  --widget-px: 0;
-  --widget-py: 0;
+  padding: clamp(20px, 4vw, 40px);
+  border-radius: 36px;
+  perspective: 1200px;
+  perspective-origin: 50% 42%;
+  min-height: 520px;
 }
 
-.widget-card {
+/* Grid of widgets — bento spans via custom properties (mobile collapses). */
+.widget-grid {
   position: relative;
-  background: var(--w-glass);
-  border: 1px solid var(--w-glass-border);
-  border-radius: 20px;
-  padding: var(--w-sp-7, 28px) var(--w-sp-6);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  box-shadow: var(--w-shadow-card);
-  /* Contact shadow under each card — drop-shadow grounds the floating
-     glass, distinct from the box-shadow cast. */
-  filter: drop-shadow(0 24px 32px rgba(0, 0, 0, 0.32));
-  /* Individual property transitions — color, border, shadow change on
-     hover; the parallax transform runs on the scrub curve. */
-  transition:
-    background-color 300ms var(--w-ease-hover),
-    border-color     300ms var(--w-ease-hover),
-    box-shadow       300ms var(--w-ease-hover),
-    transform        400ms var(--w-ease-hover);
-  transform: rotateY(calc(var(--widget-px) * 5deg))
-             rotateX(calc(var(--widget-py) * -5deg));
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(120px, auto);
+  gap: clamp(14px, 1.6vw, 22px);
+  grid-auto-flow: dense;
   transform-style: preserve-3d;
 }
-.widget-card[data-depth="3"] {
-  transform: rotateY(calc(var(--widget-px) * 9deg))
-             rotateX(calc(var(--widget-py) * -9deg))
-             translateZ(20px);
+.widget-cell {
+  grid-column: span min(var(--w-span-col, 2), 4);
+  grid-row: span var(--w-span-row, 1);
+  /* Stagger the reveal by order index set inline. */
+  transition: none;
 }
-.widget-card[data-depth="2"] {
-  transform: rotateY(calc(var(--widget-px) * 6deg))
-             rotateX(calc(var(--widget-py) * -6deg))
-             translateZ(10px);
+.widget-js .widget-cell {
+  opacity: 0;
+  transform: translateZ(-120px) translateY(16px);
+  transition:
+    opacity 600ms var(--w-ease-reveal),
+    transform 700ms var(--w-ease-reveal);
+  transition-delay: calc(var(--w-i, 0) * 70ms);
 }
-.widget-card[data-depth="1"] {
-  transform: rotateY(calc(var(--widget-px) * 3deg))
-             rotateX(calc(var(--widget-py) * -3deg));
-}
-.widget-card:hover {
-  background-color: var(--w-glass-deep);
-  border-color: var(--w-glass-edge);
-  box-shadow: var(--w-shadow-card-lift);
+.widget-js .widget-cell.is-revealed,
+.widget-js [data-reveal].is-revealed .widget-cell {
+  opacity: 1;
+  transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .widget-card,
-  .widget-card[data-depth="3"],
-  .widget-card[data-depth="2"],
-  .widget-card[data-depth="1"] {
+  .widget-js .widget-cell {
+    opacity: 1;
     transform: none;
-    transition:
-      background-color 200ms var(--w-ease-hover),
-      border-color     200ms var(--w-ease-hover),
-      box-shadow       200ms var(--w-ease-hover);
+    transition: none;
   }
 }
 
+/* ==========================================================================
+   WidgetCard — the glass shell. The 3D transform composes the resting tilt
+   with the live parallax vars; preserve-3d keeps the face in space. A contact
+   drop-shadow grounds the float. Hover lifts the surface (transform, not
+   color) and brightens the glass.
+   ========================================================================== */
+.widget-card {
+  position: relative;
+  height: 100%;
+  min-height: 100%;
+  border-radius: 24px;
+  /* Depth-tiered contact shadow so near cards ground hardest. */
+  filter: var(--w-contact-mid);
+  transform:
+    rotateX(var(--w-rx))
+    rotateY(var(--w-ry))
+    translateZ(var(--w-lift));
+  transform-style: preserve-3d;
+  /* Individual property transitions — NEVER `transition: all`. The parallax
+     transform is driven live by the rAF loop, so we don't transition it.   */
+  transition:
+    filter 320ms var(--w-ease-hover);
+  will-change: transform;
+}
+.widget-card[data-depth="near"] { filter: var(--w-contact-near); }
+.widget-card[data-depth="far"]  { filter: var(--w-contact-far); }
+
+/* The face is the actual glass surface — separate layer so the contact
+   drop-shadow sits on the outer article, not the glass itself.            */
+.widget-card__face {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--w-sp-3);
+  padding: clamp(16px, 1.8vw, 24px);
+  border-radius: inherit;
+  background: var(--w-glass);
+  border: 1px solid var(--w-glass-border);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: var(--w-shadow-card);
+  overflow: hidden;
+  transition:
+    background-color 280ms var(--w-ease-hover),
+    border-color 280ms var(--w-ease-hover),
+    box-shadow 280ms var(--w-ease-hover),
+    transform 220ms var(--w-ease-back);
+}
+/* Sheen — a diagonal light streak across the glass, the visionOS facet. */
+.widget-card__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 28%,
+    transparent 52%,
+    transparent 100%
+  );
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+.widget-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--w-sp-2);
+}
 .widget-card__label {
-  font-size: 0.7rem;
+  font-size: var(--w-step--1);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.16em;
   color: var(--w-text-dim);
-  margin: 0 0 var(--w-sp-3);
 }
-.widget-card__value {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;          /* large display numeral tracking      */
-  color: var(--w-text);
-  margin: 0 0 var(--w-sp-2);
-  font-variant-numeric: tabular-nums;
+.widget-card__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--w-iris-bright);
+  box-shadow: 0 0 8px var(--w-iris-glow);
 }
-.widget-card__value-small {
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 var(--w-sp-1);
-}
-.widget-card__sub {
-  font-size: 0.8rem;
-  color: var(--w-text-dim);
-  margin: 0;
-  text-wrap: pretty;
+.widget-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--w-sp-3);
 }
 
-/* Chart bars — gradient phosphor */
-.widget-card__bars {
+/* Hover lifts the surface and brightens the glass — transform, not color. */
+.widget-card:hover .widget-card__face {
+  background-color: var(--w-glass-deep);
+  border-color: var(--w-glass-edge);
+  box-shadow: var(--w-shadow-card-lift);
+  transform: translateZ(8px);
+}
+.widget-card:focus-within .widget-card__face {
+  border-color: var(--w-iris-bright);
+}
+
+/* Static (reduced motion) — flatten the parallax entirely. */
+.widget-stage.is-static .widget-card,
+.widget-stage.is-static .widget-card[data-depth] {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .widget-card,
+  .widget-card[data-depth] {
+    transform: none !important;
+    filter: var(--w-contact-mid);
+  }
+  .widget-card:hover .widget-card__face { transform: none; }
+}
+
+/* All numeric values align columns — the dashboard demand. */
+.widget-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ==========================================================================
+   Weather widget
+   ========================================================================== */
+.widget-weather__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--w-sp-3);
+}
+.widget-weather__temp {
+  font-size: var(--w-step-4);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--w-text);
+}
+.widget-weather__deg {
+  font-size: 0.5em;
+  vertical-align: super;
+  color: var(--w-iris-bright);
+  margin-left: 2px;
+}
+.widget-weather__cond {
+  display: flex;
+  align-items: center;
+  gap: var(--w-sp-2);
+  font-size: var(--w-step--1);
+  color: var(--w-text-dim);
+  text-align: right;
+}
+.widget-weather__city {
+  margin: 0;
+  font-size: var(--w-step--1);
+  color: var(--w-text-faint);
+  letter-spacing: 0.04em;
+}
+.widget-ico {
+  width: 1.4em;
+  height: 1.4em;
+  fill: none;
+  stroke: var(--w-iris-bright);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.widget-weather__cond .widget-ico { stroke: var(--w-aqua); }
+.widget-hourly {
+  list-style: none;
+  margin: var(--w-sp-2) 0 0;
+  padding: var(--w-sp-3) 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--w-sp-1);
+}
+.widget-hourly__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.widget-hourly__hour {
+  font-size: 0.68rem;
+  color: var(--w-text-faint);
+  letter-spacing: 0.04em;
+}
+.widget-hourly__icon .widget-ico { width: 1.1em; height: 1.1em; }
+.widget-hourly__temp { font-size: 0.82rem; color: var(--w-text); }
+
+/* ==========================================================================
+   Schedule widget
+   ========================================================================== */
+.widget-schedule__title {
+  margin: 0;
+  font-size: var(--w-step-1);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--w-text);
+  text-wrap: pretty;
+}
+.widget-schedule__count {
+  margin: 0;
+  font-size: var(--w-step--1);
+  color: var(--w-iris-bright);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.widget-meetings {
+  list-style: none;
+  margin: var(--w-sp-2) 0 0;
+  padding: var(--w-sp-3) 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--w-sp-2);
+}
+.widget-meeting {
+  display: flex;
+  align-items: baseline;
+  gap: var(--w-sp-3);
+}
+.widget-meeting__time {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--w-iris-bright);
+}
+.widget-meeting__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.widget-meeting__name {
+  font-size: 0.85rem;
+  color: var(--w-text);
+  text-wrap: pretty;
+}
+.widget-meeting__with {
+  font-size: 0.72rem;
+  color: var(--w-text-faint);
+}
+
+/* ==========================================================================
+   Chart widget
+   ========================================================================== */
+.widget-chart__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--w-sp-2);
+}
+.widget-chart__total {
+  font-size: var(--w-step-2);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--w-text);
+}
+.widget-chart__unit {
+  font-size: 0.42em;
+  color: var(--w-text-faint);
+  margin-left: 4px;
+  font-weight: 400;
+}
+.widget-chart__delta {
+  font-size: 0.72rem;
+  color: var(--w-emerald);
+  letter-spacing: 0.02em;
+}
+.widget-bars {
+  list-style: none;
+  margin: var(--w-sp-3) 0 0;
+  padding: 0;
   display: flex;
   align-items: flex-end;
-  gap: 6px;
-  height: 60px;
-  margin-top: var(--w-sp-3);
+  justify-content: space-between;
+  gap: var(--w-sp-2);
+  height: 64px;
 }
 .widget-bar {
   flex: 1;
-  background: linear-gradient(180deg, var(--w-iris-bright) 0%, var(--w-iris) 60%, var(--w-iris-soft) 100%);
-  border-radius: 3px 3px 0 0;
-  min-height: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  justify-content: flex-end;
+}
+.widget-bar__fill {
+  width: 100%;
+  max-width: 14px;
+  height: var(--w-bar, 50%);
+  min-height: 6px;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(
+    180deg,
+    var(--w-iris-bright) 0%,
+    var(--w-iris) 55%,
+    var(--w-iris-soft) 100%
+  );
   box-shadow:
-    0 0 1px rgba(255, 255, 255, 0.20),
-    0 0 8px var(--w-iris-soft);
+    0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 10px var(--w-iris-soft);
+}
+.widget-bar__day {
+  font-size: 0.64rem;
+  color: var(--w-text-faint);
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   Music widget
+   ========================================================================== */
+.widget-music__head {
+  display: flex;
+  align-items: center;
+  gap: var(--w-sp-3);
+}
+.widget-music__art {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--w-iris) 0%, #a855f7 100%);
+  box-shadow: 0 6px 16px var(--w-iris-soft);
+}
+.widget-music__glyph {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.widget-music__meta { min-width: 0; }
+.widget-music__track {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--w-text);
+  text-wrap: pretty;
+}
+.widget-music__artist {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  color: var(--w-text-faint);
+}
+.widget-music__bar {
+  margin-top: var(--w-sp-1);
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+.widget-music__progress {
+  display: block;
+  height: 100%;
+  width: var(--w-prog, 49%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--w-iris-bright), var(--w-aqua));
+}
+.widget-music__time {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--w-text-faint);
+}
+.widget-music__dur { color: var(--w-text-dim); }
+.widget-music__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--w-sp-4);
+  margin-top: var(--w-sp-1);
+}
+.widget-music__btn {
+  display: block;
+  border-radius: 50%;
+  background: var(--w-glass-faint);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.widget-music__btn--prev,
+.widget-music__btn--next {
+  width: 28px;
+  height: 28px;
+}
+.widget-music__btn--play {
+  width: 40px;
+  height: 40px;
+  background: var(--w-iris);
+  border-color: transparent;
+  box-shadow: 0 6px 18px var(--w-iris-soft);
+  position: relative;
+}
+.widget-music__btn--play::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-40%, -50%);
+  border-style: solid;
+  border-width: 6px 0 6px 10px;
+  border-color: transparent transparent transparent #fff;
+}
+
+/* ==========================================================================
+   Health widget — activity ring
+   ========================================================================== */
+.widget-health__ring {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+}
+.widget-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.widget-ring__track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.10);
+  stroke-width: 10;
+}
+.widget-ring__value {
+  fill: none;
+  stroke: var(--w-iris-bright);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 314.16;
+  stroke-dashoffset: calc(314.16 - var(--w-ring, 232));
+  filter: drop-shadow(0 0 6px var(--w-iris-glow));
+}
+.widget-ring__pct {
+  position: absolute;
+  font-size: var(--w-step-1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--w-text);
+}
+.widget-health__ring-label {
+  margin: var(--w-sp-2) 0 0;
+  text-align: center;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--w-text-faint);
+}
+.widget-health__steps {
+  text-align: center;
+  margin-top: var(--w-sp-1);
+}
+.widget-health__count {
+  font-size: var(--w-step-1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--w-text);
+}
+.widget-health__goal {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--w-text-faint);
+}
+
+/* ==========================================================================
+   Air & sun widget
+   ========================================================================== */
+.widget-air {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--w-sp-3);
+}
+.widget-air__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: var(--w-sp-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.widget-air__cell:last-child { border-bottom: 0; padding-bottom: 0; }
+.widget-air__value {
+  font-size: var(--w-step-1);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--w-text);
+}
+.widget-air__unit {
+  font-size: 0.5em;
+  color: var(--w-text-faint);
+  margin-left: 4px;
+  font-weight: 400;
+}
+.widget-air__label {
+  font-size: 0.72rem;
+  color: var(--w-text-dim);
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   Timer widget
+   ========================================================================== */
+.widget-timer__remain {
+  margin: 0;
+  font-size: var(--w-step-3);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--w-text);
+}
+.widget-timer__task {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--w-text-dim);
+}
+.widget-timer__bar {
+  margin-top: var(--w-sp-2);
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.10);
+  overflow: hidden;
+}
+.widget-timer__progress {
+  display: block;
+  height: 100%;
+  width: var(--w-prog, 62%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--w-rose), var(--w-iris-bright));
+}
+
+/* ==========================================================================
+   Messages widget
+   ========================================================================== */
+.widget-msg__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--w-sp-2);
+}
+.widget-msg__count {
+  font-size: var(--w-step-2);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--w-text);
+}
+.widget-msg__unit {
+  font-size: 0.72rem;
+  color: var(--w-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.widget-msgs {
+  list-style: none;
+  margin: var(--w-sp-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--w-sp-2);
+}
+.widget-msg {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px var(--w-sp-2);
+  padding: var(--w-sp-2) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.widget-msg:first-child { border-top: 0; padding-top: 0; }
+.widget-msg__from {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--w-text);
+  grid-column: 1;
+}
+.widget-msg__time {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: start;
+  font-size: 0.7rem;
+  color: var(--w-text-faint);
+}
+.widget-msg__preview {
+  grid-column: 1;
+  font-size: 0.74rem;
+  color: var(--w-text-dim);
+  text-wrap: pretty;
 }
 
 /* ==========================================================================
    Footer
    ========================================================================== */
 .widget-foot {
-  padding: clamp(48px, 10vh, 80px) clamp(20px, 5vw, 60px);
-  color: var(--w-text-dim);
-  font-size: 0.8rem;
+  padding: clamp(48px, 10vh, 88px) clamp(20px, 5vw, 60px) clamp(40px, 8vh, 72px);
   text-align: center;
+  color: var(--w-text-dim);
   text-wrap: pretty;
 }
-.widget-foot p { margin: 0 0 var(--w-sp-2); }
+.widget-foot__brand {
+  margin: 0 0 var(--w-sp-2);
+  font-size: var(--w-step-1);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--w-text);
+}
+.widget-foot__line { margin: 0 0 var(--w-sp-2); font-size: 0.85rem; }
+.widget-foot__copy { margin: 0; font-size: 0.75rem; color: var(--w-text-faint); }
 
 /* ==========================================================================
    Responsive — honest at 360px, composed at 1440px+
+   720 / 900 / 1200 px breakpoints (std checklist: 3+ media queries).
    ========================================================================== */
-@media (max-width: 720px) {
-  .widget-hero { padding-bottom: var(--w-sp-8); }
-  .widget-title { font-size: clamp(2.4rem, 12vw, 4rem); }
-  .widget-stage {
-    grid-template-columns: 1fr;
-    gap: var(--w-sp-4);
-    perspective: 800px;
-  }
-  .widget-card { padding: var(--w-sp-5) var(--w-sp-5); border-radius: 16px; }
-  .widget-mode-toggle {
-    flex-wrap: wrap;
-    margin-bottom: var(--w-sp-8);
-  }
-}
-
 @media (max-width: 900px) {
-  .widget-stage {
+  .widget-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  /* On smaller screens, flatten the depth parallax so the cards stay
-     legible — suspension becomes a subtle tilt rather than a yaw. */
-  .widget-card[data-depth="3"] {
-    transform: rotateY(calc(var(--widget-px) * 5deg))
-               rotateX(calc(var(--widget-py) * -5deg))
-               translateZ(12px);
+  /* Collapse bento spans to fit the narrower grid; flatten deep parallax. */
+  .widget-cell {
+    grid-column: span min(var(--w-span-col, 2), 2);
   }
-  .widget-card[data-depth="2"] {
-    transform: rotateY(calc(var(--widget-px) * 4deg))
-               rotateX(calc(var(--widget-py) * -4deg))
-               translateZ(6px);
+  .widget-card[data-depth="near"] { filter: var(--w-contact-mid); }
+  .widget-stage { perspective: 1000px; min-height: auto; }
+}
+
+@media (max-width: 720px) {
+  .widget-hero { padding-bottom: var(--w-sp-6); }
+  .widget-title { font-size: clamp(2.6rem, 13vw, 4rem); }
+  .widget-grid {
+    grid-template-columns: 1fr;
+    gap: var(--w-sp-3);
   }
+  .widget-cell {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+  .widget-stage {
+    perspective: 800px;
+    padding: var(--w-sp-3);
+    border-radius: 24px;
+  }
+  .widget-stage-meta {
+    flex-wrap: wrap;
+    gap: var(--w-sp-2);
+  }
+  .widget-stage-meta__hint { margin-left: 0; width: 100%; }
+  /* On the smallest screens flatten the tilt entirely — suspension would
+     just obscure the content. The dashboard reads flat and clean.        */
+  .widget-card[data-depth] { filter: var(--w-contact-far); }
 }
 
 @media (min-width: 1200px) {
-  /* On wide screens, let the dashboard breathe and the depth expand. */
+  /* On wide screens, let the field breathe and the depth expand. */
   .widget-stage {
-    max-width: 1080px;
-    perspective: 1200px;
-    gap: var(--w-sp-6);
+    max-width: 1320px;
+    perspective: 1400px;
+    padding: clamp(32px, 3vw, 56px);
   }
-  .widget-card { padding: var(--w-sp-8) var(--w-sp-7, 32px); }
+  .widget-grid { gap: clamp(18px, 1.8vw, 26px); }
+  .widget-card__face { padding: clamp(20px, 1.8vw, 30px); }
+}
+
+/* ==========================================================================
+   Touch / coarse pointer — parallax is pointer-driven and meaningless on a
+   touch device with no hover; the hook still runs but the effect is gentle.
+   Here we also widen tap targets implicitly via the larger padding above.
+   ========================================================================== */
+@media (pointer: coarse) {
+  .widget-stage { perspective: 1000px; }
+  .widget-card[data-depth="near"] { filter: var(--w-contact-mid); }
 }

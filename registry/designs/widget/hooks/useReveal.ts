@@ -4,30 +4,40 @@ import { useEffect, useRef } from "react";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 /**
- * Direction-aware clip-path reveal.
+ * Direction-aware clip-path reveal for the spatial dashboard.
  *
- * Attach the returned ref to a block you want wiped in by a hard geometric
- * cut (the brutalist equivalent of a fade). When the block enters the
- * viewport, `is-revealed` is added to it; `styles.css` drives the
- * inset/polygon clip from `--rave-reveal-dir`. The reveal happens once and
- * the observer disconnects — a section does not get to re-wipe every time
- * it scrolls back into frame.
+ * Two modes:
+ *  - Attach the returned ref to the document root: every `[data-reveal]`
+ *    descendant is observed and gets `is-revealed` when it enters the
+ *    viewport (aurora-style, supports many blocks).
+ *  - Or call `useReveal<T>()` and attach the ref to a single block you want
+ *    wiped in (legacy single-element use); that block gets `is-revealed`.
  *
- * No-JS / SSR: the page ships already visible (`rave-reveal` with no
- * `rave-js` ancestor is static, clip-path: none). The pre-reveal hidden
- * state is gated behind `.rave-js .rave-reveal` so the SSR markup is the
- * completed flyer.
+ * `styles.css` drives the clip from the reveal class; the reveal happens once
+ * and the observer disconnects per block — a section does not get to re-wipe
+ * every time it scrolls back into frame.
+ *
+ * No-JS / SSR: the page ships already visible — `widget-js` is not present at
+ * first paint, and the pre-reveal hidden state is gated behind
+ * `.widget-js [data-reveal]`, so the SSR markup is the completed dashboard.
+ * Under reduced motion the hidden state is skipped — every block just stands.
  */
 export function useReveal<T extends HTMLElement = HTMLElement>() {
   const ref = useRef<T | null>(null);
   const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    // Reduced motion: leave the SSR-visible state alone. No wipe.
+    const root = ref.current;
+    if (!root) return;
     if (reduced) return;
+
+    // Collect the root itself (if it carries data-reveal) plus descendants.
+    const targets: HTMLElement[] = [];
+    if (root.hasAttribute("data-reveal")) targets.push(root);
+    root.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
+      if (el !== root) targets.push(el);
+    });
+    if (targets.length === 0) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -40,7 +50,7 @@ export function useReveal<T extends HTMLElement = HTMLElement>() {
       },
       { rootMargin: "-8% 0px -8% 0px", threshold: 0.12 },
     );
-    io.observe(el);
+    targets.forEach((t) => io.observe(t));
     return () => io.disconnect();
   }, [reduced]);
 
